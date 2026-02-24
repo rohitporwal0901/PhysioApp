@@ -3,8 +3,8 @@
     <div
         class="flex flex-col md:flex-row justify-between items-start md:items-center p-6 bg-surface dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-glass transition-colors">
         <div>
-            <h2 class="text-2xl font-bold text-slate-800 dark:text-white tracking-tight mb-2">Patient Directory</h2>
-            <p class="text-slate-500 dark:text-slate-400 text-sm">View and manage patient records and assignments.</p>
+            <h2 class="text-2xl font-bold text-slate-800 dark:text-white tracking-tight mb-2">Patients</h2>
+            <p class="text-slate-500 dark:text-slate-400 text-sm">View and manage patient records.</p>
         </div>
         <div class="flex items-center space-x-3 mt-4 md:mt-0">
             <div class="relative w-full md:w-64">
@@ -14,8 +14,8 @@
                     class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none dark:text-white transition-colors">
             </div>
             <button
-                class="flex items-center justify-center bg-primary-500 hover:bg-primary-600 text-white font-bold py-2.5 px-6 rounded-xl transition-colors shadow-md shadow-primary-500/20 whitespace-nowrap">
-                <i-lucide name="user-plus" class="w-4 h-4 mr-2"></i-lucide> Add Patient
+                class="flex items-center justify-center bg-primary-500 hover:bg-primary-600 text-white font-medium py-2.5 px-5 rounded-lg transition-colors shadow-sm whitespace-nowrap">
+                Add Patient
             </button>
         </div>
     </div>
@@ -36,7 +36,7 @@
                                   'bg-status-success/10 text-status-success dark:bg-status-success/20 dark:text-emerald-400': p.status === 'active',
                                   'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400': p.status === 'discharged'
                               }">
-                            {{ p.status  }}
+                            {{ p.status }}
                         </span>
                     </div>
 

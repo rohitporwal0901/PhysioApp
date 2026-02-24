@@ -17,23 +17,28 @@ module.exports = {
           200: '#99f6e4',
           300: '#5eead4',
           400: '#2dd4bf',
-          500: '#14b8a6', // Core Teal (Healing, Fresh)
+          500: '#0F766E', // Primary Dark Teal
           600: '#0d9488',
           700: '#0f766e',
           800: '#115e59',
           900: '#134e4a',
         },
         secondary: {
-          400: '#38bdf8',
-          500: '#0ea5e9', // Sky Blue accent
+          400: '#6ee7b7',
+          500: '#34D399', // Secondary Light Green
+          600: '#059669',
+        },
+        accent: {
+          400: '#7dd3fc',
+          500: '#38bdf8', // Light Blue Accent
           600: '#0284c7',
         },
         surface: '#ffffff',
         background: '#f8fafc',
-        darkbg: '#0f172a', // Rich midnight blue
-        darkcard: '#1e293b',
+        darkbg: '#111827', // Adjusting dark mode concept colors
+        darkcard: '#1f2937',
         status: {
-          success: '#10b981',
+          success: '#34D399',
           warning: '#f59e0b',
           danger: '#ef4444',
         }

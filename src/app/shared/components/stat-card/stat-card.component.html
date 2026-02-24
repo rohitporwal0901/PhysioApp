@@ -1,35 +1,32 @@
-<div
-    class="bg-surface rounded-2xl p-6 shadow-glass border border-slate-100 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/5 transition-all duration-300 group">
-    <div class="flex items-center">
+<div [ngClass]="bgClass"
+    class="rounded-[1.5rem] p-6 shadow-glass hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col justify-between min-h-[140px] relative overflow-hidden group">
 
-        <!-- Icon Container -->
-        <div
-            class="p-3 rounded-xl bg-primary-50 text-primary-500 group-hover:bg-primary-500 group-hover:text-white transition-colors duration-300">
-            <i-lucide [name]="icon" class="w-6 h-6"></i-lucide>
+    <!-- Decorative element -->
+    <div
+        class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-110 transition-transform duration-500">
+    </div>
+
+    <div class="flex justify-between items-start z-10">
+        <!-- Details -->
+        <div class="flex flex-col flex-1">
+            <span class="text-base font-semibold" [ngClass]="textClass">{{ title }}</span>
+            <div class="text-4xl font-bold mt-2 tracking-tight" [ngClass]="textClass">
+                {{ value }}
+            </div>
         </div>
 
-        <!-- Details -->
-        <div class="ml-5 w-0 flex-1">
-            <dl>
-                <dt class="text-sm font-medium text-slate-500 truncate group-hover:text-slate-700 transition-colors">
-                    {{ title }}
-                </dt>
-                <dd>
-                    <div class="text-2xl font-bold text-slate-900 group-hover:text-primary-900 transition-colors">
-                        {{ value }}
-                    </div>
-                </dd>
-            </dl>
+        <!-- Optional Trend Indicator next to Title -->
+        <div *ngIf="trend" class="flex items-center text-sm px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm"
+            [ngClass]="textClass">
+            <span class="font-medium font-heading">{{ trend }}</span>
         </div>
     </div>
 
-    <!-- Optional Trend Indicator -->
-    <div *ngIf="trend" class="mt-4 flex items-center text-sm" [ngClass]="{
-         'text-status-success': trendDirection === 'up',
-         'text-status-danger': trendDirection === 'down',
-         'text-slate-500': trendDirection === 'neutral'
-       }">
-        <span class="font-medium mr-2">{{ trend }}</span>
-        <span class="text-slate-400">from last month</span>
+    <!-- Bottom right aligned Icon -->
+    <div class="absolute bottom-6 right-6 z-10">
+        <div [ngClass]="iconClass"
+            class="p-3 rounded-2xl flex items-center justify-center transition-all duration-300 backdrop-blur-sm shadow-sm">
+            <i-lucide [name]="icon" class="w-6 h-6"></i-lucide>
+        </div>
     </div>
 </div>

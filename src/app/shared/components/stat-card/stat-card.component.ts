@@ -15,5 +15,9 @@ export class StatCardComponent {
   @Input() icon: string = 'activity';
   @Input() trend?: string;
   @Input() trendDirection?: 'up' | 'down' | 'neutral';
+  @Input() bgClass: string = 'bg-surface';
+  @Input() textClass: string = 'text-slate-900';
+  @Input() textMutedClass: string = 'text-slate-500';
+  @Input() iconClass: string = 'text-primary-500 bg-primary-50';
 }
 

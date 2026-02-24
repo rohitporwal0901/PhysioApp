@@ -5,7 +5,7 @@ import {
   LucideAngularModule,
   Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
   ArrowRight, Clock, ChevronRight, Menu, X, Filter, Search, Plus, Moon, Sun, PlaySquare, CheckCircle2, ActivitySquare, MoreHorizontal, Star,
-  User
+  User, FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2
 } from 'lucide-angular';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -24,7 +24,8 @@ export const appConfig: ApplicationConfig = {
     UserTrackingService,
     importProvidersFrom(LucideAngularModule.pick({
       Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
-      ArrowRight, Clock, ChevronRight, Menu, X, Filter, Search, Plus, Moon, Sun, PlaySquare, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User
+      ArrowRight, Clock, ChevronRight, Menu, X, Filter, Search, Plus, Moon, Sun, PlaySquare, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
+      FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2
     }))
   ]
 };
