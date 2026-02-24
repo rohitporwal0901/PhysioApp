@@ -5,24 +5,37 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
+    fontFamily: {
+      sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+      heading: ['Outfit', 'sans-serif'],
+    },
     extend: {
       colors: {
         primary: {
           50: '#f0fdfa',
           100: '#ccfbf1',
-          500: '#14b8a6', // Core Teal (Buttons, Active links)
-          600: '#0d9488', // Hover state
-          900: '#134e4a', // Dark text / Headings
+          200: '#99f6e4',
+          300: '#5eead4',
+          400: '#2dd4bf',
+          500: '#14b8a6', // Core Teal (Healing, Fresh)
+          600: '#0d9488',
+          700: '#0f766e',
+          800: '#115e59',
+          900: '#134e4a',
         },
         secondary: {
-          500: '#0ea5e9', // Light Blue accent (Icons, badges)
+          400: '#38bdf8',
+          500: '#0ea5e9', // Sky Blue accent
+          600: '#0284c7',
         },
-        surface: '#ffffff', // Card backgrounds
-        background: '#f8fafc', // App background (Soft slate)
+        surface: '#ffffff',
+        background: '#f8fafc',
+        darkbg: '#0f172a', // Rich midnight blue
+        darkcard: '#1e293b',
         status: {
-          success: '#10b981', // Emerald for "Completed/Available"
-          warning: '#f59e0b', // Amber for "Pending"
-          danger: '#ef4444',  // Red for "Cancelled"
+          success: '#10b981',
+          warning: '#f59e0b',
+          danger: '#ef4444',
         }
       },
       boxShadow: {
@@ -51,6 +64,9 @@ module.exports = {
       const newUtilities = {
         '.animation-delay-2000': {
           'animation-delay': '2s',
+        },
+        '.animation-delay-4000': {
+          'animation-delay': '4s',
         }
       };
       addUtilities(newUtilities);

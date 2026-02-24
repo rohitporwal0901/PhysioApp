@@ -7,21 +7,27 @@
 
 @layer base {
     html:not(.dark) body {
-        @apply bg-background text-primary-900 antialiased;
+        @apply bg-background text-primary-900 antialiased font-sans;
     }
 
     html.dark body {
-        @apply bg-slate-900 text-slate-100 antialiased;
+        /* Rich midnight dark mode with a subtle teal tint, representing health and depth */
+        @apply bg-[#0b1120] text-slate-100 antialiased font-sans;
     }
 
-    body {
-        font-family: 'Inter', system-ui, sans-serif;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-heading tracking-tight;
     }
 
     /* Scrollbar styling */
     ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
+        width: 5px;
+        height: 5px;
     }
 
     ::-webkit-scrollbar-track {
