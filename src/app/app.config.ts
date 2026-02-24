@@ -4,7 +4,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import {
   LucideAngularModule,
   Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
-  ArrowRight, Clock, ChevronRight, Menu, X, Filter, Search, Plus, Moon, Sun, PlaySquare, CheckCircle2, ActivitySquare
+  ArrowRight, Clock, ChevronRight, Menu, X, Filter, Search, Plus, Moon, Sun, PlaySquare, CheckCircle2, ActivitySquare, MoreHorizontal, Star,
+  User
 } from 'lucide-angular';
 
 import { routes } from './app.routes';
@@ -16,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     importProvidersFrom(LucideAngularModule.pick({
       Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
-      ArrowRight, Clock, ChevronRight, Menu, X, Filter, Search, Plus, Moon, Sun, PlaySquare, CheckCircle2, ActivitySquare
+      ArrowRight, Clock, ChevronRight, Menu, X, Filter, Search, Plus, Moon, Sun, PlaySquare, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User
     }))
   ]
 };

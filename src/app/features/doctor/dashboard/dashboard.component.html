@@ -178,7 +178,6 @@
             <div
                 class="bg-surface dark:bg-slate-800 rounded-3xl shadow-glass border border-slate-100 dark:border-slate-700 p-6 transition-colors">
                 <h3 class="text-lg font-bold text-slate-800 dark:text-white tracking-tight mb-4">Recent Patients</h3>
-
                 <ng-container *ngIf="patients$ | async as patients">
                     <div class="space-y-4">
                         <div *ngFor="let p of patients.slice(0, 5)" class="flex items-center justify-between group">
