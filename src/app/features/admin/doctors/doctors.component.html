@@ -1,0 +1,70 @@
+<div class="h-full flex flex-col gap-6 max-w-7xl mx-auto">
+    <!-- Header Controls -->
+    <div
+        class="flex flex-col md:flex-row justify-between items-start md:items-center p-6 bg-surface dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-glass transition-colors">
+        <div>
+            <h2 class="text-2xl font-bold text-slate-800 dark:text-white tracking-tight mb-2">Therapists Management</h2>
+            <p class="text-slate-500 dark:text-slate-400 text-sm">Manage staff, schedules, and specializations.</p>
+        </div>
+        <div class="flex items-center space-x-3 mt-4 md:mt-0">
+            <div class="relative w-full md:w-64">
+                <i-lucide name="search"
+                    class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i-lucide>
+                <input type="text" placeholder="Search therapists..."
+                    class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none dark:text-white transition-colors">
+            </div>
+            <button
+                class="flex items-center justify-center bg-primary-500 hover:bg-primary-600 text-white font-bold py-2.5 px-6 rounded-xl transition-colors shadow-md shadow-primary-500/20 whitespace-nowrap">
+                <i-lucide name="plus" class="w-4 h-4 mr-2"></i-lucide> Add New
+            </button>
+        </div>
+    </div>
+
+    <!-- Doctors Grid -->
+    <ng-container *ngIf="doctors$ | async as doctors">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div *ngFor="let doc of doctors"
+                class="bg-surface dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-300 p-6 flex flex-col items-center group relative overflow-hidden">
+
+                <!-- Status indicator -->
+                <div class="absolute top-4 right-4"
+                    [ngClass]="doc.available ? 'text-status-success dark:text-emerald-400' : 'text-slate-400 dark:text-slate-500'">
+                    <i-lucide name="activity" class="w-5 h-5"></i-lucide>
+                </div>
+
+                <div class="relative mb-4 mt-2">
+                    <img [src]="doc.image" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Dr&background=random'"
+                        alt="Doctor Avatar"
+                        class="w-24 h-24 rounded-full object-cover ring-4 ring-slate-50 dark:ring-slate-700/50 shadow-md group-hover:scale-105 transition-transform duration-300">
+                    <div class="absolute bottom-0 right-0 w-6 h-6 rounded-full border-2 border-white dark:border-slate-800 flex items-center justify-center bg-status-success"
+                        *ngIf="doc.available">
+                        <!-- small available dot -->
+                    </div>
+                </div>
+
+                <h3
+                    class="text-xl font-bold text-slate-900 dark:text-white mb-1 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                    {{ doc.name }}</h3>
+                <p class="text-sm font-medium text-primary-600 dark:text-primary-400 mb-4">{{ doc.specialty }}</p>
+
+                <div
+                    class="flex items-center space-x-1 mb-6 text-amber-500 bg-amber-50 dark:bg-amber-500/10 px-3 py-1 rounded-full">
+                    <i-lucide name="star" class="w-3.5 h-3.5" [ngStyle]="{'fill': 'currentColor'}"></i-lucide>
+                    <span class="text-xs font-bold">{{ doc.rating }}</span>
+                </div>
+
+                <div class="w-full flex space-x-3 mt-auto border-t border-slate-100 dark:border-slate-700 pt-5">
+                    <button
+                        class="flex-1 py-2 text-sm font-semibold rounded-xl text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                        View Profile
+                    </button>
+                    <button
+                        class="w-10 flex items-center justify-center rounded-xl bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 hover:bg-primary-500 hover:text-white transition-colors">
+                        <i-lucide name="calendar" class="w-4 h-4"></i-lucide>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+</div>

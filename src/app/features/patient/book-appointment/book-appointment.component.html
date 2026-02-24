@@ -1,0 +1,302 @@
+<div class="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
+
+    <!-- Stepper Header -->
+    <div
+        class="bg-surface dark:bg-slate-800 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 p-6 flex flex-col md:flex-row justify-between items-center relative overflow-hidden transition-colors">
+        <div class="flex items-center space-x-2 md:space-x-4 w-full justify-between md:justify-start">
+
+            <!-- Step 1 -->
+            <div class="flex items-center space-x-3 transition-opacity" [ngClass]="{'opacity-50': currentStep > 1}">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm transition-colors"
+                    [ngClass]="currentStep >= 1 ? 'bg-primary-500 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500'">
+                    <i-lucide name="users" class="w-5 h-5 mb-px" *ngIf="currentStep === 1"></i-lucide>
+                    <i-lucide name="check-circle-2" class="w-5 h-5" *ngIf="currentStep > 1"></i-lucide>
+                </div>
+                <div class="hidden sm:block text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors">
+                    Select Doctor</div>
+            </div>
+
+            <div class="flex-1 max-w-[40px] md:max-w-[80px] h-0.5 transition-colors"
+                [ngClass]="currentStep >= 2 ? 'bg-primary-500' : 'bg-slate-200 dark:bg-slate-700'"></div>
+
+            <!-- Step 2 -->
+            <div class="flex items-center space-x-3 transition-opacity" [ngClass]="{'opacity-50': currentStep > 2}">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm transition-all"
+                    [ngClass]="currentStep >= 2 ? 'bg-primary-500 text-white shadow-md' : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500'">
+                    <i-lucide name="calendar" class="w-5 h-5 mb-px" *ngIf="currentStep <= 2"></i-lucide>
+                    <i-lucide name="check-circle-2" class="w-5 h-5" *ngIf="currentStep > 2"></i-lucide>
+                </div>
+                <div class="hidden sm:block text-sm font-semibold transition-colors"
+                    [ngClass]="currentStep >= 2 ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500'">
+                    Date & Time</div>
+            </div>
+
+            <div class="flex-1 max-w-[40px] md:max-w-[80px] h-0.5 transition-colors"
+                [ngClass]="currentStep === 3 ? 'bg-primary-500' : 'bg-slate-200 dark:bg-slate-700'"></div>
+
+            <!-- Step 3 -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm transition-all"
+                    [ngClass]="currentStep === 3 ? 'bg-status-success text-white shadow-md shadow-status-success/30' : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500'">
+                    <i-lucide name="check-circle-2" class="w-5 h-5 mb-px"></i-lucide>
+                </div>
+                <div class="hidden sm:block text-sm font-semibold transition-colors"
+                    [ngClass]="currentStep === 3 ? 'text-status-success' : 'text-slate-400 dark:text-slate-500'">
+                    Confirmation</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Step 1: Browse Doctors -->
+    <div *ngIf="currentStep === 1" class="animate-fade-in-up">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">Available Specialists</h2>
+            <div class="relative">
+                <i-lucide name="filter"
+                    class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-slate-500"></i-lucide>
+                <select
+                    class="pl-10 pr-8 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 shadow-sm appearance-none outline-none transition-colors">
+                    <option>All Specialties</option>
+                    <option>Sports Injury</option>
+                    <option>Neurological Rehab</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Doctor Grid -->
+        <ng-container *ngIf="doctors$ | async as doctors; else loadingDocs">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                <div *ngFor="let doc of doctors"
+                    class="bg-surface dark:bg-slate-800 rounded-3xl p-6 border transition-all duration-300 relative overflow-hidden group hover:-translate-y-1"
+                    [ngClass]="doc.available ? 'border-primary-100 dark:border-slate-700 hover:border-transparent dark:hover:border-slate-600 shadow-xl shadow-primary-500/5 hover:shadow-primary-500/10 cursor-pointer' : 'border-slate-100 dark:border-slate-800 opacity-60 grayscale cursor-not-allowed'"
+                    (click)="selectDoctor(doc)">
+
+                    <!-- Top Banner Color -->
+                    <div class="absolute top-0 left-0 w-full h-2"
+                        [ngClass]="doc.available ? 'bg-gradient-to-r from-primary-400 to-secondary-500 dark:from-primary-600 dark:to-secondary-600' : 'bg-slate-200 dark:bg-slate-700'">
+                    </div>
+
+                    <div class="flex items-start justify-between mt-2 mb-4">
+                        <div class="relative">
+                            <img [src]="doc.image"
+                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Dr&background=random'"
+                                alt="Doctor Avatar"
+                                class="w-16 h-16 rounded-2xl object-cover ring-4 ring-slate-50 dark:ring-slate-800/50 shadow-sm transition-transform group-hover:scale-105">
+                            <span
+                                class="absolute -bottom-1 -right-1 w-4 h-4 border-2 border-white dark:border-slate-800 rounded-full bg-status-success"
+                                *ngIf="doc.available"></span>
+                        </div>
+
+                        <div
+                            class="px-2.5 py-1 bg-amber-50 dark:bg-slate-900/50 dark:border dark:border-amber-500/20 rounded-full flex items-center shadow-sm">
+                            <svg class="w-3.5 h-3.5 text-amber-400 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+                                </path>
+                            </svg>
+                            <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ doc.rating }}</span>
+                        </div>
+                    </div>
+
+                    <h3
+                        class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                        {{
+                        doc.name }}</h3>
+                    <p class="text-sm text-primary-600 dark:text-primary-400 font-medium mb-4">{{ doc.specialty }}</p>
+
+                    <div
+                        class="pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-sm transition-colors">
+                        <span *ngIf="doc.available"
+                            class="min-w-0 flex items-center font-medium text-slate-500 dark:text-slate-400">
+                            <i-lucide name="calendar"
+                                class="w-4 h-4 mr-1.5 text-slate-400 dark:text-slate-500"></i-lucide> Next slot: Today
+                        </span>
+                        <span *ngIf="!doc.available"
+                            class="min-w-0 flex items-center font-medium text-status-warning dark:text-amber-500">
+                            <i-lucide name="clock" class="w-4 h-4 mr-1.5"></i-lucide> Fully Booked
+                        </span>
+
+                        <button *ngIf="doc.available"
+                            class="p-2 rounded-xl bg-primary-50 dark:bg-slate-700 text-primary-600 dark:text-primary-400 group-hover:bg-primary-500 group-hover:text-white dark:group-hover:bg-primary-500 dark:group-hover:text-white transition-all duration-300 shadow-sm border border-transparent dark:group-hover:border-primary-400">
+                            <i-lucide name="arrow-right" class="w-5 h-5"></i-lucide>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-template #loadingDocs>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 animate-pulse">
+                <div *ngFor="let i of [1,2,3,4,5,6]"
+                    class="bg-surface dark:bg-slate-800 rounded-3xl p-6 border border-slate-100 dark:border-slate-700">
+                    <div class="flex items-start justify-between mt-2 mb-4">
+                        <div class="w-16 h-16 rounded-2xl bg-slate-200 dark:bg-slate-700"></div>
+                        <div class="w-12 h-6 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+                    </div>
+                    <div class="w-3/4 h-5 bg-slate-200 dark:bg-slate-700 rounded mb-2 mt-6"></div>
+                    <div class="w-1/2 h-4 bg-slate-200 dark:bg-slate-700 rounded mb-4"></div>
+                    <div class="pt-4 border-t border-slate-100 dark:border-slate-700">
+                        <div class="w-1/2 h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+
+    <!-- Step 2: Date & Time Selection -->
+    <div *ngIf="currentStep === 2 && selectedDoctor" class="animate-fade-in-up">
+        <button (click)="goBack()"
+            class="flex items-center text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 mb-6 transition-colors">
+            <i-lucide name="chevron-right" class="w-4 h-4 mr-1 rotate-180"></i-lucide> Back to Specialists
+        </button>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <!-- Doctor Summary Card -->
+            <div class="w-full lg:w-1/3">
+                <div
+                    class="bg-surface dark:bg-slate-800 rounded-3xl shadow-glass border border-slate-100 dark:border-slate-700 p-8 text-center relative overflow-hidden sticky top-6">
+                    <div
+                        class="absolute top-0 right-0 w-32 h-32 bg-primary-50 dark:bg-primary-900/10 rounded-bl-full -z-10">
+                    </div>
+
+                    <img [src]="selectedDoctor.image"
+                        onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Dr&background=random'" alt="Doctor"
+                        class="w-28 h-28 object-cover rounded-3xl mx-auto shadow-md ring-4 ring-white dark:ring-slate-700/50 mb-6">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{{ selectedDoctor.name
+                        }}</h2>
+                    <p class="text-primary-600 dark:text-primary-400 font-medium mb-6">{{ selectedDoctor.specialty }}
+                    </p>
+
+                    <div
+                        class="bg-slate-50 dark:bg-slate-700/50 rounded-2xl p-4 text-left border border-slate-100 dark:border-slate-600 mb-6">
+                        <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">
+                            Session Details</h4>
+                        <div class="flex items-center text-sm text-slate-700 dark:text-slate-300 mb-2">
+                            <i-lucide name="activity"
+                                class="w-4 h-4 mr-3 text-slate-400 dark:text-slate-500"></i-lucide> 45 Min
+                            Consultation
+                        </div>
+                        <div class="flex items-center text-sm text-slate-700 dark:text-slate-300 mb-2">
+                            <i-lucide name="calendar"
+                                class="w-4 h-4 mr-3 text-slate-400 dark:text-slate-500"></i-lucide> In-person Visit
+                        </div>
+                        <div class="flex items-center text-sm text-slate-700 dark:text-slate-300">
+                            <i-lucide name="users" class="w-4 h-4 mr-3 text-slate-400 dark:text-slate-500"></i-lucide>
+                            New Patient Intake
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar & Slots -->
+            <div class="w-full lg:w-2/3">
+                <div
+                    class="bg-surface dark:bg-slate-800 rounded-3xl shadow-glass border border-slate-100 dark:border-slate-700 p-6 sm:p-8">
+
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white tracking-tight mb-6">Select a Time for
+                        Nov 1, 2023</h3>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        <button *ngFor="let slot of availableTimeSlots" (click)="selectTimeSlot(slot)"
+                            class="py-3 px-2 rounded-2xl border text-sm font-semibold transition-all duration-200 outline-none"
+                            [ngClass]="{
+                      'bg-primary-500 border-primary-500 text-white shadow-lg shadow-primary-500/30 dark:shadow-primary-900/40 scale-105': selectedTimeSlot === slot,
+                      'bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:border-primary-300 dark:hover:border-primary-600 hover:bg-primary-50 dark:hover:bg-slate-600': selectedTimeSlot !== slot
+                    }">
+                            {{ slot }}
+                        </button>
+                    </div>
+
+                    <!-- Bottom Actions -->
+                    <div
+                        class="mt-12 pt-6 border-t border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between">
+                        <div class="mb-4 sm:mb-0 text-sm font-medium text-slate-500 dark:text-slate-400">
+                            * Local time displayed
+                        </div>
+                        <button [disabled]="!selectedTimeSlot" (click)="confirmBooking()"
+                            class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900 flex justify-center items-center"
+                            [ngClass]="{
+                  'bg-primary-500 hover:bg-primary-600 focus:ring-primary-500 shadow-lg shadow-primary-500/20 dark:shadow-primary-900/40 hover:-translate-y-0.5': selectedTimeSlot,
+                  'bg-slate-200 dark:bg-slate-700 cursor-not-allowed text-slate-400 dark:text-slate-500': !selectedTimeSlot
+                }">
+                            Confirm Booking
+                            <i-lucide name="arrow-right" class="w-5 h-5 ml-2" *ngIf="selectedTimeSlot"></i-lucide>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: Success Screen -->
+    <div *ngIf="currentStep === 3" class="animate-fade-in-up py-12">
+        <div
+            class="max-w-lg mx-auto bg-surface dark:bg-slate-800 rounded-3xl shadow-glass border border-status-success/20 dark:border-status-success/30 p-8 sm:p-12 text-center relative overflow-hidden">
+            <!-- Decor background -->
+            <div
+                class="absolute -top-24 -right-24 w-48 h-48 bg-status-success rounded-full mix-blend-multiply filter blur-3xl opacity-20 dark:opacity-10">
+            </div>
+
+            <div
+                class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-status-success/10 text-status-success dark:bg-status-success/20 mb-6 shadow-sm">
+                <i-lucide name="check-circle-2" class="w-12 h-12"></i-lucide>
+            </div>
+
+            <h2 class="text-3xl font-extrabold text-slate-800 dark:text-white tracking-tight mb-2">Booking Confirmed!
+            </h2>
+            <p class="text-slate-500 dark:text-slate-400 mb-8">Your appointment has been successfully scheduled. We've
+                sent a confirmation
+                email with all the details.</p>
+
+            <div
+                class="bg-slate-50 dark:bg-slate-700/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-600 text-left mb-8">
+                <h3
+                    class="text-sm font-bold text-slate-800 dark:text-white mb-4 border-b border-slate-200 dark:border-slate-600 pb-2">
+                    Appointment Details
+                </h3>
+                <div class="flex items-start mb-3">
+                    <img [src]="selectedDoctor?.image"
+                        onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Dr&background=random'" alt="Doctor Avatar"
+                        class="w-10 h-10 rounded-lg object-cover mr-3 shadow-sm border border-white dark:border-slate-700">
+                    <div>
+                        <p class="font-bold text-slate-900 dark:text-white text-sm">{{ selectedDoctor?.name }}</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ selectedDoctor?.specialty }}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-4 text-sm">
+                    <div>
+                        <p
+                            class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">
+                            Date</p>
+                        <p class="font-medium text-slate-800 dark:text-slate-200">Nov 1, 2023</p>
+                    </div>
+                    <div>
+                        <p
+                            class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">
+                            Time</p>
+                        <p
+                            class="font-medium inline-flex items-center text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 px-2 py-0.5 rounded-lg">
+                            {{ selectedTimeSlot }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <button [routerLink]="['/patient/dashboard']"
+                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md shadow-primary-500/10 text-sm font-bold text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-800 focus:ring-primary-500 transition-colors">
+                    Go to Dashboard
+                </button>
+                <button
+                    class="w-full flex justify-center py-3 px-4 border border-slate-200 dark:border-slate-600 rounded-xl shadow-sm text-sm font-bold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-800 focus:ring-slate-500 transition-colors">
+                    Add to Google Calendar
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</div>

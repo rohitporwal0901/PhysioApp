@@ -1,0 +1,173 @@
+<div class="space-y-6">
+    <!-- Stats row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <app-stat-card title="Total Patients" [value]="(patients$ | async)?.length || 0" icon="users" trend="+12%"
+            trendDirection="up">
+        </app-stat-card>
+
+        <app-stat-card title="Active Therapists" [value]="(doctors$ | async)?.length || 0" icon="activity" trend="+2"
+            trendDirection="neutral">
+        </app-stat-card>
+
+        <app-stat-card title="Appointments Today" [value]="(appointments$ | async)?.length || 0" icon="calendar"
+            trend="-5%" trendDirection="down">
+        </app-stat-card>
+
+        <app-stat-card title="Revenue" value="$12,450" icon="activity-square" trend="+18%" trendDirection="up">
+        </app-stat-card>
+    </div>
+
+    <!-- Main Content Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Pending Appointments Table -->
+        <div
+            class="bg-surface dark:bg-slate-800 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 lg:col-span-2 overflow-hidden flex flex-col transition-colors">
+            <div
+                class="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center transition-colors">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white tracking-tight">Today's Appointments</h3>
+                <button
+                    class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-sm font-medium transition-colors">
+                    View all
+                </button>
+            </div>
+            <div class="flex-1 p-0 overflow-x-auto">
+
+                <ng-container *ngIf="appointments$ | async as appointments; else loadingAppts">
+                    <table class="min-w-full divide-y divide-slate-100 dark:divide-slate-700 transition-colors">
+                        <thead class="bg-slate-50 dark:bg-slate-700/50 transition-colors">
+                            <tr>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                    Patient</th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                    Time</th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                    Type</th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                    Status</th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            class="bg-white dark:bg-slate-800 divide-y divide-slate-100 dark:divide-slate-700 transition-colors">
+                            <tr *ngFor="let apt of appointments"
+                                class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img [src]="apt.patientImage"
+                                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Patient&background=random'"
+                                                alt="Patient Avatar"
+                                                class="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900/30 object-cover ring-2 ring-white dark:ring-slate-800 flex items-center justify-center text-primary-600 dark:text-primary-400 font-bold transition-colors shadow-sm">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-slate-900 dark:text-white">{{
+                                                apt.patientName }}</div>
+                                            <div class="text-xs text-slate-500 dark:text-slate-400">ID: {{ apt.id }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300 font-medium">
+                                    {{ apt.time }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+                                    {{ apt.type }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                        [ngClass]="{
+                          'bg-status-success/10 text-status-success dark:bg-status-success/20': apt.status === 'completed',
+                          'bg-status-warning/10 text-status-warning dark:bg-status-warning/20 dark:text-amber-400': apt.status === 'pending' || apt.status === 'scheduled',
+                          'bg-status-danger/10 text-status-danger dark:bg-status-danger/20 dark:text-red-400': apt.status === 'cancelled'
+                        }">
+                                        {{ apt.status | titlecase }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-container>
+
+                <ng-template #loadingAppts>
+                    <div class="p-6 space-y-4">
+                        <div class="animate-pulse flex space-x-4" *ngFor="let i of [1,2,3]">
+                            <div class="rounded-full bg-slate-200 dark:bg-slate-700 h-10 w-10"></div>
+                            <div class="flex-1 space-y-3 py-1">
+                                <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
+                                <div class="space-y-2">
+                                    <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+
+            </div>
+        </div>
+
+        <!-- Active Doctors side column -->
+        <div
+            class="bg-surface dark:bg-slate-800 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col transition-colors">
+            <div
+                class="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center transition-colors">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white tracking-tight">Available Therapists</h3>
+            </div>
+            <div class="px-6 py-4 flex-1">
+
+                <ng-container *ngIf="doctors$ | async as doctors; else loadingDocs">
+                    <ul class="space-y-4">
+                        <li *ngFor="let doc of doctors"
+                            class="flex items-center p-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-xl transition-colors cursor-pointer group">
+                            <img [src]="doc.image"
+                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Dr&background=random'" alt=""
+                                class="h-10 w-10 rounded-full object-cover ring-2 ring-white dark:ring-slate-800 shadow-sm transition-colors">
+                            <div class="ml-3 flex-1 overflow-hidden">
+                                <p
+                                    class="text-sm font-semibold text-slate-900 dark:text-white truncate group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                                    {{ doc.name }}</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 truncate">{{ doc.specialty }}</p>
+                            </div>
+                            <div>
+                                <span
+                                    class="inline-flex items-center justify-center p-1 rounded-full text-white bg-status-success dark:bg-status-success/80"
+                                    *ngIf="doc.available">
+                                    <i-lucide name="check-circle-2" class="w-4 h-4"></i-lucide>
+                                </span>
+                                <span
+                                    class="inline-flex items-center justify-center p-1 rounded-full text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-700"
+                                    *ngIf="!doc.available">
+                                    <i-lucide name="clock" class="w-4 h-4"></i-lucide>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                </ng-container>
+
+                <ng-template #loadingDocs>
+                    <div class="animate-pulse space-y-4">
+                        <div class="flex space-x-4 items-center" *ngFor="let i of [1,2,3,4]">
+                            <div class="rounded-full bg-slate-200 dark:bg-slate-700 h-10 w-10"></div>
+                            <div class="flex-1 space-y-2 py-1">
+                                <div class="h-2.5 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+                                <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+
+            </div>
+            <div
+                class="px-6 py-4 bg-slate-50 dark:bg-slate-700/30 border-t border-slate-100 dark:border-slate-700 mt-auto transition-colors">
+                <button
+                    class="w-full flex justify-center items-center px-4 py-2 border border-slate-200 dark:border-slate-600 shadow-sm text-sm font-medium rounded-xl text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-800 focus:ring-primary-500 transition-colors">
+                    View Schedule
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

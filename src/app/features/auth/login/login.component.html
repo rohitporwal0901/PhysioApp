@@ -1,0 +1,85 @@
+<div
+    class="min-h-screen bg-slate-900 flex items-center justify-center relative overflow-hidden selection:bg-primary-500 selection:text-white">
+    <!-- Decorative background elements -->
+    <div
+        class="absolute -top-40 -right-40 w-96 h-96 bg-primary-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob">
+    </div>
+    <div
+        class="absolute -bottom-40 -left-40 w-96 h-96 bg-secondary-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000">
+    </div>
+
+    <!-- Glassmorphism Card -->
+    <div
+        class="relative w-full max-w-md p-8 bg-surface/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-glass m-4 animate-fade-in-up">
+
+        <div class="text-center mb-8">
+            <div
+                class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-secondary-500 mb-4 shadow-lg shadow-primary-500/30">
+                <i-lucide name="activity" class="text-white w-8 h-8"></i-lucide>
+            </div>
+            <h1 class="text-3xl font-bold tracking-tight text-white mb-2">PhysioPro</h1>
+            <p class="text-slate-400 text-sm">Sign in to your account</p>
+        </div>
+
+        <form class="space-y-6">
+            <!-- Role Selection Pills -->
+            <div class="flex justify-center space-x-2 p-1 bg-slate-800/50 rounded-xl mb-6 backdrop-blur-md">
+                @for (role of ['Admin', 'Doctor', 'Patient']; track role) {
+                <button type="button" (click)="selectRole(role)" [class.bg-primary-500]="selectedRole === role"
+                    [class.text-white]="selectedRole === role" [class.text-slate-400]="selectedRole !== role"
+                    [class.hover:text-white]="selectedRole !== role"
+                    class="flex-1 py-2 px-3 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-slate-900">
+                    {{ role }}
+                </button>
+                }
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1" for="email">Email Address</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i-lucide name="mail" class="h-5 w-5 text-slate-500"></i-lucide>
+                        </div>
+                        <input id="email" type="email" required
+                            class="block w-full pl-10 pr-3 py-3 border border-slate-700 rounded-xl bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors sm:text-sm backdrop-blur-md"
+                            placeholder="you@example.com">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1" for="password">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i-lucide name="lock" class="h-5 w-5 text-slate-500"></i-lucide>
+                        </div>
+                        <input id="password" type="password" required
+                            class="block w-full pl-10 pr-3 py-3 border border-slate-700 rounded-xl bg-slate-800/50 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors sm:text-sm backdrop-blur-md"
+                            placeholder="••••••••">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember-me" name="remember-me" type="checkbox"
+                        class="h-4 w-4 text-primary-500 focus:ring-primary-500 border-slate-700 rounded bg-slate-800">
+                    <label for="remember-me" class="ml-2 block text-sm text-slate-300">
+                        Remember me
+                    </label>
+                </div>
+
+                <div class="text-sm">
+                    <a href="#" class="font-medium text-primary-400 hover:text-primary-300 transition-colors">
+                        Forgot password?
+                    </a>
+                </div>
+            </div>
+
+            <button type="button" (click)="login()"
+                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg shadow-primary-500/20 text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 focus:ring-offset-slate-900 transition-all active:scale-[0.98]">
+                Sign in to {{ selectedRole }}
+            </button>
+        </form>
+    </div>
+</div>

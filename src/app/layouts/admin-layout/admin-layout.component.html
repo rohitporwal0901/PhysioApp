@@ -1,0 +1,21 @@
+<div class="h-screen flex overflow-hidden bg-background dark:bg-slate-900 transition-colors duration-300">
+    <!-- Sidebar -->
+    <app-sidebar [role]="currentRole" [isMobileMenuOpen]="isMobileMenuOpen" (closeMenu)="isMobileMenuOpen = false">
+    </app-sidebar>
+
+    <!-- Main View -->
+    <div class="flex-1 flex flex-col w-0 overflow-hidden">
+        <!-- Header -->
+        <app-header [pageTitle]="pageTitle" (toggleMenu)="toggleMobileMenu()">
+        </app-header>
+
+        <!-- Content Area -->
+        <main class="flex-1 relative overflow-y-auto focus:outline-none scroll-smooth">
+            <div class="py-6">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>

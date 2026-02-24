@@ -1,0 +1,63 @@
+<header
+    class="bg-surface dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-800 lg:static lg:overflow-y-visible transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative flex justify-between xl:grid xl:grid-cols-12 lg:gap-8 h-16">
+
+            <!-- Mobile menu button -->
+            <div class="flex items-center lg:hidden">
+                <button (click)="toggleMenu.emit()" type="button"
+                    class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 dark:text-slate-500 hover:text-slate-500 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
+                    aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <i-lucide name="menu" class="block h-6 w-6"></i-lucide>
+                </button>
+            </div>
+
+            <!-- Page Title (Desktop) -->
+            <div
+                class="hidden lg:flex lg:items-center lg:col-span-4 text-xl font-bold text-slate-800 dark:text-white transition-colors">
+                {{ pageTitle }}
+            </div>
+
+            <!-- Page Title (Mobile) -->
+            <div class="flex items-center lg:hidden flex-1 justify-center sm:justify-start px-2">
+                <span class="text-lg font-bold text-slate-800 dark:text-white transition-colors">{{ pageTitle }}</span>
+            </div>
+
+            <!-- Search & Right Actions -->
+            <div class="flex-1 flex items-center justify-end xl:col-span-8 space-x-4">
+
+                <!-- Search -->
+                <div class="flex-1 min-w-0 md:max-w-md hidden sm:block">
+                    <label for="search" class="sr-only">Search</label>
+                    <div
+                        class="relative rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 overflow-hidden focus-within:ring-1 focus-within:ring-primary-500 focus-within:border-primary-500 transition-all">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+                            <i-lucide name="search" class="h-5 w-5 text-slate-400 dark:text-slate-500"></i-lucide>
+                        </div>
+                        <input id="search" name="search"
+                            class="block w-full bg-transparent py-2 pl-10 pr-3 text-sm text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-500 focus:outline-none focus:ring-0 sm:text-sm"
+                            placeholder="Search patients or doctors..." type="search">
+                    </div>
+                </div>
+
+                <!-- Dark Mode Toggle -->
+                <button (click)="toggleDarkMode()"
+                    class="bg-surface dark:bg-slate-900 p-2 lg:mr-2 rounded-full text-slate-400 dark:text-slate-500 hover:text-slate-500 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none relative transition-colors shadow-sm border border-transparent dark:border-slate-800">
+                    <span class="sr-only">Toggle dark mode</span>
+                    <i-lucide [name]="isDarkMode ? 'sun' : 'moon'" class="h-5 w-5"></i-lucide>
+                </button>
+
+                <!-- Notifications -->
+                <button
+                    class="bg-surface dark:bg-slate-900 p-2 rounded-full text-slate-400 dark:text-slate-500 hover:text-slate-500 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 shadow-sm focus:outline-none relative transition-colors">
+                    <span class="sr-only">View notifications</span>
+                    <i-lucide name="activity-square" class="h-5 w-5 lg:h-6 lg:w-6"></i-lucide>
+                    <span
+                        class="absolute top-1 lg:top-1.5 right-1 lg:right-1.5 block max-h-2 h-2.5 max-w-2 w-2.5 rounded-full bg-primary-500 ring-2 ring-white dark:ring-slate-900 transition-colors"></span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</header>

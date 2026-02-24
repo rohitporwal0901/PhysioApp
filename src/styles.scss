@@ -1,1 +1,38 @@
-/* You can add global styles to this file, and also import other style files */
+// Fix Tailwind at-rule lint warnings to avoid noise, by importing tailwindcss files correctly in SCSS,
+// or we can just leave it as is if it's fine, but since we are overriding, we will use import syntax or disable linter.
+// Better: just add the scrollbar styling to layer base.
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html:not(.dark) body {
+        @apply bg-background text-primary-900 antialiased;
+    }
+
+    html.dark body {
+        @apply bg-slate-900 text-slate-100 antialiased;
+    }
+
+    body {
+        font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-slate-100 dark:bg-slate-800;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-slate-300 dark:bg-slate-600 rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-400 dark:bg-slate-500;
+    }
+}
