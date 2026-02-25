@@ -73,67 +73,104 @@
 
   <!-- ══════════════════ HERO ══════════════════ -->
   <section class="hero-section relative pt-16 overflow-hidden">
-    <div class="hero-bg absolute inset-0"></div>
-    <div class="orb orb-1 absolute w-[600px] h-[600px] -top-64 -right-64 pointer-events-none"></div>
-    <div class="orb orb-2 absolute w-[400px] h-[400px] -bottom-40 -left-40 pointer-events-none"></div>
-    <div class="dot-grid absolute inset-0 opacity-25 pointer-events-none"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 relative z-10">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 items-center">
+    <!-- Rich layered background -->
+    <div class="hero-bg-gradient absolute inset-0"></div>
+    <div class="hero-mesh absolute inset-0 pointer-events-none"></div>
+    <div class="orb orb-1 absolute w-[700px] h-[700px] -top-48 -right-48 pointer-events-none"></div>
+    <div class="orb orb-2 absolute w-[500px] h-[500px] -bottom-40 -left-40 pointer-events-none"></div>
+    <div class="orb orb-3 absolute w-72 h-72 top-1/2 left-1/3 pointer-events-none"></div>
 
-        <!-- LEFT -->
-        <div class="hero-content">
-          <!-- Platform badge -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 lg:py-16 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-12 xl:gap-16 items-center min-h-[calc(100svh-4rem)]">
+
+        <!-- ── LEFT CONTENT ── -->
+        <div class="hero-content flex flex-col justify-center">
+
+          <!-- Platform trust badge -->
           <div
-            class="hero-badge inline-flex items-center gap-2 bg-white border border-primary-100 text-primary-700 text-xs font-semibold px-4 py-2 rounded-lg mb-5 shadow-sm">
-            <i-lucide name="shield-check" class="w-3.5 h-3.5 text-primary-500"></i-lucide>
-            India's Trusted Physiotherapy Platform
+            class="hero-badge inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-primary-200 text-primary-700 text-xs font-bold px-4 py-2.5 rounded-xl mb-6 shadow-sm w-fit">
+            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            India's #1 Physiotherapy Platform
+            <span
+              class="ml-1 bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full text-[10px] font-bold">VERIFIED</span>
           </div>
 
+          <!-- Headline -->
           <h1
-            class="text-4xl sm:text-5xl lg:text-[3.4rem] xl:text-6xl font-black font-heading text-slate-900 leading-[1.1] mb-5">
-            Find, Book &amp; Heal<br>with <span class="text-gradient-animated">Expert Physios</span>
+            class="text-[2.6rem] sm:text-5xl lg:text-[3.2rem] xl:text-[3.8rem] font-black font-heading text-slate-900 leading-[1.08] mb-5">
+            Your Path to
+            <span class="hero-highlight block">Pain-Free Living</span>
+            <span class="text-slate-600 text-3xl sm:text-4xl lg:text-[2.4rem] font-bold">starts here.</span>
           </h1>
-          <p class="text-base sm:text-lg text-slate-600 mb-8 leading-relaxed max-w-lg">
-            Connect with certified physiotherapists near you. Online &amp; in-clinic appointments for sports injuries,
-            back pain, post-surgery rehab and more.
+
+          <p class="text-base sm:text-[1.05rem] text-slate-600 mb-8 leading-relaxed max-w-md">
+            Book certified physiotherapists for <strong class="text-slate-800 font-semibold">in-clinic, online or home
+              visits</strong>.
+            Personalised treatment. Expert care. Real results.
           </p>
 
-          <!-- ── Search / Quick Book Widget ── -->
+          <!-- Search Widget -->
           <div
-            class="search-widget bg-white rounded-2xl shadow-lg shadow-slate-200/70 border border-slate-100 p-2 flex flex-col sm:flex-row gap-2 mb-8">
-            <div class="flex items-center gap-2 flex-1 px-3 py-2">
-              <i-lucide name="search" class="w-4 h-4 text-slate-400 flex-shrink-0"></i-lucide>
-              <input [(ngModel)]="searchQuery" (keyup.enter)="searchAndBook()" type="text"
-                placeholder="Search condition, e.g. Back Pain…"
-                class="flex-1 text-sm text-slate-700 bg-transparent placeholder-slate-400 outline-none min-w-0">
+            class="search-widget bg-white rounded-2xl shadow-xl shadow-primary-100/60 border border-slate-200/80 mb-6 overflow-hidden">
+            <div class="flex flex-col sm:flex-row">
+              <div class="flex items-center gap-3 flex-1 px-4 py-3.5">
+                <i-lucide name="search" class="w-4 h-4 text-slate-400 flex-shrink-0"></i-lucide>
+                <input [(ngModel)]="searchQuery" (keyup.enter)="searchAndBook()" type="text"
+                  placeholder="Condition, e.g. Back Pain, Knee Injury…"
+                  class="flex-1 text-sm text-slate-700 bg-transparent placeholder-slate-400 outline-none min-w-0">
+              </div>
+              <div class="hidden sm:flex items-center gap-2 px-4 py-3.5 border-l border-slate-100">
+                <i-lucide name="map-pin" class="w-4 h-4 text-primary-400 flex-shrink-0"></i-lucide>
+                <span class="text-sm text-slate-600 font-medium">Mumbai</span>
+                <i-lucide name="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i-lucide>
+              </div>
+              <button (click)="searchAndBook()"
+                class="btn-primary flex items-center justify-center gap-2 px-6 py-3.5 text-white font-bold text-sm whitespace-nowrap">
+                <i-lucide name="search" class="w-4 h-4"></i-lucide>
+                Find a Physio
+              </button>
             </div>
-            <div class="flex items-center gap-2 px-3 py-2 border-t sm:border-t-0 sm:border-l border-slate-100">
-              <i-lucide name="map-pin" class="w-4 h-4 text-slate-400 flex-shrink-0"></i-lucide>
-              <span class="text-sm text-slate-500">Mumbai</span>
-              <i-lucide name="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i-lucide>
-            </div>
-            <button (click)="searchAndBook()"
-              class="btn-primary flex items-center justify-center gap-1.5 px-5 py-3 rounded-xl text-white font-bold text-sm whitespace-nowrap">
-              <i-lucide name="search" class="w-4 h-4"></i-lucide>
-              Find a Physio
-            </button>
           </div>
 
-          <!-- Condition chips -->
+          <!-- Popular conditions chips -->
           <div class="flex flex-wrap gap-2 mb-8">
-            <span class="text-xs text-slate-500 font-medium self-center mr-1">Popular:</span>
-            @for (c of conditions.slice(0, 6); track c.label) {
+            <span class="text-xs text-slate-500 font-semibold self-center">Trending: </span>
+            @for (c of conditions.slice(0, 5); track c.label) {
             <button (click)="bookCondition(c.label)"
-              class="condition-chip text-xs font-medium px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 hover:bg-primary-50 hover:text-primary-700 hover:border-primary-200 border border-transparent transition-all duration-200">
+              class="condition-chip inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 shadow-xs transition-all duration-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary-400"></span>
               {{ c.label }}
             </button>
             }
           </div>
 
-          <!-- Trust strip -->
-          <div class="flex flex-wrap items-center gap-5">
-            @for (badge of trustBadges; track badge.label) {
+          <!-- Social proof row -->
+          <div class="flex flex-wrap items-center gap-6 pt-5 border-t border-slate-200/60">
+            <!-- Avatar stack -->
+            <div class="flex items-center gap-2">
+              <div class="flex -space-x-2">
+                <img src="https://randomuser.me/api/portraits/women/32.jpg"
+                  class="w-8 h-8 rounded-full ring-2 ring-white object-cover" alt="">
+                <img src="https://randomuser.me/api/portraits/men/45.jpg"
+                  class="w-8 h-8 rounded-full ring-2 ring-white object-cover" alt="">
+                <img src="https://randomuser.me/api/portraits/women/68.jpg"
+                  class="w-8 h-8 rounded-full ring-2 ring-white object-cover" alt="">
+                <div
+                  class="w-8 h-8 rounded-full ring-2 ring-white bg-primary-500 flex items-center justify-center text-white text-[10px] font-bold">
+                  +5K</div>
+              </div>
+              <div>
+                <div class="flex items-center gap-0.5">
+                  @for (s of [1,2,3,4,5]; track s) {
+                  <i-lucide name="star" class="w-3 h-3 text-amber-400" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
+                  }
+                </div>
+                <p class="text-[11px] text-slate-500">5,000+ happy patients</p>
+              </div>
+            </div>
+
+            @for (badge of trustBadges.slice(0, 2); track badge.label) {
             <div class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
               <i-lucide [name]="badge.icon" class="w-4 h-4 text-primary-500"></i-lucide>
               {{ badge.label }}
@@ -142,52 +179,141 @@
           </div>
         </div>
 
-        <!-- RIGHT — Hero visual -->
-        <div class="hero-visual relative hidden lg:flex items-center justify-center">
-          <!-- Image -->
-          <div class="relative w-[400px] xl:w-[450px] h-[500px] xl:h-[540px]">
-            <div
-              class="absolute inset-0 bg-gradient-to-br from-primary-400 to-primary-700 rounded-[3rem] rotate-4 shadow-glow-lg">
-            </div>
-            <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?q=80&w=2831&auto=format&fit=crop"
-              alt="Physiotherapy session" loading="eager"
-              class="relative w-full h-full object-cover object-center rounded-[3rem] shadow-2xl z-10">
-            <div class="absolute inset-0 rounded-[3rem] bg-gradient-to-t from-slate-900/30 to-transparent z-20"></div>
-          </div>
+        <!-- ── RIGHT — Platform Visual Panel ── -->
+        <div class="hero-visual relative hidden lg:block">
 
-          <!-- Floating: Next appointment -->
-          <div
-            class="floating-card absolute -left-12 top-14 bg-white rounded-2xl shadow-card border border-slate-100 p-4 z-30 animate-float w-52">
-            <div class="flex items-center gap-2 mb-2">
-              <div class="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center">
-                <i-lucide name="calendar-check" class="w-4 h-4 text-primary-600"></i-lucide>
+          <!-- Background card shape -->
+          <div class="hero-panel relative ml-auto w-full max-w-[480px]">
+
+            <!-- Main image with frame -->
+            <div class="hero-image-frame relative">
+              <!-- Glow ring -->
+              <div
+                class="absolute inset-[-12px] bg-gradient-to-br from-primary-300/40 to-secondary-400/30 rounded-[3.5rem] blur-md">
               </div>
-              <span class="text-xs font-semibold text-slate-500">Next Available</span>
-            </div>
-            <p class="text-sm font-bold text-slate-800">Today, 4:30 PM</p>
-            <p class="text-xs text-primary-600 font-medium">Dr. Anita Kapoor</p>
-          </div>
+              <!-- Rotated accent card behind -->
+              <div
+                class="absolute inset-0 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-[3rem] rotate-[4deg] scale-[0.98] opacity-70 shadow-lg">
+              </div>
 
-          <!-- Floating: Rating -->
-          <div
-            class="floating-card absolute -right-8 bottom-24 bg-white rounded-2xl shadow-card border border-slate-100 p-4 animate-float animation-delay-2000 z-30">
-            <div class="flex items-center gap-0.5 mb-1">
-              @for (s of [1,2,3,4,5]; track s) {
-              <i-lucide name="star" class="w-3.5 h-3.5 text-amber-400" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
-              }
-            </div>
-            <p class="text-sm font-bold text-slate-800">4.9 / 5.0</p>
-            <p class="text-xs text-slate-500">500+ Verified Reviews</p>
-          </div>
+              <!-- Slideshow container -->
+              <div
+                class="hero-slideshow relative w-full h-[420px] xl:h-[480px] rounded-[3rem] overflow-hidden shadow-2xl z-10">
+                @for (img of heroImages; track img.url; let i = $index) {
+                <div class="hero-slide absolute inset-0" [class.hero-slide--active]="i === activeHeroImage">
+                  <img [src]="img.url" [alt]="img.label" class="w-full h-full object-cover object-center">
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-900/65 via-slate-900/10 to-transparent">
+                  </div>
+                </div>
+                }
 
-          <!-- Floating: Sessions -->
-          <div
-            class="floating-card absolute -right-6 top-16 bg-gradient-to-br from-primary-500 to-primary-700 text-white rounded-2xl shadow-glow p-4 animate-float animation-delay-4000 z-30">
-            <i-lucide name="trending-up" class="w-5 h-5 mb-1 opacity-90"></i-lucide>
-            <p class="text-xs font-semibold opacity-80">Sessions Done</p>
-            <p class="text-xl font-black">10K+</p>
+                <!-- Label pill top-left -->
+                <div class="absolute top-5 left-5 z-30">
+                  <div
+                    class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold px-3 py-2 rounded-xl">
+                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse flex-shrink-0"></span>
+                    {{ heroImages[activeHeroImage].label }}
+                  </div>
+                </div>
+
+                <!-- Counter top-right -->
+                <div
+                  class="absolute top-5 right-5 z-30 bg-black/25 backdrop-blur-sm text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg">
+                  {{ activeHeroImage + 1 }} / {{ heroImages.length }}
+                </div>
+
+                <!-- Caption + dots at bottom -->
+                <div class="absolute bottom-0 left-0 right-0 z-30 p-4">
+                  <div
+                    class="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-2xl px-4 py-3 border border-white/15 mb-3">
+                    <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                      <i-lucide name="heart-pulse" class="w-4 h-4 text-white"></i-lucide>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-white font-bold text-sm">{{ heroImages[activeHeroImage].label }}</p>
+                      <p class="text-white/65 text-[11px] truncate">{{ heroImages[activeHeroImage].caption }}</p>
+                    </div>
+                  </div>
+                  <!-- Dot indicators -->
+                  <div class="flex items-center justify-center gap-2">
+                    @for (img of heroImages; track img.url; let i = $index) {
+                    <button (click)="goToHeroImage(i)" [attr.aria-label]="img.label" class="hero-dot"
+                      [class.hero-dot--active]="i === activeHeroImage"></button>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── Floating card 1: Doctor available ── -->
+            <div
+              class="floating-card absolute -left-14 top-10 bg-white rounded-2xl shadow-xl border border-slate-100 p-4 z-40 w-56 animate-float">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="relative">
+                  <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-10 h-10 rounded-xl object-cover"
+                    alt="Doctor">
+                  <span
+                    class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full"></span>
+                </div>
+                <div>
+                  <p class="text-[11px] text-slate-500 font-medium">Available Now</p>
+                  <p class="text-sm font-bold text-slate-800">Dr. Anita Kapoor</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-500">Sports Physio · 8 yrs</span>
+                <span class="bg-primary-50 text-primary-700 font-bold px-2 py-0.5 rounded-full">Book</span>
+              </div>
+            </div>
+
+            <!-- ── Floating card 2: Recovery progress ── -->
+            <div
+              class="floating-card absolute -right-12 top-36 bg-white rounded-2xl shadow-xl border border-slate-100 p-4 z-40 w-52 animate-float animation-delay-2000">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center">
+                  <i-lucide name="trending-up" class="w-4 h-4 text-green-600"></i-lucide>
+                </div>
+                <p class="text-xs font-bold text-slate-700">Recovery Progress</p>
+              </div>
+              <!-- Progress bar -->
+              <div class="h-2 bg-slate-100 rounded-full mb-2 overflow-hidden">
+                <div
+                  class="h-full w-[78%] bg-gradient-to-r from-primary-400 to-green-500 rounded-full progress-animate">
+                </div>
+              </div>
+              <div class="flex justify-between text-[11px]">
+                <span class="text-slate-500">Week 4 of 6</span>
+                <span class="font-bold text-primary-600">78% complete</span>
+              </div>
+            </div>
+
+            <!-- ── Floating card 3: Sessions stat ── -->
+            <div
+              class="floating-card absolute -right-10 bottom-28 bg-gradient-to-br from-primary-500 to-primary-700 text-white rounded-2xl shadow-glow p-4 z-40 animate-float animation-delay-4000">
+              <div class="flex items-center gap-2 mb-1">
+                <i-lucide name="activity" class="w-5 h-5 opacity-90"></i-lucide>
+                <p class="text-xs font-semibold opacity-80">This Month</p>
+              </div>
+              <p class="text-2xl font-black">680</p>
+              <p class="text-[11px] opacity-70">Sessions completed</p>
+            </div>
+
+            <!-- ── Floating card 4: Rating ── -->
+            <div
+              class="floating-card absolute -left-10 bottom-16 bg-white rounded-2xl shadow-xl border border-slate-100 px-4 py-3 z-40 animate-float animation-delay-1000">
+              <div class="flex items-center gap-0.5 mb-0.5">
+                @for (s of [1,2,3,4,5]; track s) {
+                <i-lucide name="star" class="w-3.5 h-3.5 text-amber-400" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
+                }
+              </div>
+              <p class="text-sm font-black text-slate-800">4.9 <span class="text-xs font-normal text-slate-400">/
+                  5.0</span></p>
+              <p class="text-[11px] text-slate-500">500+ reviews</p>
+            </div>
+
           </div>
         </div>
+
       </div>
     </div>
 

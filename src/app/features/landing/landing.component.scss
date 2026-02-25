@@ -192,13 +192,24 @@ nav {
 /* ── Hero section ── */
 .hero-section {
   min-height: 100svh;
-  background: linear-gradient(140deg, #f0faf9 0%, #edfaf8 35%, #f0fff4 65%, #f0f9ff 100%);
+  background: #f0faf9;
+}
+
+.hero-bg-gradient {
+  background:
+    linear-gradient(140deg, #edfaf8 0%, #f0faf9 30%, #f0fff4 60%, #e0f2fe 100%);
 }
 
 .hero-bg {
   background:
     radial-gradient(ellipse at 70% 10%, rgba(15, 155, 142, 0.1) 0%, transparent 55%),
     radial-gradient(ellipse at 15% 85%, rgba(16, 185, 129, 0.07) 0%, transparent 50%);
+}
+
+.hero-mesh {
+  background-image:
+    radial-gradient(circle at 80% 20%, rgba(15, 155, 142, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 10% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
 }
 
 /* Animated orbs */
@@ -209,12 +220,67 @@ nav {
 }
 
 .orb-1 {
-  background: radial-gradient(circle, rgba(15, 155, 142, 0.18), rgba(16, 185, 129, 0.08));
+  background: radial-gradient(circle, rgba(15, 155, 142, 0.22), rgba(16, 185, 129, 0.10));
 }
 
 .orb-2 {
-  background: radial-gradient(circle, rgba(52, 211, 153, 0.14), rgba(14, 165, 233, 0.07));
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.15), rgba(14, 165, 233, 0.08));
   animation-delay: -5s;
+}
+
+.orb-3 {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.10), transparent);
+  animation-delay: -8s;
+}
+
+/* ── Hero Image Slideshow ── */
+.hero-slideshow {
+  position: relative;
+}
+
+.hero-slide {
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+
+  img {
+    transition: transform 4s ease-out;
+  }
+
+  &--active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: all;
+    z-index: 10;
+
+    img {
+      transform: scale(1.04);
+      /* subtle Ken Burns zoom while visible */
+    }
+  }
+}
+
+/* Dot indicators */
+.hero-dot {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &--active {
+    width: 28px;
+    background: #ffffff;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  }
+
+  &:hover:not(.hero-dot--active) {
+    background: rgba(255, 255, 255, 0.7);
+  }
 }
 
 @keyframes orbDrift {
@@ -256,6 +322,17 @@ nav {
 
 .hero-badge {
   animation: popIn 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+}
+
+/* Hero headline highlight — large animated gradient text */
+.hero-highlight {
+  background: linear-gradient(125deg, #0F9B8E 0%, #10B981 35%, #34D399 60%, #0ea5e9 85%, #0F9B8E 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 6s ease-in-out infinite;
+  display: block;
 }
 
 @keyframes slideFade {
@@ -300,6 +377,21 @@ nav {
 
   input:focus {
     outline: none;
+  }
+}
+
+/* Progress bar fill animation */
+.progress-animate {
+  animation: progressFill 1.8s cubic-bezier(0.4, 0, 0.2, 1) 1.2s both;
+}
+
+@keyframes progressFill {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 78%;
   }
 }
 
@@ -604,6 +696,10 @@ nav {
 }
 
 /* ── Animation delays ── */
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
 .animation-delay-2000 {
   animation-delay: 2s;
 }

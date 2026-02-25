@@ -30,6 +30,37 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     private testimonialInterval: any;
     openFaqIndex: number | null = null;
 
+    // Hero image slideshow
+    activeHeroImage = 0;
+    private heroImageInterval: any;
+    heroImages = [
+        {
+            url: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=2070&auto=format&fit=crop',
+            label: 'Manual Therapy',
+            caption: 'Expert hands-on physiotherapy treatment'
+        },
+        {
+            url: 'https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=2070&auto=format&fit=crop',
+            label: 'Rehabilitation',
+            caption: 'Guided recovery & mobility exercises'
+        },
+        {
+            url: 'https://images.unsplash.com/photo-1576765607924-3f7b8410a787?q=80&w=2069&auto=format&fit=crop',
+            label: 'Therapeutic Massage',
+            caption: 'Targeted soft-tissue & deep-tissue therapy'
+        },
+        {
+            url: 'https://images.unsplash.com/photo-1518611012118-696072a63b2a?q=80&w=2070&auto=format&fit=crop',
+            label: 'Exercise Therapy',
+            caption: 'Personalised active rehabilitation plans'
+        },
+        {
+            url: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?q=80&w=2070&auto=format&fit=crop',
+            label: 'Post-Surgical Care',
+            caption: 'Structured recovery after orthopaedic surgery'
+        },
+    ];
+
     // Animated counters
     statCounters = [
         { label: 'Patients Treated', numericValue: 5000, current: 0, suffix: '+', animated: false },
@@ -130,6 +161,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit() {
         this.doctors$ = this.api.getDoctors();
         this.startTestimonialRotation();
+        this.startHeroImageRotation();
     }
 
     ngAfterViewInit() {
@@ -139,6 +171,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnDestroy() {
         this.observers.forEach(o => o.disconnect());
         clearInterval(this.testimonialInterval);
+        clearInterval(this.heroImageInterval);
     }
 
     private setupScrollAnimations() {
@@ -183,6 +216,19 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             this.activeTestimonial = (this.activeTestimonial + 1) % this.testimonials.length;
             this.cdr.markForCheck();
         }, 4500);
+    }
+
+    startHeroImageRotation() {
+        this.heroImageInterval = setInterval(() => {
+            this.activeHeroImage = (this.activeHeroImage + 1) % this.heroImages.length;
+            this.cdr.markForCheck();
+        }, 3800);
+    }
+
+    goToHeroImage(i: number) {
+        this.activeHeroImage = i;
+        clearInterval(this.heroImageInterval);
+        this.startHeroImageRotation();
     }
 
     setTestimonial(i: number) {
