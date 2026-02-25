@@ -4,12 +4,14 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import {
   LucideAngularModule,
   Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
-  ArrowRight, Clock, ChevronRight, Menu, X, Filter, Search, Plus, Moon, Sun,
+  ArrowRight, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
   PlaySquare, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
   FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2,
   Heart, Zap, Shield, MapPin, Phone, GraduationCap, Award,
   ClipboardList, HeartPulse, CalendarCheck, CalendarPlus,
-  ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff
+  ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff,
+  ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
+  TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone
 } from 'lucide-angular';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -28,12 +30,14 @@ export const appConfig: ApplicationConfig = {
     UserTrackingService,
     importProvidersFrom(LucideAngularModule.pick({
       Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
-      ArrowRight, Clock, ChevronRight, Menu, X, Filter, Search, Plus, Moon, Sun,
+      ArrowRight, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
       PlaySquare, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
       FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2,
       Heart, Zap, Shield, MapPin, Phone, GraduationCap, Award,
       ClipboardList, HeartPulse, CalendarCheck, CalendarPlus,
-      ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff
+      ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff,
+      ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
+      TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone
     }))
   ]
 };
