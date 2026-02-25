@@ -1,88 +1,250 @@
-<div
-    class="min-h-screen relative flex items-center justify-center overflow-hidden selection:bg-primary-500 selection:text-white bg-slate-100 dark:bg-darkbg">
+<div class="min-h-screen flex bg-slate-50 dark:bg-slate-950 overflow-hidden">
 
-    <!-- Background Image with Blur -->
-    <div class="absolute inset-0 z-0">
-        <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=2940&auto=format&fit=crop"
-            alt="Clinic Background" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-white/40 dark:bg-slate-900/60 backdrop-blur-sm"></div>
-    </div>
+    <!-- ═══════════════════════════════════════════
+       LEFT PANEL — Role Visual
+  ═══════════════════════════════════════════ -->
+    <div class="hidden lg:flex lg:w-[52%] relative flex-col overflow-hidden transition-all duration-700">
 
-    <!-- Main Container -->
-    <div
-        class="relative z-10 w-full max-w-4xl max-h-[700px] h-[90vh] flex rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up">
+        <!-- Background image that changes per role -->
+        <div class="absolute inset-0">
+            <img [src]="currentConfig.image" alt="Role Visual"
+                class="w-full h-full object-cover transition-all duration-700">
+            <!-- Gradient overlay -->
+            <div class="absolute inset-0 bg-gradient-to-br" [ngClass]="selectedRole === 'Admin' ? 'from-primary-900/90 via-primary-800/75 to-primary-600/60'
+                 : selectedRole === 'Doctor' ? 'from-slate-900/90 via-secondary-900/75 to-secondary-700/60'
+                 : 'from-slate-900/90 via-accent-900/75 to-accent-700/60'">
+            </div>
+        </div>
 
+        <!-- Content over image -->
+        <div class="relative z-10 flex flex-col h-full p-10 xl:p-14">
 
+            <!-- Logo -->
+            <div class="flex items-center gap-3 mb-auto">
+                <div
+                    class="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center shadow-lg">
+                    <i-lucide name="activity" class="w-6 h-6 text-white"></i-lucide>
+                </div>
+                <span class="text-2xl font-black text-white font-heading tracking-tight">
+                    Physio<span class="text-white/70">Pro</span>
+                </span>
+            </div>
 
-        <!-- Login Form Panel -->
-        <div
-            class="flex-1 right-panel p-8 md:p-12 flex flex-col justify-center items-center relative bg-white/70 dark:bg-slate-800/80 backdrop-blur-2xl">
-            <!-- Decorative Elements inside Form Side -->
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-primary-500/20 rounded-full blur-2xl"></div>
+            <!-- Main Role Content -->
+            <div class="flex-1 flex flex-col justify-center py-12">
 
-            <div class="w-full max-w-sm relative z-10">
-                <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-slate-800 dark:text-white mb-2 font-heading">
-                        <span class="text-primary-500">PhysioCare</span> Login
-                    </h1>
+                <!-- Role badge -->
+                <div
+                    class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 text-white text-sm font-bold px-4 py-2 rounded-full mb-6 w-fit">
+                    <i-lucide [name]="currentConfig.icon" class="w-4 h-4"></i-lucide>
+                    {{ currentConfig.tagline }}
                 </div>
 
-                <!-- Role Selection -->
-                <div
-                    class="flex justify-center space-x-2 p-1 bg-white/50 dark:bg-slate-900/50 rounded-xl mb-8 backdrop-blur-md shadow-sm border border-white/50 dark:border-slate-700/50">
-                    @for (role of ['Admin', 'Doctor', 'Patient']; track role) {
-                    <button type="button" (click)="selectRole(role)" [class.bg-primary-500]="selectedRole === role"
-                        [class.text-white]="selectedRole === role" [class.shadow-md]="selectedRole === role"
-                        [class.text-slate-600]="selectedRole !== role"
-                        [class.dark:text-slate-400]="selectedRole !== role"
-                        class="flex-1 py-2 px-3 text-sm font-medium rounded-lg transition-all duration-300 focus:outline-none">
-                        {{ role }}
-                    </button>
+                <h2 class="text-4xl xl:text-5xl font-black text-white leading-tight mb-4 font-heading">
+                    Everything You<br>Need, In One Place.
+                </h2>
+                <p class="text-white/70 text-base leading-relaxed mb-10 max-w-md">
+                    {{ currentConfig.description }}
+                </p>
+
+                <!-- Feature list -->
+                <div class="space-y-4">
+                    @for (feature of currentConfig.features; track feature.text) {
+                    <div class="flex items-center gap-3 text-white/90 group">
+                        <div
+                            class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center flex-shrink-0 group-hover:bg-white/25 transition-colors">
+                            <i-lucide [name]="feature.icon" class="w-4 h-4 text-white"></i-lucide>
+                        </div>
+                        <span class="text-sm font-semibold">{{ feature.text }}</span>
+                    </div>
                     }
                 </div>
+            </div>
 
-                <form class="space-y-5">
-                    <div>
-                        <input id="email" type="email" required
-                            class="block w-full px-4 py-3.5 border border-white/60 dark:border-slate-700/60 rounded-xl bg-white/60 dark:bg-slate-900/60 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all shadow-sm backdrop-blur-sm"
-                            placeholder="Email">
-                    </div>
-
-                    <div>
-                        <input id="password" type="password" required
-                            class="block w-full px-4 py-3.5 border border-white/60 dark:border-slate-700/60 rounded-xl bg-white/60 dark:bg-slate-900/60 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all shadow-sm backdrop-blur-sm"
-                            placeholder="Password">
-                    </div>
-
-                    <div class="flex items-center justify-between text-sm py-1">
-                        <a href="#"
-                            class="font-medium text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                            Forgot Password?
-                        </a>
-                    </div>
-
-                    <button type="button" (click)="login()"
-                        class="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-full shadow-lg shadow-primary-500/30 text-base font-semibold text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 focus:ring-offset-white dark:focus:ring-offset-slate-900 transition-all active:scale-[0.98]">
-                        LOGIN
-                    </button>
-
-                    <!-- Bottom Action Buttons -->
-                    <div class="flex justify-center space-x-4 mt-8 pt-4">
-                        <button
-                            class="w-12 h-12 rounded-full border border-primary-500/20 bg-white/50 text-primary-500 hover:bg-primary-50 dark:bg-slate-800/50 dark:border-slate-700 dark:hover:bg-slate-700 flex items-center justify-center transition-colors shadow-sm">
-                            <i-lucide name="camera" class="w-5 h-5"></i-lucide>
-                        </button>
-                        <button
-                            class="w-12 h-12 rounded-full border border-secondary-500/20 bg-white/50 text-secondary-500 hover:bg-secondary-50 dark:bg-slate-800/50 dark:border-slate-700 dark:hover:bg-slate-700 flex items-center justify-center transition-colors shadow-sm">
-                            <i-lucide name="refresh-cw" class="w-5 h-5"></i-lucide>
-                        </button>
-                        <button
-                            class="w-12 h-12 rounded-full border border-primary-500/20 bg-white/50 text-primary-500 hover:bg-primary-50 dark:bg-slate-800/50 dark:border-slate-700 dark:hover:bg-slate-700 flex items-center justify-center transition-colors shadow-sm">
-                            <i-lucide name="fingerprint" class="w-5 h-5"></i-lucide>
-                        </button>
-                    </div>
-                </form>
+            <!-- Bottom trust info -->
+            <div class="flex items-center gap-4 text-white/50 text-xs font-medium">
+                <span>500+ Patients Served</span>
+                <span class="w-1 h-1 bg-white/30 rounded-full"></span>
+                <span>15+ Specialists</span>
+                <span class="w-1 h-1 bg-white/30 rounded-full"></span>
+                <span>98% Satisfaction</span>
             </div>
         </div>
     </div>
+
+    <!-- ═══════════════════════════════════════════
+       RIGHT PANEL — Login Form
+  ═══════════════════════════════════════════ -->
+    <div
+        class="flex-1 flex flex-col items-center justify-center px-6 sm:px-10 py-12 bg-white dark:bg-slate-900 relative overflow-auto">
+
+        <!-- Subtle background decoration -->
+        <div
+            class="absolute top-0 right-0 w-72 h-72 bg-primary-50 dark:bg-primary-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none">
+        </div>
+        <div
+            class="absolute bottom-0 left-0 w-56 h-56 bg-secondary-50 dark:bg-secondary-900/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none">
+        </div>
+
+        <div class="w-full max-w-md relative z-10">
+
+            <!-- Mobile logo (shown only on small screens) -->
+            <div class="flex items-center gap-2.5 mb-10 lg:hidden">
+                <div
+                    class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-md">
+                    <i-lucide name="activity" class="w-5 h-5 text-white"></i-lucide>
+                </div>
+                <span class="text-xl font-bold text-slate-800 dark:text-white font-heading">Physio<span
+                        class="text-primary-500">Pro</span></span>
+            </div>
+
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-black text-slate-900 dark:text-white font-heading mb-2">
+                    Welcome back
+                    <span class="inline-block animate-wave">👋</span>
+                </h1>
+                <p class="text-slate-500 dark:text-slate-400 text-sm">
+                    Select your role and sign in to continue.
+                </p>
+            </div>
+
+            <!-- ── ROLE SELECTOR ── -->
+            <div class="mb-8">
+                <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Sign in
+                    as</p>
+                <div class="grid grid-cols-3 gap-3">
+                    @for (role of ['Admin', 'Doctor', 'Patient']; track role) {
+                    <button type="button" (click)="selectRole(role)"
+                        class="relative flex flex-col items-center gap-2 py-4 px-2 rounded-2xl border-2 transition-all duration-300 group"
+                        [ngClass]="selectedRole === role
+              ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 shadow-md shadow-primary-500/15'
+              : 'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-primary-200 dark:hover:border-slate-600'">
+
+                        <!-- Active indicator -->
+                        <div *ngIf="selectedRole === role"
+                            class="absolute top-2 right-2 w-2 h-2 bg-primary-500 rounded-full"></div>
+
+                        <!-- Icon -->
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center transition-colors"
+                            [ngClass]="selectedRole === role
+                ? 'bg-primary-500 text-white shadow-md shadow-primary-500/30'
+                : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 group-hover:bg-primary-50 group-hover:text-primary-500'">
+                            <i-lucide [name]="roleConfigs[role].icon" class="w-5 h-5"></i-lucide>
+                        </div>
+
+                        <span class="text-xs font-bold transition-colors"
+                            [ngClass]="selectedRole === role ? 'text-primary-600 dark:text-primary-400' : 'text-slate-500 dark:text-slate-400'">
+                            {{ role }}
+                        </span>
+                    </button>
+                    }
+                </div>
+            </div>
+
+            <!-- ── ROLE PREVIEW STRIP (mobile only) ── -->
+            <div
+                class="lg:hidden mb-6 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                <p class="text-xs font-bold text-primary-600 dark:text-primary-400 mb-2">{{ currentConfig.tagline }}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{{ currentConfig.description }}
+                </p>
+            </div>
+
+            <!-- ── LOGIN FORM ── -->
+            <form (ngSubmit)="login()" class="space-y-5">
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                        Email Address
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                            <i-lucide name="mail" class="w-4 h-4 text-slate-400"></i-lucide>
+                        </div>
+                        <input id="email" type="email" [(ngModel)]="email" name="email" required
+                            placeholder="Enter your email"
+                            class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent focus:bg-white dark:focus:bg-slate-800 transition-all text-sm">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label for="password"
+                            class="text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
+                        <a href="#"
+                            class="text-xs font-semibold text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Forgot
+                            password?</a>
+                    </div>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                            <i-lucide name="lock" class="w-4 h-4 text-slate-400"></i-lucide>
+                        </div>
+                        <input id="password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password"
+                            name="password" required placeholder="Enter your password"
+                            class="w-full pl-11 pr-12 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent focus:bg-white dark:focus:bg-slate-800 transition-all text-sm">
+                        <button type="button" (click)="togglePassword()"
+                            class="absolute inset-y-0 right-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
+                            <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" class="w-4 h-4"></i-lucide>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Login Button -->
+                <button type="submit" [disabled]="isLoading"
+                    class="w-full flex justify-center items-center gap-3 py-4 px-6 rounded-2xl font-bold text-white shadow-lg transition-all duration-300 active:scale-[0.98]"
+                    [ngClass]="isLoading
+            ? 'bg-primary-400 cursor-not-allowed shadow-primary-400/20'
+            : 'bg-primary-500 hover:bg-primary-600 shadow-primary-500/30 hover:shadow-primary-500/40 hover:-translate-y-0.5'">
+
+                    <!-- Spinner -->
+                    <svg *ngIf="isLoading" class="animate-spin w-5 h-5 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
+                    </svg>
+
+                    <i-lucide *ngIf="!isLoading" name="arrow-right" class="w-5 h-5"></i-lucide>
+                    {{ isLoading ? 'Signing In...' : 'Sign In as ' + selectedRole }}
+                </button>
+            </form>
+
+            <!-- ── QUICK ACCESS DIVIDER ── -->
+            <div class="flex items-center gap-3 my-6">
+                <div class="flex-1 h-px bg-slate-100 dark:bg-slate-700"></div>
+                <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">quick access</span>
+                <div class="flex-1 h-px bg-slate-100 dark:bg-slate-700"></div>
+            </div>
+
+            <!-- ── QUICK LOGIN ACTIONS ── -->
+            <div class="flex gap-3">
+                <button (click)="login()"
+                    class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-primary-200 dark:hover:border-slate-600 transition-all shadow-sm">
+                    <i-lucide name="fingerprint" class="w-4 h-4 text-primary-500"></i-lucide>
+                    Biometric
+                </button>
+                <button
+                    class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-primary-200 dark:hover:border-slate-600 transition-all shadow-sm">
+                    <i-lucide name="camera" class="w-4 h-4 text-secondary-500"></i-lucide>
+                    Face ID
+                </button>
+                <button
+                    class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-primary-200 dark:hover:border-slate-600 transition-all shadow-sm">
+                    <i-lucide name="refresh-cw" class="w-4 h-4 text-accent-500"></i-lucide>
+                    OTP Login
+                </button>
+            </div>
+
+            <!-- Footer note -->
+            <p class="text-center text-xs text-slate-400 dark:text-slate-600 mt-8">
+                Not a registered patient yet?
+                <a routerLink="/" class="text-primary-500 font-semibold hover:underline ml-1">Find a Doctor</a>
+            </p>
+
+        </div>
+    </div>
+
 </div>

@@ -1,0 +1,27 @@
+/* Landing page specific styles */
+.landing-page {
+  scroll-behavior: smooth;
+}
+
+/* Gradient text utility */
+.text-gradient {
+  background: linear-gradient(135deg, #0F9B8E, #10B981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Service icon gradient classes */
+.from-primary-400 { --tw-gradient-from: #3cc0b0; }
+.to-primary-600   { --tw-gradient-to: #0d8679; }
+.from-rose-400    { --tw-gradient-from: #fb7185; }
+.to-rose-600      { --tw-gradient-to: #e11d48; }
+.from-amber-400   { --tw-gradient-from: #fbbf24; }
+.to-amber-600     { --tw-gradient-to: #d97706; }
+.from-violet-400  { --tw-gradient-from: #a78bfa; }
+.to-violet-600    { --tw-gradient-to: #7c3aed; }
+
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}

@@ -1,0 +1,351 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-primary-50">
+
+    <!-- Navbar -->
+    <nav class="bg-white/90 backdrop-blur-xl border-b border-slate-100 shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <button (click)="goBack()"
+                class="flex items-center gap-2 text-slate-600 hover:text-primary-600 font-semibold transition-colors group">
+                <i-lucide name="chevron-left"
+                    class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i-lucide>
+                Back to Doctors
+            </button>
+            <div class="flex items-center gap-2">
+                <div
+                    class="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
+                    <i-lucide name="activity" class="w-4 h-4 text-white"></i-lucide>
+                </div>
+                <span class="text-lg font-bold text-slate-800 font-heading">Physio<span
+                        class="text-primary-500">Pro</span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12" *ngIf="doctor">
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- ── LEFT: Doctor Card ── -->
+            <div class="lg:col-span-1">
+                <div
+                    class="bg-white rounded-[2rem] border border-slate-100 shadow-card overflow-hidden sticky top-24 animate-fade-in-up">
+
+                    <!-- Doctor photo -->
+                    <div class="relative h-64 bg-gradient-to-br from-primary-400 to-primary-600">
+                        <img [src]="doctor.image"
+                            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Doctor&background=0F9B8E&color=fff&size=300'"
+                            alt="Doctor" class="w-full h-full object-cover object-top">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <span class="px-3 py-1.5 rounded-full text-xs font-bold shadow-sm"
+                                [ngClass]="doctor.available ? 'bg-status-success text-white' : 'bg-slate-200 text-slate-600'">
+                                {{ doctor.available ? '✓ Available Today' : 'Currently Unavailable' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="p-6">
+                        <h1 class="text-2xl font-black text-slate-900 font-heading mb-1">{{ doctor.name }}</h1>
+                        <p class="text-primary-600 font-semibold mb-4">{{ doctor.specialty }}</p>
+
+                        <!-- Rating -->
+                        <div class="flex items-center gap-2 mb-5 pb-5 border-b border-slate-100">
+                            <div class="flex">
+                                @for (s of [1,2,3,4,5]; track s) {
+                                <i-lucide name="star" class="w-5 h-5" [class.text-amber-400]="s <= doctor.rating"
+                                    [class.text-slate-200]="s > doctor.rating"
+                                    [ngStyle]="{'fill':'currentColor'}"></i-lucide>
+                                }
+                            </div>
+                            <span class="font-bold text-slate-700">{{ doctor.rating }}</span>
+                            <span class="text-sm text-slate-400">({{ (doctor.rating * 20 | number:'1.0-0') }}
+                                reviews)</span>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="grid grid-cols-3 gap-3 mb-6">
+                            <div class="text-center p-3 bg-primary-50 rounded-2xl">
+                                <p class="text-lg font-black text-primary-600">8+</p>
+                                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Years Exp.
+                                </p>
+                            </div>
+                            <div class="text-center p-3 bg-primary-50 rounded-2xl">
+                                <p class="text-lg font-black text-primary-600">500+</p>
+                                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Patients</p>
+                            </div>
+                            <div class="text-center p-3 bg-primary-50 rounded-2xl">
+                                <p class="text-lg font-black text-primary-600">99%</p>
+                                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">Success</p>
+                            </div>
+                        </div>
+
+                        <!-- Action button -->
+                        <button *ngIf="doctor.available && activeTab === 'profile'" (click)="activeTab = 'register'"
+                            class="w-full py-3.5 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-bold shadow-md shadow-primary-500/25 hover:shadow-primary-500/40 active:scale-95 transition-all flex items-center justify-center gap-2">
+                            <i-lucide name="calendar-plus" class="w-5 h-5"></i-lucide>
+                            Book an Appointment
+                        </button>
+                        <button *ngIf="!doctor.available"
+                            class="w-full py-3.5 rounded-2xl bg-slate-100 text-slate-400 font-bold cursor-not-allowed">
+                            Currently Unavailable
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── RIGHT: Content Tabs ── -->
+            <div class="lg:col-span-2 animate-fade-in-up">
+
+                <!-- Tab navigation -->
+                <div class="flex bg-white border border-slate-100 rounded-2xl p-1.5 mb-8 shadow-sm">
+                    <button (click)="activeTab = 'profile'"
+                        class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all"
+                        [ngClass]="activeTab === 'profile' ? 'bg-primary-500 text-white shadow-md' : 'text-slate-500 hover:text-primary-600'">
+                        <i-lucide name="user" class="w-4 h-4 inline mr-1.5 -mt-0.5"></i-lucide>Doctor Profile
+                    </button>
+                    <button (click)="activeTab = 'register'"
+                        class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all"
+                        [ngClass]="activeTab === 'register' ? 'bg-primary-500 text-white shadow-md' : 'text-slate-500 hover:text-primary-600'">
+                        <i-lucide name="user-plus" class="w-4 h-4 inline mr-1.5 -mt-0.5"></i-lucide>Register
+                    </button>
+                    <button (click)="activeTab = 'book'" *ngIf="doctor.available"
+                        class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all"
+                        [ngClass]="activeTab === 'book' ? 'bg-primary-500 text-white shadow-md' : 'text-slate-500 hover:text-primary-600'">
+                        <i-lucide name="calendar" class="w-4 h-4 inline mr-1.5 -mt-0.5"></i-lucide>Book Slot
+                    </button>
+                </div>
+
+                <!-- ── TAB: PROFILE ── -->
+                <div *ngIf="activeTab === 'profile'" class="space-y-6">
+                    <div class="bg-white rounded-[2rem] border border-slate-100 shadow-card p-8">
+                        <h2 class="text-xl font-bold text-slate-900 font-heading mb-4">About Dr.</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6">
+                            {{ doctor.name }} is a highly experienced physiotherapist specializing in {{
+                            doctor.specialty }}.
+                            With over 8 years of dedicated clinical practice, they have helped hundreds of patients
+                            recover from
+                            injuries, surgeries, and chronic conditions. Known for their patient-first approach and
+                            evidence-based
+                            treatment methods.
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            @for (item of [
+                            {icon:'graduation-cap', label:'Education', value:'BPT, MPT — Mumbai University'},
+                            {icon:'award', label:'Certifications', value:'Certified Manual Therapist'},
+                            {icon:'clock', label:'Consultation', value:'45 min, In-person & Online'},
+                            {icon:'map-pin', label:'Clinic', value:'PhysioPro Centre, Mumbai'}
+                            ]; track item.label) {
+                            <div class="flex gap-4 p-4 bg-slate-50 rounded-2xl">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center flex-shrink-0">
+                                    <i-lucide [name]="item.icon" class="w-5 h-5 text-primary-600"></i-lucide>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-0.5">{{
+                                        item.label }}</p>
+                                    <p class="text-sm font-semibold text-slate-700">{{ item.value }}</p>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Specializations -->
+                    <div class="bg-white rounded-[2rem] border border-slate-100 shadow-card p-8">
+                        <h3 class="text-lg font-bold text-slate-900 font-heading mb-5">Specializations</h3>
+                        <div class="flex flex-wrap gap-3">
+                            @for (tag of ['Manual Therapy', 'Sports Rehab', 'Post-Surgery Care', 'Pain Management',
+                            'Exercise Therapy', 'Electrotherapy']; track tag) {
+                            <span
+                                class="px-4 py-2 bg-primary-50 text-primary-700 border border-primary-100 rounded-full text-sm font-semibold">{{
+                                tag }}</span>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- CTA -->
+                    <div class="bg-gradient-to-r from-primary-500 to-secondary-500 rounded-[2rem] p-8 text-white">
+                        <h3 class="text-xl font-bold mb-2">Ready to start your recovery?</h3>
+                        <p class="text-primary-100 mb-6 text-sm">Register and book your first session with {{
+                            doctor.name }} in under 2 minutes.</p>
+                        <button (click)="activeTab = 'register'"
+                            class="bg-white text-primary-600 font-bold py-3 px-8 rounded-2xl hover:bg-primary-50 active:scale-95 transition-all shadow-md">
+                            Register & Book Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ── TAB: REGISTER ── -->
+                <div *ngIf="activeTab === 'register'">
+                    <div class="bg-white rounded-[2rem] border border-slate-100 shadow-card p-8">
+                        <div class="mb-8">
+                            <h2 class="text-2xl font-bold text-slate-900 font-heading">Create Your Account</h2>
+                            <p class="text-slate-500 mt-1">Register to book appointments with {{ doctor.name }} and
+                                manage your care.</p>
+                        </div>
+
+                        <form (ngSubmit)="register()" class="space-y-5">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Full Name *</label>
+                                    <input type="text" [(ngModel)]="regForm.name" name="name" required
+                                        placeholder="John Doe"
+                                        class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary-400 focus:border-transparent outline-none text-slate-800 placeholder-slate-400 transition-all text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Phone Number
+                                        *</label>
+                                    <input type="tel" [(ngModel)]="regForm.phone" name="phone" required
+                                        placeholder="+91 98765 43210"
+                                        class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary-400 focus:border-transparent outline-none text-slate-800 placeholder-slate-400 transition-all text-sm">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Email Address *</label>
+                                <input type="email" [(ngModel)]="regForm.email" name="email" required
+                                    placeholder="you@example.com"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary-400 focus:border-transparent outline-none text-slate-800 placeholder-slate-400 transition-all text-sm">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Date of Birth</label>
+                                <input type="date" [(ngModel)]="regForm.dob" name="dob"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary-400 focus:border-transparent outline-none text-slate-700 transition-all text-sm">
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Password *</label>
+                                    <input type="password" [(ngModel)]="regForm.password" name="password" required
+                                        placeholder="Min. 8 characters"
+                                        class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary-400 focus:border-transparent outline-none text-slate-800 placeholder-slate-400 transition-all text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Confirm Password
+                                        *</label>
+                                    <input type="password" [(ngModel)]="regForm.confirmPassword" name="confirmPassword"
+                                        required placeholder="Repeat password"
+                                        class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary-400 focus:border-transparent outline-none text-slate-800 placeholder-slate-400 transition-all text-sm">
+                                </div>
+                            </div>
+
+                            <div class="pt-2">
+                                <button type="submit"
+                                    class="w-full py-4 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-bold shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2">
+                                    <i-lucide name="user-plus" class="w-5 h-5"></i-lucide>
+                                    Create Account & Continue
+                                </button>
+                            </div>
+
+                            <p class="text-center text-sm text-slate-500">
+                                Already have an account?
+                                <button type="button" (click)="activeTab = 'book'"
+                                    class="text-primary-600 font-semibold hover:underline ml-1">Login here</button>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ── TAB: BOOK ── -->
+                <div *ngIf="activeTab === 'book'" class="space-y-6">
+
+                    <!-- Success screen -->
+                    <div *ngIf="bookingConfirmed"
+                        class="bg-white rounded-[2rem] border border-slate-100 shadow-card p-10 text-center animate-fade-in-up">
+                        <div
+                            class="w-24 h-24 bg-status-success/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i-lucide name="check-circle-2" class="w-12 h-12 text-status-success"></i-lucide>
+                        </div>
+                        <h2 class="text-2xl font-black text-slate-900 font-heading mb-2">Appointment Booked! 🎉</h2>
+                        <p class="text-slate-500 mb-6">Your session with <strong class="text-slate-800">{{ doctor.name
+                                }}</strong> is confirmed for <strong class="text-primary-600">{{ selectedDate
+                                }}</strong> at <strong class="text-primary-600">{{ selectedSlot }}</strong>.</p>
+                        <div class="bg-primary-50 rounded-2xl p-5 text-left inline-block w-full max-w-sm mb-8">
+                            <div class="flex items-center gap-3 mb-3">
+                                <img [src]="doctor.image"
+                                    onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Doctor&background=0F9B8E&color=fff'"
+                                    alt="" class="w-12 h-12 rounded-xl object-cover">
+                                <div>
+                                    <p class="font-bold text-slate-800 text-sm">{{ doctor.name }}</p>
+                                    <p class="text-primary-600 text-xs font-semibold">{{ doctor.specialty }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-slate-600">
+                                <i-lucide name="calendar" class="w-4 h-4 text-primary-500"></i-lucide>
+                                {{ selectedDate }} • {{ selectedSlot }}
+                            </div>
+                        </div>
+                        <button (click)="goBack()"
+                            class="w-full py-4 rounded-2xl bg-primary-500 text-white font-bold hover:bg-primary-600 active:scale-95 transition-all shadow-md shadow-primary-500/25">
+                            Back to Home
+                        </button>
+                    </div>
+
+                    <!-- Booking form -->
+                    <div *ngIf="!bookingConfirmed"
+                        class="bg-white rounded-[2rem] border border-slate-100 shadow-card p-8">
+                        <h2 class="text-xl font-bold text-slate-900 font-heading mb-2">Select Date & Time</h2>
+                        <p class="text-slate-500 text-sm mb-6">Choose your preferred appointment slot with {{
+                            doctor.name }}.</p>
+
+                        <!-- Date picker -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Select Date</label>
+                            <input type="date" [(ngModel)]="selectedDate" [min]="minDate"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary-400 focus:border-transparent outline-none text-slate-800 transition-all text-sm">
+                        </div>
+
+                        <!-- Time slots -->
+                        <div class="mb-8">
+                            <label class="block text-sm font-semibold text-slate-700 mb-3">Available Time Slots</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                @for (slot of availableSlots; track slot) {
+                                <button (click)="selectedSlot = slot"
+                                    class="py-3 px-2 rounded-2xl border text-sm font-bold transition-all duration-200"
+                                    [ngClass]="{
+                    'bg-primary-500 border-primary-500 text-white shadow-lg shadow-primary-500/30 scale-105': selectedSlot === slot,
+                    'bg-slate-50 border-slate-200 text-slate-600 hover:border-primary-300 hover:bg-primary-50': selectedSlot !== slot
+                  }">
+                                    {{ slot }}
+                                </button>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Doctor summary -->
+                        <div class="flex items-center gap-4 p-4 bg-primary-50 rounded-2xl mb-6">
+                            <img [src]="doctor.image"
+                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Doctor&background=0F9B8E&color=fff'"
+                                alt="" class="w-14 h-14 rounded-2xl object-cover shadow-sm">
+                            <div>
+                                <p class="font-bold text-slate-800">{{ doctor.name }}</p>
+                                <p class="text-primary-600 text-sm font-semibold">{{ doctor.specialty }}</p>
+                                <p class="text-slate-500 text-xs mt-0.5">45 min • In-person consultation</p>
+                            </div>
+                        </div>
+
+                        <button [disabled]="!selectedDate || !selectedSlot" (click)="confirmBooking()"
+                            class="w-full py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-center gap-2"
+                            [ngClass]="selectedDate && selectedSlot
+                ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25 hover:bg-primary-600 hover:shadow-primary-500/40 active:scale-95'
+                : 'bg-slate-100 text-slate-400 cursor-not-allowed'">
+                            <i-lucide name="calendar-check" class="w-5 h-5"
+                                *ngIf="selectedDate && selectedSlot"></i-lucide>
+                            {{ selectedDate && selectedSlot ? 'Confirm Appointment' : 'Select Date & Time to Continue'
+                            }}
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="!doctor" class="max-w-6xl mx-auto px-4 py-20 text-center animate-pulse">
+        <div class="h-8 bg-slate-200 rounded-xl w-48 mx-auto mb-4"></div>
+        <div class="h-4 bg-slate-100 rounded-xl w-72 mx-auto"></div>
+    </div>
+</div>

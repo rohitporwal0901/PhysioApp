@@ -1,11 +1,22 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    // Public landing page
+    {
+        path: '',
+        loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent)
+    },
+    // Doctor public profile (accessible without login)
+    {
+        path: 'doctor-profile/:id',
+        loadComponent: () => import('./features/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
+    },
+    // Auth
     {
         path: 'login',
         loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
     },
+    // Protected app (Admin / Doctor / Patient layouts)
     {
         path: '',
         loadComponent: () => import('./layouts/admin-layout/admin-layout.component').then(m => m.AdminLayoutComponent),
@@ -48,5 +59,5 @@ export const routes: Routes = [
             }
         ]
     },
-    { path: '**', redirectTo: 'login' }
+    { path: '**', redirectTo: '' }
 ];

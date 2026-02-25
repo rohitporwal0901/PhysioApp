@@ -1,18 +1,21 @@
-// Fix Tailwind at-rule lint warnings to avoid noise, by importing tailwindcss files correctly in SCSS,
-// or we can just leave it as is if it's fine, but since we are overriding, we will use import syntax or disable linter.
-// Better: just add the scrollbar styling to layer base.
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
 @layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
     html:not(.dark) body {
-        @apply bg-background text-primary-900 antialiased font-sans;
+        @apply bg-background text-slate-900 antialiased font-sans;
     }
 
     html.dark body {
-        /* Rich midnight dark mode with a subtle teal tint, representing health and depth */
-        @apply bg-[#0b1120] text-slate-100 antialiased font-sans;
+        @apply bg-darkbg text-slate-100 antialiased font-sans;
     }
 
     h1,
@@ -35,10 +38,31 @@
     }
 
     ::-webkit-scrollbar-thumb {
-        @apply bg-slate-300 dark:bg-slate-600 rounded-full;
+        @apply bg-primary-300 dark:bg-slate-600 rounded-full;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        @apply bg-slate-400 dark:bg-slate-500;
+        @apply bg-primary-400 dark:bg-slate-500;
+    }
+}
+
+@layer utilities {
+
+    /* Text gradient utility */
+    .text-gradient {
+        background: linear-gradient(135deg, #0F9B8E, #10B981);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Shadow card */
+    .shadow-card {
+        box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Selection color */
+    ::selection {
+        @apply bg-primary-400/30 text-primary-900;
     }
 }
