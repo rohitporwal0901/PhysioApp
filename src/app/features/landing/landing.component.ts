@@ -69,6 +69,8 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
         { label: 'Years of Excellence', numericValue: 12, current: 0, suffix: '+', animated: false },
     ];
 
+    statIcons = ['users', 'stethoscope', 'heart-pulse', 'award'];
+
     conditions = [
         { label: 'Back Pain', icon: 'person-standing' },
         { label: 'Knee Injury', icon: 'footprints' },
@@ -151,6 +153,13 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
         { icon: 'shield-check', label: 'NABH Accredited' },
         { icon: 'users', label: '500+ Trained Specialists' },
         { icon: 'heart-pulse', label: 'Evidence-Based Care' },
+    ];
+
+    socialLinks = [
+        { icon: 'instagram', label: 'Instagram', url: 'https://instagram.com/physiopro' },
+        { icon: 'twitter', label: 'Twitter', url: 'https://twitter.com/physiopro' },
+        { icon: 'linkedin', label: 'LinkedIn', url: 'https://linkedin.com/company/physiopro' },
+        { icon: 'youtube', label: 'YouTube', url: 'https://youtube.com/physiopro' },
     ];
 
     @HostListener('window:scroll')
@@ -254,6 +263,10 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
     openDoctorProfile(doc: any) {
         this.router.navigate(['/doctor-profile', doc.id], { state: { doctor: doc } });
+    }
+
+    scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     goToLogin() { this.router.navigate(['/login']); }

@@ -187,7 +187,43 @@
           </div>
         </div>
 
-        <!-- ── RIGHT — Platform Visual Panel ── -->
+        <!-- ── MOBILE Hero Image (visible only on small screens) ── -->
+        <div class="hero-mobile-image block lg:hidden mt-8 mb-4 reveal">
+          <div class="relative mx-auto max-w-sm">
+            <div
+              class="absolute inset-[-6px] bg-gradient-to-br from-primary-300/30 to-secondary-400/20 rounded-3xl blur-sm">
+            </div>
+            <div class="relative w-full h-56 sm:h-72 rounded-3xl overflow-hidden shadow-xl">
+              @for (img of heroImages; track img.url; let i = $index) {
+              <div class="hero-slide absolute inset-0" [class.hero-slide--active]="i === activeHeroImage">
+                <img [src]="img.url" [alt]="img.label" class="w-full h-full object-cover object-center">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent"></div>
+              </div>
+              }
+              <div class="absolute bottom-3 left-3 right-3 z-30">
+                <div
+                  class="flex items-center gap-2 bg-white/15 backdrop-blur-md rounded-xl px-3 py-2 border border-white/15">
+                  <div class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+                    <i-lucide name="heart-pulse" class="w-3.5 h-3.5 text-white"></i-lucide>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-white font-bold text-xs">{{ heroImages[activeHeroImage].label }}</p>
+                    <p class="text-white/60 text-[10px] truncate">{{ heroImages[activeHeroImage].caption }}</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Mobile dots -->
+              <div class="absolute top-3 right-3 z-30 flex items-center gap-1.5">
+                @for (img of heroImages; track img.url; let i = $index) {
+                <button (click)="goToHeroImage(i)" class="hero-dot"
+                  [class.hero-dot--active]="i === activeHeroImage"></button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── RIGHT — Platform Visual Panel (Desktop only) ── -->
         <div class="hero-visual relative hidden lg:block">
 
           <!-- Background card shape -->
@@ -335,15 +371,21 @@
   </section>
 
   <!-- ══════════════════ STAT COUNTERS ══════════════════ -->
-  <section class="py-10 sm:py-14 bg-white">
+  <section class="py-10 sm:py-14 bg-white relative">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="stats-trigger grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
+      <div class="stats-trigger grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
         @for (stat of statCounters; track stat.label; let i = $index) {
-        <div class="stat-item text-center" [style.transition-delay]="(i * 120) + 'ms'">
-          <div class="text-3xl sm:text-4xl font-black text-primary-600 font-heading">
+        <div
+          class="stat-card relative text-center bg-gradient-to-br from-white to-primary-50/40 border border-primary-100/50 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300"
+          [style.transition-delay]="(i * 120) + 'ms'">
+          <!-- Decorative bg icon -->
+          <div class="absolute top-2 right-2 opacity-[0.07] pointer-events-none">
+            <i-lucide [name]="statIcons[i]" class="w-12 h-12 text-primary-600"></i-lucide>
+          </div>
+          <div class="text-3xl sm:text-4xl font-black text-primary-600 font-heading relative z-10">
             {{ stat.animated ? stat.current : 0 }}{{ stat.suffix }}
           </div>
-          <div class="text-xs sm:text-sm font-medium text-slate-500 mt-1">{{ stat.label }}</div>
+          <div class="text-xs sm:text-sm font-medium text-slate-500 mt-1.5 relative z-10">{{ stat.label }}</div>
         </div>
         }
       </div>
@@ -826,6 +868,16 @@
             </div>
             }
           </div>
+
+          <!-- Social media icons -->
+          <div class="flex items-center gap-3 pt-3">
+            @for (social of socialLinks; track social.label) {
+            <a [href]="social.url" target="_blank" [attr.aria-label]="social.label"
+              class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-primary-600 flex items-center justify-center text-slate-400 hover:text-white transition-all duration-200 hover:scale-105">
+              <i-lucide [name]="social.icon" class="w-4 h-4"></i-lucide>
+            </a>
+            }
+          </div>
         </div>
 
         <!-- Quick Links -->
@@ -863,6 +915,19 @@
               <span>Mon–Sat: 8 AM – 8 PM</span>
             </li>
           </ul>
+
+          <!-- Newsletter mini form -->
+          <div class="mt-6">
+            <p class="text-xs text-slate-500 mb-2 font-medium">Get health tips in your inbox</p>
+            <div class="flex rounded-xl overflow-hidden border border-slate-700">
+              <input type="email" placeholder="Your email"
+                class="flex-1 bg-slate-800 px-3 py-2.5 text-xs text-slate-300 placeholder-slate-500 outline-none min-w-0">
+              <button
+                class="bg-primary-600 hover:bg-primary-500 px-4 text-white text-xs font-bold transition-colors flex-shrink-0">
+                <i-lucide name="send" class="w-3.5 h-3.5"></i-lucide>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -886,5 +951,12 @@
       Book Free Appointment
     </button>
   </div>
+
+  <!-- Scroll to Top Button -->
+  <button (click)="scrollToTop()" *ngIf="navScrolled"
+    class="scroll-to-top fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 w-11 h-11 rounded-xl bg-primary-500 hover:bg-primary-600 text-white shadow-lg shadow-primary-500/30 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
+    [class.hidden]="!navScrolled" aria-label="Scroll to top">
+    <i-lucide name="arrow-up" class="w-5 h-5"></i-lucide>
+  </button>
 
 </div>

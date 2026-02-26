@@ -4,7 +4,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import {
   LucideAngularModule,
   Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
-  ArrowRight, ArrowLeft, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
+  ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
   PlaySquare, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
   FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2,
   Heart, Zap, Shield, MapPin, Phone, PhoneCall, GraduationCap, Award,
@@ -12,7 +12,7 @@ import {
   ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff,
   ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
   TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone,
-  LockKeyhole, AlertCircle, Check
+  LockKeyhole, AlertCircle, Check, Linkedin, Send
 } from 'lucide-angular';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -31,7 +31,7 @@ export const appConfig: ApplicationConfig = {
     UserTrackingService,
     importProvidersFrom(LucideAngularModule.pick({
       Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
-      ArrowRight, ArrowLeft, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
+      ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
       PlaySquare, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
       FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2,
       Heart, Zap, Shield, MapPin, Phone, PhoneCall, GraduationCap, Award,
@@ -39,7 +39,7 @@ export const appConfig: ApplicationConfig = {
       ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff,
       ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
       TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone,
-      LockKeyhole, AlertCircle, Check
+      LockKeyhole, AlertCircle, Check, Linkedin, Send
     }))
   ]
 };
