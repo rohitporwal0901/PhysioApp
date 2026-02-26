@@ -35,30 +35,26 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     private heroImageInterval: any;
     heroImages = [
         {
-            url: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=2070&auto=format&fit=crop',
-            label: 'Manual Therapy',
-            caption: 'Expert hands-on physiotherapy treatment'
+            url: 'https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=1200&auto=format&fit=crop',
+            label: 'Expert Physiotherapy',
+            caption: 'Personalised hands-on treatment by certified specialists'
         },
         {
-            url: 'https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=2070&auto=format&fit=crop',
-            label: 'Rehabilitation',
-            caption: 'Guided recovery & mobility exercises'
+            url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1200&auto=format&fit=crop',
+            label: 'Fitness Rehabilitation',
+            caption: 'Guided strength training & active recovery'
         },
         {
-            url: 'https://images.unsplash.com/photo-1576765607924-3f7b8410a787?q=80&w=2069&auto=format&fit=crop',
-            label: 'Therapeutic Massage',
-            caption: 'Targeted soft-tissue & deep-tissue therapy'
+            url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1200&auto=format&fit=crop',
+            label: 'Yoga & Flexibility',
+            caption: 'Improve mobility with therapeutic yoga sessions'
         },
         {
-            url: 'https://images.unsplash.com/photo-1518611012118-696072a63b2a?q=80&w=2070&auto=format&fit=crop',
-            label: 'Exercise Therapy',
-            caption: 'Personalised active rehabilitation plans'
+            url: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?q=80&w=1200&auto=format&fit=crop',
+            label: 'Sports Recovery',
+            caption: 'Get back to peak performance after injury'
         },
-        {
-            url: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?q=80&w=2070&auto=format&fit=crop',
-            label: 'Post-Surgical Care',
-            caption: 'Structured recovery after orthopaedic surgery'
-        },
+
     ];
 
     // Animated counters
