@@ -19,17 +19,7 @@ export class DoctorProfileComponent implements OnInit {
     private api = inject(MockApiService);
 
     doctor: any = null;
-    activeTab: 'profile' | 'register' | 'book' = 'profile';
-
-    // Registration form
-    regForm = {
-        name: '',
-        email: '',
-        phone: '',
-        dob: '',
-        password: '',
-        confirmPassword: ''
-    };
+    activeTab: 'profile' | 'book' = 'profile';
 
     // Booking form
     selectedDate = '';
@@ -57,21 +47,23 @@ export class DoctorProfileComponent implements OnInit {
         }
     }
 
-    // Get doctor from window history state (when page is refreshed)
-    get doctorFromState(): any {
-        return history.state?.doctor;
+    // Navigate to patient registration first, then come back for booking
+    goToPatientRegister() {
+        this.router.navigate(['/patient/register']);
     }
 
-    register() {
-        if (this.regForm.name && this.regForm.email && this.regForm.password) {
-            this.activeTab = 'book';
-        }
+    startBooking() {
+        this.activeTab = 'book';
     }
 
     confirmBooking() {
         if (this.selectedDate && this.selectedSlot) {
             this.bookingConfirmed = true;
         }
+    }
+
+    goToDashboard() {
+        this.router.navigate(['/patient/dashboard']);
     }
 
     goBack() {

@@ -1,0 +1,249 @@
+<div class="register-page">
+
+    <!-- Background blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="register-container">
+
+        <!-- ── LOGO BAR ── -->
+        <div class="logo-bar">
+            <div class="logo-icon">
+                <i-lucide name="activity" class="icon-sm text-white"></i-lucide>
+            </div>
+            <span class="logo-text">Physio<span class="logo-accent">Pro</span></span>
+            <a routerLink="/" class="back-home">
+                <i-lucide name="arrow-left" class="icon-xs"></i-lucide>
+                Back to Home
+            </a>
+        </div>
+
+        <!-- ── STEPPER ── -->
+        <div class="stepper-card">
+            <div class="stepper">
+                <!-- Step 1 -->
+                <div class="step" [class.active]="currentStep === 1" [class.done]="currentStep > 1">
+                    <div class="step-circle">
+                        <i-lucide *ngIf="currentStep <= 1" name="user" class="icon-xs"></i-lucide>
+                        <i-lucide *ngIf="currentStep > 1" name="check" class="icon-xs"></i-lucide>
+                    </div>
+                    <span class="step-label">Personal Info</span>
+                </div>
+                <div class="step-line" [class.done]="currentStep > 1"></div>
+                <!-- Step 2 -->
+                <div class="step" [class.active]="currentStep === 2">
+                    <div class="step-circle">
+                        <i-lucide name="shield-check" class="icon-xs"></i-lucide>
+                    </div>
+                    <span class="step-label">Medical & Account</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── FORM CARD ── -->
+        <div class="form-card">
+
+            <!-- STEP 1 — Personal Info -->
+            <div *ngIf="currentStep === 1" class="form-step animate-fade-in">
+                <div class="form-header">
+                    <div class="form-header-icon">
+                        <i-lucide name="user-plus" class="icon-md text-white"></i-lucide>
+                    </div>
+                    <div>
+                        <h2 class="form-title">Create your Patient Account</h2>
+                        <p class="form-subtitle">Step 1 of 2 — Personal details</p>
+                    </div>
+                </div>
+
+                <div class="fields-grid">
+                    <!-- Full Name -->
+                    <div class="field-group full-width">
+                        <label class="field-label">
+                            <i-lucide name="user" class="icon-xs text-slate-400"></i-lucide>
+                            Full Name <span class="required">*</span>
+                        </label>
+                        <input type="text" [(ngModel)]="fullName" placeholder="e.g. Rohit Porwal"
+                            class="field-input" />
+                    </div>
+
+                    <!-- Email -->
+                    <div class="field-group">
+                        <label class="field-label">
+                            <i-lucide name="mail" class="icon-xs text-slate-400"></i-lucide>
+                            Email Address <span class="required">*</span>
+                        </label>
+                        <input type="email" [(ngModel)]="email" placeholder="you@example.com"
+                            class="field-input" />
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="field-group">
+                        <label class="field-label">
+                            <i-lucide name="phone" class="icon-xs text-slate-400"></i-lucide>
+                            Phone Number <span class="required">*</span>
+                        </label>
+                        <input type="tel" [(ngModel)]="phone" placeholder="+91 98765 43210"
+                            class="field-input" />
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div class="field-group">
+                        <label class="field-label">
+                            <i-lucide name="calendar" class="icon-xs text-slate-400"></i-lucide>
+                            Date of Birth <span class="required">*</span>
+                        </label>
+                        <input type="date" [(ngModel)]="dob"
+                            class="field-input" />
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="field-group">
+                        <label class="field-label">
+                            <i-lucide name="users" class="icon-xs text-slate-400"></i-lucide>
+                            Gender <span class="required">*</span>
+                        </label>
+                        <select [(ngModel)]="gender" class="field-input field-select">
+                            <option value="" disabled>Select gender</option>
+                            <option *ngFor="let g of genders" [value]="g">{{ g }}</option>
+                        </select>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="field-group full-width">
+                        <label class="field-label">
+                            <i-lucide name="map-pin" class="icon-xs text-slate-400"></i-lucide>
+                            Address <span class="optional">(optional)</span>
+                        </label>
+                        <textarea [(ngModel)]="address" placeholder="Your full address..."
+                            class="field-input field-textarea" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <button (click)="nextStep()" [disabled]="!step1Valid"
+                    class="btn-primary-full" [class.disabled]="!step1Valid">
+                    <span>Continue</span>
+                    <i-lucide name="arrow-right" class="icon-xs"></i-lucide>
+                </button>
+
+                <p class="login-link">
+                    Already registered?
+                    <a routerLink="/login" class="link">Sign in here</a>
+                </p>
+            </div>
+
+            <!-- STEP 2 — Medical & Account -->
+            <div *ngIf="currentStep === 2" class="form-step animate-fade-in">
+                <div class="form-header">
+                    <div class="form-header-icon form-header-icon--green">
+                        <i-lucide name="shield-check" class="icon-md text-white"></i-lucide>
+                    </div>
+                    <div>
+                        <h2 class="form-title">Medical & Account Setup</h2>
+                        <p class="form-subtitle">Step 2 of 2 — Almost there!</p>
+                    </div>
+                </div>
+
+                <div class="fields-grid">
+                    <!-- Condition -->
+                    <div class="field-group full-width">
+                        <label class="field-label">
+                            <i-lucide name="stethoscope" class="icon-xs text-slate-400"></i-lucide>
+                            Primary Condition <span class="optional">(optional)</span>
+                        </label>
+                        <select [(ngModel)]="condition" class="field-input field-select">
+                            <option value="">Select your condition</option>
+                            <option *ngFor="let c of conditions" [value]="c">{{ c }}</option>
+                        </select>
+                    </div>
+
+                    <!-- Emergency Contact -->
+                    <div class="field-group full-width">
+                        <label class="field-label">
+                            <i-lucide name="phone-call" class="icon-xs text-slate-400"></i-lucide>
+                            Emergency Contact <span class="optional">(optional)</span>
+                        </label>
+                        <input type="tel" [(ngModel)]="emergencyContact"
+                            placeholder="Emergency contact number" class="field-input" />
+                    </div>
+
+                    <!-- Password -->
+                    <div class="field-group">
+                        <label class="field-label">
+                            <i-lucide name="lock" class="icon-xs text-slate-400"></i-lucide>
+                            Password <span class="required">*</span>
+                        </label>
+                        <div class="password-wrapper">
+                            <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password"
+                                placeholder="Min. 8 characters" class="field-input" />
+                            <button type="button" (click)="togglePassword()" class="password-toggle">
+                                <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" class="icon-xs"></i-lucide>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="field-group">
+                        <label class="field-label">
+                            <i-lucide name="lock-keyhole" class="icon-xs text-slate-400"></i-lucide>
+                            Confirm Password <span class="required">*</span>
+                        </label>
+                        <div class="password-wrapper">
+                            <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword"
+                                placeholder="Re-enter password" class="field-input"
+                                [class.input-error]="confirmPassword && !passwordsMatch" />
+                        </div>
+                        <p *ngIf="confirmPassword && !passwordsMatch" class="error-msg">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Passwords do not match
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Terms -->
+                <label class="terms-row">
+                    <input type="checkbox" [(ngModel)]="agreeTerms" class="terms-checkbox" />
+                    <span class="terms-text">
+                        I agree to the
+                        <a href="#" class="link">Terms of Service</a> and
+                        <a href="#" class="link">Privacy Policy</a>
+                    </span>
+                </label>
+
+                <div class="btn-row">
+                    <button (click)="prevStep()" class="btn-outline">
+                        <i-lucide name="arrow-left" class="icon-xs"></i-lucide>
+                        Back
+                    </button>
+                    <button (click)="register()" [disabled]="!step2Valid || isLoading"
+                        class="btn-primary" [class.disabled]="!step2Valid || isLoading">
+                        <svg *ngIf="isLoading" class="spin-icon" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        <i-lucide *ngIf="!isLoading" name="check-circle" class="icon-xs"></i-lucide>
+                        {{ isLoading ? 'Creating Account...' : 'Register & Book Appointment' }}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Trust badges -->
+        <div class="trust-row">
+            <div class="trust-badge">
+                <i-lucide name="shield-check" class="icon-xs text-primary-500"></i-lucide>
+                <span>NABH Accredited</span>
+            </div>
+            <div class="trust-badge">
+                <i-lucide name="lock" class="icon-xs text-primary-500"></i-lucide>
+                <span>Data Encrypted</span>
+            </div>
+            <div class="trust-badge">
+                <i-lucide name="award" class="icon-xs text-primary-500"></i-lucide>
+                <span>ISO 9001 Certified</span>
+            </div>
+        </div>
+
+    </div>
+</div>

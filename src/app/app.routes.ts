@@ -11,6 +11,16 @@ export const routes: Routes = [
         path: 'doctor-profile/:id',
         loadComponent: () => import('./features/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
     },
+    // Patient Registration (public — before booking)
+    {
+        path: 'patient/register',
+        loadComponent: () => import('./features/patient/register/register.component').then(m => m.PatientRegisterComponent)
+    },
+    // Doctor / Physiotherapist Registration (public)
+    {
+        path: 'doctor/register',
+        loadComponent: () => import('./features/doctor/register/doctor-register.component').then(m => m.DoctorRegisterComponent)
+    },
     // Auth
     {
         path: 'login',

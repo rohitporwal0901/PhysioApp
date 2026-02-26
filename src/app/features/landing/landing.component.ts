@@ -242,11 +242,11 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     bookCondition(condition: string) {
-        this.router.navigate(['/login'], { queryParams: { condition } });
+        this.router.navigate(['/patient/register'], { queryParams: { condition } });
     }
 
     searchAndBook() {
-        this.router.navigate(['/login'], { queryParams: { q: this.searchQuery } });
+        this.router.navigate(['/patient/register'], { queryParams: { q: this.searchQuery } });
     }
 
     toggleMobileMenu() { this.mobileMenuOpen = !this.mobileMenuOpen; }
@@ -257,4 +257,6 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     goToLogin() { this.router.navigate(['/login']); }
+    goToRegister() { this.router.navigate(['/patient/register']); }
+    goToDoctorRegister() { this.router.navigate(['/doctor/register']); }
 }

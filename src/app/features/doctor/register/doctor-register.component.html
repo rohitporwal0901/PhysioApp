@@ -1,0 +1,391 @@
+<div class="dr-register-page">
+
+    <!-- Background -->
+    <div class="bg-blob bg-blob--1"></div>
+    <div class="bg-blob bg-blob--2"></div>
+
+    <div class="dr-register-container">
+
+        <!-- ── TOP BAR ── -->
+        <div class="top-bar">
+            <a routerLink="/" class="logo-link">
+                <div class="logo-icon">
+                    <i-lucide name="activity" class="w-[18px] h-[18px] text-white"></i-lucide>
+                </div>
+                <span class="logo-text">Physio<span class="accent">Pro</span></span>
+            </a>
+            <span class="top-bar-title">Physiotherapist Registration</span>
+            <a routerLink="/" class="back-link">
+                <i-lucide name="arrow-left" class="w-3.5 h-3.5"></i-lucide>
+                Back to Home
+            </a>
+        </div>
+
+        <div class="layout">
+
+            <!-- ── SIDEBAR ── -->
+            <aside class="sidebar">
+                <div class="sidebar-inner">
+                    <div class="sidebar-heading">
+                        <i-lucide name="clipboard-list" class="w-4 h-4 text-primary-500"></i-lucide>
+                        Registration Steps
+                    </div>
+                    <nav class="step-nav">
+                        <button *ngFor="let s of sidebarSteps" class="step-nav-item"
+                            [class.active]="currentStep === s.num" [class.done]="currentStep > s.num"
+                            [class.disabled]="currentStep < s.num" (click)="goToStep(s.num)">
+                            <div class="step-nav-circle">
+                                <i-lucide *ngIf="currentStep <= s.num" [name]="s.icon" class="w-3.5 h-3.5"></i-lucide>
+                                <i-lucide *ngIf="currentStep > s.num" name="check" class="w-3.5 h-3.5"></i-lucide>
+                            </div>
+                            <span class="step-nav-label">{{ s.label }}</span>
+                        </button>
+                    </nav>
+                    <div class="sidebar-progress">
+                        <div class="progress-text">
+                            <span>Progress</span>
+                            <span class="progress-pct">{{ ((currentStep - 1) / totalSteps * 100) | number:'1.0-0'
+                                }}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" [style.width.%]="(currentStep - 1) / totalSteps * 100"></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- ── FORM AREA ── -->
+            <main class="form-area">
+
+                <!-- ═══ STEP 1: BASIC INFO ═══ -->
+                <div *ngIf="currentStep === 1" class="form-card fade-in">
+                    <div class="card-header">
+                        <div class="card-icon blue">
+                            <i-lucide name="user" class="w-5 h-5 text-white"></i-lucide>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Basic Information</h2>
+                            <p class="card-subtitle">Step 1 of {{ totalSteps }} — Personal details</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="field full">
+                            <label class="label">Full Name <span class="req">*</span></label>
+                            <input type="text" [(ngModel)]="fullName" placeholder="Dr. Full Name" class="input" />
+                        </div>
+
+                        <div class="field full">
+                            <label class="label">Gender <span class="req">*</span></label>
+                            <div class="radio-row">
+                                <label *ngFor="let g of genders" class="radio-btn" [class.selected]="gender === g"
+                                    (click)="gender = g">
+                                    <span class="radio-dot"></span>
+                                    {{ g }}
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Date of Birth <span class="req">*</span></label>
+                            <input type="date" [(ngModel)]="dob" class="input" />
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Nationality</label>
+                            <input type="text" [(ngModel)]="nationality" class="input" />
+                        </div>
+
+                        <div class="field full">
+                            <label class="label">State / Province</label>
+                            <select [(ngModel)]="state" class="input select">
+                                <option value="">Select state</option>
+                                <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ STEP 2: CONTACT DETAILS ═══ -->
+                <div *ngIf="currentStep === 2" class="form-card fade-in">
+                    <div class="card-header">
+                        <div class="card-icon teal">
+                            <i-lucide name="phone" class="w-5 h-5 text-white"></i-lucide>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Contact Information</h2>
+                            <p class="card-subtitle">Step 2 of {{ totalSteps }} — How we reach you</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="field">
+                            <label class="label">Phone Number <span class="req">*</span></label>
+                            <input type="tel" [(ngModel)]="phone" placeholder="+91 98765 43210" class="input" />
+                        </div>
+                        <div class="field">
+                            <label class="label">Alternate Phone</label>
+                            <input type="tel" [(ngModel)]="altPhone" placeholder="+91 ..." class="input" />
+                        </div>
+                        <div class="field full">
+                            <label class="label">Email Address <span class="req">*</span></label>
+                            <input type="email" [(ngModel)]="email" placeholder="doctor@example.com" class="input" />
+                        </div>
+                        <div class="field full">
+                            <label class="label">Clinic / Hospital Address</label>
+                            <textarea [(ngModel)]="address" placeholder="Full address..." class="input textarea"
+                                rows="2"></textarea>
+                        </div>
+                        <div class="field">
+                            <label class="label">City</label>
+                            <input type="text" [(ngModel)]="city" placeholder="Mumbai" class="input" />
+                        </div>
+                        <div class="field">
+                            <label class="label">PIN Code</label>
+                            <input type="text" [(ngModel)]="pincode" placeholder="400001" class="input" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ STEP 3: QUALIFICATIONS ═══ -->
+                <div *ngIf="currentStep === 3" class="form-card fade-in">
+                    <div class="card-header">
+                        <div class="card-icon purple">
+                            <i-lucide name="graduation-cap" class="w-5 h-5 text-white"></i-lucide>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Qualifications</h2>
+                            <p class="card-subtitle">Step 3 of {{ totalSteps }} — Your credentials</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="field full">
+                            <label class="label">Highest Qualification <span class="req">*</span></label>
+                            <select [(ngModel)]="qualification" class="input select">
+                                <option value="">Select qualification</option>
+                                <option *ngFor="let q of qualifications" [value]="q">{{ q }}</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label class="label">Specialization <span class="req">*</span></label>
+                            <input type="text" [(ngModel)]="specialization" placeholder="e.g. Sports Rehab"
+                                class="input" />
+                        </div>
+                        <div class="field">
+                            <label class="label">Years of Experience <span class="req">*</span></label>
+                            <input type="number" [(ngModel)]="experience" placeholder="e.g. 8" class="input" />
+                        </div>
+                        <div class="field">
+                            <label class="label">Registration Number</label>
+                            <input type="text" [(ngModel)]="registrationNumber" placeholder="Council Reg. No."
+                                class="input" />
+                        </div>
+                        <div class="field">
+                            <label class="label">Medical Council</label>
+                            <input type="text" [(ngModel)]="council" placeholder="e.g. IAP" class="input" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ STEP 4: AREAS OF INTEREST ═══ -->
+                <div *ngIf="currentStep === 4" class="form-card fade-in">
+                    <div class="card-header">
+                        <div class="card-icon rose">
+                            <i-lucide name="heart-pulse" class="w-5 h-5 text-white"></i-lucide>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Areas of Interest</h2>
+                            <p class="card-subtitle">Step 4 of {{ totalSteps }} — Select your practice areas</p>
+                        </div>
+                    </div>
+
+                    <p class="helper-text">Select all areas that apply to your practice <span class="req">*</span></p>
+
+                    <div class="checkbox-grid">
+                        <label *ngFor="let area of areasOfInterest" class="checkbox-card"
+                            [class.checked]="selectedAreas.includes(area)" (click)="toggleArea(area)">
+                            <div class="cb-box">
+                                <i-lucide *ngIf="selectedAreas.includes(area)" name="check"
+                                    class="w-3 h-3 text-white"></i-lucide>
+                            </div>
+                            <span class="cb-label">{{ area }}</span>
+                        </label>
+                    </div>
+                    <p class="selected-count">{{ selectedAreas.length }} selected</p>
+                </div>
+
+                <!-- ═══ STEP 5: FEES & AVAILABILITY ═══ -->
+                <div *ngIf="currentStep === 5" class="form-card fade-in">
+                    <div class="card-header">
+                        <div class="card-icon amber">
+                            <i-lucide name="calendar" class="w-5 h-5 text-white"></i-lucide>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Fees & Availability</h2>
+                            <p class="card-subtitle">Step 5 of {{ totalSteps }} — Pricing & schedule</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="field">
+                            <label class="label">Consultation Fee (₹) <span class="req">*</span></label>
+                            <input type="number" [(ngModel)]="consultationFee" placeholder="e.g. 500" class="input" />
+                        </div>
+                        <div class="field">
+                            <label class="label">Follow-up Fee (₹)</label>
+                            <input type="number" [(ngModel)]="followUpFee" placeholder="e.g. 300" class="input" />
+                        </div>
+                        <div class="field full">
+                            <label class="label">Consultation Type</label>
+                            <div class="radio-row">
+                                <label class="radio-btn" [class.selected]="consultationType === 'in-person'"
+                                    (click)="consultationType = 'in-person'">
+                                    <span class="radio-dot"></span> In-Person
+                                </label>
+                                <label class="radio-btn" [class.selected]="consultationType === 'online'"
+                                    (click)="consultationType = 'online'">
+                                    <span class="radio-dot"></span> Online
+                                </label>
+                                <label class="radio-btn" [class.selected]="consultationType === 'both'"
+                                    (click)="consultationType = 'both'">
+                                    <span class="radio-dot"></span> Both
+                                </label>
+                            </div>
+                        </div>
+                        <div class="field full">
+                            <label class="label">Available Days</label>
+                            <div class="days-row">
+                                <button *ngFor="let d of days" class="day-chip"
+                                    [class.selected]="availableDays.includes(d)" (click)="toggleDay(d)">
+                                    {{ d.slice(0, 3) }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ STEP 6: DOCUMENTS & ACCOUNT ═══ -->
+                <div *ngIf="currentStep === 6" class="form-card fade-in">
+                    <div class="card-header">
+                        <div class="card-icon green">
+                            <i-lucide name="shield-check" class="w-5 h-5 text-white"></i-lucide>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Account & Documents</h2>
+                            <p class="card-subtitle">Step 6 of {{ totalSteps }} — Almost done!</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <!-- Profile Photo -->
+                        <div class="field full">
+                            <label class="label">Profile Photo</label>
+                            <div class="upload-box" (click)="photoInput.click()">
+                                <input #photoInput type="file" accept="image/*" hidden
+                                    (change)="onFileSelect('photo', $event)" />
+                                <div class="upload-icon">
+                                    <i-lucide name="camera" class="w-6 h-6 text-slate-400"></i-lucide>
+                                </div>
+                                <p class="upload-text" *ngIf="!profilePhotoName">Click to upload profile photo</p>
+                                <p class="upload-text uploaded" *ngIf="profilePhotoName">{{ profilePhotoName }}</p>
+                                <p class="upload-hint">JPG, PNG — Max 5 MB</p>
+                            </div>
+                        </div>
+
+                        <!-- Certificate -->
+                        <div class="field">
+                            <label class="label">Degree Certificate</label>
+                            <div class="upload-box small" (click)="certInput.click()">
+                                <input #certInput type="file" accept=".pdf,image/*" hidden
+                                    (change)="onFileSelect('certificate', $event)" />
+                                <i-lucide name="file-text" class="w-5 h-5 text-slate-400"></i-lucide>
+                                <p class="upload-text-sm">{{ certificateName || 'Upload certificate' }}</p>
+                            </div>
+                        </div>
+
+                        <!-- ID Proof -->
+                        <div class="field">
+                            <label class="label">ID Proof</label>
+                            <div class="upload-box small" (click)="idInput.click()">
+                                <input #idInput type="file" accept=".pdf,image/*" hidden
+                                    (change)="onFileSelect('id', $event)" />
+                                <i-lucide name="file-text" class="w-5 h-5 text-slate-400"></i-lucide>
+                                <p class="upload-text-sm">{{ idProofName || 'Upload ID proof' }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="field">
+                            <label class="label">Password <span class="req">*</span></label>
+                            <div class="pw-wrap">
+                                <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password"
+                                    placeholder="Min. 8 characters" class="input" />
+                                <button type="button" (click)="togglePassword()" class="pw-toggle">
+                                    <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" class="w-4 h-4"></i-lucide>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Confirm Password <span class="req">*</span></label>
+                            <div class="pw-wrap">
+                                <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword"
+                                    placeholder="Re-enter password" class="input"
+                                    [class.error]="confirmPassword && !passwordsMatch" />
+                            </div>
+                            <p *ngIf="confirmPassword && !passwordsMatch" class="error-text">
+                                Passwords do not match
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Terms -->
+                    <label class="terms-check">
+                        <input type="checkbox" [(ngModel)]="agreeTerms" class="terms-input" />
+                        <span class="terms-label">
+                            I agree to the <a href="#" class="link">Terms of Service</a> and
+                            <a href="#" class="link">Privacy Policy</a>, and confirm that all information provided is
+                            accurate.
+                        </span>
+                    </label>
+                </div>
+
+                <!-- ── BOTTOM ACTIONS ── -->
+                <div class="form-actions">
+                    <button *ngIf="currentStep > 1" (click)="prevStep()" class="btn-outline">
+                        <i-lucide name="arrow-left" class="w-4 h-4"></i-lucide>
+                        Previous
+                    </button>
+                    <div class="spacer" *ngIf="currentStep === 1"></div>
+
+                    <button *ngIf="currentStep < totalSteps" (click)="nextStep()" class="btn-primary"
+                        [class.disabled]="!currentStepValid" [disabled]="!currentStepValid">
+                        Continue
+                        <i-lucide name="arrow-right" class="w-4 h-4"></i-lucide>
+                    </button>
+
+                    <button *ngIf="currentStep === totalSteps" (click)="register()" class="btn-submit"
+                        [class.disabled]="!step6Valid || isLoading" [disabled]="!step6Valid || isLoading">
+                        <svg *ngIf="isLoading" class="spinner" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        <i-lucide *ngIf="!isLoading" name="check-circle" class="w-4 h-4"></i-lucide>
+                        {{ isLoading ? 'Submitting...' : 'Submit Registration' }}
+                    </button>
+                </div>
+
+                <!-- Login link -->
+                <p class="login-hint">
+                    Already registered?
+                    <a routerLink="/login" class="link">Sign in here</a>
+                </p>
+
+            </main>
+        </div>
+
+    </div>
+</div>

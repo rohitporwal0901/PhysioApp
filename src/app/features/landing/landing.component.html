@@ -25,6 +25,11 @@
         <a href="#doctors" class="nav-link text-sm font-medium text-slate-600">Doctors</a>
         <a href="#faq" class="nav-link text-sm font-medium text-slate-600">FAQ</a>
         <a href="#contact" class="nav-link text-sm font-medium text-slate-600">Contact</a>
+        <button (click)="goToDoctorRegister()"
+          class="nav-link text-sm font-semibold text-secondary-600 hover:text-secondary-700 transition-colors flex items-center gap-1">
+          <i-lucide name="stethoscope" class="w-3.5 h-3.5"></i-lucide>
+          For Physiotherapists
+        </button>
       </div>
 
       <!-- Desktop CTA -->
@@ -33,7 +38,7 @@
           class="text-sm font-semibold text-primary-600 hover:text-primary-700 px-3 py-1.5 transition-colors">
           Patient Login
         </button>
-        <button (click)="goToLogin()"
+        <button (click)="goToRegister()"
           class="btn-primary px-5 py-2.5 rounded-xl text-white text-sm font-bold shadow-md shadow-primary-500/30">
           Book Appointment
         </button>
@@ -61,10 +66,13 @@
         <a href="#faq" (click)="closeMobileMenu()" class="mobile-nav-item">
           <i-lucide name="help-circle" class="w-4 h-4 text-primary-400"></i-lucide> FAQ
         </a>
+        <button (click)="goToDoctorRegister(); closeMobileMenu()" class="mobile-nav-item">
+          <i-lucide name="stethoscope" class="w-4 h-4 text-secondary-400"></i-lucide> For Physiotherapists
+        </button>
         <div class="flex gap-3 pt-3 border-t border-slate-100 mt-2">
           <button (click)="goToLogin(); closeMobileMenu()"
             class="flex-1 py-3 rounded-xl border border-primary-200 text-primary-600 font-semibold text-sm hover:bg-primary-50 transition-all">Login</button>
-          <button (click)="goToLogin(); closeMobileMenu()"
+          <button (click)="goToRegister(); closeMobileMenu()"
             class="flex-1 py-3 rounded-xl btn-primary text-white font-bold text-sm">Book Now</button>
         </div>
       </div>
@@ -590,7 +598,7 @@
               }
             </ul>
 
-            <button (click)="goToLogin()"
+            <button (click)="goToRegister()"
               class="bg-white text-primary-600 font-bold py-3.5 px-8 rounded-xl hover:bg-primary-50 active:scale-95 transition-all shadow-md text-sm">
               Book a Free Consultation →
             </button>
@@ -775,7 +783,7 @@
         Book your first assessment at no cost. No referral, no waiting list — just expert care.
       </p>
       <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <button (click)="goToLogin()"
+        <button (click)="goToRegister()"
           class="bg-white text-primary-600 font-bold text-sm sm:text-base py-4 px-8 rounded-xl shadow-xl hover:bg-primary-50 active:scale-95 transition-all duration-300 flex items-center gap-2 justify-center">
           <i-lucide name="calendar-check" class="w-5 h-5"></i-lucide>
           Book Free Appointment
@@ -872,7 +880,7 @@
 
   <!-- Mobile sticky CTA -->
   <div class="fixed bottom-4 left-4 right-4 z-50 sm:hidden">
-    <button (click)="goToLogin()"
+    <button (click)="goToRegister()"
       class="btn-primary w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-white font-bold text-sm shadow-2xl shadow-primary-500/50">
       <i-lucide name="calendar-check" class="w-4 h-4"></i-lucide>
       Book Free Appointment
