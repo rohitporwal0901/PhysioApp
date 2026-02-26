@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MockApiService } from '../../../core/services/mock-api.service';
 import { Observable } from 'rxjs';
@@ -8,7 +9,7 @@ import { LucideAngularModule } from 'lucide-angular';
 @Component({
   selector: 'app-book-appointment',
   standalone: true,
-  imports: [CommonModule, RouterModule, LucideAngularModule],
+  imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule],
   templateUrl: './book-appointment.component.html',
   styleUrl: './book-appointment.component.scss'
 })

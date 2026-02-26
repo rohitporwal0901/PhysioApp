@@ -21,6 +21,21 @@
             </a>
         </div>
 
+        <!-- ── MOBILE STEP BAR (hidden on desktop, visible on mobile) ── -->
+        <div class="mobile-step-bar">
+            <div class="mobile-step-header">
+                <span class="mobile-step-title">{{ sidebarSteps[currentStep - 1].label }}</span>
+                <span class="mobile-step-count">{{ currentStep }} / {{ totalSteps }}</span>
+            </div>
+            <div class="mobile-progress-bar">
+                <div class="mobile-progress-fill" [style.width.%]="(currentStep - 1) / totalSteps * 100"></div>
+            </div>
+            <div class="mobile-step-dots">
+                <span *ngFor="let s of sidebarSteps" class="mobile-step-dot" [class.active]="currentStep === s.num"
+                    [class.done]="currentStep > s.num"></span>
+            </div>
+        </div>
+
         <div class="layout">
 
             <!-- ── SIDEBAR ── -->
