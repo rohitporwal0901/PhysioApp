@@ -5,7 +5,7 @@ import {
   LucideAngularModule,
   Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
   ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
-  PlaySquare, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
+  PlaySquare, PlayCircle, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
   FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2,
   Heart, Zap, Shield, MapPin, Phone, PhoneCall, GraduationCap, Award,
   ClipboardList, HeartPulse, CalendarCheck, CalendarPlus,
@@ -32,7 +32,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(LucideAngularModule.pick({
       Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
       ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
-      PlaySquare, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
+      PlaySquare, PlayCircle, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
       FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2,
       Heart, Zap, Shield, MapPin, Phone, PhoneCall, GraduationCap, Award,
       ClipboardList, HeartPulse, CalendarCheck, CalendarPlus,

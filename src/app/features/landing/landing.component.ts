@@ -224,10 +224,11 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     startHeroImageRotation() {
-        this.heroImageInterval = setInterval(() => {
-            this.activeHeroImage = (this.activeHeroImage + 1) % this.heroImages.length;
-            this.cdr.markForCheck();
-        }, 3800);
+        // Disabled since we are now using a YouTube Video iframe
+        // this.heroImageInterval = setInterval(() => {
+        //     this.activeHeroImage = (this.activeHeroImage + 1) % this.heroImages.length;
+        //     this.cdr.markForCheck();
+        // }, 3800);
     }
 
     goToHeroImage(i: number) {

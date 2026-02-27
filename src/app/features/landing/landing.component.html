@@ -193,31 +193,28 @@
             <div
               class="absolute inset-[-6px] bg-gradient-to-br from-primary-300/30 to-secondary-400/20 rounded-3xl blur-sm">
             </div>
-            <div class="relative w-full h-56 sm:h-72 rounded-3xl overflow-hidden shadow-xl">
-              @for (img of heroImages; track img.url; let i = $index) {
-              <div class="hero-slide absolute inset-0" [class.hero-slide--active]="i === activeHeroImage">
-                <img [src]="img.url" [alt]="img.label" class="w-full h-full object-cover object-center">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent"></div>
+            <div class="relative w-full h-56 sm:h-72 rounded-3xl overflow-hidden shadow-xl bg-slate-900">
+              <iframe class="absolute inset-0 w-full h-full"
+                src="https://www.youtube.com/embed/aO1boUJhjvk?autoplay=1&mute=1&loop=1&playlist=aO1boUJhjvk&controls=0&showinfo=0&rel=0"
+                title="Physiotherapy Mobile Dummy Video" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent pointer-events-none">
               </div>
-              }
-              <div class="absolute bottom-3 left-3 right-3 z-30">
+
+              <div class="absolute bottom-3 left-3 right-3 z-30 pointer-events-none">
                 <div
                   class="flex items-center gap-2 bg-white/15 backdrop-blur-md rounded-xl px-3 py-2 border border-white/15">
                   <div class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
-                    <i-lucide name="heart-pulse" class="w-3.5 h-3.5 text-white"></i-lucide>
+                    <i-lucide name="play-circle" class="w-3.5 h-3.5 text-white"></i-lucide>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="text-white font-bold text-xs">{{ heroImages[activeHeroImage].label }}</p>
-                    <p class="text-white/60 text-[10px] truncate">{{ heroImages[activeHeroImage].caption }}</p>
+                    <p class="text-white font-bold text-xs">Guided Physiotherapy</p>
+                    <p class="text-white/60 text-[10px] truncate">Watch professional recovery techniques</p>
                   </div>
                 </div>
-              </div>
-              <!-- Mobile dots -->
-              <div class="absolute top-3 right-3 z-30 flex items-center gap-1.5">
-                @for (img of heroImages; track img.url; let i = $index) {
-                <button (click)="goToHeroImage(i)" class="hero-dot"
-                  [class.hero-dot--active]="i === activeHeroImage"></button>
-                }
               </div>
             </div>
           </div>
@@ -240,43 +237,31 @@
                 class="absolute inset-0 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-[2.8rem] rotate-[3deg] scale-[0.97] opacity-60 shadow-lg">
               </div>
 
-              <!-- Slideshow container -->
+              <!-- Slideshow container / Now Youtube Video -->
               <div
-                class="hero-slideshow relative w-full h-[400px] xl:h-[460px] rounded-[2.8rem] overflow-hidden shadow-2xl z-10">
-                @for (img of heroImages; track img.url; let i = $index) {
-                <div class="hero-slide absolute inset-0" [class.hero-slide--active]="i === activeHeroImage">
-                  <img [src]="img.url" [alt]="img.label" class="w-full h-full object-cover object-center">
-                  <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent">
-                  </div>
-                </div>
-                }
-
-                <!-- Counter top-right -->
+                class="hero-slideshow relative w-full h-[400px] xl:h-[460px] rounded-[2.8rem] overflow-hidden shadow-2xl z-10 bg-slate-900">
+                <iframe class="absolute inset-0 w-full h-full scale-[1.35] lg:scale-[1.2]"
+                  src="https://www.youtube.com/embed/aO1boUJhjvk?autoplay=1&mute=1&loop=1&playlist=aO1boUJhjvk&controls=0&showinfo=0&rel=0"
+                  title="Physiotherapy Dummy Video" frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen>
+                </iframe>
                 <div
-                  class="absolute top-4 right-4 z-30 bg-black/30 backdrop-blur-sm text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg">
-                  {{ activeHeroImage + 1 }} / {{ heroImages.length }}
+                  class="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent pointer-events-none">
                 </div>
 
-                <!-- Caption + dots at bottom -->
-                <div class="absolute bottom-0 left-0 right-0 z-30 p-4">
+                <!-- Caption at bottom -->
+                <div class="absolute bottom-0 left-0 right-0 z-30 p-4 pointer-events-none">
                   <div
                     class="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-2xl px-4 py-3 border border-white/15">
                     <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
-                      <i-lucide name="heart-pulse" class="w-4 h-4 text-white"></i-lucide>
+                      <i-lucide name="play-circle" class="w-4 h-4 text-white"></i-lucide>
                     </div>
                     <div class="flex-1 min-w-0">
-                      <p class="text-white font-bold text-sm">{{ heroImages[activeHeroImage].label }}</p>
-                      <p class="text-white/65 text-[11px] truncate">{{ heroImages[activeHeroImage].caption }}</p>
+                      <p class="text-white font-bold text-sm">Guided Physiotherapy</p>
+                      <p class="text-white/65 text-[11px] truncate">Watch professional recovery techniques</p>
                     </div>
                   </div>
-                </div>
-
-                <!-- Dot indicators -->
-                <div class="absolute bottom-[4.5rem] left-0 right-0 z-30 flex items-center justify-center gap-2">
-                  @for (img of heroImages; track img.url; let i = $index) {
-                  <button (click)="goToHeroImage(i)" [attr.aria-label]="img.label" class="hero-dot"
-                    [class.hero-dot--active]="i === activeHeroImage"></button>
-                  }
                 </div>
               </div>
             </div>
