@@ -894,3 +894,70 @@
         transform: translateY(0);
     }
 }
+
+/* ── BOOKED SLOT STATE ── */
+.slot-btn {
+    position: relative;
+
+    &.booked {
+        background: #fee2e2 !important;
+        border-color: #fca5a5 !important;
+        color: #b91c1c !important;
+        cursor: not-allowed !important;
+        opacity: 0.7;
+        transform: none !important;
+        box-shadow: none !important;
+
+        &:hover {
+            transform: none !important;
+            background: #fee2e2 !important;
+            border-color: #fca5a5 !important;
+            color: #b91c1c !important;
+        }
+    }
+}
+
+.slot-booked-label {
+    display: block;
+    font-size: 0.56rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #dc2626;
+    margin-top: 0.1rem;
+}
+
+/* ── BOOKING AS INFO ── */
+.booking-as-info {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: #047857;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    padding: 0.5rem 0.875rem;
+    background: #ecfdf5;
+    border-radius: 10px;
+    border: 1px solid #a7f3d0;
+
+    strong {
+        font-weight: 800;
+    }
+}
+
+/* ── BOOKING ERROR (inline) ── */
+.booking-error-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.875rem;
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    border: 1.5px solid #fca5a5;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #b91c1c;
+    margin-bottom: 1rem;
+    animation: fadeInUp 0.3s ease-out;
+}

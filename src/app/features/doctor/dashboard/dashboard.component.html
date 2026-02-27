@@ -95,20 +95,29 @@
 
                 <div class="divide-y divide-slate-100 dark:divide-slate-700 p-2">
                     <ng-container *ngIf="appointments$ | async as appointments">
-                        <!-- Display first 4 appointments for demo -->
-                        <div *ngFor="let apt of appointments.slice(0, 4)"
-                            class="p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-2xl transition-colors group flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                        <!-- Display all appointments for demo (dummy + dynamic) -->
+                        <div *ngFor="let apt of appointments"
+                            class="p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-2xl transition-colors group flex flex-col sm:flex-row justify-between sm:items-center gap-4 relative overflow-hidden"
+                            [ngClass]="{'bg-primary-50/50 dark:bg-primary-900/10 border border-primary-100 dark:border-primary-800/50': apt.isDynamic}">
+
+                            <!-- Dynamic tag for newly booked -->
+                            <div *ngIf="apt.isDynamic"
+                                class="absolute top-0 right-0 bg-primary-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-bl-lg rounded-tr-xl">
+                                NEW
+                            </div>
 
                             <!-- Left Info -->
                             <div class="flex items-start sm:items-center">
-                                <div
-                                    class="w-14 h-14 bg-slate-100 dark:bg-slate-700 rounded-2xl flex items-center justify-center font-bold text-slate-600 dark:text-slate-300 mr-4 shadow-sm border border-slate-200 dark:border-slate-600 flex-shrink-0">
+                                <div class="w-14 h-14 bg-slate-100 dark:bg-slate-700 rounded-2xl flex items-center justify-center font-bold text-slate-600 dark:text-slate-300 mr-4 shadow-sm border border-slate-200 dark:border-slate-600 flex-shrink-0"
+                                    [ngClass]="{'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 border-primary-200 dark:border-primary-800': apt.isDynamic}">
                                     {{ apt.time.split(' ')[0] }}
                                 </div>
                                 <div>
                                     <h4
                                         class="text-base font-bold text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                                        {{ apt.patientName }}</h4>
+                                        {{ apt.patientName }} <span *ngIf="apt.isDynamic"
+                                            class="text-xs text-primary-500 font-semibold ml-1">({{ apt.date }})</span>
+                                    </h4>
                                     <div class="flex items-center text-sm text-slate-500 dark:text-slate-400 mt-1">
                                         <i-lucide name="activity-square"
                                             class="w-3.5 h-3.5 mr-1.5 opacity-70"></i-lucide> {{ apt.type }}
@@ -118,13 +127,20 @@
 
                             <!-- Right Actions / Status -->
                             <div
-                                class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-2 sm:mt-0 pb-1 sm:pb-0 border-b sm:border-0 border-slate-100 dark:border-slate-700">
-                                <span class="px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded-lg mr-4"
-                                    [ngClass]="{
-                                        'bg-status-success/10 text-status-success dark:bg-status-success/20 dark:text-emerald-400': apt.status === 'completed',
-                                        'bg-status-warning/10 text-status-warning dark:bg-status-warning/20 dark:text-amber-400': apt.status === 'pending' || apt.status === 'scheduled',
-                                        'bg-status-danger/10 text-status-danger dark:bg-status-danger/20 dark:text-red-400': apt.status === 'cancelled'
-                                      }">
+                                class="flex items-center justify-between sm:justify-end w-full sm:w-auto mt-2 sm:mt-0 pb-1 sm:pb-0 border-b sm:border-0 border-slate-100 dark:border-slate-700 z-10">
+                                <span
+                                    class="px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded-lg mr-4 bg-status-success/10 text-status-success dark:bg-status-success/20 dark:text-emerald-400"
+                                    *ngIf="apt.status === 'completed' || apt.status === 'confirmed'">
+                                    {{ apt.status }}
+                                </span>
+                                <span
+                                    class="px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded-lg mr-4 bg-status-warning/10 text-status-warning dark:bg-status-warning/20 dark:text-amber-400"
+                                    *ngIf="apt.status === 'pending' || apt.status === 'scheduled'">
+                                    {{ apt.status }}
+                                </span>
+                                <span
+                                    class="px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded-lg mr-4 bg-status-danger/10 text-status-danger dark:bg-status-danger/20 dark:text-red-400"
+                                    *ngIf="apt.status === 'cancelled'">
                                     {{ apt.status }}
                                 </span>
 

@@ -1,8 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
+import { BookingService } from '../../../core/services/booking.service';
 
 @Component({
     selector: 'app-patient-register',
@@ -13,6 +14,8 @@ import { LucideAngularModule } from 'lucide-angular';
 })
 export class PatientRegisterComponent {
     private router = inject(Router);
+    private route = inject(ActivatedRoute);
+    private bookingService = inject(BookingService);
 
     isLoading = false;
     showPassword = false;
@@ -33,6 +36,9 @@ export class PatientRegisterComponent {
     emergencyContact = '';
     agreeTerms = false;
 
+    // Doctor context (passed from doctor-profile page)
+    private doctorId: string | null = null;
+
     conditions = [
         'Back Pain', 'Knee Injury', 'Shoulder Pain', 'Neck Pain',
         'Sports Injury', 'Post Surgery', 'Frozen Shoulder', 'Arthritis',
@@ -40,6 +46,11 @@ export class PatientRegisterComponent {
     ];
 
     genders = ['Male', 'Female', 'Non-binary', 'Prefer not to say'];
+
+    ngOnInit() {
+        // Check if coming from a doctor profile
+        this.doctorId = this.route.snapshot.queryParamMap.get('doctorId');
+    }
 
     get passwordsMatch(): boolean {
         return this.password === this.confirmPassword;
@@ -72,10 +83,28 @@ export class PatientRegisterComponent {
     register() {
         if (!this.step2Valid) return;
         this.isLoading = true;
-        // Simulate registration delay, then redirect to book appointment
+
+        // Register patient via BookingService
+        this.bookingService.registerPatient({
+            fullName: this.fullName,
+            email: this.email,
+            phone: this.phone,
+            dob: this.dob,
+            gender: this.gender,
+            address: this.address,
+            condition: this.condition,
+            emergencyContact: this.emergencyContact
+        });
+
+        // Simulate registration delay, then redirect
         setTimeout(() => {
             this.isLoading = false;
-            this.router.navigate(['/patient/book-appointment']);
+            // If coming from a doctor profile, go back to that doctor's profile
+            if (this.doctorId) {
+                this.router.navigate(['/doctor-profile', this.doctorId]);
+            } else {
+                this.router.navigate(['/patient/book-appointment']);
+            }
         }, 1200);
     }
 }

@@ -4,6 +4,7 @@ import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { MockApiService } from '../../core/services/mock-api.service';
+import { BookingService } from '../../core/services/booking.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -17,14 +18,17 @@ export class DoctorProfileComponent implements OnInit {
     private router = inject(Router);
     private route = inject(ActivatedRoute);
     private api = inject(MockApiService);
+    private bookingService = inject(BookingService);
 
     doctor: any = null;
     activeTab: 'profile' | 'book' = 'profile';
 
     // Booking form
-    selectedDate = '';
+    selectedDate = new Date().toISOString().split('T')[0];
     selectedSlot = '';
     bookingConfirmed = false;
+    bookedSlots: string[] = [];
+    bookingError = '';
 
     availableSlots = [
         '09:00 AM', '09:45 AM', '10:30 AM', '11:15 AM',
@@ -47,23 +51,85 @@ export class DoctorProfileComponent implements OnInit {
         }
     }
 
-    // Navigate to patient registration first, then come back for booking
+    /** Check if the patient is registered */
+    get isPatientRegistered(): boolean {
+        return this.bookingService.isPatientRegistered;
+    }
+
+    /** Get registered patient name */
+    get patientName(): string {
+        return this.bookingService.currentPatient?.fullName || '';
+    }
+
+    // Navigate to patient registration first, pass doctorId so it returns here
     goToPatientRegister() {
-        this.router.navigate(['/patient/register']);
+        this.router.navigate(['/patient/register'], {
+            queryParams: { doctorId: this.doctor?.id }
+        });
     }
 
     startBooking() {
+        // Check if patient is registered
+        if (!this.isPatientRegistered) {
+            this.bookingError = 'Please register first before booking an appointment.';
+            return;
+        }
+        this.bookingError = '';
         this.activeTab = 'book';
+        this.onDateChange(); // Ensure slots are refreshed for the default date when tab opens
+    }
+
+    /** When date changes, reload booked slots for that date */
+    onDateChange() {
+        if (this.doctor && this.selectedDate) {
+            this.bookedSlots = this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
+            // If the selected slot is now booked, deselect it
+            if (this.bookedSlots.includes(this.selectedSlot)) {
+                this.selectedSlot = '';
+            }
+        }
+    }
+
+    /** Check if a slot is already booked */
+    isSlotBooked(slot: string): boolean {
+        return this.bookedSlots.includes(slot);
+    }
+
+    selectSlot(slot: string) {
+        if (!this.isSlotBooked(slot)) {
+            this.selectedSlot = slot;
+        }
     }
 
     confirmBooking() {
-        if (this.selectedDate && this.selectedSlot) {
-            this.bookingConfirmed = true;
+        if (this.selectedDate && this.selectedSlot && this.doctor) {
+            const appointment = this.bookingService.bookAppointment({
+                doctorId: this.doctor.id,
+                doctorName: this.doctor.name,
+                doctorSpecialty: this.doctor.specialty,
+                doctorImage: this.doctor.image,
+                date: this.selectedDate,
+                time: this.selectedSlot,
+                type: 'Consultation'
+            });
+
+            if (appointment) {
+                this.bookingConfirmed = true;
+                this.bookingError = '';
+                // Refresh booked slots
+                this.bookedSlots = this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
+            } else {
+                this.bookingError = 'This slot is already booked or you are not registered. Please try another slot.';
+            }
         }
     }
 
     goToDashboard() {
         this.router.navigate(['/patient/dashboard']);
+    }
+
+    goToDoctorDashboard() {
+        this.router.navigate(['/doctor/dashboard']);
     }
 
     goBack() {

@@ -895,3 +895,139 @@
         transform: translateY(0);
     }
 }
+
+/* ── REGISTRATION BADGE ── */
+.registration-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    border: 1.5px solid #6ee7b7;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #047857;
+    margin-bottom: 0.75rem;
+
+    strong {
+        font-weight: 800;
+        color: #065f46;
+    }
+}
+
+/* ── BOOKING ERROR ── */
+.booking-error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    border: 1.5px solid #fca5a5;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #b91c1c;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.error-register-link {
+    background: none;
+    border: none;
+    color: #0ea5e9;
+    font-weight: 700;
+    font-size: 0.78rem;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: inherit;
+    padding: 0;
+    margin-left: 0.25rem;
+
+    &:hover {
+        color: #0284c7;
+    }
+}
+
+/* ── BOOKING AS TEXT ── */
+.booking-as-text {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: #047857;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    padding: 0.5rem 0.875rem;
+    background: #ecfdf5;
+    border-radius: 10px;
+    border: 1px solid #a7f3d0;
+
+    strong {
+        font-weight: 800;
+    }
+}
+
+/* ── BOOKED SLOT ── */
+.slot-btn {
+    position: relative;
+
+    &.booked {
+        background: #fee2e2 !important;
+        border-color: #fca5a5 !important;
+        color: #b91c1c !important;
+        cursor: not-allowed !important;
+        opacity: 0.7;
+        transform: none !important;
+        box-shadow: none !important;
+
+        &:hover {
+            transform: none !important;
+            background: #fee2e2 !important;
+        }
+    }
+}
+
+.booked-badge {
+    display: block;
+    font-size: 0.58rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #dc2626;
+    margin-top: 0.15rem;
+}
+
+/* ── DASHBOARD BUTTONS ── */
+.dashboard-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    width: 100%;
+}
+
+.go-doctor-dashboard-btn {
+    width: 100%;
+    padding: 0.9rem 1.5rem;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    color: #0ea5e9;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border: 2px solid #bae6fd;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: inherit;
+
+    &:hover {
+        transform: translateY(-2px);
+        background: #e0f2fe;
+        border-color: #0ea5e9;
+        box-shadow: 0 6px 18px rgba(14, 165, 233, 0.2);
+    }
+}

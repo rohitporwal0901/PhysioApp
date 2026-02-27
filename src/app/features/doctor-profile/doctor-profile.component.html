@@ -71,9 +71,15 @@
                         </div>
                     </div>
 
+                    <!-- Registration Status Badge -->
+                    <div *ngIf="isPatientRegistered" class="registration-badge">
+                        <i-lucide name="check-circle" class="w-4 h-4"></i-lucide>
+                        Registered as <strong>{{ patientName }}</strong>
+                    </div>
+
                     <!-- Action Buttons -->
                     <div class="action-btns">
-                        <button *ngIf="doctor.available && activeTab === 'profile'" (click)="goToPatientRegister()"
+                        <button *ngIf="doctor.available && activeTab === 'profile' && !isPatientRegistered" (click)="goToPatientRegister()"
                             class="btn-book">
                             <i-lucide name="calendar-plus" class="w-5 h-5"></i-lucide>
                             Register & Book Appointment
@@ -81,10 +87,19 @@
                         <button *ngIf="doctor.available && activeTab === 'profile'" (click)="startBooking()"
                             class="btn-book-slot">
                             <i-lucide name="calendar" class="w-4 h-4"></i-lucide>
-                            Already Registered? Book Slot
+                            {{ isPatientRegistered ? 'Book Appointment Slot' : 'Already Registered? Book Slot' }}
                         </button>
                         <button *ngIf="!doctor.available" class="btn-unavailable">
                             Currently Unavailable
+                        </button>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div *ngIf="bookingError" class="booking-error">
+                        <i-lucide name="alert-circle" class="w-4 h-4"></i-lucide>
+                        {{ bookingError }}
+                        <button *ngIf="!isPatientRegistered" (click)="goToPatientRegister()" class="error-register-link">
+                            Register Now →
                         </button>
                     </div>
                 </div>
@@ -219,34 +234,56 @@
                                 </div>
                             </div>
 
-                            <button (click)="goToDashboard()" class="go-dashboard-btn">
-                                <i-lucide name="layout-dashboard" class="w-5 h-5"></i-lucide>
-                                Go to My Dashboard
-                            </button>
+                            <div class="dashboard-btns">
+                                <button (click)="goToDashboard()" class="go-dashboard-btn">
+                                    <i-lucide name="layout-dashboard" class="w-5 h-5"></i-lucide>
+                                    Patient Dashboard
+                                </button>
+                                <button (click)="goToDoctorDashboard()" class="go-doctor-dashboard-btn">
+                                    <i-lucide name="activity" class="w-5 h-5"></i-lucide>
+                                    Doctor Dashboard
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Booking Form -->
                     <div *ngIf="!bookingConfirmed" class="content-card">
                         <h2 class="content-card-title">Select Date & Time</h2>
-                        <p class="about-text" style="margin-bottom: 1.25rem;">
+                        <p class="about-text" style="margin-bottom: 0.5rem;">
                             Choose your preferred appointment slot with {{ doctor.name }}.
                         </p>
+                        <p *ngIf="isPatientRegistered" class="booking-as-text">
+                            <i-lucide name="user-check" class="w-4 h-4"></i-lucide>
+                            Booking as <strong>{{ patientName }}</strong>
+                        </p>
+
+                        <!-- Error in booking form -->
+                        <div *ngIf="bookingError" class="booking-error" style="margin-bottom: 1rem;">
+                            <i-lucide name="alert-circle" class="w-4 h-4"></i-lucide>
+                            {{ bookingError }}
+                        </div>
 
                         <div class="booking-form">
                             <!-- Date picker -->
                             <div class="date-section">
                                 <label>Select Date</label>
-                                <input type="date" [(ngModel)]="selectedDate" [min]="minDate" class="date-input">
+                                <input type="date" [(ngModel)]="selectedDate" [min]="minDate" class="date-input"
+                                    (ngModelChange)="onDateChange()">
                             </div>
 
                             <!-- Time slots -->
                             <div class="slots-section">
                                 <label>Available Time Slots</label>
                                 <div class="slots-grid">
-                                    <button *ngFor="let slot of availableSlots" (click)="selectedSlot = slot"
-                                        class="slot-btn" [class.selected]="selectedSlot === slot">
+                                    <button *ngFor="let slot of availableSlots"
+                                        (click)="selectSlot(slot)"
+                                        class="slot-btn"
+                                        [class.selected]="selectedSlot === slot"
+                                        [class.booked]="isSlotBooked(slot)"
+                                        [disabled]="isSlotBooked(slot)">
                                         {{ slot }}
+                                        <span *ngIf="isSlotBooked(slot)" class="booked-badge">Booked</span>
                                     </button>
                                 </div>
                             </div>
