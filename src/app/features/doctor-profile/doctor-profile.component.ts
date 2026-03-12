@@ -111,9 +111,26 @@ export class DoctorProfileComponent implements OnInit {
         }
     }
 
-    /** Check if a slot is already booked */
+    /** Check if a slot is already booked or in the past */
     isSlotBooked(slot: string): boolean {
-        return this.bookedSlots.includes(slot);
+        return this.bookedSlots.includes(slot) || this.isSlotInPast(slot);
+    }
+
+    isSlotInPast(slot: string): boolean {
+        // Only disable past slots if the selected date is today
+        if (this.selectedDate !== this.minDate) return false;
+
+        const now = new Date();
+        const [time, period] = slot.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+
+        if (period === 'PM' && hours < 12) hours += 12;
+        if (period === 'AM' && hours === 12) hours = 0;
+
+        const slotTime = new Date();
+        slotTime.setHours(hours, minutes, 0, 0);
+
+        return slotTime < now;
     }
 
     selectSlot(slot: string) {

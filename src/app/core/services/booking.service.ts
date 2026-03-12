@@ -10,7 +10,8 @@ import {
   doc, 
   updateDoc,
   Timestamp,
-  orderBy
+  orderBy,
+  arrayUnion
 } from '@angular/fire/firestore';
 import { Observable, BehaviorSubject, map } from 'rxjs';
 import { AuthService, AppUser } from './auth.service';
@@ -91,6 +92,13 @@ export class BookingService {
       };
 
       await addDoc(this.appointmentsCollection, appointment);
+      
+      // 2. Link patient to doctor permanently in their profile
+      const userRef = doc(this.firestore, 'users', user.uid);
+      await updateDoc(userRef, {
+        assignedDoctors: arrayUnion(data.doctorId)
+      });
+
       return { success: true };
     } catch (err) {
       console.error('Booking error:', err);

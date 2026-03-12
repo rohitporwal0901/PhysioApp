@@ -70,7 +70,23 @@ export class BookAppointmentComponent implements OnInit {
   }
 
   isSlotBooked(slot: string): boolean {
-    return this.bookedSlots.includes(slot);
+    return this.bookedSlots.includes(slot) || this.isSlotInPast(slot);
+  }
+
+  isSlotInPast(slot: string): boolean {
+    if (this.selectedDate !== this.minDate) return false;
+
+    const now = new Date();
+    const [time, period] = slot.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+
+    if (period === 'PM' && hours < 12) hours += 12;
+    if (period === 'AM' && hours === 12) hours = 0;
+
+    const slotTime = new Date();
+    slotTime.setHours(hours, minutes, 0, 0);
+
+    return slotTime < now;
   }
 
   selectTimeSlot(slot: string) {

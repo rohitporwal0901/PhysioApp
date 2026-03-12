@@ -38,6 +38,16 @@ export class MockApiService {
     return this.collectionToObservable(q);
   }
 
+  /** Get patients specifically assigned to a doctor (through their bookings) */
+  getPatientsByDoctor(doctorId: string): Observable<any[]> {
+    const q = query(
+      collection(this.firestore, 'users'),
+      where('role', '==', 'patient'),
+      where('assignedDoctors', 'array-contains', doctorId)
+    );
+    return this.collectionToObservable(q);
+  }
+
   /** Get all appointments */
   getAppointments(): Observable<any[]> {
     return this.collectionToObservable(collection(this.firestore, 'appointments'));
