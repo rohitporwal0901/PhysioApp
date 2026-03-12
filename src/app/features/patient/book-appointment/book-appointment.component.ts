@@ -115,6 +115,14 @@ export class BookAppointmentComponent implements OnInit {
     }
   }
 
+  bookAnotherSlot() {
+    this.currentStep = 1;
+    this.selectedDoctor = null;
+    this.selectedTimeSlot = null;
+    this.bookingError = '';
+    this.isProcessing = false;
+  }
+
   get formattedDate(): string {
     if (!this.selectedDate) return '';
     const d = new Date(this.selectedDate + 'T00:00:00');
