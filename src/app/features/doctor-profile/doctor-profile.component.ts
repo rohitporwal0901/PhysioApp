@@ -51,6 +51,15 @@ export class DoctorProfileComponent implements OnInit {
                 this.doctor = docs.find(d => d.id === docId) || docs[0];
             });
         }
+        
+        this.route.queryParams.subscribe(params => {
+            if (params['tab'] === 'book') {
+                if (this.isPatientRegistered) {
+                    this.activeTab = 'book';
+                    this.onDateChange();
+                }
+            }
+        });
     }
 
     /** Check if the patient is registered */
@@ -83,8 +92,9 @@ export class DoctorProfileComponent implements OnInit {
             } else {
                 // Not logged in at all - "Already Registered? Book Slot" flow
                 // Take them to login and then come back
+                const currentUrl = this.router.url.split('?')[0]; // strip existing query params if any
                 this.router.navigate(['/login'], { 
-                    queryParams: { returnUrl: this.router.url } 
+                    queryParams: { returnUrl: `${currentUrl}?tab=book` } 
                 });
             }
         }
@@ -133,6 +143,13 @@ export class DoctorProfileComponent implements OnInit {
                 this.bookingError = result.error || 'This slot is already booked or you are not registered. Please try another slot.';
             }
         }
+    }
+
+    bookAnotherSlot() {
+        this.bookingConfirmed = false;
+        this.selectedSlot = '';
+        this.bookingError = '';
+        this.onDateChange();
     }
 
     goToDashboard() {

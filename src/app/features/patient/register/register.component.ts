@@ -103,8 +103,11 @@ export class PatientRegisterComponent {
         this.isLoading = false;
 
         if (result.success) {
-            // Navigate to patient dashboard
-            this.router.navigate(['/patient/dashboard']);
+            if (this.doctorId) {
+                this.router.navigate(['/doctor-profile', this.doctorId], { queryParams: { tab: 'book' } });
+            } else {
+                this.router.navigate(['/patient/dashboard']);
+            }
         } else {
             this.errorMessage = result.error ?? 'Registration failed. Please try again.';
         }

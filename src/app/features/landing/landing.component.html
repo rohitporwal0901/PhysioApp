@@ -34,26 +34,10 @@
 
       <!-- Desktop CTA -->
       <div class="hidden md:flex items-center gap-3">
-        @if (!isLoggedIn) {
-        <button (click)="goToLogin()"
-          class="text-sm font-semibold text-primary-600 hover:text-primary-700 px-3 py-1.5 transition-colors">
-          Patient Login
-        </button>
         <button (click)="goToRegister()"
           class="btn-primary px-5 py-2.5 rounded-xl text-white text-sm font-bold shadow-md shadow-primary-500/30">
           Book Appointment
         </button>
-        } @else {
-        <button (click)="goToDashboard()"
-          class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-sm font-bold hover:bg-slate-200 transition-all border border-slate-200">
-          <i-lucide name="layout-dashboard" class="w-4 h-4"></i-lucide>
-          My Dashboard
-        </button>
-        <button (click)="logout()"
-          class="p-2.5 rounded-xl border border-rose-100 text-rose-500 hover:bg-rose-50 transition-all" title="Logout">
-          <i-lucide name="log-out" class="w-4 h-4"></i-lucide>
-        </button>
-        }
       </div>
 
       <!-- Mobile hamburger -->
@@ -82,17 +66,8 @@
           <i-lucide name="stethoscope" class="w-4 h-4 text-secondary-400"></i-lucide> For Physiotherapists
         </button>
         <div class="flex gap-3 pt-3 border-t border-slate-100 mt-2">
-          @if (!isLoggedIn) {
-          <button (click)="goToLogin(); closeMobileMenu()"
-            class="flex-1 py-3 rounded-xl border border-primary-200 text-primary-600 font-semibold text-sm hover:bg-primary-50 transition-all">Login</button>
           <button (click)="goToRegister(); closeMobileMenu()"
-            class="flex-1 py-3 rounded-xl btn-primary text-white font-bold text-sm">Book Now</button>
-          } @else {
-          <button (click)="goToDashboard(); closeMobileMenu()"
-            class="flex-1 py-3 rounded-xl bg-primary-50 text-primary-700 font-bold text-sm">Dashboard</button>
-          <button (click)="logout(); closeMobileMenu()"
-            class="flex-1 py-3 rounded-xl border border-rose-100 text-rose-500 font-bold text-sm">Logout</button>
-          }
+            class="flex-1 py-3 rounded-xl btn-primary text-white font-bold text-sm">Book Appointment</button>
         </div>
       </div>
     </div>

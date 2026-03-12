@@ -19,7 +19,7 @@ export class AuthService {
   private firestore = inject(Firestore);
   private router = inject(Router);
 
-  private currentUserSubject = new BehaviorSubject<AppUser | null>(null);
+  private currentUserSubject = new BehaviorSubject<AppUser | null | undefined>(undefined);
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor() {
@@ -34,15 +34,31 @@ export class AuthService {
   }
 
   get currentUser(): AppUser | null {
-    return this.currentUserSubject.getValue();
+    const val = this.currentUserSubject.getValue();
+    return val === undefined ? null : val;
   }
 
   get isLoggedIn(): boolean {
-    return this.currentUserSubject.getValue() !== null;
+    return !!this.currentUserSubject.getValue();
   }
 
   get userRole(): string | null {
     return this.currentUserSubject.getValue()?.role ?? null;
+  }
+
+  async waitForAuth(): Promise<AppUser | null> {
+    const currentState = this.currentUserSubject.getValue();
+    if (currentState !== undefined) {
+      return currentState;
+    }
+    return new Promise((resolve) => {
+      const sub = this.currentUserSubject.subscribe(user => {
+        if (user !== undefined) {
+          sub.unsubscribe();
+          resolve(user);
+        }
+      });
+    });
   }
 
   private async fetchUserProfile(uid: string): Promise<AppUser | null> {
@@ -69,7 +85,7 @@ export class AuthService {
         return { success: false, error: 'User profile not found. Please contact support.' };
       }
       this.currentUserSubject.next(profile);
-      this.navigateByRole(profile.role);
+      // Removed automatic navigation so login component can handle returnUrl
       return { success: true };
     } catch (err: any) {
       return { success: false, error: this.mapFirebaseError(err.code) };

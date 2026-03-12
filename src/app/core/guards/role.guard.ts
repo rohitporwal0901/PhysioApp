@@ -3,11 +3,11 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
-  return () => {
+  return async () => {
     const auth = inject(AuthService);
     const router = inject(Router);
 
-    const user = auth.currentUser;
+    const user = await auth.waitForAuth();
     if (!user) {
       router.navigate(['/login']);
       return false;
