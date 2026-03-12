@@ -34,7 +34,9 @@ export class DoctorProfileComponent implements OnInit {
     patientNotes = '';
 
     availableSlots = [
-        '04:15 PM', '05:00 PM'
+       '09:00 AM', '09:45 AM', '10:30 AM', '11:15 AM',
+    '12:00 PM', '02:00 PM', '02:45 PM', '03:30 PM',
+    '04:15 PM', '05:00 PM'
     ];
 
     // Unsplash doctor profile image collection
