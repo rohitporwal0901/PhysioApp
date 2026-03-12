@@ -87,7 +87,12 @@ export class AuthService {
     emergencyContact?: string;
   }): Promise<{ success: boolean; error?: string }> {
     try {
+      console.log("data.email", data.email);
+      console.log(" data.passwordl", data.password);
+
+
       const cred = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
+      console.log("cred", cred);
       const profile: AppUser = {
         uid: cred.user.uid,
         email: data.email,
@@ -178,6 +183,7 @@ export class AuthService {
       case 'auth/user-not-found': return 'No account found with this email.';
       case 'auth/wrong-password': return 'Incorrect password. Please try again.';
       case 'auth/invalid-credential': return 'Invalid email or password. Please try again.';
+      case 'auth/operation-not-allowed': return 'Registration is currently disabled. Please enable Email/Password login in Firebase Console.';
       case 'auth/too-many-requests': return 'Too many failed attempts. Please try again later.';
       default: return 'An error occurred. Please try again.';
     }

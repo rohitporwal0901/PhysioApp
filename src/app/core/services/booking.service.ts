@@ -13,7 +13,7 @@ import {
   orderBy
 } from '@angular/fire/firestore';
 import { Observable, BehaviorSubject, map } from 'rxjs';
-import { AuthService } from './auth.service';
+import { AuthService, AppUser } from './auth.service';
 
 export interface BookedAppointment {
   id?: string;
@@ -40,6 +40,16 @@ export class BookingService {
 
   private appointmentsCollection = collection(this.firestore, 'appointments');
 
+  get isPatientRegistered(): boolean {
+    const user = this.auth.currentUser;
+    return !!user && user.role === 'patient';
+  }
+
+  get currentPatient(): AppUser | null {
+    const user = this.auth.currentUser;
+    return user && user.role === 'patient' ? user : null;
+  }
+
   // ═══════════════════════════════════════
   //  BOOKING LOGIC
   // ═══════════════════════════════════════
@@ -48,6 +58,7 @@ export class BookingService {
     doctorId: string;
     doctorName: string;
     doctorSpecialty: string;
+    doctorImage?: string;
     date: string;
     time: string;
     type?: string;
@@ -131,6 +142,11 @@ export class BookingService {
     );
     const snap = await getDocs(q);
     return snap.docs.map(doc => doc.data()['time']);
+  }
+
+  /** Alias for legacy/component usage */
+  getBookedSlotsForDoctor(doctorId: string, date: string): Promise<string[]> {
+    return this.getBookedSlots(doctorId, date);
   }
 
   // ═══════════════════════════════════════

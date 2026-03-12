@@ -7,7 +7,10 @@ import {
   onSnapshot,
   doc,
   deleteDoc,
-  updateDoc
+  updateDoc,
+  addDoc,
+  Timestamp,
+  getDoc
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
@@ -35,9 +38,41 @@ export class MockApiService {
     return this.collectionToObservable(q);
   }
 
+  /** Get all appointments */
+  getAppointments(): Observable<any[]> {
+    return this.collectionToObservable(collection(this.firestore, 'appointments'));
+  }
+
+  /** Add a new doctor */
+  addDoctor(doctor: any): Promise<any> {
+    return addDoc(collection(this.firestore, 'users'), {
+      ...doctor,
+      role: 'doctor',
+      createdAt: Timestamp.now(),
+      isAvailable: true
+    });
+  }
+
   removeUser(uid: string): Promise<void> {
     const docRef = doc(this.firestore, 'users', uid);
     return deleteDoc(docRef);
+  }
+
+  /** Alias for removeUser to match component usage */
+  removeDoctor(uid: string): Promise<void> {
+    return this.removeUser(uid);
+  }
+
+  /** Toggle doctor availability */
+  async toggleDoctorAvailability(uid: string): Promise<void> {
+    const docRef = doc(this.firestore, 'users', uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      await updateDoc(docRef, {
+        isAvailable: !data['isAvailable']
+      });
+    }
   }
 
   // Generic helper for real-time collection updates

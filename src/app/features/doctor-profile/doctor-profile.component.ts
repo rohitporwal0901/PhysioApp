@@ -80,9 +80,9 @@ export class DoctorProfileComponent implements OnInit {
     }
 
     /** When date changes, reload booked slots for that date */
-    onDateChange() {
+    async onDateChange() {
         if (this.doctor && this.selectedDate) {
-            this.bookedSlots = this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
+            this.bookedSlots = await this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
             // If the selected slot is now booked, deselect it
             if (this.bookedSlots.includes(this.selectedSlot)) {
                 this.selectedSlot = '';
@@ -101,9 +101,9 @@ export class DoctorProfileComponent implements OnInit {
         }
     }
 
-    confirmBooking() {
+    async confirmBooking() {
         if (this.selectedDate && this.selectedSlot && this.doctor) {
-            const appointment = this.bookingService.bookAppointment({
+            const result = await this.bookingService.bookAppointment({
                 doctorId: this.doctor.id,
                 doctorName: this.doctor.name,
                 doctorSpecialty: this.doctor.specialty,
@@ -113,13 +113,13 @@ export class DoctorProfileComponent implements OnInit {
                 type: 'Consultation'
             });
 
-            if (appointment) {
+            if (result.success) {
                 this.bookingConfirmed = true;
                 this.bookingError = '';
                 // Refresh booked slots
-                this.bookedSlots = this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
+                this.bookedSlots = await this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
             } else {
-                this.bookingError = 'This slot is already booked or you are not registered. Please try another slot.';
+                this.bookingError = result.error || 'This slot is already booked or you are not registered. Please try another slot.';
             }
         }
     }

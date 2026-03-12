@@ -1,12 +1,12 @@
 export const environment = {
     production: false,
     firebaseConfig: {
-        apiKey: "AIzaSyAaAxX_vizYtyQUShcTo2X7lCC61BqhGyI",
-        authDomain: "test-project-59ee7.firebaseapp.com",
-        projectId: "test-project-59ee7",
-        storageBucket: "test-project-59ee7.firebasestorage.app",
-        messagingSenderId: "855806065710",
-        appId: "1:855806065710:web:cf197ff6fd6b4f77dfb3bf",
-        measurementId: "G-EJ2PEVCXMT"
+        apiKey: "AIzaSyBW2loJtXmLapGB4TkqfMjOdaaIxRE6VBg",
+        authDomain: "physioapp-8d82a.firebaseapp.com",
+        projectId: "physioapp-8d82a",
+        storageBucket: "physioapp-8d82a.firebasestorage.app",
+        messagingSenderId: "232327119808",
+        appId: "1:232327119808:web:e81028a0ff76c7df057e25",
+        measurementId: "G-GEZH3XS280"
     }
 };
