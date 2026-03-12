@@ -106,4 +106,18 @@ export class AgendaComponent implements OnInit {
       default: return 'bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-400';
     }
   }
+
+  sendWhatsApp(apt: BookedAppointment) {
+    if (!apt) return;
+    
+    // We would ideally fetch the patient's phone here. 
+    // Since we only have patientEmail and patientName in the appointment, 
+    // we'll assume there might be a patient object or we can fetch it.
+    // For now, let's use a dummy number or placeholders.
+    // In a real app, we'd query the patient user record first.
+    
+    const message = `Hello ${apt.patientName}, I am your Physiotherapist. This is regarding your appointment on ${apt.date} at ${apt.time}.`;
+    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  }
 }

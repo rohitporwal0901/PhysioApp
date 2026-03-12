@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit {
   doctors$: Observable<any[]> | null = null;
   upcomingAppointments: BookedAppointment[] = [];
   patientName = 'Guest';
+  isLoading = true;
 
   ngOnInit() {
     this.doctors$ = this.api.getDoctors();
@@ -32,7 +33,9 @@ export class DashboardComponent implements OnInit {
       
       // Get real-time appointments from Firestore
       this.bookingService.getPatientAppointments(user.uid).subscribe(appointments => {
-        this.upcomingAppointments = appointments;
+        // Show only confirmed appointments in the dashboard summary
+        this.upcomingAppointments = appointments.filter(apt => apt.status === 'confirmed');
+        this.isLoading = false;
       });
     }
   }

@@ -228,13 +228,13 @@
                             class="text-xs font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2 transition-colors">
                             Quick Actions</h4>
                         <div class="space-y-3">
-                           <button class="w-full text-left p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-sm font-semibold hover:border-primary-300 transition-all flex items-center justify-between">
-                               <span>View Medical Record</span>
+                           <button (click)="sendWhatsApp(selectedAppointment)"
+                               class="w-full text-left p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-sm font-semibold hover:border-primary-300 transition-all flex items-center justify-between group">
+                               <div class="flex items-center gap-2">
+                                   <i-lucide name="message-circle" class="w-4 h-4 text-green-500 group-hover:scale-110 transition-transform"></i-lucide>
+                                   <span>Send WhatsApp Message</span>
+                               </div>
                                <i-lucide name="chevron-right" class="w-4 h-4"></i-lucide>
-                           </button>
-                           <button class="w-full text-left p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-sm font-semibold hover:border-primary-300 transition-all flex items-center justify-between">
-                               <span>Send Message</span>
-                               <i-lucide name="message-circle" class="w-4 h-4"></i-lucide>
                            </button>
                         </div>
                     </div>
