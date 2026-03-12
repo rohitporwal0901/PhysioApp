@@ -10,6 +10,7 @@ export interface AppUser {
   role: 'admin' | 'doctor' | 'patient';
   fullName: string;
   createdAt?: Date;
+  available?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -85,14 +86,12 @@ export class AuthService {
     address?: string;
     condition?: string;
     emergencyContact?: string;
+    image?: string;
   }): Promise<{ success: boolean; error?: string }> {
     try {
-      console.log("data.email", data.email);
-      console.log(" data.passwordl", data.password);
-
-
       const cred = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
-      console.log("cred", cred);
+      
+      const { password, ...cleanData } = data;
       const profile: AppUser = {
         uid: cred.user.uid,
         email: data.email,
@@ -100,11 +99,13 @@ export class AuthService {
         fullName: data.fullName,
         createdAt: new Date()
       };
+
+      const dummyImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName)}&background=random&color=fff&size=512`;
+
       await setDoc(doc(this.firestore, 'users', cred.user.uid), {
+        ...cleanData,
         ...profile,
-        phone: data.phone,
-        dob: data.dob,
-        gender: data.gender,
+        image: data.image || dummyImage,
         address: data.address ?? '',
         condition: data.condition ?? '',
         emergencyContact: data.emergencyContact ?? '',
@@ -113,6 +114,7 @@ export class AuthService {
       this.currentUserSubject.next(profile);
       return { success: true };
     } catch (err: any) {
+      console.error('Registration error details:', err);
       return { success: false, error: this.mapFirebaseError(err.code) };
     }
   }
@@ -137,25 +139,33 @@ export class AuthService {
     followUpFee?: string;
     consultationType?: string;
     availableDays?: string[];
+    image?: string;
   }): Promise<{ success: boolean; error?: string }> {
     try {
       const cred = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
+      
+      const { password, ...cleanData } = data;
       const profile: AppUser = {
         uid: cred.user.uid,
         email: data.email,
         role: 'doctor',
+        available: true,
         fullName: data.fullName,
         createdAt: new Date()
       };
+
+      const dummyImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName)}&background=0ea5e9&color=fff&size=512`;
+
       await setDoc(doc(this.firestore, 'users', cred.user.uid), {
+        ...cleanData,
         ...profile,
-        ...data,
-        password: undefined, // never store password
+        image: data.image || dummyImage,
         createdAt: new Date().toISOString()
       });
       this.currentUserSubject.next(profile);
       return { success: true };
     } catch (err: any) {
+      console.error('Doctor registration error details:', err);
       return { success: false, error: this.mapFirebaseError(err.code) };
     }
   }

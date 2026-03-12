@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -15,12 +15,18 @@ import { AuthService } from '../../../core/services/auth.service';
 export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   email: string = '';
   password: string = '';
   showPassword: boolean = false;
   isLoading: boolean = false;
   errorMessage: string = '';
+  returnUrl: string = '/';
+
+  ngOnInit() {
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -37,9 +43,16 @@ export class LoginComponent {
     const result = await this.authService.login(this.email, this.password);
     this.isLoading = false;
 
-    if (!result.success) {
+    if (result.success) {
+      if (this.returnUrl && this.returnUrl !== '/') {
+        this.router.navigateByUrl(this.returnUrl);
+      } else {
+        // Fallback to role-based redirection
+        const role = this.authService.userRole;
+        if (role) this.authService.navigateByRole(role);
+      }
+    } else {
       this.errorMessage = result.error ?? 'Login failed. Please try again.';
     }
-    // On success, AuthService.navigateByRole() handles redirection automatically
   }
 }

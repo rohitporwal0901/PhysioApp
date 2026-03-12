@@ -78,13 +78,25 @@ export class MockApiService {
   // Generic helper for real-time collection updates
   private collectionToObservable(q: any): Observable<any[]> {
     return new Observable<any[]>(subscriber => {
+      console.log('Starting Firestore snapshot for query...', q);
       return onSnapshot(q, (snapshot: any) => {
-        const data = snapshot.docs.map((d: any) => ({
-          id: d.id,
-          ...d.data()
-        }));
+        const data = snapshot.docs.map((d: any) => {
+          const docData = d.data();
+          return {
+            id: d.id,
+            ...docData,
+            // Fallback for availability field naming inconsistency
+            available: docData.available ?? docData.isAvailable ?? false,
+            // Ensure rating exists for UI
+            rating: docData.rating ?? 4.5
+          };
+        });
+        console.log(`Firestore snapshot received: ${data.length} items found.`, data);
         subscriber.next(data);
-      }, (error: any) => subscriber.error(error));
+      }, (error: any) => {
+        console.error('Firestore snapshot error:', error);
+        subscriber.error(error);
+      });
     });
   }
 }

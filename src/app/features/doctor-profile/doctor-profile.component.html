@@ -38,8 +38,8 @@
 
                 <!-- Info -->
                 <div class="doctor-info">
-                    <h1 class="doctor-name">{{ doctor.name }}</h1>
-                    <p class="doctor-specialty">{{ doctor.specialty }}</p>
+                    <h1 class="doctor-name">{{ doctor.fullName || doctor.name }}</h1>
+                    <p class="doctor-specialty">{{ doctor.specialization || doctor.specialty }}</p>
 
                     <!-- Rating -->
                     <div class="rating-row">
@@ -128,8 +128,8 @@
                     <div class="content-card">
                         <h2 class="content-card-title">About Dr.</h2>
                         <p class="about-text">
-                            {{ doctor.name }} is a highly experienced physiotherapist specializing in
-                            {{ doctor.specialty }}.
+                            {{ doctor.fullName || doctor.name }} is a highly experienced physiotherapist specializing in
+                            {{ doctor.specialization || doctor.specialty }}.
                             With over 8 years of dedicated clinical practice, they have helped hundreds of patients
                             recover from
                             injuries, surgeries, and chronic conditions. Known for their patient-first approach and
@@ -191,7 +191,7 @@
                     <div class="cta-card">
                         <div class="cta-text">
                             <h3>Ready to start your recovery?</h3>
-                            <p>Register and book your first session with {{ doctor.name }} in under 2 minutes.</p>
+                            <p>Register and book your first session with {{ doctor.fullName || doctor.name }} in under 2 minutes.</p>
                         </div>
                         <button (click)="goToPatientRegister()" class="cta-btn">
                             Register & Book Now
@@ -213,7 +213,7 @@
                             </div>
                             <h2 class="success-h2">Appointment Booked! 🎉</h2>
                             <p class="success-p">
-                                Your session with <strong>{{ doctor.name }}</strong> is confirmed for
+                                Your session with <strong>{{ doctor.fullName || doctor.name }}</strong> is confirmed for
                                 <strong style="color:#0ea5e9">{{ selectedDate }}</strong> at
                                 <strong style="color:#0ea5e9">{{ selectedSlot }}</strong>.
                             </p>
@@ -224,8 +224,8 @@
                                         onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Doctor&background=0ea5e9&color=fff'"
                                         alt="" class="success-doc-img">
                                     <div>
-                                        <p class="success-doc-name">{{ doctor.name }}</p>
-                                        <p class="success-doc-spec">{{ doctor.specialty }}</p>
+                                        <p class="success-doc-name">{{ doctor.fullName || doctor.name }}</p>
+                                        <p class="success-doc-spec">{{ doctor.specialization || doctor.specialty }}</p>
                                     </div>
                                 </div>
                                 <div class="success-meta">
@@ -251,7 +251,7 @@
                     <div *ngIf="!bookingConfirmed" class="content-card">
                         <h2 class="content-card-title">Select Date & Time</h2>
                         <p class="about-text" style="margin-bottom: 0.5rem;">
-                            Choose your preferred appointment slot with {{ doctor.name }}.
+                            Choose your preferred appointment slot with {{ doctor.fullName || doctor.name }}.
                         </p>
                         <p *ngIf="isPatientRegistered" class="booking-as-text">
                             <i-lucide name="user-check" class="w-4 h-4"></i-lucide>
@@ -294,8 +294,8 @@
                                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Doctor&background=0ea5e9&color=fff'"
                                     alt="" class="doc-mini-img">
                                 <div>
-                                    <p class="doc-mini-name">{{ doctor.name }}</p>
-                                    <p class="doc-mini-spec">{{ doctor.specialty }}</p>
+                                    <p class="doc-mini-name">{{ doctor.fullName || doctor.name }}</p>
+                                    <p class="doc-mini-spec">{{ doctor.specialization || doctor.specialty }}</p>
                                     <p class="doc-mini-meta">45 min • In-person consultation</p>
                                 </div>
                             </div>

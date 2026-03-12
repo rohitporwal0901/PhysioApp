@@ -6,8 +6,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
-import { MockApiService } from '../../core/services/mock-api.service';
 import { Observable } from 'rxjs';
+import { MockApiService } from '../../core/services/mock-api.service';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
     selector: 'app-landing',
@@ -20,6 +21,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     private api = inject(MockApiService);
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
+    private authService = inject(AuthService);
 
     doctors$: Observable<any[]> | undefined;
     mobileMenuOpen = false;
@@ -29,6 +31,9 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     activeTestimonial = 0;
     private testimonialInterval: any;
     openFaqIndex: number | null = null;
+
+    get isLoggedIn() { return this.authService.isLoggedIn; }
+    get userRole() { return this.authService.userRole; }
 
     // Hero image slideshow
     activeHeroImage = 0;
@@ -165,6 +170,11 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit() {
         this.doctors$ = this.api.getDoctors();
+        // Re-trigger observer whenever doctors load
+        this.doctors$.subscribe(() => {
+            setTimeout(() => this.setupScrollAnimations(), 200);
+        });
+
         this.startTestimonialRotation();
         this.startHeroImageRotation();
     }
@@ -180,6 +190,10 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private setupScrollAnimations() {
+        // Disconnect existing observers to avoid duplicates
+        this.observers.forEach(o => o.disconnect());
+        this.observers = [];
+
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach(entry => {
@@ -191,12 +205,11 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
                 });
             },
-            { threshold: 0.12 }
+            { threshold: 0.1 }
         );
-        setTimeout(() => {
-            document.querySelectorAll('.reveal, .stats-trigger').forEach(el => observer.observe(el));
-            this.observers.push(observer);
-        }, 100);
+
+        document.querySelectorAll('.reveal, .stats-trigger, .doctor-card, .service-card').forEach(el => observer.observe(el));
+        this.observers.push(observer);
     }
 
     animateCounters() {
@@ -269,4 +282,14 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     goToLogin() { this.router.navigate(['/login']); }
     goToRegister() { this.router.navigate(['/patient/register']); }
     goToDoctorRegister() { this.router.navigate(['/doctor/register']); }
+
+    goToDashboard() {
+        if (this.userRole === 'admin') this.router.navigate(['/admin/dashboard']);
+        else if (this.userRole === 'doctor') this.router.navigate(['/doctor/dashboard']);
+        else this.router.navigate(['/patient/dashboard']);
+    }
+
+    logout() {
+        this.authService.logout();
+    }
 }

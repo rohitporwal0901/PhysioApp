@@ -5,7 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { MockApiService } from '../../core/services/mock-api.service';
 import { BookingService } from '../../core/services/booking.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
     selector: 'app-doctor-profile',
@@ -19,6 +20,7 @@ export class DoctorProfileComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private api = inject(MockApiService);
     private bookingService = inject(BookingService);
+    private authService = inject(AuthService);
 
     doctor: any = null;
     activeTab: 'profile' | 'book' = 'profile';
@@ -53,7 +55,7 @@ export class DoctorProfileComponent implements OnInit {
 
     /** Check if the patient is registered */
     get isPatientRegistered(): boolean {
-        return this.bookingService.isPatientRegistered;
+        return this.authService.isLoggedIn && this.authService.userRole === 'patient';
     }
 
     /** Get registered patient name */
@@ -69,14 +71,23 @@ export class DoctorProfileComponent implements OnInit {
     }
 
     startBooking() {
-        // Check if patient is registered
-        if (!this.isPatientRegistered) {
-            this.bookingError = 'Please register first before booking an appointment.';
-            return;
+        if (this.isPatientRegistered) {
+            this.activeTab = 'book';
+            this.bookingError = '';
+            this.onDateChange();
+        } else {
+            // Not registered as a patient in current session
+            if (this.authService.isLoggedIn) {
+                // Logged in but not as a patient (Doctor or Admin)
+                this.bookingError = `You are currently logged in as an ${this.authService.userRole}. Only patients can book appointments.`;
+            } else {
+                // Not logged in at all - "Already Registered? Book Slot" flow
+                // Take them to login and then come back
+                this.router.navigate(['/login'], { 
+                    queryParams: { returnUrl: this.router.url } 
+                });
+            }
         }
-        this.bookingError = '';
-        this.activeTab = 'book';
-        this.onDateChange(); // Ensure slots are refreshed for the default date when tab opens
     }
 
     /** When date changes, reload booked slots for that date */
@@ -105,8 +116,8 @@ export class DoctorProfileComponent implements OnInit {
         if (this.selectedDate && this.selectedSlot && this.doctor) {
             const result = await this.bookingService.bookAppointment({
                 doctorId: this.doctor.id,
-                doctorName: this.doctor.name,
-                doctorSpecialty: this.doctor.specialty,
+                doctorName: this.doctor.fullName || this.doctor.name || 'Doctor',
+                doctorSpecialty: this.doctor.specialization || this.doctor.specialty || 'Physiotherapist',
                 doctorImage: this.doctor.image,
                 date: this.selectedDate,
                 time: this.selectedSlot,
