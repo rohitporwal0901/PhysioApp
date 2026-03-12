@@ -143,6 +143,13 @@
                     </div>
                 </div>
 
+                <!-- Error Alert -->
+                <div *ngIf="errorMessage"
+                    class="flex items-start gap-3 p-4 mb-4 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/40">
+                    <i-lucide name="alert-circle" class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"></i-lucide>
+                    <p class="text-sm text-red-600 dark:text-red-400 font-medium">{{ errorMessage }}</p>
+                </div>
+
                 <div class="fields-grid">
                     <!-- Condition -->
                     <div class="field-group full-width">

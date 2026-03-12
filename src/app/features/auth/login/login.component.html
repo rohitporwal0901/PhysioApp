@@ -1,18 +1,15 @@
 <div class="min-h-screen flex bg-slate-50 dark:bg-slate-950 overflow-hidden">
 
     <!-- ═══════════════════════════════════════════
-       LEFT PANEL — Role Visual
+       LEFT PANEL — Branding Visual
   ═══════════════════════════════════════════ -->
-    <div class="hidden lg:flex lg:w-[52%] relative flex-col overflow-hidden transition-all duration-700">
+    <div class="hidden lg:flex lg:w-[52%] relative flex-col overflow-hidden">
 
-        <!-- Background image that changes per role -->
+        <!-- Background image -->
         <div class="absolute inset-0">
-            <img [src]="currentConfig.image" alt="Role Visual"
-                class="w-full h-full object-cover transition-all duration-700">
-            <!-- Gradient overlay -->
-            <div class="absolute inset-0 bg-gradient-to-br" [ngClass]="selectedRole === 'Admin' ? 'from-primary-900/90 via-primary-800/75 to-primary-600/60'
-                 : selectedRole === 'Doctor' ? 'from-slate-900/90 via-secondary-900/75 to-secondary-700/60'
-                 : 'from-slate-900/90 via-accent-900/75 to-accent-700/60'">
+            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1200&auto=format&fit=crop"
+                alt="PhysioPro" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary-900/90 via-primary-800/75 to-secondary-700/60">
             </div>
         </div>
 
@@ -30,34 +27,53 @@
                 </span>
             </div>
 
-            <!-- Main Role Content -->
+            <!-- Main Content -->
             <div class="flex-1 flex flex-col justify-center py-12">
 
-                <!-- Role badge -->
                 <div
                     class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 text-white text-sm font-bold px-4 py-2 rounded-full mb-6 w-fit">
-                    <i-lucide [name]="currentConfig.icon" class="w-4 h-4"></i-lucide>
-                    {{ currentConfig.tagline }}
+                    <i-lucide name="shield-check" class="w-4 h-4"></i-lucide>
+                    Secure Portal
                 </div>
 
                 <h2 class="text-4xl xl:text-5xl font-black text-white leading-tight mb-4 font-heading">
-                    Everything You<br>Need, In One Place.
+                    Your Health,<br>Our Priority.
                 </h2>
                 <p class="text-white/70 text-base leading-relaxed mb-10 max-w-md">
-                    {{ currentConfig.description }}
+                    Welcome to PhysioPro — the all-in-one platform for physiotherapy clinics. Manage doctors,
+                    patients, appointments and recovery journeys seamlessly.
                 </p>
 
                 <!-- Feature list -->
                 <div class="space-y-4">
-                    @for (feature of currentConfig.features; track feature.text) {
                     <div class="flex items-center gap-3 text-white/90 group">
                         <div
-                            class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center flex-shrink-0 group-hover:bg-white/25 transition-colors">
-                            <i-lucide [name]="feature.icon" class="w-4 h-4 text-white"></i-lucide>
+                            class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center flex-shrink-0">
+                            <i-lucide name="users" class="w-4 h-4 text-white"></i-lucide>
                         </div>
-                        <span class="text-sm font-semibold">{{ feature.text }}</span>
+                        <span class="text-sm font-semibold">Role-based access for Admins, Doctors & Patients</span>
                     </div>
-                    }
+                    <div class="flex items-center gap-3 text-white/90 group">
+                        <div
+                            class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center flex-shrink-0">
+                            <i-lucide name="calendar" class="w-4 h-4 text-white"></i-lucide>
+                        </div>
+                        <span class="text-sm font-semibold">Smart appointment scheduling & tracking</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-white/90 group">
+                        <div
+                            class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center flex-shrink-0">
+                            <i-lucide name="activity" class="w-4 h-4 text-white"></i-lucide>
+                        </div>
+                        <span class="text-sm font-semibold">Patient recovery progress monitoring</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-white/90 group">
+                        <div
+                            class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center flex-shrink-0">
+                            <i-lucide name="shield" class="w-4 h-4 text-white"></i-lucide>
+                        </div>
+                        <span class="text-sm font-semibold">Secure, real-time data with Firebase</span>
+                    </div>
                 </div>
             </div>
 
@@ -75,8 +91,7 @@
     <!-- ═══════════════════════════════════════════
        RIGHT PANEL — Login Form
   ═══════════════════════════════════════════ -->
-    <div
-        class="flex-1 flex flex-col items-center justify-center px-6 sm:px-10 py-12 bg-white dark:bg-slate-900 relative overflow-auto">
+    <div class="flex-1 flex flex-col items-center justify-center px-6 sm:px-10 py-12 bg-white dark:bg-slate-900 relative overflow-auto">
 
         <!-- Subtle background decoration -->
         <div
@@ -88,7 +103,7 @@
 
         <div class="w-full max-w-md relative z-10">
 
-            <!-- Mobile logo (shown only on small screens) -->
+            <!-- Mobile logo -->
             <div class="flex items-center gap-2.5 mb-10 lg:hidden">
                 <div
                     class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-md">
@@ -105,57 +120,24 @@
                     <span class="inline-block animate-wave">👋</span>
                 </h1>
                 <p class="text-slate-500 dark:text-slate-400 text-sm">
-                    Select your role and sign in to continue.
-                </p>
-            </div>
-
-            <!-- ── ROLE SELECTOR ── -->
-            <div class="mb-8">
-                <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Sign in
-                    as</p>
-                <div class="grid grid-cols-3 gap-3">
-                    @for (role of ['Admin', 'Doctor', 'Patient']; track role) {
-                    <button type="button" (click)="selectRole(role)"
-                        class="relative flex flex-col items-center gap-2 py-4 px-2 rounded-2xl border-2 transition-all duration-300 group"
-                        [ngClass]="selectedRole === role
-              ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 shadow-md shadow-primary-500/15'
-              : 'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-primary-200 dark:hover:border-slate-600'">
-
-                        <!-- Active indicator -->
-                        <div *ngIf="selectedRole === role"
-                            class="absolute top-2 right-2 w-2 h-2 bg-primary-500 rounded-full"></div>
-
-                        <!-- Icon -->
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center transition-colors"
-                            [ngClass]="selectedRole === role
-                ? 'bg-primary-500 text-white shadow-md shadow-primary-500/30'
-                : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 group-hover:bg-primary-50 group-hover:text-primary-500'">
-                            <i-lucide [name]="roleConfigs[role].icon" class="w-5 h-5"></i-lucide>
-                        </div>
-
-                        <span class="text-xs font-bold transition-colors"
-                            [ngClass]="selectedRole === role ? 'text-primary-600 dark:text-primary-400' : 'text-slate-500 dark:text-slate-400'">
-                            {{ role }}
-                        </span>
-                    </button>
-                    }
-                </div>
-            </div>
-
-            <!-- ── ROLE PREVIEW STRIP (mobile only) ── -->
-            <div
-                class="lg:hidden mb-6 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
-                <p class="text-xs font-bold text-primary-600 dark:text-primary-400 mb-2">{{ currentConfig.tagline }}</p>
-                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{{ currentConfig.description }}
+                    Sign in to your account. Your role will be detected automatically.
                 </p>
             </div>
 
             <!-- ── LOGIN FORM ── -->
             <form (ngSubmit)="login()" class="space-y-5">
 
+                <!-- Error Alert -->
+                <div *ngIf="errorMessage"
+                    class="flex items-start gap-3 p-4 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/40">
+                    <i-lucide name="alert-circle" class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"></i-lucide>
+                    <p class="text-sm text-red-600 dark:text-red-400 font-medium">{{ errorMessage }}</p>
+                </div>
+
                 <!-- Email -->
                 <div>
-                    <label for="email" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                    <label for="email"
+                        class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
                         Email Address
                     </label>
                     <div class="relative">
@@ -208,42 +190,30 @@
                     </svg>
 
                     <i-lucide *ngIf="!isLoading" name="arrow-right" class="w-5 h-5"></i-lucide>
-                    {{ isLoading ? 'Signing In...' : 'Sign In as ' + selectedRole }}
+                    {{ isLoading ? 'Signing In...' : 'Sign In' }}
                 </button>
             </form>
 
-            <!-- ── QUICK ACCESS DIVIDER ── -->
-            <div class="flex items-center gap-3 my-6">
+            <!-- Divider -->
+            <div class="flex items-center gap-3 my-7">
                 <div class="flex-1 h-px bg-slate-100 dark:bg-slate-700"></div>
-                <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">quick access</span>
+                <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">New to PhysioPro?</span>
                 <div class="flex-1 h-px bg-slate-100 dark:bg-slate-700"></div>
             </div>
 
-            <!-- ── QUICK LOGIN ACTIONS ── -->
-            <div class="flex gap-3">
-                <button (click)="login()"
-                    class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-primary-200 dark:hover:border-slate-600 transition-all shadow-sm">
-                    <i-lucide name="fingerprint" class="w-4 h-4 text-primary-500"></i-lucide>
-                    Biometric
-                </button>
-                <button
-                    class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-primary-200 dark:hover:border-slate-600 transition-all shadow-sm">
-                    <i-lucide name="camera" class="w-4 h-4 text-secondary-500"></i-lucide>
-                    Face ID
-                </button>
-                <button
-                    class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-primary-200 dark:hover:border-slate-600 transition-all shadow-sm">
-                    <i-lucide name="refresh-cw" class="w-4 h-4 text-accent-500"></i-lucide>
-                    OTP Login
-                </button>
+            <!-- Register links -->
+            <div class="grid grid-cols-2 gap-3">
+                <a routerLink="/patient/register"
+                    class="flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-200 dark:hover:border-primary-700 hover:text-primary-600 dark:hover:text-primary-400 transition-all shadow-sm">
+                    <i-lucide name="heart" class="w-4 h-4 text-accent-500"></i-lucide>
+                    Register as Patient
+                </a>
+                <a routerLink="/doctor/register"
+                    class="flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-secondary-50 dark:hover:bg-secondary-900/20 hover:border-secondary-200 dark:hover:border-secondary-700 hover:text-secondary-600 dark:hover:text-secondary-400 transition-all shadow-sm">
+                    <i-lucide name="stethoscope" class="w-4 h-4 text-secondary-500"></i-lucide>
+                    Register as Doctor
+                </a>
             </div>
-
-            <!-- Footer note -->
-            <p class="text-center text-xs text-slate-400 dark:text-slate-600 mt-8">
-                New patient?
-                <a routerLink="/patient/register" class="text-primary-500 font-semibold hover:underline ml-1">Register &
-                    Book Appointment</a>
-            </p>
 
         </div>
     </div>

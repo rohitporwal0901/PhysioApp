@@ -1,7 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
+import { AuthService, AppUser } from '../../../core/services/auth.service';
 
 interface MenuItem {
   label: string;
@@ -19,53 +20,67 @@ interface MenuItem {
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
-  @Input() role: string = 'Admin';
+  @Input() role: string = ''; // Can be passed or detected
   @Input() isMobileMenuOpen: boolean = false;
   @Output() closeMenu = new EventEmitter<void>();
 
+  private authService = inject(AuthService);
+
+  get currentUser(): AppUser | null {
+    return this.authService.currentUser;
+  }
+
+  get effectiveRole(): string {
+    return this.role || this.currentUser?.role || 'admin';
+  }
+
+  get userName(): string {
+    return this.currentUser?.fullName ?? 'User';
+  }
+
+  get userEmail(): string {
+    return this.currentUser?.email ?? '';
+  }
+
   get roleLabel(): string {
-    return this.role;
+    switch (this.effectiveRole.toLowerCase()) {
+      case 'doctor': return 'Doctor';
+      case 'patient': return 'Patient';
+      default: return 'Admin';
+    }
   }
 
   get roleIcon(): string {
-    switch (this.role) {
-      case 'Doctor': return 'activity';
-      case 'Patient': return 'heart';
+    switch (this.effectiveRole.toLowerCase()) {
+      case 'doctor': return 'activity';
+      case 'patient': return 'heart';
       default: return 'settings';
     }
   }
 
-  get roleColor(): string {
-    switch (this.role) {
-      case 'Doctor': return 'from-secondary-500 to-secondary-600';
-      case 'Patient': return 'from-accent-500 to-accent-600';
+  get roleColorClasses(): string {
+    switch (this.effectiveRole.toLowerCase()) {
+      case 'doctor': return 'from-secondary-500 to-secondary-600';
+      case 'patient': return 'from-accent-500 to-accent-600';
       default: return 'from-primary-500 to-primary-600';
     }
   }
 
-  get userName(): string {
-    switch (this.role) {
-      case 'Doctor': return 'Dr. Sarah Jenkins';
-      case 'Patient': return 'John Doe';
-      default: return 'Super Admin';
-    }
-  }
-
   get menuItems(): MenuItem[] {
-    switch (this.role) {
-      case 'Doctor':
+    switch (this.effectiveRole.toLowerCase()) {
+      case 'doctor':
         return [
           { label: 'Dashboard', icon: 'layout-dashboard', path: '/doctor/dashboard' },
           { label: 'My Agenda', icon: 'calendar', path: '/doctor/agenda', badge: 'Today', badgeColor: 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400' },
           { label: 'My Patients', icon: 'users', path: '/doctor/patients' },
         ];
-      case 'Patient':
+      case 'patient':
         return [
           { label: 'My Dashboard', icon: 'layout-dashboard', path: '/patient/dashboard' },
           { label: 'Book Session', icon: 'calendar-plus', path: '/patient/book-appointment', badge: 'New', badgeColor: 'bg-status-success/10 text-status-success dark:bg-status-success/20' },
           { label: 'My Sessions', icon: 'activity', path: '/patient/sessions' },
         ];
-      case 'Admin':
+      case 'admin':
       default:
         return [
           { label: 'Dashboard', icon: 'layout-dashboard', path: '/admin/dashboard' },
@@ -73,5 +88,9 @@ export class SidebarComponent {
           { label: 'Patients', icon: 'users', path: '/admin/patients' },
         ];
     }
+  }
+
+  async onLogout() {
+    await this.authService.logout();
   }
 }

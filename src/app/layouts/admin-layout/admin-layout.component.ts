@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -14,12 +15,19 @@ import { HeaderComponent } from '../../shared/components/header/header.component
 })
 export class AdminLayoutComponent implements OnInit {
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   isMobileMenuOpen = false;
   currentRole = 'Admin';
   pageTitle = 'Dashboard';
 
   ngOnInit() {
+    this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.currentRole = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+      }
+    });
+
     this.updateLayoutState(this.router.url);
 
     this.router.events.pipe(
@@ -30,14 +38,6 @@ export class AdminLayoutComponent implements OnInit {
   }
 
   updateLayoutState(url: string) {
-    if (url.includes('doctor')) {
-      this.currentRole = 'Doctor';
-    } else if (url.includes('patient')) {
-      this.currentRole = 'Patient';
-    } else {
-      this.currentRole = 'Admin';
-    }
-
     if (url.includes('agenda')) this.pageTitle = 'My Agenda';
     else if (url.includes('book-appointment')) this.pageTitle = 'Book Appointment';
     else if (url.includes('patients')) this.pageTitle = 'Patients Directory';

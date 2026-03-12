@@ -12,10 +12,12 @@ import {
   ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff,
   ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
   TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone,
-  LockKeyhole, AlertCircle, Check, Linkedin, Send
+  LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut
 } from 'lucide-angular';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getAnalytics, provideAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
@@ -26,6 +28,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
     provideAnalytics(() => getAnalytics()),
     ScreenTrackingService,
     UserTrackingService,
@@ -39,7 +43,7 @@ export const appConfig: ApplicationConfig = {
       ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff,
       ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
       TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone,
-      LockKeyhole, AlertCircle, Check, Linkedin, Send
+      LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut
     }))
   ]
 };

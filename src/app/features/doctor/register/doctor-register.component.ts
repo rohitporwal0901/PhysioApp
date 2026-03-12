@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
     selector: 'app-doctor-register',
@@ -13,11 +14,13 @@ import { LucideAngularModule } from 'lucide-angular';
 })
 export class DoctorRegisterComponent {
     private router = inject(Router);
+    private authService = inject(AuthService);
 
     isLoading = false;
     showPassword = false;
     currentStep = 1;
     totalSteps = 6;
+    errorMessage = '';
 
     // Step 1 — Basic Info
     fullName = '';
@@ -95,25 +98,20 @@ export class DoctorRegisterComponent {
     get step1Valid(): boolean {
         return !!(this.fullName && this.gender && this.dob);
     }
-
     get step2Valid(): boolean {
         return !!(this.email && this.phone);
     }
-
     get step3Valid(): boolean {
         return !!(this.qualification && this.specialization && this.experience);
     }
-
     get step4Valid(): boolean {
         return this.selectedAreas.length > 0;
     }
-
     get step5Valid(): boolean {
         return !!(this.consultationFee);
     }
-
     get step6Valid(): boolean {
-        return !!(this.password && this.passwordsMatch && this.agreeTerms);
+        return !!(this.password && this.password.length >= 6 && this.passwordsMatch && this.agreeTerms);
     }
 
     get currentStepValid(): boolean {
@@ -130,20 +128,14 @@ export class DoctorRegisterComponent {
 
     toggleArea(area: string) {
         const idx = this.selectedAreas.indexOf(area);
-        if (idx > -1) {
-            this.selectedAreas.splice(idx, 1);
-        } else {
-            this.selectedAreas.push(area);
-        }
+        if (idx > -1) this.selectedAreas.splice(idx, 1);
+        else this.selectedAreas.push(area);
     }
 
     toggleDay(day: string) {
         const idx = this.availableDays.indexOf(day);
-        if (idx > -1) {
-            this.availableDays.splice(idx, 1);
-        } else {
-            this.availableDays.push(day);
-        }
+        if (idx > -1) this.availableDays.splice(idx, 1);
+        else this.availableDays.push(day);
     }
 
     togglePassword() {
@@ -151,8 +143,9 @@ export class DoctorRegisterComponent {
     }
 
     goToStep(step: number) {
-        if (step <= this.currentStep) {
+        if (step < this.currentStep) {
             this.currentStep = step;
+            this.errorMessage = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
@@ -160,6 +153,7 @@ export class DoctorRegisterComponent {
     nextStep() {
         if (this.currentStep < this.totalSteps && this.currentStepValid) {
             this.currentStep++;
+            this.errorMessage = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
@@ -167,11 +161,11 @@ export class DoctorRegisterComponent {
     prevStep() {
         if (this.currentStep > 1) {
             this.currentStep--;
+            this.errorMessage = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
 
-    // Simulated file pick
     onFileSelect(type: 'photo' | 'certificate' | 'id', event: any) {
         const file = event?.target?.files?.[0];
         if (file) {
@@ -181,12 +175,39 @@ export class DoctorRegisterComponent {
         }
     }
 
-    register() {
+    async register() {
         if (!this.step6Valid) return;
         this.isLoading = true;
-        setTimeout(() => {
-            this.isLoading = false;
+        this.errorMessage = '';
+
+        const result = await this.authService.registerDoctor({
+            email: this.email,
+            password: this.password,
+            fullName: this.fullName,
+            gender: this.gender,
+            dob: this.dob,
+            phone: this.phone,
+            address: this.address,
+            city: this.city,
+            state: this.state,
+            qualification: this.qualification,
+            specialization: this.specialization,
+            experience: this.experience,
+            registrationNumber: this.registrationNumber,
+            council: this.council,
+            areasOfInterest: this.selectedAreas,
+            consultationFee: this.consultationFee,
+            followUpFee: this.followUpFee,
+            consultationType: this.consultationType,
+            availableDays: this.availableDays
+        });
+
+        this.isLoading = false;
+
+        if (result.success) {
             this.router.navigate(['/doctor/dashboard']);
-        }, 1500);
+        } else {
+            this.errorMessage = result.error ?? 'Registration failed. Please try again.';
+        }
     }
 }
