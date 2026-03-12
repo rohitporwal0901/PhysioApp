@@ -23,6 +23,15 @@ export class MySessionsComponent implements OnInit {
   activeTab: 'upcoming' | 'past' = 'upcoming';
   isLoading = true;
 
+  // Unsplash doctor profile image collection
+  private doctorImages = [
+    'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1559839734-2b71f1536783?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400&auto=format&fit=crop'
+  ];
+
   ngOnInit() {
     const user = this.authService.currentUser;
     if (user && user.role === 'patient') {
@@ -59,6 +68,13 @@ export class MySessionsComponent implements OnInit {
     if (match[3].toUpperCase() === 'PM' && hours < 12) hours += 12;
     if (match[3].toUpperCase() === 'AM' && hours === 12) hours = 0;
     return hours * 60 + minutes;
+  }
+
+  getDoctorImage(session: any, index: number): string {
+    if (session.doctorImage && !session.doctorImage.includes('ui-avatars.com')) {
+      return session.doctorImage;
+    }
+    return this.doctorImages[index % this.doctorImages.length];
   }
 
   encodeURIComponent(str: string): string {

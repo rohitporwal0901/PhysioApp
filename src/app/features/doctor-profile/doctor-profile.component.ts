@@ -34,9 +34,16 @@ export class DoctorProfileComponent implements OnInit {
     patientNotes = '';
 
     availableSlots = [
-        '09:00 AM', '09:45 AM', '10:30 AM', '11:15 AM',
-        '12:00 PM', '02:00 PM', '02:45 PM', '03:30 PM',
         '04:15 PM', '05:00 PM'
+    ];
+
+    // Unsplash doctor profile image collection
+    private doctorImages = [
+      'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1559839734-2b71f1536783?q=80&w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=600&auto=format&fit=crop'
     ];
 
     ngOnInit() {
@@ -142,6 +149,10 @@ export class DoctorProfileComponent implements OnInit {
 
     async confirmBooking() {
         if (this.selectedDate && this.selectedSlot && this.doctor) {
+            if (!this.patientNotes || this.patientNotes.trim().length < 10) {
+                this.bookingError = 'Please describe your condition/complaint (min 10 characters).';
+                return;
+            }
             const result = await this.bookingService.bookAppointment({
                 doctorId: this.doctor.id,
                 doctorName: this.doctor.fullName || this.doctor.name || 'Doctor',
@@ -185,6 +196,16 @@ export class DoctorProfileComponent implements OnInit {
 
     get minDate(): string {
         return new Date().toISOString().split('T')[0];
+    }
+
+    getDoctorImage(): string {
+        if (!this.doctor) return '';
+        if (this.doctor.image && !this.doctor.image.includes('ui-avatars.com')) {
+            return this.doctor.image;
+        }
+        // Use a stable image based on the doctor's name length for consistency on this page
+        const index = (this.doctor.fullName || this.doctor.name || '').length;
+        return this.doctorImages[index % this.doctorImages.length];
     }
 
     encodeURIComponent(str: string): string {

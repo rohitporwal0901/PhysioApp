@@ -33,7 +33,8 @@ export interface BookedAppointment {
   time: string;          // e.g. '09:00 AM'
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
   type: string;
-  notes: string;
+  notes: string;          // Patient's complaint/reason for visit
+  treatmentNotes?: string; // Doctor's notes after/during session
   createdAt: any;
 }
 
@@ -181,9 +182,9 @@ export class BookingService {
     await updateDoc(docRef, { status });
   }
 
-  async updateAppointmentNotes(appointmentId: string, notes: string): Promise<void> {
+  async updateTreatmentNotes(appointmentId: string, treatmentNotes: string): Promise<void> {
     const docRef = doc(this.firestore, 'appointments', appointmentId);
-    await updateDoc(docRef, { notes });
+    await updateDoc(docRef, { treatmentNotes });
   }
 
   // Helper to convert Firestore query to Observable

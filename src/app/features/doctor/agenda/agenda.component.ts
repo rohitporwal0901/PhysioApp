@@ -23,6 +23,15 @@ export class AgendaComponent implements OnInit {
   selectedAppointment: BookedAppointment | null = null;
   isLoading = true;
   clinicalNotes: string = '';
+  
+  // Unsplash profile image collections for patients
+  private patientImages = [
+    'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop'
+  ];
 
   ngOnInit() {
     const user = this.authService.currentUser;
@@ -58,7 +67,7 @@ export class AgendaComponent implements OnInit {
 
   selectAppointment(apt: BookedAppointment) {
     this.selectedAppointment = apt;
-    this.clinicalNotes = apt.notes || '';
+    this.clinicalNotes = apt.treatmentNotes || '';
   }
 
   async confirmAppointment(apt: BookedAppointment) {
@@ -90,12 +99,12 @@ export class AgendaComponent implements OnInit {
     if (!apt.id) return;
     try {
       if (this.clinicalNotes) {
-        await this.bookingService.updateAppointmentNotes(apt.id, this.clinicalNotes);
+        await this.bookingService.updateTreatmentNotes(apt.id, this.clinicalNotes);
       }
       await this.bookingService.updateAppointmentStatus(apt.id, 'completed');
       if (this.selectedAppointment?.id === apt.id) {
         this.selectedAppointment.status = 'completed';
-        this.selectedAppointment.notes = this.clinicalNotes;
+        this.selectedAppointment.treatmentNotes = this.clinicalNotes;
       }
     } catch (error) {
       console.error('Error completing appointment', error);
@@ -118,6 +127,13 @@ export class AgendaComponent implements OnInit {
     const message = `Hello ${apt.patientName}, I am your Physiotherapist. This is regarding your appointment on ${apt.date} at ${apt.time}.`;
     const url = `https://wa.me/?text=${this.encodeURIComponent(message)}`;
     window.open(url, '_blank');
+  }
+
+  getPatientImage(apt: any, index: number): string {
+    if (apt.patientImage && !apt.patientImage.includes('ui-avatars.com')) {
+      return apt.patientImage;
+    }
+    return this.patientImages[index % this.patientImages.length];
   }
 
   encodeURIComponent(str: string): string {

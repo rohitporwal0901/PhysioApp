@@ -104,6 +104,12 @@ export class BookAppointmentComponent implements OnInit {
     this.isProcessing = true;
     this.bookingError = '';
 
+    if (!this.patientNotes || this.patientNotes.trim().length < 10) {
+      this.bookingError = 'Please provide a brief description of your problem (at least 10 characters).';
+      this.isProcessing = false;
+      return;
+    }
+
     const result = await this.bookingService.bookAppointment({
       doctorId: this.selectedDoctor.id,
       doctorName: this.selectedDoctor.fullName || this.selectedDoctor.name,

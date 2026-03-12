@@ -26,7 +26,7 @@
 
                 <!-- Hero Photo -->
                 <div class="doctor-hero">
-                    <img [src]="doctor.image || 'https://ui-avatars.com/api/?name=' + (doctor.fullName || 'Doctor') + '&background=0D8ABC&color=fff&size=300'"
+                    <img [src]="getDoctorImage()"
                         alt="Doctor">
                     <div class="hero-overlay"></div>
                     <span class="avail-badge" [class.available]="doctor.available"
@@ -295,7 +295,7 @@
 
                             <!-- Doctor mini summary -->
                             <div class="doc-mini-summary">
-                                <img [src]="doctor.image || 'https://ui-avatars.com/api/?name=' + (doctor.fullName || 'Doctor') + '&background=0D8ABC&color=fff'"
+                                <img [src]="getDoctorImage()"
                                     alt="" class="doc-mini-img">
                                 <div>
                                     <p class="doc-mini-name">{{ doctor.fullName || doctor.name }}</p>

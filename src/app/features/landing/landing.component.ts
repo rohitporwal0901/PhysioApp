@@ -62,6 +62,15 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ];
 
+    // Unsplash doctor profile image collection
+    private doctorImages = [
+      'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=400&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1559839734-2b71f1536783?q=80&w=400&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=400&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400&auto=format&fit=crop'
+    ];
+
     // Animated counters
     statCounters = [
         { label: 'Patients Treated', numericValue: 5000, current: 0, suffix: '+', animated: false },
@@ -126,11 +135,11 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     ];
 
     testimonials = [
-        { name: 'Priya Sharma', role: 'Marathon Runner', rating: 5, text: 'After my ACL tear I thought I\'d never run again. Six weeks of targeted physio at PhysioPro and I was back on track. Truly world-class care.', avatar: 'https://randomuser.me/api/portraits/women/32.jpg' },
-        { name: 'Ramesh Gupta', role: 'IT Professional', rating: 5, text: 'Booking took 2 minutes, the therapist was on time and my chronic back pain improved after three sessions. Highly recommend.', avatar: 'https://randomuser.me/api/portraits/men/45.jpg' },
-        { name: 'Neha Verma', role: 'School Teacher', rating: 5, text: 'Five years of debilitating back pain — gone in 8 weeks. The personalised exercise plan changed my life. I wish I had come sooner!', avatar: 'https://randomuser.me/api/portraits/women/68.jpg' },
-        { name: 'Arjun Mehta', role: 'Cricket Player', rating: 5, text: 'Shoulder surgery rehab was seamless. The team monitored progress weekly and adjusted the plan. I\'m now bowling at full pace again.', avatar: 'https://randomuser.me/api/portraits/men/22.jpg' },
-        { name: 'Sunita Rao', role: 'Retired Educator', rating: 5, text: 'The geriatric programme gave me my independence back. Safe exercises, caring staff and brilliant follow-up. 10/10.', avatar: 'https://randomuser.me/api/portraits/women/55.jpg' },
+        { name: 'Priya Sharma', role: 'Marathon Runner', rating: 5, text: 'After my ACL tear I thought I\'d never run again. Six weeks of targeted physio at PhysioPro and I was back on track. Truly world-class care.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop' },
+        { name: 'Ramesh Gupta', role: 'IT Professional', rating: 5, text: 'Booking took 2 minutes, the therapist was on time and my chronic back pain improved after three sessions. Highly recommend.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop' },
+        { name: 'Neha Verma', role: 'School Teacher', rating: 5, text: 'Five years of debilitating back pain — gone in 8 weeks. The personalised exercise plan changed my life. I wish I had come sooner!', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop' },
+        { name: 'Arjun Mehta', role: 'Cricket Player', rating: 5, text: 'Shoulder surgery rehab was seamless. The team monitored progress weekly and adjusted the plan. I\'m now bowling at full pace again.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop' },
+        { name: 'Sunita Rao', role: 'Retired Educator', rating: 5, text: 'The geriatric programme gave me my independence back. Safe exercises, caring staff and brilliant follow-up. 10/10.', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop' },
     ];
 
     whyChoose = [
@@ -295,5 +304,12 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
     encodeURIComponent(str: string): string {
         return encodeURIComponent(str);
+    }
+
+    getDoctorImage(doc: any, index: number): string {
+        if (doc.image && !doc.image.includes('ui-avatars.com')) {
+            return doc.image;
+        }
+        return this.doctorImages[index % this.doctorImages.length];
     }
 }

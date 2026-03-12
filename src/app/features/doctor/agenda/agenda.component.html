@@ -25,7 +25,7 @@
                     </div>
 
                     <ul class="space-y-6 relative">
-                        <li *ngFor="let apt of filteredAgenda" class="relative transition-all duration-300 group"
+                        <li *ngFor="let apt of filteredAgenda; let i = index" class="relative transition-all duration-300 group"
                             (click)="selectAppointment(apt)">
 
                             <!-- Active state visual indicator -->
@@ -37,12 +37,16 @@
 
                                 <!-- Timeline Dot & Time -->
                                 <div class="flex flex-col items-center mr-4 w-16 sm:w-20 pt-1">
+                                    <!-- Patient Avatar Small -->
+                                    <div class="h-10 w-10 rounded-xl overflow-hidden mb-2 ring-2 ring-white dark:ring-slate-800 shadow-sm">
+                                        <img [src]="getPatientImage(apt, i)" class="w-full h-full object-cover">
+                                    </div>
                                     <span
-                                        class="text-sm font-semibold text-slate-700 dark:text-slate-300 whitespace-nowrap transition-colors">
+                                        class="text-xs font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap transition-colors">
                                         {{ apt.time }}
                                     </span>
                                     <span
-                                        class="text-xs font-medium text-slate-400 dark:text-slate-500 mt-0.5 transition-colors">
+                                        class="text-[10px] font-medium text-slate-400 dark:text-slate-500 mt-0.5 transition-colors">
                                         {{ apt.date | date:'MMM d' }}
                                     </span>
 
@@ -189,6 +193,22 @@
                             Appointment Details
                         </h3>
                         <div class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 text-slate-700 dark:text-slate-200">
+                           <div class="flex items-center gap-6 mb-8 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
+                               <div class="w-20 h-20 rounded-2xl overflow-hidden shadow-lg ring-4 ring-white dark:ring-slate-800">
+                                   <img [src]="getPatientImage(selectedAppointment, 0)" 
+                                        class="w-full h-full object-cover">
+                               </div>
+                               <div>
+                                   <h4 class="text-xl font-black text-slate-800 dark:text-white leading-tight">{{ selectedAppointment.patientName }}</h4>
+                                   <p class="text-sm font-medium text-slate-500">{{ selectedAppointment.patientCondition || 'General Consultation' }}</p>
+                                   <div class="flex items-center gap-2 mt-2">
+                                       <span class="px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase rounded-md border border-blue-100 dark:border-blue-800">
+                                           #PAT-{{ selectedAppointment.patientId.slice(-4) || 'XXXX' }}
+                                       </span>
+                                   </div>
+                               </div>
+                           </div>
+                           
                            <div class="grid grid-cols-2 gap-6">
                                <div>
                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Patient Name</label>
@@ -211,16 +231,23 @@
                                    <p class="text-sm font-medium text-slate-600 dark:text-slate-300">{{ selectedAppointment.patientCondition || 'General Consultation' }}</p>
                                </div>
 
+                               <div class="col-span-2" *ngIf="selectedAppointment.notes">
+                                   <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Patient's Initial Complaint</label>
+                                   <div class="mt-1 p-3 bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-800/30">
+                                       <p class="text-sm italic text-slate-600 dark:text-slate-400">"{{ selectedAppointment.notes }}"</p>
+                                   </div>
+                               </div>
+
                                <div class="col-span-2 pt-4 border-t border-slate-100 dark:border-slate-700">
-                                   <label class="text-sm font-bold text-slate-800 dark:text-white mb-2 block">Clinical & Treatment Notes</label>
+                                   <label class="text-sm font-bold text-slate-800 dark:text-white mb-2 block">Physiotherapy Treatment Notes</label>
                                    <textarea 
                                        [(ngModel)]="clinicalNotes"
                                        [disabled]="selectedAppointment.status === 'completed' || selectedAppointment.status === 'cancelled'"
-                                       placeholder="Enter treatment notes, progress, and next steps..."
+                                       placeholder="Enter treatment plan, exercises prescribed, and recovery progress..."
                                        class="w-full h-32 p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary-500/50 outline-none resize-none transition-all"
                                    ></textarea>
                                    <p *ngIf="selectedAppointment.status === 'completed'" class="text-[10px] text-slate-400 mt-1 italic">
-                                       Notes are locked after session completion.
+                                       Treatment history is locked after completion.
                                    </p>
                                </div>
                            </div>

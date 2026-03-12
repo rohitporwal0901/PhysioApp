@@ -18,6 +18,28 @@ export class AuthService {
   private auth = inject(Auth);
   private firestore = inject(Firestore);
   private router = inject(Router);
+  
+  // Unsplash profile image collections
+  private doctorImages = [
+    'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1559839734-2b71f1536783?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400&auto=format&fit=crop'
+  ];
+
+  private patientImages = [
+    'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop'
+  ];
+
+  getRandomProfileImage(role: 'doctor' | 'patient'): string {
+    const images = role === 'doctor' ? this.doctorImages : this.patientImages;
+    return images[Math.floor(Math.random() * images.length)];
+  }
 
   private currentUserSubject = new BehaviorSubject<AppUser | null | undefined>(undefined);
   currentUser$ = this.currentUserSubject.asObservable();
@@ -116,7 +138,7 @@ export class AuthService {
         createdAt: new Date()
       };
 
-      const dummyImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName)}&background=random&color=fff&size=512`;
+      const dummyImage = this.getRandomProfileImage('patient');
 
       await setDoc(doc(this.firestore, 'users', cred.user.uid), {
         ...cleanData,
@@ -170,7 +192,7 @@ export class AuthService {
         createdAt: new Date()
       };
 
-      const dummyImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName)}&background=0ea5e9&color=fff&size=512`;
+      const dummyImage = this.getRandomProfileImage('doctor');
 
       await setDoc(doc(this.firestore, 'users', cred.user.uid), {
         ...cleanData,
