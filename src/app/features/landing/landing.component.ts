@@ -292,4 +292,8 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     logout() {
         this.authService.logout();
     }
+
+    encodeURIComponent(str: string): string {
+        return encodeURIComponent(str);
+    }
 }

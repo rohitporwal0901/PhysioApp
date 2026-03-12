@@ -51,8 +51,9 @@
                 <div class="doctor-list fade-in-up">
                     <div *ngFor="let doc of doctors" class="doctor-card" (click)="selectDoctor(doc)">
                         <div class="doctor-card-left">
-                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white text-2xl font-bold shadow-md">
-                                {{ doc.fullName.charAt(0) }}
+                            <div class="relative w-16 h-16 mr-4 flex-shrink-0">
+                                <img [src]="'https://ui-avatars.com/api/?name=' + encodeURIComponent(doc.fullName) + '&background=0D8ABC&color=fff&size=128'" 
+                                     class="w-16 h-16 rounded-2xl object-cover shadow-sm" alt="">
                             </div>
                             <div class="doctor-info">
                                 <h3>{{ doc.fullName }}</h3>
@@ -101,8 +102,9 @@
                 <!-- Doctor Summary -->
                 <div class="doc-summary-card">
                     <div class="doc-summary-bg"></div>
-                    <div class="w-24 h-24 mx-auto rounded-3xl bg-white dark:bg-slate-800 flex items-center justify-center text-primary-500 text-3xl font-black shadow-lg mb-4 relative z-10 border-4 border-white dark:border-slate-800">
-                        {{ selectedDoctor.fullName.charAt(0) }}
+                    <div class="relative mx-auto w-24 h-24 mb-4 z-10">
+                        <img [src]="'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedDoctor.fullName) + '&background=0D8ABC&color=fff&size=128'" 
+                             class="w-24 h-24 rounded-3xl object-cover ring-4 ring-white dark:ring-slate-800 shadow-lg" alt="">
                     </div>
                     <p class="doc-summary-name relative z-10">{{ selectedDoctor.fullName }}</p>
                     <p class="doc-summary-spec relative z-10">{{ selectedDoctor.specialization || selectedDoctor.specialty }}</p>
@@ -146,6 +148,12 @@
                             {{ slot }}
                             <span *ngIf="isSlotBooked(slot)" class="slot-booked-label">Unavailable</span>
                         </button>
+                    </div>
+
+                    <div class="mt-6">
+                        <label class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 block">Personal Note / Complaint (Optional)</label>
+                        <textarea [(ngModel)]="patientNotes" placeholder="Describe your symptoms or condition..." 
+                            class="w-full h-24 p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary-500/50 outline-none resize-none transition-all"></textarea>
                     </div>
 
                     <button [disabled]="!selectedTimeSlot || isProcessing" (click)="confirmBooking()" class="confirm-btn"

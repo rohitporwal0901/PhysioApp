@@ -31,6 +31,7 @@ export class DoctorProfileComponent implements OnInit {
     bookingConfirmed = false;
     bookedSlots: string[] = [];
     bookingError = '';
+    patientNotes = '';
 
     availableSlots = [
         '09:00 AM', '09:45 AM', '10:30 AM', '11:15 AM',
@@ -145,10 +146,11 @@ export class DoctorProfileComponent implements OnInit {
                 doctorId: this.doctor.id,
                 doctorName: this.doctor.fullName || this.doctor.name || 'Doctor',
                 doctorSpecialty: this.doctor.specialization || this.doctor.specialty || 'Physiotherapist',
-                doctorImage: this.doctor.image,
+                doctorImage: this.doctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(this.doctor.fullName || 'Doctor')}&background=0D8ABC&color=fff`,
                 date: this.selectedDate,
                 time: this.selectedSlot,
-                type: 'Consultation'
+                type: 'Consultation',
+                notes: this.patientNotes
             });
 
             if (result.success) {
@@ -183,5 +185,9 @@ export class DoctorProfileComponent implements OnInit {
 
     get minDate(): string {
         return new Date().toISOString().split('T')[0];
+    }
+
+    encodeURIComponent(str: string): string {
+        return encodeURIComponent(str);
     }
 }

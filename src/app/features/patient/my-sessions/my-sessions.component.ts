@@ -60,4 +60,8 @@ export class MySessionsComponent implements OnInit {
     if (match[3].toUpperCase() === 'AM' && hours === 12) hours = 0;
     return hours * 60 + minutes;
   }
+
+  encodeURIComponent(str: string): string {
+    return encodeURIComponent(str);
+  }
 }

@@ -6,6 +6,7 @@ import {
   query, 
   where, 
   getDocs, 
+  getDoc, 
   onSnapshot, 
   doc, 
   updateDoc,
@@ -21,6 +22,10 @@ export interface BookedAppointment {
   patientId: string;
   patientName: string;
   patientEmail: string;
+  patientPhone?: string;
+  patientGender?: string;
+  patientCondition?: string;
+  patientImage?: string;
   doctorId: string;
   doctorName: string;
   doctorSpecialty: string;
@@ -63,6 +68,7 @@ export class BookingService {
     date: string;
     time: string;
     type?: string;
+    notes?: string;
   }): Promise<{ success: boolean; error?: string }> {
     const user = this.auth.currentUser;
     if (!user || user.role !== 'patient') {
@@ -76,18 +82,27 @@ export class BookingService {
     }
 
     try {
+      // Get the full patient profile to store the latest details in appointment
+      const patientRef = doc(this.firestore, 'users', user.uid);
+      const patientSnap = await getDoc(patientRef);
+      const patientData = patientSnap.data() as any;
+
       const appointment: BookedAppointment = {
         patientId: user.uid,
         patientName: user.fullName,
         patientEmail: user.email,
+        patientPhone: patientData?.phone || '',
+        patientGender: patientData?.gender || '',
+        patientCondition: patientData?.condition || data.type || 'General Consultation',
+        patientImage: patientData?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=random`,
         doctorId: data.doctorId,
         doctorName: data.doctorName,
         doctorSpecialty: data.doctorSpecialty,
         date: data.date,
         time: data.time,
-        status: 'pending', // Starts as pending for doctor approval
+        status: 'pending',
         type: data.type || 'Consultation',
-        notes: '',
+        notes: data.notes || '',
         createdAt: Timestamp.now()
       };
 
@@ -164,6 +179,11 @@ export class BookingService {
   async updateAppointmentStatus(appointmentId: string, status: 'confirmed' | 'cancelled' | 'completed'): Promise<void> {
     const docRef = doc(this.firestore, 'appointments', appointmentId);
     await updateDoc(docRef, { status });
+  }
+
+  async updateAppointmentNotes(appointmentId: string, notes: string): Promise<void> {
+    const docRef = doc(this.firestore, 'appointments', appointmentId);
+    await updateDoc(docRef, { notes });
   }
 
   // Helper to convert Firestore query to Observable

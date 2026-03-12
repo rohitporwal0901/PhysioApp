@@ -130,9 +130,8 @@
                 class="flex flex-col sm:flex-row items-center sm:items-start justify-between pb-8 border-b border-slate-100 dark:border-slate-700 flex-shrink-0 transition-colors">
                 <div class="flex items-center text-center sm:text-left mb-6 sm:mb-0">
                     <div class="relative mr-6">
-                        <div class="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-gradient-to-br from-primary-400 to-secondary-500 flex items-center justify-center text-white text-2xl font-bold shadow-md shadow-primary-500/20">
-                            {{ selectedAppointment.patientName.charAt(0) }}
-                        </div>
+                        <img [src]="selectedAppointment.patientImage || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedAppointment.patientName) + '&background=random&color=fff'" 
+                             class="h-16 w-16 md:h-20 md:w-20 rounded-2xl object-cover shadow-md shadow-primary-500/20" alt="">
                     </div>
                     <div>
                         <h2
@@ -190,30 +189,39 @@
                             Appointment Details
                         </h3>
                         <div class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 text-slate-700 dark:text-slate-200">
-                           <div class="space-y-4">
+                           <div class="grid grid-cols-2 gap-6">
                                <div>
-                                   <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Patient Name</label>
-                                   <p class="text-lg font-semibold">{{ selectedAppointment.patientName }}</p>
+                                   <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Patient Name</label>
+                                   <p class="text-base font-bold text-slate-800 dark:text-white">{{ selectedAppointment.patientName }}</p>
                                </div>
                                <div>
-                                   <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Appointment Type</label>
-                                   <p class="font-medium text-primary-500">{{ selectedAppointment.type }}</p>
+                                   <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Gender</label>
+                                   <p class="text-sm font-semibold">{{ selectedAppointment.patientGender || 'Not Specified' }}</p>
                                </div>
                                <div>
-                                   <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Date & Time</label>
-                                   <p class="font-medium">{{ selectedAppointment.date | date }} at {{ selectedAppointment.time }}</p>
+                                   <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Phone Number</label>
+                                   <p class="text-sm font-semibold">{{ selectedAppointment.patientPhone || 'No Phone' }}</p>
                                </div>
                                <div>
-                                   <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Current Status</label>
-                                   <div class="mt-1">
-                                       <span class="px-3 py-1 rounded-full text-xs font-bold capitalize" [ngClass]="getStatusClass(selectedAppointment.status)">
-                                           {{ selectedAppointment.status }}
-                                       </span>
-                                   </div>
+                                   <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Appointment Type</label>
+                                   <p class="text-sm font-bold text-primary-500">{{ selectedAppointment.type }}</p>
                                </div>
-                               <div *ngIf="selectedAppointment.notes">
-                                   <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Patient Notes</label>
-                                   <p class="text-sm italic text-slate-500">{{ selectedAppointment.notes }}</p>
+                               <div class="col-span-2">
+                                   <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Condition / Complaint</label>
+                                   <p class="text-sm font-medium text-slate-600 dark:text-slate-300">{{ selectedAppointment.patientCondition || 'General Consultation' }}</p>
+                               </div>
+
+                               <div class="col-span-2 pt-4 border-t border-slate-100 dark:border-slate-700">
+                                   <label class="text-sm font-bold text-slate-800 dark:text-white mb-2 block">Clinical & Treatment Notes</label>
+                                   <textarea 
+                                       [(ngModel)]="clinicalNotes"
+                                       [disabled]="selectedAppointment.status === 'completed' || selectedAppointment.status === 'cancelled'"
+                                       placeholder="Enter treatment notes, progress, and next steps..."
+                                       class="w-full h-32 p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary-500/50 outline-none resize-none transition-all"
+                                   ></textarea>
+                                   <p *ngIf="selectedAppointment.status === 'completed'" class="text-[10px] text-slate-400 mt-1 italic">
+                                       Notes are locked after session completion.
+                                   </p>
                                </div>
                            </div>
                         </div>

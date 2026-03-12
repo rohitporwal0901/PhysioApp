@@ -22,6 +22,7 @@ export class AgendaComponent implements OnInit {
   selectedDate: string = new Date().toISOString().split('T')[0];
   selectedAppointment: BookedAppointment | null = null;
   isLoading = true;
+  clinicalNotes: string = '';
 
   ngOnInit() {
     const user = this.authService.currentUser;
@@ -57,6 +58,7 @@ export class AgendaComponent implements OnInit {
 
   selectAppointment(apt: BookedAppointment) {
     this.selectedAppointment = apt;
+    this.clinicalNotes = apt.notes || '';
   }
 
   async confirmAppointment(apt: BookedAppointment) {
@@ -87,10 +89,13 @@ export class AgendaComponent implements OnInit {
   async completeAppointment(apt: BookedAppointment) {
     if (!apt.id) return;
     try {
-      // Completing the appointment also frees up the slot status for others if needed
+      if (this.clinicalNotes) {
+        await this.bookingService.updateAppointmentNotes(apt.id, this.clinicalNotes);
+      }
       await this.bookingService.updateAppointmentStatus(apt.id, 'completed');
       if (this.selectedAppointment?.id === apt.id) {
         this.selectedAppointment.status = 'completed';
+        this.selectedAppointment.notes = this.clinicalNotes;
       }
     } catch (error) {
       console.error('Error completing appointment', error);
@@ -110,14 +115,12 @@ export class AgendaComponent implements OnInit {
   sendWhatsApp(apt: BookedAppointment) {
     if (!apt) return;
     
-    // We would ideally fetch the patient's phone here. 
-    // Since we only have patientEmail and patientName in the appointment, 
-    // we'll assume there might be a patient object or we can fetch it.
-    // For now, let's use a dummy number or placeholders.
-    // In a real app, we'd query the patient user record first.
-    
     const message = `Hello ${apt.patientName}, I am your Physiotherapist. This is regarding your appointment on ${apt.date} at ${apt.time}.`;
-    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/?text=${this.encodeURIComponent(message)}`;
     window.open(url, '_blank');
+  }
+
+  encodeURIComponent(str: string): string {
+    return encodeURIComponent(str);
   }
 }

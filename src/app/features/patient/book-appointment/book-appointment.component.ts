@@ -31,11 +31,13 @@ export class BookAppointmentComponent implements OnInit {
   bookedSlots: string[] = [];
   bookingError = '';
   isProcessing = false;
+  patientNotes = '';
 
-  // All available slots
+  // All available slots (Standardized with DoctorProfile)
   availableTimeSlots = [
-    '09:00 AM', '09:30 AM', '10:00 AM', '11:00 AM',
-    '01:00 PM', '01:30 PM', '03:00 PM', '04:30 PM'
+    '09:00 AM', '09:45 AM', '10:30 AM', '11:15 AM',
+    '12:00 PM', '02:00 PM', '02:45 PM', '03:30 PM',
+    '04:15 PM', '05:00 PM'
   ];
 
   ngOnInit() {
@@ -106,9 +108,11 @@ export class BookAppointmentComponent implements OnInit {
       doctorId: this.selectedDoctor.id,
       doctorName: this.selectedDoctor.fullName || this.selectedDoctor.name,
       doctorSpecialty: this.selectedDoctor.specialization || 'Physiotherapist',
+      doctorImage: this.selectedDoctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(this.selectedDoctor.fullName || 'Doctor')}&background=0D8ABC&color=fff`,
       date: this.selectedDate,
       time: this.selectedTimeSlot,
-      type: 'Consultation'
+      type: 'Consultation',
+      notes: this.patientNotes
     });
 
     this.isProcessing = false;
@@ -155,5 +159,9 @@ export class BookAppointmentComponent implements OnInit {
 
   goToDoctorDashboard() {
     this.router.navigate(['/doctor/dashboard']);
+  }
+
+  encodeURIComponent(str: string): string {
+    return encodeURIComponent(str);
   }
 }

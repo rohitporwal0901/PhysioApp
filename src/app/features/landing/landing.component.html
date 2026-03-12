@@ -470,8 +470,7 @@
 
             <!-- Doctor image -->
             <div class="relative h-52 bg-gradient-to-br from-primary-400 to-primary-700 overflow-hidden">
-              <img [src]="doc.image"
-                onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Doctor&background=0F9B8E&color=fff&size=200'"
+              <img [src]="doc.image || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(doc.fullName) + '&background=0D8ABC&color=fff&size=256'" 
                 alt="{{ doc.fullName }}"
                 class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-600 ease-out">
               <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>

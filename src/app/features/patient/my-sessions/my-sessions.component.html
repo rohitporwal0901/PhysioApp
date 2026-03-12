@@ -55,22 +55,24 @@
                 </div>
 
                 <!-- Details Block -->
-                <div class="flex-1">
-                    <div class="flex items-center space-x-3 mb-1">
-                        <h3
-                            class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                            {{ session.doctorSpecialty }}</h3>
-                        <span
-                            class="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-lg border"
-                             [ngClass]="session.status === 'confirmed' ? 'bg-green-100 text-green-700 dark:bg-green-900/30' : 'bg-status-warning/10 text-status-warning dark:bg-slate-700 dark:text-amber-400 border-status-warning/20'">
-                            {{ session.status }}
-                        </span>
+                <div class="flex-1 flex items-center">
+                    <div class="w-12 h-12 rounded-xl overflow-hidden ring-2 ring-white dark:ring-slate-700 shadow-sm mr-4 flex-shrink-0">
+                        <img [src]="'https://ui-avatars.com/api/?name=' + encodeURIComponent(session.doctorName) + '&background=0D8ABC&color=fff&size=100'" 
+                             class="w-full h-full object-cover" alt="">
                     </div>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">with {{ session.doctorName }}</p>
-                    <p class="text-xs text-slate-400 dark:text-slate-500 flex items-center">
-                        <i-lucide name="activity-square" class="w-4 h-4 mr-1.5"></i-lucide> {{ session.type }}
-                        Consultation
-                    </p>
+                    <div>
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1">
+                            <h3
+                                class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                                {{ session.doctorSpecialty }}</h3>
+                            <span
+                                class="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-lg border shadow-sm"
+                                 [ngClass]="session.status === 'confirmed' ? 'bg-green-500 text-white border-green-500' : 'bg-status-warning/10 text-status-warning dark:bg-slate-700 dark:text-amber-400 border-status-warning/20'">
+                                {{ session.status }}
+                            </span>
+                        </div>
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">with Dr. {{ session.doctorName }}</p>
+                    </div>
                 </div>
             </div>
 
@@ -102,14 +104,13 @@
             <div
                 class="flex flex-col md:flex-row justify-between border-b border-slate-100 dark:border-slate-700 pb-5 mb-5">
                 <div class="flex items-center">
-                    <div
-                        class="w-12 h-12 rounded-2xl flex items-center justify-center mr-4"
-                        [ngClass]="session.status === 'completed' ? 'bg-status-success/10 text-status-success' : 'bg-red-100 text-red-600'">
-                        <i-lucide [name]="session.status === 'completed' ? 'check-circle-2' : 'x-circle'" class="w-6 h-6"></i-lucide>
+                    <div class="w-12 h-12 rounded-xl overflow-hidden ring-2 ring-white dark:ring-slate-700 shadow-sm mr-4 flex-shrink-0">
+                        <img [src]="'https://ui-avatars.com/api/?name=' + encodeURIComponent(session.doctorName) + '&background=64748b&color=fff&size=100'" 
+                             class="w-full h-full object-cover grayscale opacity-80" alt="">
                     </div>
                     <div>
                         <h3 class="text-base font-bold text-slate-800 dark:text-white">{{ session.doctorSpecialty }}</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">{{ session.date | date }} &bull; {{
+                        <p class="text-sm text-slate-500 dark:text-slate-400">{{ session.date | date }} &bull; Dr. {{
                             session.doctorName }}</p>
                     </div>
                 </div>

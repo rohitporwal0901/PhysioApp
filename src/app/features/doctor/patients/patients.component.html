@@ -44,10 +44,9 @@
                     <div class="flex items-center space-x-4 mb-4">
                         <!-- Patient Photo -->
                         <div class="relative">
-                            <img [src]="p.image"
-                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Patient&background=random'"
-                                alt="Patient Avatar"
-                                class="w-16 h-16 rounded-2xl object-cover ring-2 ring-slate-50 dark:ring-slate-700/50 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                            <img [src]="'https://ui-avatars.com/api/?name=' + (p.name || 'Patient') + '&background=random&color=fff&size=128'" 
+                                 alt="Patient Avatar"
+                                 class="w-16 h-16 rounded-2xl object-cover ring-2 ring-slate-50 dark:ring-slate-700/50 shadow-sm group-hover:scale-105 transition-transform duration-300">
                         </div>
                         <div>
                             <h3
