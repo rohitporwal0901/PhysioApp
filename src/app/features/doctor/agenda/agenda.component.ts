@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MockApiService } from '../../../core/services/mock-api.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BookingService, BookedAppointment } from '../../../core/services/booking.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { Observable, of } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
@@ -13,19 +13,57 @@ import { LucideAngularModule } from 'lucide-angular';
   styleUrl: './agenda.component.scss'
 })
 export class AgendaComponent implements OnInit {
-  private api = inject(MockApiService);
+  private bookingService = inject(BookingService);
+  private authService = inject(AuthService);
 
-  agenda$: Observable<any[]> | null = null;
-  selectedAppointment: any = null;
+  agenda$: Observable<BookedAppointment[]> = of([]);
+  selectedAppointment: BookedAppointment | null = null;
+  isLoading = true;
 
   ngOnInit() {
-    // Filter down to doctor D1's agenda for today
-    this.agenda$ = this.api.getAppointments().pipe(
-      map(appointments => appointments.filter(a => a.doctorId === 'D1'))
-    );
+    const user = this.authService.currentUser;
+    if (user && user.role === 'doctor') {
+      this.agenda$ = this.bookingService.getDoctorAppointments(user.uid);
+      this.agenda$.subscribe(() => this.isLoading = false);
+    }
   }
 
-  selectAppointment(apt: any) {
+  selectAppointment(apt: BookedAppointment) {
     this.selectedAppointment = apt;
+  }
+
+  async confirmAppointment(apt: BookedAppointment) {
+    if (!apt.id) return;
+    try {
+      await this.bookingService.updateAppointmentStatus(apt.id, 'confirmed');
+      if (this.selectedAppointment?.id === apt.id) {
+        this.selectedAppointment.status = 'confirmed';
+      }
+    } catch (error) {
+      console.error('Error confirming appointment', error);
+    }
+  }
+
+  async rejectAppointment(apt: BookedAppointment) {
+    if (!apt.id) return;
+    try {
+      // Rejection cancels the appointment, opening the slot back up
+      await this.bookingService.updateAppointmentStatus(apt.id, 'cancelled');
+      if (this.selectedAppointment?.id === apt.id) {
+        this.selectedAppointment.status = 'cancelled';
+      }
+    } catch (error) {
+      console.error('Error rejecting appointment', error);
+    }
+  }
+
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'confirmed': return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
+      case 'pending': return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
+      case 'cancelled': return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
+      case 'completed': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
+      default: return 'bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-400';
+    }
   }
 }

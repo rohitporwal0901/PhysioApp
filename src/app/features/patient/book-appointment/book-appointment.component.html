@@ -40,35 +40,34 @@
         <ng-container *ngIf="currentStep === 1">
             <div class="section-title-row">
                 <h2 class="section-title">Available Specialists</h2>
-                <select class="filter-select">
-                    <option>All Specialties</option>
-                    <option>Sports Injury</option>
-                    <option>Neurological Rehab</option>
-                    <option>Orthopaedic</option>
-                </select>
+                <div class="flex items-center gap-2 p-2 bg-slate-100 dark:bg-slate-800 rounded-xl">
+                    <i-lucide name="search" class="w-4 h-4 text-slate-400 ml-2"></i-lucide>
+                    <input type="text" placeholder="Search by name..." class="bg-transparent border-none text-sm outline-none w-48">
+                </div>
             </div>
 
             <!-- Doctor Cards -->
             <ng-container *ngIf="doctors$ | async as doctors; else loadingDocs">
                 <div class="doctor-list fade-in-up">
-                    <div *ngFor="let doc of doctors" class="doctor-card" [class.unavailable]="!doc.available"
-                        (click)="selectDoctor(doc)">
-
+                    <div *ngFor="let doc of doctors" class="doctor-card" (click)="selectDoctor(doc)">
                         <div class="doctor-card-left">
-                            <img [src]="doc.image"
-                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Dr&background=0ea5e9&color=fff&size=200'"
-                                [alt]="doc.name" class="doctor-avatar">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white text-2xl font-bold shadow-md">
+                                {{ doc.fullName.charAt(0) }}
+                            </div>
                             <div class="doctor-info">
-                                <h3>{{ doc.name }}</h3>
-                                <p>{{ doc.specialty }}</p>
+                                <h3>{{ doc.fullName }}</h3>
+                                <p>{{ doc.specialization || doc.specialty }}</p>
                                 <div class="doctor-badge-row">
-                                    <span class="badge-exp">8+ yrs exp</span>
+                                    <span class="badge-exp">Top Rated</span>
+                                    <span class="badge-exp">{{ doc.experience ?? '8+' }} yrs exp</span>
                                 </div>
                             </div>
                         </div>
-
-                        <button *ngIf="doc.available" class="view-btn">Book</button>
-                        <span *ngIf="!doc.available" class="booked-label">Booked</span>
+                        <button class="view-btn">Book Now</button>
+                    </div>
+                    <div *ngIf="doctors.length === 0" class="col-span-full py-20 text-center">
+                        <i-lucide name="users" class="w-16 h-16 text-slate-200 dark:text-slate-800 mx-auto mb-4"></i-lucide>
+                        <p class="text-slate-500 dark:text-slate-400">No doctors are currently available for booking.</p>
                     </div>
                 </div>
             </ng-container>
@@ -102,23 +101,20 @@
                 <!-- Doctor Summary -->
                 <div class="doc-summary-card">
                     <div class="doc-summary-bg"></div>
-                    <img [src]="selectedDoctor.image"
-                        onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Dr&background=0ea5e9&color=fff&size=200'"
-                        alt="Doctor" class="doc-summary-img">
-                    <p class="doc-summary-name">{{ selectedDoctor.name }}</p>
-                    <p class="doc-summary-spec">{{ selectedDoctor.specialty }}</p>
-                    <div class="doc-details-box">
+                    <div class="w-24 h-24 mx-auto rounded-3xl bg-white dark:bg-slate-800 flex items-center justify-center text-primary-500 text-3xl font-black shadow-lg mb-4 relative z-10 border-4 border-white dark:border-slate-800">
+                        {{ selectedDoctor.fullName.charAt(0) }}
+                    </div>
+                    <p class="doc-summary-name relative z-10">{{ selectedDoctor.fullName }}</p>
+                    <p class="doc-summary-spec relative z-10">{{ selectedDoctor.specialization || selectedDoctor.specialty }}</p>
+                    
+                    <div class="doc-details-box relative z-10">
                         <div class="doc-detail-row">
                             <i-lucide name="clock" class="w-3.5 h-3.5 text-primary-400"></i-lucide>
-                            45 Min Consultation
+                            Consultation (45 Min)
                         </div>
                         <div class="doc-detail-row">
                             <i-lucide name="map-pin" class="w-3.5 h-3.5 text-primary-400"></i-lucide>
-                            In-person Visit
-                        </div>
-                        <div class="doc-detail-row">
-                            <i-lucide name="users" class="w-3.5 h-3.5 text-primary-400"></i-lucide>
-                            New Patient Intake
+                            Clinic Visit
                         </div>
                     </div>
                 </div>
@@ -127,9 +123,9 @@
                 <div class="slot-card">
                     <h3 class="slot-card-title">Select <span>Date & Time</span></h3>
 
-                    <p class="booking-as-info" *ngIf="isPatientRegistered">
+                    <p class="booking-as-info">
                         <i-lucide name="user-check" class="w-4 h-4"></i-lucide>
-                        Booking as <strong>{{ patientName }}</strong>
+                        Patient: <strong>{{ patientName }}</strong>
                     </p>
 
                     <!-- Error -->
@@ -148,14 +144,15 @@
                             [class.selected]="selectedTimeSlot === slot" [class.booked]="isSlotBooked(slot)"
                             [disabled]="isSlotBooked(slot)">
                             {{ slot }}
-                            <span *ngIf="isSlotBooked(slot)" class="slot-booked-label">Booked</span>
+                            <span *ngIf="isSlotBooked(slot)" class="slot-booked-label">Unavailable</span>
                         </button>
                     </div>
 
-                    <button [disabled]="!selectedTimeSlot" (click)="confirmBooking()" class="confirm-btn"
+                    <button [disabled]="!selectedTimeSlot || isProcessing" (click)="confirmBooking()" class="confirm-btn"
                         [class.active]="selectedTimeSlot" [class.inactive]="!selectedTimeSlot">
-                        <i-lucide name="calendar-check" class="w-5 h-5" *ngIf="selectedTimeSlot"></i-lucide>
-                        {{ selectedTimeSlot ? 'Confirm Booking' : 'Select a Time to Continue' }}
+                        <i-lucide name="loader" class="w-5 h-5 animate-spin" *ngIf="isProcessing"></i-lucide>
+                        <i-lucide name="calendar-check" class="w-5 h-5" *ngIf="selectedTimeSlot && !isProcessing"></i-lucide>
+                        {{ isProcessing ? 'Processing...' : (selectedTimeSlot ? 'Confirm Appointment' : 'Select a Time') }}
                     </button>
                 </div>
 
@@ -166,55 +163,40 @@
         <ng-container *ngIf="currentStep === 3">
             <div class="success-wrap fade-in-up">
                 <div class="success-card">
-                    <!-- BG Effects -->
                     <div class="success-bg-blob blob-top"></div>
                     <div class="success-bg-blob blob-bottom"></div>
 
-                    <!-- Icon -->
                     <div class="success-icon-wrap">
                         <div class="success-icon-glow"></div>
                         <div class="success-icon-circle">
-                            <i-lucide name="calendar-check" class="w-12 h-12 text-white"></i-lucide>
+                            <i-lucide name="check" class="w-12 h-12 text-white"></i-lucide>
                         </div>
-                        <span class="xp-badge">+50 XP</span>
                     </div>
 
-                    <h2 class="success-title">You're all set! 🥳</h2>
+                    <h2 class="success-title">Booking Requested! 🥳</h2>
                     <p class="success-desc">
-                        Your appointment with <strong style="color:#0f172a">{{ selectedDoctor?.name }}</strong>
-                        is confirmed. You just earned 50 recovery points!
+                        Your request for <strong style="color:#0f172a">{{ selectedDoctor?.fullName }}</strong>
+                        has been sent. You'll be notified once the doctor confirms your slot.
                     </p>
 
                     <!-- Booking Summary -->
-                    <div class="booking-summary">
-                        <div class="booking-summary-top">
-                            <img [src]="selectedDoctor?.image"
-                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Dr&background=0ea5e9&color=fff'"
-                                alt="" class="summary-doc-img">
-                            <div>
-                                <p class="summary-doc-name">{{ selectedDoctor?.name }}</p>
-                                <p class="summary-doc-spec">{{ selectedDoctor?.specialty }}</p>
+                    <div class="booking-summary mt-6">
+                        <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-center">
+                                <i-lucide name="calendar" class="w-5 h-5 text-primary-500 mr-2"></i-lucide>
+                                <span class="text-sm font-bold">{{ formattedDate }}</span>
                             </div>
-                        </div>
-                        <div class="booking-meta-row">
-                            <div class="booking-meta-item">
-                                <p class="meta-label">
-                                    <i-lucide name="calendar" class="w-3.5 h-3.5"></i-lucide> Date
-                                </p>
-                                <p class="meta-value">{{ formattedDate }}</p>
+                            <div class="flex items-center">
+                                <i-lucide name="clock" class="w-5 h-5 text-secondary-500 mr-2"></i-lucide>
+                                <span class="text-sm font-bold">{{ selectedTimeSlot }}</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Actions -->
-                    <div class="success-actions">
-                        <button (click)="goToPatientDashboard()" class="action-btn-primary">
-                            <i-lucide name="layout-dashboard" class="w-4 h-4"></i-lucide>
-                            Patient Dashboard
-                        </button>
-                        <button (click)="goToDoctorDashboard()" class="action-btn-outline">
-                            <i-lucide name="activity" class="w-4 h-4"></i-lucide>
-                            Doctor Dashboard
+                    <div class="success-actions mt-8">
+                        <button (click)="goToPatientDashboard()" class="action-btn-primary w-full py-4 rounded-2xl font-bold bg-primary-600 text-white shadow-xl shadow-primary-500/20 hover:scale-[1.02] transition-all">
+                            Go to My Appointments
                         </button>
                     </div>
                 </div>

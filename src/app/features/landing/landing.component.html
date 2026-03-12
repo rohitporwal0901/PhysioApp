@@ -478,7 +478,7 @@
             <div class="relative h-52 bg-gradient-to-br from-primary-400 to-primary-700 overflow-hidden">
               <img [src]="doc.image"
                 onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Doctor&background=0F9B8E&color=fff&size=200'"
-                alt="{{ doc.name }}"
+                alt="{{ doc.fullName }}"
                 class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-600 ease-out">
               <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
 
@@ -498,8 +498,8 @@
 
               <!-- Name overlay -->
               <div class="absolute bottom-3 left-4">
-                <h3 class="text-base font-bold text-white font-heading leading-tight">{{ doc.name }}</h3>
-                <p class="text-primary-200 text-xs">{{ doc.specialty }}</p>
+                <h3 class="text-base font-bold text-white font-heading leading-tight">{{ doc.fullName }}</h3>
+                <p class="text-primary-200 text-xs">{{ doc.specialization || doc.specialty }}</p>
               </div>
             </div>
 

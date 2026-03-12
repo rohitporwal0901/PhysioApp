@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MockApiService } from '../../../core/services/mock-api.service';
 import { BookingService } from '../../../core/services/booking.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Observable } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
 
@@ -17,6 +18,7 @@ import { LucideAngularModule } from 'lucide-angular';
 export class BookAppointmentComponent implements OnInit {
   private api = inject(MockApiService);
   private bookingService = inject(BookingService);
+  private authService = inject(AuthService);
   private router = inject(Router);
 
   doctors$: Observable<any[]> | null = null;
@@ -28,6 +30,7 @@ export class BookAppointmentComponent implements OnInit {
   selectedTimeSlot: string | null = null;
   bookedSlots: string[] = [];
   bookingError = '';
+  isProcessing = false;
 
   // All available slots
   availableTimeSlots = [
@@ -36,41 +39,33 @@ export class BookAppointmentComponent implements OnInit {
   ];
 
   ngOnInit() {
-    // Check if patient is registered
-    if (!this.bookingService.isPatientRegistered) {
-      this.router.navigate(['/patient/register']);
+    if (!this.authService.isLoggedIn || this.authService.userRole !== 'patient') {
+      this.router.navigate(['/login']);
       return;
     }
     this.doctors$ = this.api.getDoctors();
   }
 
-  get isPatientRegistered(): boolean {
-    return this.bookingService.isPatientRegistered;
-  }
-
   get patientName(): string {
-    return this.bookingService.currentPatient?.fullName || '';
+    return this.authService.currentUser?.fullName || '';
   }
 
   selectDoctor(doc: any) {
-    if (!doc.available) return;
     this.selectedDoctor = doc;
     this.currentStep = 2;
-    // Load booked slots for this doctor on selected date
     this.refreshBookedSlots();
   }
 
   onDateChange() {
     this.refreshBookedSlots();
-    // If selected slot is now booked, deselect it
     if (this.selectedTimeSlot && this.bookedSlots.includes(this.selectedTimeSlot)) {
       this.selectedTimeSlot = null;
     }
   }
 
-  refreshBookedSlots() {
+  async refreshBookedSlots() {
     if (this.selectedDoctor && this.selectedDate) {
-      this.bookedSlots = this.bookingService.getBookedSlotsForDoctor(this.selectedDoctor.id, this.selectedDate);
+      this.bookedSlots = await this.bookingService.getBookedSlots(this.selectedDoctor.id, this.selectedDate);
     }
   }
 
@@ -85,24 +80,28 @@ export class BookAppointmentComponent implements OnInit {
     }
   }
 
-  confirmBooking() {
-    if (this.selectedTimeSlot && this.selectedDoctor) {
-      const appointment = this.bookingService.bookAppointment({
-        doctorId: this.selectedDoctor.id,
-        doctorName: this.selectedDoctor.name,
-        doctorSpecialty: this.selectedDoctor.specialty,
-        doctorImage: this.selectedDoctor.image,
-        date: this.selectedDate,
-        time: this.selectedTimeSlot,
-        type: 'Consultation'
-      });
+  async confirmBooking() {
+    if (!this.selectedTimeSlot || !this.selectedDoctor) return;
+    
+    this.isProcessing = true;
+    this.bookingError = '';
 
-      if (appointment) {
-        this.currentStep = 3;
-        this.bookingError = '';
-      } else {
-        this.bookingError = 'This slot is already booked. Please select another.';
-      }
+    const result = await this.bookingService.bookAppointment({
+      doctorId: this.selectedDoctor.id,
+      doctorName: this.selectedDoctor.fullName || this.selectedDoctor.name,
+      doctorSpecialty: this.selectedDoctor.specialization || 'Physiotherapist',
+      date: this.selectedDate,
+      time: this.selectedTimeSlot,
+      type: 'Consultation'
+    });
+
+    this.isProcessing = false;
+
+    if (result.success) {
+      this.currentStep = 3;
+    } else {
+      this.bookingError = result.error || 'Booking failed.';
+      this.refreshBookedSlots(); // Refresh in case it was just booked
     }
   }
 
@@ -116,14 +115,6 @@ export class BookAppointmentComponent implements OnInit {
     }
   }
 
-  goToPatientDashboard() {
-    this.router.navigate(['/patient/dashboard']);
-  }
-
-  goToDoctorDashboard() {
-    this.router.navigate(['/doctor/dashboard']);
-  }
-
   get formattedDate(): string {
     if (!this.selectedDate) return '';
     const d = new Date(this.selectedDate + 'T00:00:00');
@@ -133,5 +124,12 @@ export class BookAppointmentComponent implements OnInit {
   get minDate(): string {
     return new Date().toISOString().split('T')[0];
   }
-}
 
+  goToPatientDashboard() {
+    this.router.navigate(['/patient/dashboard']);
+  }
+
+  goToDoctorDashboard() {
+    this.router.navigate(['/doctor/dashboard']);
+  }
+}
