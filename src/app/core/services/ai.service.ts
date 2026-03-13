@@ -30,26 +30,27 @@ export class AiService {
     }
 
     const prompt = `
-      You are a highly experienced Senior Physiotherapist.
-      Analyze the following patient data and session notes to create a professional rehabilitation progress report.
+      You are a Senior Clinical Physiotherapist and Rehabilitation Specialist.
+      Perform a deep biomechanical and clinical analysis based on the patient data provided.
 
-      PATIENT DETAILS:
-      - Name: ${data.patientName}
-      - Clinical Condition: ${data.condition}
-      - Treatment Notes: ${data.notes}
+      PATIENT CLINICAL DATA:
+      - Subject: ${data.patientName}
+      - Primary Diagnosis/Condition: ${data.condition}
+      - Clinical Session Notes: ${data.notes}
 
-      STRICT OUTPUT FORMAT RULES:
-      1. DO NOT use secondary formatting like markdown bold (**) or bullet points.
-      2. Use the exact labels provided below.
-      3. For Roadmap Phases, use the format: Goal | Exercise | Focus
+      STRICT REPORTING GUIDELINES:
+      - Use formal medical terminology (e.g., glenohumeral, proprioception, kinematic chain).
+      - Quantify the recovery trajectory where possible.
+      - DO NOT use markdown symbols like asterisks (**).
+      - Maintain a professional, data-driven, yet encouraging tone.
 
-      REPORT STRUCTURE:
-      [SUMMARY]: (4 lines of clinical assessment)
-      [SCORE]: (Progress percentage as a number only, e.g., 75)
-      [PHASE_1]: (Goal | Exercise | Focus)
-      [PHASE_2]: (Goal | Exercise | Focus)
-      [PHASE_3]: (Goal | Exercise | Focus)
-      [ADVICE]: (One final professional clinical recommendation)
+      REQUIRED STRUCTURE:
+      [SUMMARY]: Provide a 4-line expert clinical evaluation of the session. Address musculoskeletal integrity and neural mobility improvements.
+      [SCORE]: Progress percentage (Integer 0-100).
+      [PHASE_1]: Recovery Phase Goal | Evidence-Based Exercises | Primary Clinical Focus
+      [PHASE_2]: Progressive Phase Goal | Resistance/Weight-Bearing Drills | Core/Joint Stability Focus
+      [PHASE_3]: Functional Integration Goal | Sport/Activity Specific Drills | Full Autonomy & Prevention
+      [ADVICE]: Concluding professional recommendation for long-term health.
     `;
 
     const genAI = new GoogleGenerativeAI(key);
@@ -99,24 +100,24 @@ export class AiService {
     const score = parseInt(scoreText.replace(/[^0-9]/g, '')) || 50;
     const recommendation = extract('ADVICE') || 'Follow the prescribed home exercise program and maintain hydration.';
 
-    const roadmap: string[][] = [];
+    const roadmap: any[] = [];
     ['PHASE_1', 'PHASE_2', 'PHASE_3'].forEach((phase, idx) => {
       const content = extract(phase);
       if (content) {
         const parts = content.split('|').map((p: string) => p.trim());
-        roadmap.push([
-          `Phase ${idx + 1}`,
-          parts[0] || 'Recovery Goal',
-          parts[1] || 'Standard Exercise',
-          parts[2] || 'Clinical Focus'
-        ]);
+        roadmap.push({
+          phase: `Phase ${idx + 1}`,
+          goal: parts[0] || 'Recovery Goal',
+          exercises: parts[1] || 'Standard Exercise',
+          focus: parts[2] || 'Clinical Focus'
+        });
       }
     });
 
     if (roadmap.length === 0) {
-      roadmap.push(['Phase 1', 'Acute Recovery', 'Basic ROM', 'Inflammation Control']);
-      roadmap.push(['Phase 2', 'Mobility', 'Resistance Training', 'Strength']);
-      roadmap.push(['Phase 3', 'Functional', 'Sport-Specific Drills', 'Autonomy']);
+      roadmap.push({ phase: 'Phase 1', goal: 'Acute Recovery', exercises: 'Basic ROM', focus: 'Inflammation Control' });
+      roadmap.push({ phase: 'Phase 2', goal: 'Mobility', exercises: 'Resistance Training', focus: 'Strength' });
+      roadmap.push({ phase: 'Phase 3', goal: 'Functional', exercises: 'Sport-Specific Drills', focus: 'Autonomy' });
     }
 
     return { summary, score, roadmap, recommendation };

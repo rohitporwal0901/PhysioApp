@@ -125,7 +125,7 @@
                         <i-lucide [name]="generatingReportId === session.id ? 'loader' : 'sparkles'" 
                                   [class.animate-spin]="generatingReportId === session.id"
                                   class="w-3.5 h-3.5 mr-1.5"></i-lucide>
-                        {{ generatingReportId === session.id ? 'Analyzing...' : '⚡ AI Recovery Report' }}
+                        {{ generatingReportId === session.id ? 'Analyzing...' : (session.aiReport ? '📁 Download AI Report' : '⚡ Generate AI Report') }}
                     </button>
                     <button *ngIf="!session.feedback" (click)="openFeedbackModal(session)"
                         class="px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 text-xs font-bold rounded-lg border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors flex items-center">

@@ -42,6 +42,13 @@ export interface BookedAppointment {
     createdAt: any;
   };
   createdAt: any;
+  aiReport?: {
+    summary: string;
+    score: number;
+    roadmap: any[]; // Changed from string[][] to any[] of objects
+    recommendation: string;
+    generatedAt: any;
+  };
 }
 
 @Injectable({
@@ -82,14 +89,12 @@ export class BookingService {
       return { success: false, error: 'Only registered patients can book appointments.' };
     }
 
-    // 1. Check if slot is already booked (Confirmed or Pending)
     const isBooked = await this.isSlotTaken(data.doctorId, data.date, data.time);
     if (isBooked) {
       return { success: false, error: 'This time slot is already taken. Please choose another.' };
     }
 
     try {
-      // Get the full patient profile to store the latest details in appointment
       const patientRef = doc(this.firestore, 'users', user.uid);
       const patientSnap = await getDoc(patientRef);
       const patientData = patientSnap.data() as any;
@@ -115,7 +120,6 @@ export class BookingService {
 
       await addDoc(this.appointmentsCollection, appointment);
       
-      // 2. Link patient to doctor permanently in their profile
       const userRef = doc(this.firestore, 'users', user.uid);
       await updateDoc(userRef, {
         assignedDoctors: arrayUnion(data.doctorId)
@@ -140,10 +144,6 @@ export class BookingService {
     return !snap.empty;
   }
 
-  // ═══════════════════════════════════════
-  //  RETRIEVE APPOINTMENTS (Real-time)
-  // ═══════════════════════════════════════
-
   getPatientAppointments(patientId: string): Observable<BookedAppointment[]> {
     const q = query(
       this.appointmentsCollection,
@@ -162,7 +162,6 @@ export class BookingService {
     return this.collectionToObservable(q);
   }
 
-  /** Get booked slots for a doctor on a specific date to disable them in UI */
   async getBookedSlots(doctorId: string, date: string): Promise<string[]> {
     const q = query(
       this.appointmentsCollection,
@@ -174,14 +173,10 @@ export class BookingService {
     return snap.docs.map(doc => doc.data()['time']);
   }
 
-  /** Alias for legacy/component usage */
-  getBookedSlotsForDoctor(doctorId: string, date: string): Promise<string[]> {
+  /** Alias for existing component usage */
+  async getBookedSlotsForDoctor(doctorId: string, date: string): Promise<string[]> {
     return this.getBookedSlots(doctorId, date);
   }
-
-  // ═══════════════════════════════════════
-  //  STATUS MANAGEMENT (Doctor Actions)
-  // ═══════════════════════════════════════
 
   async updateAppointmentStatus(appointmentId: string, status: 'confirmed' | 'cancelled' | 'completed'): Promise<void> {
     const docRef = doc(this.firestore, 'appointments', appointmentId);
@@ -203,6 +198,16 @@ export class BookingService {
     });
   }
 
+  async updateAiReport(appointmentId: string, aiReport: any): Promise<void> {
+    const docRef = doc(this.firestore, 'appointments', appointmentId);
+    await updateDoc(docRef, { 
+      aiReport: {
+        ...aiReport,
+        generatedAt: Timestamp.now()
+      }
+    });
+  }
+
   getLatestFeedbacks(limitCount: number = 5): Observable<BookedAppointment[]> {
     const q = query(
       this.appointmentsCollection,
@@ -213,7 +218,6 @@ export class BookingService {
     return this.collectionToObservable(q);
   }
 
-  // Helper to convert Firestore query to Observable
   private collectionToObservable(q: any): Observable<BookedAppointment[]> {
     return new Observable<BookedAppointment[]>(subscriber => {
       return onSnapshot(q, (snapshot: any) => {

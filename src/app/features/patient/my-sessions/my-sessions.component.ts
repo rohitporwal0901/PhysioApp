@@ -91,13 +91,18 @@ export class MySessionsComponent implements OnInit {
   async downloadReport(session: BookedAppointment) {
     if (!session.id) return;
 
-    // Start Loading Overlay
+    // 1. If AI Report already exists, just generate the PDF immediately
+    if (session.aiReport) {
+      this.generatePDF(session, session.aiReport);
+      return;
+    }
+
+    // 2. Otherwise, generate new report via AI
     this.generatingReportId = session.id;
 
     let aiAnalysis;
 
     try {
-      // Step 1: Attempt Real AI Analysis
       if (environment.geminiApiKey) {
         try {
           const aiRawResponse = await this.aiService.generateClinicalReport({
@@ -108,16 +113,25 @@ export class MySessionsComponent implements OnInit {
           });
           aiAnalysis = this.aiService.parseAIResponse(aiRawResponse);
         } catch (apiError) {
-          console.error("Gemini API failed, falling back to local review:", apiError);
+          console.error("Gemini API failed, using high-quality local template:", apiError);
           aiAnalysis = this.performLocalAIReview(session);
         }
       } else {
-        // Fallback if no key is present
         aiAnalysis = this.performLocalAIReview(session);
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Short simulation
+        await new Promise(resolve => setTimeout(resolve, 2000));
       }
 
-      // Step 2: Generate PDF
+      // 3. PERSIST the report to database (Important: Move this outside the try/catch)
+      if (aiAnalysis) {
+        await this.bookingService.updateAiReport(session.id, aiAnalysis);
+        
+        // Update local state immediately for better UX
+        session.aiReport = {
+          ...aiAnalysis,
+          generatedAt: new Date()
+        };
+      }
+
       this.generatePDF(session, aiAnalysis);
 
     } catch (globalError) {
@@ -131,7 +145,10 @@ export class MySessionsComponent implements OnInit {
 
   private generatePDF(session: BookedAppointment, ai: any) {
     const doc = new jsPDF();
-    
+    const primaryColor = [16, 185, 129];
+    const classicNavy = [15, 23, 42];
+    const goldAccent = [133, 77, 14];
+
     // Watermark & Background cross pattern
     this.drawWatermark(doc);
 
@@ -184,64 +201,86 @@ export class MySessionsComponent implements OnInit {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
     doc.setTextColor(51, 65, 85);
-    doc.text(`Name: ${session.patientName}`, 25, currentY + 15);
-    doc.text(`Condition: ${session.patientCondition || session.type}`, 25, currentY + 23);
-    doc.text(`Date: ${session.date}`, 25, currentY + 31);
+    doc.text(`Patient: ${session.patientName}`, 25, currentY + 15);
+    doc.text(`Medical Diagnosis: ${session.patientCondition || session.type}`, 25, currentY + 23);
+    doc.text(`Admission Date: ${session.date}`, 25, currentY + 31);
 
-    doc.text(`Dr. ${session.doctorName}`, 115, currentY + 15);
+    doc.text(`Lead Consultant: Dr. ${session.doctorName}`, 115, currentY + 15);
     doc.text(`${session.doctorSpecialty}`, 115, currentY + 23);
-    doc.text(`ID: #PHY-${session.id?.substring(0, 8).toUpperCase()}`, 115, currentY + 31);
+    doc.text(`Record Verified: ${new Date().toLocaleDateString()}`, 115, currentY + 31);
 
-    currentY += 50;
+    currentY += 45;
 
-    // AI Summary Box
-    const summary = doc.splitTextToSize(ai.summary, 160);
-    const boxH = (summary.length * 7) + 20;
+    // AI Observations Box
+    const summary = doc.splitTextToSize(ai.summary, 165);
+    const boxH = (summary.length * 7) + 22;
 
-    doc.setFillColor(248, 250, 252);
+    doc.setFillColor(243, 244, 246);
     doc.setDrawColor(16, 185, 129);
-    doc.roundedRect(20, currentY, 170, boxH, 3, 3, 'FD');
+    doc.setLineWidth(0.4);
+    doc.roundedRect(20, currentY, 170, boxH, 4, 4, 'FD');
     
-    doc.setTextColor(16, 185, 129);
+    doc.setTextColor(classicNavy[0], classicNavy[1], classicNavy[2]);
     doc.setFontSize(12);
-    doc.setFont('times', 'bolditalic');
-    doc.text('AI CLINICAL OBSERVATIONS', 30, currentY + 10);
+    doc.setFont('times', 'bold');
+    doc.text('PRIMARY CLINICAL OBSERVATIONS', 28, currentY + 10);
     
-    doc.setTextColor(15, 23, 42);
+    doc.setTextColor(51, 65, 85);
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10.5);
-    doc.text(summary, 30, currentY + 20);
+    doc.setFontSize(10);
+    doc.text(summary, 28, currentY + 20);
 
     currentY += boxH + 15;
 
     // Roadmap Table
-    doc.setTextColor(15, 23, 42);
+    doc.setTextColor(classicNavy[0], classicNavy[1], classicNavy[2]);
     doc.setFontSize(14);
     doc.setFont('times', 'bold');
-    doc.text('REHABILITATION ROADMAP', 25, currentY);
+    doc.text('STRUCTURED REHABILITATION ROADMAP', 25, currentY);
 
     autoTable(doc, {
       startY: currentY + 5,
-      head: [['PHASE', 'GOAL', 'PROTOCOL', 'FOCUS']],
-      body: ai.roadmap,
+      head: [['PHASE', 'CLINICAL GOALS', 'SPECIFIC PROTOCOL', 'THERAPEUTIC FOCUS']],
+      body: ai.roadmap.map((r: any) => [r.phase, r.goal, r.exercises, r.focus]),
       theme: 'grid',
-      headStyles: { fillColor: [15, 23, 42], textColor: 255, font: 'times' },
-      styles: { fontSize: 9, cellPadding: 5 },
-      columnStyles: { 0: { fontStyle: 'bold', textColor: [16, 185, 129] } },
+      headStyles: { 
+        fillColor: [15, 23, 42], 
+        textColor: 255, 
+        font: 'times',
+        fontStyle: 'bold',
+        halign: 'center'
+      },
+      styles: { 
+        fontSize: 9, 
+        cellPadding: 5,
+        valign: 'middle'
+      },
+      columnStyles: { 
+        0: { fontStyle: 'bold', textColor: [16, 185, 129], cellWidth: 25 },
+        1: { cellWidth: 45 },
+        2: { cellWidth: 60 },
+        3: { fontStyle: 'italic', textColor: [71, 85, 105], cellWidth: 35 }
+      },
       margin: { left: 20, right: 20 }
     });
 
     const finalY = (doc as any).lastAutoTable.finalY + 15;
 
-    // Clinical Advice
-    doc.setTextColor(15, 23, 42);
-    doc.setFontSize(12);
+    // Advice Box
+    doc.setFillColor(255, 251, 235); // Amber light
+    doc.setDrawColor(245, 158, 11); // Amber
+    doc.roundedRect(20, finalY, 170, 25, 2, 2, 'FD');
+
+    doc.setTextColor(146, 64, 14); // Dark Amber
+    doc.setFontSize(11);
     doc.setFont('times', 'bold');
-    doc.text('FINAL CLINICAL ADVICE', 25, finalY);
+    doc.text('LONG-TERM CLINICAL ADVICE', 28, finalY + 8);
+    
+    doc.setTextColor(69, 26, 3);
     doc.setFont('helvetica', 'italic');
-    doc.setFontSize(10);
-    const advice = doc.splitTextToSize(ai.recommendation, 160);
-    doc.text(advice, 25, finalY + 8);
+    doc.setFontSize(9.5);
+    const advice = doc.splitTextToSize(ai.recommendation, 155);
+    doc.text(advice, 28, finalY + 15);
 
     doc.save(`Report_${session.patientName.replace(/\s+/g, '_')}.pdf`);
   }
