@@ -103,7 +103,7 @@ export class MySessionsComponent implements OnInit {
     let aiAnalysis;
 
     try {
-      if (environment.geminiApiKey) {
+      if (session) {
         try {
           const aiRawResponse = await this.aiService.generateClinicalReport({
             condition: session.patientCondition || session.type,

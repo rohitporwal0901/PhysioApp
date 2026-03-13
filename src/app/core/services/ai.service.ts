@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { environment } from '../../../environments/environment';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AiService {
+  private firestore = inject(Firestore);
+  private cachedApiKey: string | null = null;
 
   // Free tier models - best quota se worst tak
   private readonly FREE_MODELS = [
@@ -24,9 +26,17 @@ export class AiService {
     doctorName: string;
   }): Promise<string> {
 
-    const key = environment.geminiApiKey;
+    if (!this.cachedApiKey) {
+      const docRef = doc(this.firestore, 'app_secrets', 'gemini');
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        this.cachedApiKey = docSnap.data()['apiKey'];
+      }
+    }
+
+    const key = this.cachedApiKey;
     if (!key) {
-      throw new Error('Gemini API Key missing in environment.ts');
+      throw new Error('Gemini API Key missing in Firestore collection "app_secrets/gemini"');
     }
 
     const prompt = `
