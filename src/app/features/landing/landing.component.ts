@@ -85,7 +85,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     statIcons = ['users', 'stethoscope', 'heart-pulse', 'award'];
 
     conditions = [
-        { label: 'Back Pain', icon: 'person-standing' },
+        { label: 'Back Pain', icon: 'accessibility' },
         { label: 'Knee Injury', icon: 'footprints' },
         { label: 'Shoulder Pain', icon: 'activity' },
         { label: 'Neck Pain', icon: 'brain' },
