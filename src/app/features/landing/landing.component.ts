@@ -9,6 +9,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { Observable } from 'rxjs';
 import { MockApiService } from '../../core/services/mock-api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { BookingService, BookedAppointment } from '../../core/services/booking.service';
 
 @Component({
     selector: 'app-landing',
@@ -22,8 +23,10 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
     private authService = inject(AuthService);
+    private bookingService = inject(BookingService);
 
     doctors$: Observable<any[]> | undefined;
+    feedbacks$: Observable<BookedAppointment[]> | undefined;
     mobileMenuOpen = false;
     navScrolled = false;
     searchQuery = '';
@@ -182,6 +185,14 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
         // Re-trigger observer whenever doctors load
         this.doctors$.subscribe(() => {
             setTimeout(() => this.setupScrollAnimations(), 200);
+        });
+
+        this.feedbacks$ = this.bookingService.getLatestFeedbacks(5);
+        this.feedbacks$.subscribe(feedbacks => {
+            if (feedbacks && feedbacks.length > 0) {
+                // If we have real feedbacks, we might want to update the rotation logic
+                // But for now let's just make sure they are available in the template
+            }
         });
 
         this.startTestimonialRotation();

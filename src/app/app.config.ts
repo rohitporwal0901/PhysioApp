@@ -12,7 +12,7 @@ import {
   ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff,
   ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
   TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone,
-  LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut
+  LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut, Sparkles, MessageSquare, Loader
 } from 'lucide-angular';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -43,7 +43,7 @@ export const appConfig: ApplicationConfig = {
       ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff,
       ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
       TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone,
-      LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut
+      LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut, Sparkles, MessageSquare, Loader
     }))
   ]
 };

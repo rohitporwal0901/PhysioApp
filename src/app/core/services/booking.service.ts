@@ -12,7 +12,8 @@ import {
   updateDoc,
   Timestamp,
   orderBy,
-  arrayUnion
+  arrayUnion,
+  limit
 } from '@angular/fire/firestore';
 import { Observable, BehaviorSubject, map } from 'rxjs';
 import { AuthService, AppUser } from './auth.service';
@@ -35,6 +36,11 @@ export interface BookedAppointment {
   type: string;
   notes: string;          // Patient's complaint/reason for visit
   treatmentNotes?: string; // Doctor's notes after/during session
+  feedback?: {
+    rating: number;
+    comment: string;
+    createdAt: any;
+  };
   createdAt: any;
 }
 
@@ -185,6 +191,26 @@ export class BookingService {
   async updateTreatmentNotes(appointmentId: string, treatmentNotes: string): Promise<void> {
     const docRef = doc(this.firestore, 'appointments', appointmentId);
     await updateDoc(docRef, { treatmentNotes });
+  }
+
+  async updateFeedback(appointmentId: string, feedback: { rating: number; comment: string }): Promise<void> {
+    const docRef = doc(this.firestore, 'appointments', appointmentId);
+    await updateDoc(docRef, { 
+      feedback: {
+        ...feedback,
+        createdAt: Timestamp.now()
+      }
+    });
+  }
+
+  getLatestFeedbacks(limitCount: number = 5): Observable<BookedAppointment[]> {
+    const q = query(
+      this.appointmentsCollection,
+      where('feedback', '!=', null),
+      orderBy('feedback.createdAt', 'desc'),
+      limit(limitCount)
+    );
+    return this.collectionToObservable(q);
   }
 
   // Helper to convert Firestore query to Observable

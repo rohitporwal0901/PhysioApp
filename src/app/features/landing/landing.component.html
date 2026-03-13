@@ -651,65 +651,110 @@
         </p>
       </div>
 
-      <!-- Featured testimonial -->
-      <div class="max-w-2xl mx-auto mb-10">
-        <div
-          class="testimonial-featured-card bg-white/7 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-7 sm:p-10">
-          <div class="flex gap-1 mb-4">
-            @for (s of [1,2,3,4,5]; track s) {
-            <i-lucide name="star" class="w-4 h-4 text-amber-400" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
-            }
-            <span class="ml-2 text-xs font-medium text-slate-400 self-center">Verified Patient</span>
-          </div>
-          <p class="text-white/90 text-sm sm:text-base leading-relaxed mb-6 italic min-h-[4.5rem]">
-            "{{ testimonials[activeTestimonial].text }}"
-          </p>
-          <div class="flex items-center gap-3">
-            <img [src]="testimonials[activeTestimonial].avatar" alt="{{ testimonials[activeTestimonial].name }}"
-              class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-400/40">
-            <div>
-              <p class="font-bold text-white text-sm">{{ testimonials[activeTestimonial].name }}</p>
-              <p class="text-primary-300 text-xs">{{ testimonials[activeTestimonial].role }}</p>
+      <!-- Featured testimonial (Real Feedback from Patients) -->
+      <ng-container *ngIf="feedbacks$ | async as realFeedbacks; else staticTestimonials">
+        <div class="max-w-2xl mx-auto mb-10" *ngIf="realFeedbacks.length > 0">
+            <div class="testimonial-featured-card bg-white/7 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-7 sm:p-10">
+                <div class="flex gap-1 mb-4">
+                    <i-lucide name="star" *ngFor="let s of [1,2,3,4,5]" 
+                              [class.text-amber-400]="s <= realFeedbacks[activeTestimonial % realFeedbacks.length].feedback!.rating"
+                              [class.text-slate-200]="s > realFeedbacks[activeTestimonial % realFeedbacks.length].feedback!.rating"
+                              class="w-4 h-4" [ngStyle]="{'fill': (s <= realFeedbacks[activeTestimonial % realFeedbacks.length].feedback!.rating ? 'currentColor' : 'none')}"></i-lucide>
+                    <span class="ml-2 text-xs font-medium text-slate-400 self-center">Verified Patient Feedback</span>
+                </div>
+                <p class="text-white/90 text-sm sm:text-base leading-relaxed mb-6 italic min-h-[4.5rem]">
+                    "{{ realFeedbacks[activeTestimonial % realFeedbacks.length].feedback?.comment || 'Exceptional service and care.' }}"
+                </p>
+                <div class="flex items-center gap-3">
+                    <img [src]="realFeedbacks[activeTestimonial % realFeedbacks.length].patientImage" 
+                         alt="{{ realFeedbacks[activeTestimonial % realFeedbacks.length].patientName }}"
+                         class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-400/40">
+                    <div>
+                        <p class="font-bold text-white text-sm">{{ realFeedbacks[activeTestimonial % realFeedbacks.length].patientName }}</p>
+                        <p class="text-primary-300 text-xs">Patient of Dr. {{ realFeedbacks[activeTestimonial % realFeedbacks.length].doctorName }}</p>
+                    </div>
+                    <div class="ml-auto text-right">
+                        <p class="text-xs text-slate-500">{{ realFeedbacks[activeTestimonial % realFeedbacks.length].feedback?.createdAt.toDate() | date:'shortDate' }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="ml-auto text-right">
-              <p class="text-xs text-slate-500">Treated by PhysioPro</p>
+        </div>
+
+        <!-- Mini cards grid (Latest 3) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" *ngIf="realFeedbacks.length > 0">
+            @for (fb of realFeedbacks.slice(0, 3); track fb.id; let i = $index) {
+            <div (click)="setTestimonial(i)"
+                class="mini-testimonial-card reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
+                [class.active-card]="i === (activeTestimonial % realFeedbacks.length)">
+                <div class="flex gap-0.5 mb-3">
+                    <i-lucide name="star" *ngFor="let s of [1,2,3,4,5]" 
+                              [class.text-amber-400]="s <= fb.feedback!.rating"
+                              [class.text-slate-600]="s > fb.feedback!.rating"
+                              class="w-3 h-3" [ngStyle]="{'fill': (s <= fb.feedback!.rating ? 'currentColor' : 'none')}"></i-lucide>
+                </div>
+                <p class="text-white/70 text-xs italic mb-4 line-clamp-3 leading-relaxed">"{{ fb.feedback?.comment }}"</p>
+                <div class="flex items-center gap-2">
+                    <img [src]="fb.patientImage" alt="" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-500/30">
+                    <div>
+                        <p class="font-bold text-white text-xs">{{ fb.patientName }}</p>
+                        <p class="text-primary-400 text-[10px]">Treated for {{ fb.type }}</p>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+      </ng-container>
+
+      <!-- Fallback to Static Testimonials if no real feedbacks exist -->
+      <ng-template #staticTestimonials>
+        <div class="max-w-2xl mx-auto mb-10">
+          <div
+            class="testimonial-featured-card bg-white/7 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-7 sm:p-10">
+            <div class="flex gap-1 mb-4">
+              @for (s of [1,2,3,4,5]; track s) {
+              <i-lucide name="star" class="w-4 h-4 text-amber-400" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
+              }
+              <span class="ml-2 text-xs font-medium text-slate-400 self-center">Verified Patient</span>
+            </div>
+            <p class="text-white/90 text-sm sm:text-base leading-relaxed mb-6 italic min-h-[4.5rem]">
+              "{{ testimonials[activeTestimonial % testimonials.length].text }}"
+            </p>
+            <div class="flex items-center gap-3">
+              <img [src]="testimonials[activeTestimonial % testimonials.length].avatar" alt="{{ testimonials[activeTestimonial % testimonials.length].name }}"
+                class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-400/40">
+              <div>
+                <p class="font-bold text-white text-sm">{{ testimonials[activeTestimonial % testimonials.length].name }}</p>
+                <p class="text-primary-300 text-xs">{{ testimonials[activeTestimonial % testimonials.length].role }}</p>
+              </div>
+              <div class="ml-auto text-right">
+                <p class="text-xs text-slate-500">Treated by PhysioPro</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Dots -->
-      <div class="flex justify-center gap-2 mb-12">
-        @for (t of testimonials; track t.name; let i = $index) {
-        <button (click)="setTestimonial(i)" class="testimonial-dot" [class.active]="i === activeTestimonial"
-          [attr.aria-label]="t.name">
-          <img [src]="t.avatar" alt="{{ t.name }}" class="w-full h-full object-cover rounded-full">
-        </button>
-        }
-      </div>
-
-      <!-- Mini cards grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        @for (t of testimonials.slice(0, 3); track t.name; let i = $index) {
-        <div (click)="setTestimonial(i)"
-          class="mini-testimonial-card reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
-          [class.active-card]="i === activeTestimonial">
-          <div class="flex gap-0.5 mb-3">
-            @for (s of [1,2,3,4,5]; track s) {
-            <i-lucide name="star" class="w-3 h-3 text-amber-400" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
-            }
-          </div>
-          <p class="text-white/70 text-xs italic mb-4 line-clamp-3 leading-relaxed">"{{ t.text }}"</p>
-          <div class="flex items-center gap-2">
-            <img [src]="t.avatar" alt="" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-500/30">
-            <div>
-              <p class="font-bold text-white text-xs">{{ t.name }}</p>
-              <p class="text-primary-400 text-[10px]">{{ t.role }}</p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          @for (t of testimonials.slice(0, 3); track t.name; let i = $index) {
+          <div (click)="setTestimonial(i)"
+            class="mini-testimonial-card reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
+            [class.active-card]="i === (activeTestimonial % testimonials.length)">
+            <div class="flex gap-0.5 mb-3">
+              @for (s of [1,2,3,4,5]; track s) {
+              <i-lucide name="star" class="w-3 h-3 text-amber-400" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
+              }
+            </div>
+            <p class="text-white/70 text-xs italic mb-4 line-clamp-3 leading-relaxed">"{{ t.text }}"</p>
+            <div class="flex items-center gap-2">
+              <img [src]="t.avatar" alt="" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-500/30">
+              <div>
+                <p class="font-bold text-white text-xs">{{ t.name }}</p>
+                <p class="text-primary-400 text-[10px]">{{ t.role }}</p>
+              </div>
             </div>
           </div>
+          }
         </div>
-        }
-      </div>
+      </ng-template>
     </div>
   </section>
 
