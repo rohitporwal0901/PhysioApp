@@ -197,34 +197,38 @@ export class MySessionsComponent implements OnInit {
     currentY += 40;
 
     // Progress Badge inside summary box
+    // Observations Box (Dynamic Height)
+    const summary = doc.splitTextToSize(ai.summary, 155);
+    const summaryHeight = summary.length * 5;
+    const observationBoxHeight = Math.max(45, summaryHeight + 20); // Maintain a minimum height of 45
+
     doc.setFillColor(243, 244, 246);
     doc.setDrawColor(16, 185, 129);
     doc.setLineWidth(0.5);
-    doc.roundedRect(10, currentY, 190, 45, 3, 3, 'FD');
+    doc.roundedRect(10, currentY, 190, observationBoxHeight, 3, 3, 'FD');
 
     // Score Circle
     doc.setFillColor(15, 23, 42);
-    doc.circle(180, currentY + 22, 12, 'F');
+    doc.circle(180, currentY + (observationBoxHeight / 2), 12, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    doc.text(`${ai.score}%`, 176, currentY + 23);
+    doc.text(`${ai.score}%`, 180, currentY + (observationBoxHeight / 2) + 1, { align: 'center' });
     doc.setFontSize(5);
-    doc.text('RECOVERY', 174, currentY + 26);
+    doc.text('RECOVERY', 180, currentY + (observationBoxHeight / 2) + 4, { align: 'center' });
 
-    // Observations
+    // Observations Text
     doc.setTextColor(15, 23, 42);
     doc.setFontSize(11);
     doc.setFont('times', 'bold');
     doc.text('EXPERT CLINICAL OBSERVATIONS', 15, currentY + 10);
     
     doc.setTextColor(51, 65, 85);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('times', 'normal');
     doc.setFontSize(9.5);
-    const summary = doc.splitTextToSize(ai.summary, 155);
     doc.text(summary, 15, currentY + 18);
 
-    currentY += 55;
+    currentY += observationBoxHeight + 10;
 
     // Table
     doc.setTextColor(15, 23, 42);
@@ -232,28 +236,66 @@ export class MySessionsComponent implements OnInit {
     doc.setFont('times', 'bold');
     doc.text('REHABILITATION ROADMAP', 15, currentY);
 
+    // 1. Normalize Roadmap Data (Handle both old array format and new object format)
+    const normalizedRoadmap = ai.roadmap.map((r: any) => {
+      if (Array.isArray(r)) {
+        return {
+          phase: r[0] || 'N/A',
+          goal: r[1] || 'N/A',
+          exercises: r[2] || 'N/A',
+          focus: r[3] || 'N/A',
+          videoUrl: null
+        };
+      }
+      return r;
+    });
+
     autoTable(doc, {
       startY: currentY + 5,
-      head: [['PHASE', 'CLINICAL GOALS', 'SPECIFIC PROTOCOL', 'PRIMARY FOCUS']],
-      body: ai.roadmap.map((r: any) => [r.phase, r.goal, r.exercises, r.focus]),
+      head: [['PHASE', 'CLINICAL GOALS', 'SPECIFIC PROTOCOL', 'PRIMARY FOCUS', 'VIDEO']],
+      body: normalizedRoadmap.map((r: any) => [r.phase, r.goal, r.exercises, r.focus, r.videoUrl ? 'Watch Guide' : 'N/A']),
       theme: 'grid',
       headStyles: { fillColor: [15, 23, 42], textColor: 255, font: 'times', fontSize: 9 },
-      styles: { fontSize: 8.5, cellPadding: 3 },
+      styles: { fontSize: 8, cellPadding: 3 },
       columnStyles: { 
         0: { fontStyle: 'bold', textColor: [16, 185, 129], cellWidth: 20 },
-        1: { cellWidth: 50 },
-        2: { cellWidth: 70 },
-        3: { cellWidth: 30 }
+        1: { cellWidth: 40 },
+        2: { cellWidth: 55 },
+        3: { cellWidth: 35 },
+        4: { cellWidth: 30 } // Removed fixed blue
+      },
+      didParseCell: (data) => {
+        if (data.section === 'body' && data.column.index === 4) {
+          const rowData = normalizedRoadmap[data.row.index];
+          if (rowData && rowData.videoUrl) {
+            data.cell.styles.textColor = [37, 99, 235]; // Blue
+            data.cell.styles.fontStyle = 'bold';
+          } else {
+            data.cell.styles.textColor = [150, 150, 150]; // Grey
+          }
+        }
+      },
+      didDrawCell: (data) => {
+        const rowData = normalizedRoadmap[data.row.index];
+        if (data.section === 'body' && data.column.index === 4 && rowData && rowData.videoUrl) {
+          doc.link(data.cell.x, data.cell.y, data.cell.width, data.cell.height, {
+            url: rowData.videoUrl
+          });
+        }
       },
       margin: { left: 10, right: 10 }
     });
 
     const finalY = (doc as any).lastAutoTable.finalY + 12;
 
-    // Final Advice (Amber Box)
+    // Final Advice (Dynamic Amber Box)
+    const advice = doc.splitTextToSize(ai.recommendation, 180);
+    const textHeight = advice.length * 5; // roughly 5 units per line
+    const adviceBoxHeight = textHeight + 15; // padding for header and bottom
+
     doc.setFillColor(255, 251, 235);
     doc.setDrawColor(245, 158, 11);
-    doc.roundedRect(10, finalY, 190, 20, 2, 2, 'FD');
+    doc.roundedRect(10, finalY, 190, adviceBoxHeight, 2, 2, 'FD');
 
     doc.setTextColor(146, 64, 14);
     doc.setFontSize(10);
@@ -261,10 +303,9 @@ export class MySessionsComponent implements OnInit {
     doc.text('FINAL CLINICAL RECOMMENDATION', 15, finalY + 7);
     
     doc.setTextColor(69, 26, 3);
-    doc.setFont('helvetica', 'italic');
+    doc.setFont('times', 'italic'); // Changed to times for consistency
     doc.setFontSize(9);
-    const advice = doc.splitTextToSize(ai.recommendation, 180);
-    doc.text(advice, 15, finalY + 14);
+    doc.text(advice, 15, finalY + 13);
 
     // Footer Signature Line
     doc.setDrawColor(203, 213, 225);
@@ -297,14 +338,14 @@ export class MySessionsComponent implements OnInit {
     let score = 65;
     let recommendation = "Maintain active consistency with the home exercise protocol. Focus on gradual load progression.";
     let roadmap = [
-      ['Phase 1', 'Pain Control', 'ISO exercises', 'Stability'],
-      ['Phase 2', 'Mobility', 'Active stretching', 'Range'],
-      ['Phase 3', 'Integration', 'Functional drills', 'Power']
+      { phase: 'Phase 1', goal: 'Pain Control', exercises: 'ISO exercises', focus: 'Stability', videoUrl: 'https://www.youtube.com/results?search_query=physiotherapy+pain+management' },
+      { phase: 'Phase 2', goal: 'Mobility', exercises: 'Active stretching', focus: 'Range', videoUrl: 'https://www.youtube.com/results?search_query=physiotherapy+mobility+exercises' },
+      { phase: 'Phase 3', goal: 'Integration', exercises: 'Functional drills', focus: 'Power', videoUrl: 'https://www.youtube.com/results?search_query=physiotherapy+functional+return' }
     ];
-
+    
     if (c.includes('back') || c.includes('spine')) {
       summary = "Spinal assessment suggests reduced mechanical stress. Core stability is improving, allowing for increased functional load-bearing capacity.";
-      roadmap[0] = ['Phase 1', 'Decompression', 'Pelvic tilts', 'Relief'];
+      roadmap[0] = { ...roadmap[0], goal: 'Decompression', exercises: 'Pelvic tilts', focus: 'Relief', videoUrl: 'https://www.youtube.com/results?search_query=physiotherapy+back+decompression' };
     }
 
     return { summary, score, roadmap, recommendation };

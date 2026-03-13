@@ -49,18 +49,18 @@ export class AiService {
       - Clinical Session Notes: ${data.notes}
 
       STRICT REPORTING GUIDELINES:
-      - Use formal medical terminology (e.g., glenohumeral, proprioception, kinematic chain).
-      - Quantify the recovery trajectory where possible.
+      - Use formal medical terminology.
       - DO NOT use markdown symbols like asterisks (**).
-      - Maintain a professional, data-driven, yet encouraging tone.
+      - Use the pipe symbol (|) strictly to separate exactly 4 fields in PHASES.
+      - DO NOT include labels like 'Goal:' or 'Exercises:' inside the data.
 
       REQUIRED STRUCTURE:
-      [SUMMARY]: Provide a 4-line expert clinical evaluation of the session. Address musculoskeletal integrity and neural mobility improvements.
+      [SUMMARY]: 4-line expert clinical evaluation.
       [SCORE]: Progress percentage (Integer 0-100).
-      [PHASE_1]: Recovery Phase Goal | Evidence-Based Exercises | Primary Clinical Focus
-      [PHASE_2]: Progressive Phase Goal | Resistance/Weight-Bearing Drills | Core/Joint Stability Focus
-      [PHASE_3]: Functional Integration Goal | Sport/Activity Specific Drills | Full Autonomy & Prevention
-      [ADVICE]: Concluding professional recommendation for long-term health.
+      [PHASE_1]: Goal | Exercises | Focus | YouTube Search Query (e.g., knee strengthening physiotherapy)
+      [PHASE_2]: Goal | Exercises | Focus | YouTube Search Query
+      [PHASE_3]: Goal | Exercises | Focus | YouTube Search Query
+      [ADVICE]: Concluding professional recommendation.
     `;
 
     const genAI = new GoogleGenerativeAI(key);
@@ -99,49 +99,47 @@ export class AiService {
    * Cleans and parses the AI response into a structured object for the PDF generator
    */
   parseAIResponse(text: string) {
-    // 1. Check if the AI returned a JSON string (sometimes Gemini follows JSON instructions better)
-    try {
-      if (text.trim().startsWith('{')) {
-        const json = JSON.parse(text.trim());
-        return {
-          summary: json.summary || 'Clinical evaluation completed.',
-          score: parseInt(json.score) || 75,
-          roadmap: Array.isArray(json.roadmap) ? json.roadmap : [],
-          recommendation: json.advice || json.recommendation || 'Maintain consistency.'
-        };
-      }
-    } catch (e) {}
-
-    // 2. Standard Regex Parsing
     const extract = (label: string) => {
       const regex = new RegExp(`\\[${label}\\]:?\\s*([\\s\\S]*?)(?=\\[|$)`, 'i');
       const match = text.match(regex);
-      return match ? match[1].trim().replace(/\*{1,2}/g, '').replace(/[\r\n]+/g, ' ').substring(0, 500) : null;
+      return match ? match[1].trim() : null;
     };
 
-    const summary = extract('SUMMARY') || 'Patient progress analyzed. Biomechanical integrity is within expected clinical parameters.';
+    const summary = extract('SUMMARY')?.replace(/\*{1,2}/g, '').substring(0, 500) || 'Clinical progress analyzed.';
     const scoreText = extract('SCORE') || '70';
     const score = parseInt(scoreText.replace(/[^0-9]/g, '')) || 70;
-    const recommendation = extract('ADVICE') || 'Continue with prescribed therapeutic exercises and avoid over-exertion.';
+    const recommendation = extract('ADVICE')?.replace(/\*{1,2}/g, '') || 'Maintain consistency.';
 
     const roadmap: any[] = [];
     ['PHASE_1', 'PHASE_2', 'PHASE_3'].forEach((phase, idx) => {
       const content = extract(phase);
       if (content) {
-        const parts = content.split('|').map((p: string) => p.trim());
+        // Remove markdown and clean labels
+        const cleanContent = content.replace(/\*\*/g, '');
+        const parts = cleanContent.split('|').map((p: string) => p.trim());
+        
+        // Fallback: If AI didn't use pipes correctly, try to find a YouTube query in the text
+        let query = parts[3] || '';
+        if (!query) {
+          const ytMatch = cleanContent.match(/(?:YouTube Search Query|YouTube|Search):\s*([^\n|]+)/i);
+          if (ytMatch) query = ytMatch[1].trim();
+          else if (parts.length > 0) query = parts[parts.length - 1]; // Take last part if no pipes but long text
+        }
+
         roadmap.push({
           phase: `Phase ${idx + 1}`,
-          goal: parts[0] || 'Progressive Recovery',
-          exercises: parts[1] || 'Specific Therapy Drills',
-          focus: parts[2] || 'Clinical Stability'
+          goal: parts[0]?.replace(/^Goal:\s*/i, '') || 'Progressive Recovery',
+          exercises: parts[1]?.replace(/^Exercises:\s*/i, '') || 'Therapeutic Drills',
+          focus: parts[2]?.replace(/^Focus:\s*/i, '') || 'Clinical Stability',
+          videoUrl: query ? `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}` : null
         });
       }
     });
 
     if (roadmap.length === 0) {
-      roadmap.push({ phase: 'Phase 1', goal: 'Pain Management', exercises: 'Isometric Drills', focus: 'Inflammation' });
-      roadmap.push({ phase: 'Phase 2', goal: 'Strength Gain', exercises: 'Resistance Bands', focus: 'Muscle Fiber' });
-      roadmap.push({ phase: 'Phase 3', goal: 'Functional Return', exercises: 'Agility Drills', focus: 'Autonomy' });
+      roadmap.push({ phase: 'Phase 1', goal: 'Pain Management', exercises: 'Isometric Drills', focus: 'Inflammation', videoUrl: 'https://www.youtube.com/results?search_query=physiotherapy+pain+management' });
+      roadmap.push({ phase: 'Phase 2', goal: 'Strength Gain', exercises: 'Resistance Bands', focus: 'Muscle Fiber', videoUrl: 'https://www.youtube.com/results?search_query=physiotherapy+strength+gain' });
+      roadmap.push({ phase: 'Phase 3', goal: 'Functional Return', exercises: 'Agility Drills', focus: 'Autonomy', videoUrl: 'https://www.youtube.com/results?search_query=physiotherapy+functional+return' });
     }
 
     return { summary, score, roadmap, recommendation };

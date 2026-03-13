@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
   upcomingAppointments: BookedAppointment[] = [];
   patientName = 'Guest';
   isLoading = true;
+  currentTreatmentPlan: any = null;
 
   // Unsplash doctor profile image collection
   private doctorImages = [
@@ -44,6 +45,20 @@ export class DashboardComponent implements OnInit {
       this.bookingService.getPatientAppointments(user.uid).subscribe(appointments => {
         // Show only confirmed appointments in the dashboard summary
         this.upcomingAppointments = appointments.filter(apt => apt.status === 'confirmed');
+        
+        // Find latest appointment with an AI Report to show as current treatment plan
+        const latestWithAI = appointments
+          .filter(apt => !!apt.aiReport)
+          .sort((a, b) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            return dateB - dateA;
+          })[0];
+          
+        if (latestWithAI) {
+          this.currentTreatmentPlan = latestWithAI.aiReport;
+        }
+
         this.isLoading = false;
       });
     }
