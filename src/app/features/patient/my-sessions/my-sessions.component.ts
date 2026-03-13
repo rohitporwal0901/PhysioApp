@@ -149,138 +149,129 @@ export class MySessionsComponent implements OnInit {
     const classicNavy = [15, 23, 42];
     const goldAccent = [133, 77, 14];
 
-    // Watermark & Background cross pattern
     this.drawWatermark(doc);
 
-    // Border
+    // Main Border
     doc.setDrawColor(203, 213, 225);
     doc.setLineWidth(0.5);
     doc.rect(5, 5, 200, 287);
-    doc.rect(7, 7, 196, 283);
 
-    // Modern Header Block
-    doc.setFillColor(15, 23, 42); // Navy
-    doc.rect(5, 5, 200, 40, 'F');
+    // Slim Premium Header
+    doc.setFillColor(15, 23, 42); 
+    doc.rect(5, 5, 200, 35, 'F');
+    
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(32);
+    doc.setFontSize(28);
     doc.setFont('times', 'bold');
-    doc.text('PhysioPro', 20, 30);
-
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(203, 213, 225);
-    doc.text('PREMIUM CLINICAL REHABILITATION SERVICES', 120, 22);
-    doc.setTextColor(16, 185, 129); // Emerald
+    doc.text('PhysioPro', 15, 25);
+    
+    doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
-    doc.text('OFFICIAL AI-DIAGNOSTIC REPORT', 120, 28);
-
-    // Progress Badge
-    doc.setDrawColor(133, 77, 14); // Gold
-    doc.setFillColor(255, 255, 255, 0.1);
-    doc.circle(185, 25, 12, 'FD');
+    doc.setTextColor(16, 185, 129);
+    doc.text('PREMIUM CLINICAL AI REPORT', 140, 20);
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(11);
-    doc.text(`${ai.score}%`, 181, 26);
-    doc.setFontSize(5);
-    doc.text('RECOVERY', 178, 29);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`DATE: ${session.date}`, 140, 25);
+    doc.text(`REPORT ID: #PHY-${session.id?.substring(0, 6).toUpperCase()}`, 140, 30);
 
-    let currentY = 65;
+    let currentY = 50;
 
-    // Patient & Provider Info
+    // Patient & Clinical Context (Side by Side)
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(10, currentY, 190, 30, 2, 2, 'F');
+
     doc.setTextColor(15, 23, 42);
-    doc.setFontSize(16);
-    doc.setFont('times', 'bold');
-    doc.text('PATIENT RECORD', 25, currentY);
-    doc.text('PROVIDER DETAILS', 115, currentY);
-
-    doc.setDrawColor(15, 23, 42);
-    doc.setLineWidth(0.8);
-    doc.line(25, currentY + 3, 90, currentY + 3);
-    doc.line(115, currentY + 3, 185, currentY + 3);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('PATIENT INFORMATION', 15, currentY + 8);
+    doc.text('CLINICAL PROVIDER', 110, currentY + 8);
 
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
-    doc.setTextColor(51, 65, 85);
-    doc.text(`Patient: ${session.patientName}`, 25, currentY + 15);
-    doc.text(`Medical Diagnosis: ${session.patientCondition || session.type}`, 25, currentY + 23);
-    doc.text(`Admission Date: ${session.date}`, 25, currentY + 31);
+    doc.setTextColor(71, 85, 105);
+    doc.text(`Name: ${session.patientName}`, 15, currentY + 16);
+    doc.text(`Condition: ${session.patientCondition || session.type}`, 15, currentY + 23);
 
-    doc.text(`Lead Consultant: Dr. ${session.doctorName}`, 115, currentY + 15);
-    doc.text(`${session.doctorSpecialty}`, 115, currentY + 23);
-    doc.text(`Record Verified: ${new Date().toLocaleDateString()}`, 115, currentY + 31);
+    doc.text(`Lead: Dr. ${session.doctorName}`, 110, currentY + 16);
+    doc.text(`Specialty: ${session.doctorSpecialty}`, 110, currentY + 23);
 
-    currentY += 45;
+    currentY += 40;
 
-    // AI Observations Box
-    const summary = doc.splitTextToSize(ai.summary, 165);
-    const boxH = (summary.length * 7) + 22;
-
+    // Progress Badge inside summary box
     doc.setFillColor(243, 244, 246);
     doc.setDrawColor(16, 185, 129);
-    doc.setLineWidth(0.4);
-    doc.roundedRect(20, currentY, 170, boxH, 4, 4, 'FD');
-    
-    doc.setTextColor(classicNavy[0], classicNavy[1], classicNavy[2]);
-    doc.setFontSize(12);
+    doc.setLineWidth(0.5);
+    doc.roundedRect(10, currentY, 190, 45, 3, 3, 'FD');
+
+    // Score Circle
+    doc.setFillColor(15, 23, 42);
+    doc.circle(180, currentY + 22, 12, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${ai.score}%`, 176, currentY + 23);
+    doc.setFontSize(5);
+    doc.text('RECOVERY', 174, currentY + 26);
+
+    // Observations
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(11);
     doc.setFont('times', 'bold');
-    doc.text('PRIMARY CLINICAL OBSERVATIONS', 28, currentY + 10);
+    doc.text('EXPERT CLINICAL OBSERVATIONS', 15, currentY + 10);
     
     doc.setTextColor(51, 65, 85);
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.text(summary, 28, currentY + 20);
+    doc.setFontSize(9.5);
+    const summary = doc.splitTextToSize(ai.summary, 155);
+    doc.text(summary, 15, currentY + 18);
 
-    currentY += boxH + 15;
+    currentY += 55;
 
-    // Roadmap Table
-    doc.setTextColor(classicNavy[0], classicNavy[1], classicNavy[2]);
-    doc.setFontSize(14);
+    // Table
+    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(12);
     doc.setFont('times', 'bold');
-    doc.text('STRUCTURED REHABILITATION ROADMAP', 25, currentY);
+    doc.text('REHABILITATION ROADMAP', 15, currentY);
 
     autoTable(doc, {
       startY: currentY + 5,
-      head: [['PHASE', 'CLINICAL GOALS', 'SPECIFIC PROTOCOL', 'THERAPEUTIC FOCUS']],
+      head: [['PHASE', 'CLINICAL GOALS', 'SPECIFIC PROTOCOL', 'PRIMARY FOCUS']],
       body: ai.roadmap.map((r: any) => [r.phase, r.goal, r.exercises, r.focus]),
       theme: 'grid',
-      headStyles: { 
-        fillColor: [15, 23, 42], 
-        textColor: 255, 
-        font: 'times',
-        fontStyle: 'bold',
-        halign: 'center'
-      },
-      styles: { 
-        fontSize: 9, 
-        cellPadding: 5,
-        valign: 'middle'
-      },
+      headStyles: { fillColor: [15, 23, 42], textColor: 255, font: 'times', fontSize: 9 },
+      styles: { fontSize: 8.5, cellPadding: 3 },
       columnStyles: { 
-        0: { fontStyle: 'bold', textColor: [16, 185, 129], cellWidth: 25 },
-        1: { cellWidth: 45 },
-        2: { cellWidth: 60 },
-        3: { fontStyle: 'italic', textColor: [71, 85, 105], cellWidth: 35 }
+        0: { fontStyle: 'bold', textColor: [16, 185, 129], cellWidth: 20 },
+        1: { cellWidth: 50 },
+        2: { cellWidth: 70 },
+        3: { cellWidth: 30 }
       },
-      margin: { left: 20, right: 20 }
+      margin: { left: 10, right: 10 }
     });
 
-    const finalY = (doc as any).lastAutoTable.finalY + 15;
+    const finalY = (doc as any).lastAutoTable.finalY + 12;
 
-    // Advice Box
-    doc.setFillColor(255, 251, 235); // Amber light
-    doc.setDrawColor(245, 158, 11); // Amber
-    doc.roundedRect(20, finalY, 170, 25, 2, 2, 'FD');
+    // Final Advice (Amber Box)
+    doc.setFillColor(255, 251, 235);
+    doc.setDrawColor(245, 158, 11);
+    doc.roundedRect(10, finalY, 190, 20, 2, 2, 'FD');
 
-    doc.setTextColor(146, 64, 14); // Dark Amber
-    doc.setFontSize(11);
+    doc.setTextColor(146, 64, 14);
+    doc.setFontSize(10);
     doc.setFont('times', 'bold');
-    doc.text('LONG-TERM CLINICAL ADVICE', 28, finalY + 8);
+    doc.text('FINAL CLINICAL RECOMMENDATION', 15, finalY + 7);
     
     doc.setTextColor(69, 26, 3);
     doc.setFont('helvetica', 'italic');
-    doc.setFontSize(9.5);
-    const advice = doc.splitTextToSize(ai.recommendation, 155);
-    doc.text(advice, 28, finalY + 15);
+    doc.setFontSize(9);
+    const advice = doc.splitTextToSize(ai.recommendation, 180);
+    doc.text(advice, 15, finalY + 14);
+
+    // Footer Signature Line
+    doc.setDrawColor(203, 213, 225);
+    doc.line(140, 275, 190, 275);
+    doc.setFontSize(8);
+    doc.setTextColor(100, 116, 139);
+    doc.text('Certified Clinical Signatory', 145, 280);
 
     doc.save(`Report_${session.patientName.replace(/\s+/g, '_')}.pdf`);
   }

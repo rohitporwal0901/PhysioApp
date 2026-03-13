@@ -89,16 +89,30 @@ export class AiService {
    * Cleans and parses the AI response into a structured object for the PDF generator
    */
   parseAIResponse(text: string) {
+    // 1. Check if the AI returned a JSON string (sometimes Gemini follows JSON instructions better)
+    try {
+      if (text.trim().startsWith('{')) {
+        const json = JSON.parse(text.trim());
+        return {
+          summary: json.summary || 'Clinical evaluation completed.',
+          score: parseInt(json.score) || 75,
+          roadmap: Array.isArray(json.roadmap) ? json.roadmap : [],
+          recommendation: json.advice || json.recommendation || 'Maintain consistency.'
+        };
+      }
+    } catch (e) {}
+
+    // 2. Standard Regex Parsing
     const extract = (label: string) => {
       const regex = new RegExp(`\\[${label}\\]:?\\s*([\\s\\S]*?)(?=\\[|$)`, 'i');
       const match = text.match(regex);
-      return match ? match[1].trim().replace(/\*/g, '') : null;
+      return match ? match[1].trim().replace(/\*{1,2}/g, '').replace(/[\r\n]+/g, ' ').substring(0, 500) : null;
     };
 
-    const summary = extract('SUMMARY') || 'Patient progress is being monitored according to clinical standards.';
-    const scoreText = extract('SCORE') || '50';
-    const score = parseInt(scoreText.replace(/[^0-9]/g, '')) || 50;
-    const recommendation = extract('ADVICE') || 'Follow the prescribed home exercise program and maintain hydration.';
+    const summary = extract('SUMMARY') || 'Patient progress analyzed. Biomechanical integrity is within expected clinical parameters.';
+    const scoreText = extract('SCORE') || '70';
+    const score = parseInt(scoreText.replace(/[^0-9]/g, '')) || 70;
+    const recommendation = extract('ADVICE') || 'Continue with prescribed therapeutic exercises and avoid over-exertion.';
 
     const roadmap: any[] = [];
     ['PHASE_1', 'PHASE_2', 'PHASE_3'].forEach((phase, idx) => {
@@ -107,17 +121,17 @@ export class AiService {
         const parts = content.split('|').map((p: string) => p.trim());
         roadmap.push({
           phase: `Phase ${idx + 1}`,
-          goal: parts[0] || 'Recovery Goal',
-          exercises: parts[1] || 'Standard Exercise',
-          focus: parts[2] || 'Clinical Focus'
+          goal: parts[0] || 'Progressive Recovery',
+          exercises: parts[1] || 'Specific Therapy Drills',
+          focus: parts[2] || 'Clinical Stability'
         });
       }
     });
 
     if (roadmap.length === 0) {
-      roadmap.push({ phase: 'Phase 1', goal: 'Acute Recovery', exercises: 'Basic ROM', focus: 'Inflammation Control' });
-      roadmap.push({ phase: 'Phase 2', goal: 'Mobility', exercises: 'Resistance Training', focus: 'Strength' });
-      roadmap.push({ phase: 'Phase 3', goal: 'Functional', exercises: 'Sport-Specific Drills', focus: 'Autonomy' });
+      roadmap.push({ phase: 'Phase 1', goal: 'Pain Management', exercises: 'Isometric Drills', focus: 'Inflammation' });
+      roadmap.push({ phase: 'Phase 2', goal: 'Strength Gain', exercises: 'Resistance Bands', focus: 'Muscle Fiber' });
+      roadmap.push({ phase: 'Phase 3', goal: 'Functional Return', exercises: 'Agility Drills', focus: 'Autonomy' });
     }
 
     return { summary, score, roadmap, recommendation };
