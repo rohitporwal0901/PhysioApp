@@ -2,19 +2,9 @@
 
 /* Wave animation for emoji */
 @keyframes wave {
-
-    0%,
-    100% {
-        transform: rotate(0deg);
-    }
-
-    25% {
-        transform: rotate(20deg);
-    }
-
-    75% {
-        transform: rotate(-10deg);
-    }
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(20deg); }
+    75% { transform: rotate(-10deg); }
 }
 
 .animate-wave {
@@ -23,7 +13,94 @@
     transform-origin: 70% 70%;
 }
 
-/* Smooth role panel transition */
+/* Page enter animations */
+@keyframes fadeInSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInSlideRight {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes shine {
+    100% { transform: translateX(200%) skewX(-30deg); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.animate-fade-in-up {
+    animation: fadeInSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-fade-in-right {
+    animation: fadeInSlideRight 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
+.animate-shine {
+    animation: shine 2s infinite;
+}
+
+.animate-shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* App Splash Feel */
+@keyframes splashScale {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.animate-splash {
+    animation: splashScale 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Ensure no overflow clipping */
+.min-h-screen {
+    min-height: -webkit-fill-available;
+}
+
+/* Staggered entry for form elements */
+.form-group-1 { animation-delay: 0.1s; opacity: 0; }
+.form-group-2 { animation-delay: 0.2s; opacity: 0; }
+.form-group-3 { animation-delay: 0.3s; opacity: 0; }
+.form-group-4 { animation-delay: 0.4s; opacity: 0; }
+.form-group-5 { animation-delay: 0.5s; opacity: 0; }
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card-premium {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.login-button {
+    height: 60px;
+    letter-spacing: 0.1em;
+}
+
 .left-panel-content {
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }

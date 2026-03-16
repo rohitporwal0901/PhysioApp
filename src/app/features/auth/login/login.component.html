@@ -1,26 +1,35 @@
-<div class="min-h-screen flex bg-slate-50 dark:bg-slate-950 overflow-hidden">
+<div class="min-h-screen flex bg-slate-50 dark:bg-slate-950 overflow-hidden relative">
 
     <!-- ═══════════════════════════════════════════
-       LEFT PANEL — Branding Visual
-  ═══════════════════════════════════════════ -->
-    <div class="hidden lg:flex lg:w-[52%] relative flex-col overflow-hidden">
+       MOBILE BACKGROUND & OVERLAY
+    ═══════════════════════════════════════════ -->
+    <div class="lg:hidden absolute inset-0 z-0">
+        <!-- New High-End App Background -->
+        <img src="mobile-bg.png" class="w-full h-full object-cover scale-110 opacity-60" alt="">
+        <!-- Smooth Dark Overlay for perfect contrast -->
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-[1px]"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-slate-900/10"></div>
+    </div>
 
+    <!-- ═══════════════════════════════════════════
+       LEFT PANEL — Branding Visual (Web)
+    ═══════════════════════════════════════════ -->
+    <div class="hidden lg:flex lg:w-[52%] relative flex-col overflow-hidden">
         <!-- Background image -->
         <div class="absolute inset-0">
-            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1200&auto=format&fit=crop"
-                alt="PhysioPro" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-br from-primary-900/90 via-primary-800/75 to-secondary-700/60">
-            </div>
+            <img src="login-bg.png" alt="PhysioPro" class="w-full h-full object-cover transition-transform duration-[20s] hover:scale-110">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary-950/90 via-primary-900/75 to-secondary-800/60"></div>
+            <!-- Glass Overlay decor -->
+            <div class="absolute top-[20%] left-[-10%] w-96 h-96 bg-primary-400/20 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-[20%] right-[-10%] w-64 h-64 bg-secondary-400/20 rounded-full blur-[100px]"></div>
         </div>
 
         <!-- Content over image -->
         <div class="relative z-10 flex flex-col h-full p-10 xl:p-14">
-
             <!-- Logo -->
-            <div class="flex items-center gap-3 mb-auto">
-                <div
-                    class="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center shadow-lg">
-                    <i-lucide name="activity" class="w-6 h-6 text-white"></i-lucide>
+            <div class="flex items-center gap-3 mb-auto animate-fade-in-right">
+                <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center shadow-2xl">
+                    <i-lucide name="activity" class="w-7 h-7 text-white"></i-lucide>
                 </div>
                 <span class="text-2xl font-black text-white font-heading tracking-tight">
                     Physio<span class="text-white/70">Pro</span>
@@ -29,193 +38,148 @@
 
             <!-- Main Content -->
             <div class="flex-1 flex flex-col justify-center py-12">
-
-                <div
-                    class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 text-white text-sm font-bold px-4 py-2 rounded-full mb-6 w-fit">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold px-4 py-2 rounded-full mb-8 w-fit animate-fade-in-up" style="animation-delay: 0.2s">
                     <i-lucide name="shield-check" class="w-4 h-4"></i-lucide>
-                    Secure Portal
+                    SECURE MEDICAL PORTAL
                 </div>
 
-                <h2 class="text-4xl xl:text-5xl font-black text-white leading-tight mb-4 font-heading">
-                    Your Health,<br>Our Priority.
+                <h2 class="text-5xl xl:text-7xl font-black text-white leading-tight mb-6 font-heading animate-fade-in-up" style="animation-delay: 0.4s">
+                    Empowering <br> <span class="text-primary-300">Recovery.</span>
                 </h2>
-                <p class="text-white/70 text-base leading-relaxed mb-10 max-w-md">
-                    Welcome to PhysioPro — the all-in-one platform for physiotherapy clinics. Manage doctors,
-                    patients, appointments and recovery journeys seamlessly.
+                <p class="text-white/70 text-lg leading-relaxed mb-12 max-w-md animate-fade-in-up" style="animation-delay: 0.6s">
+                    Join thousands who have accelerated their recovery journey with our state-of-the-art physiotherapy management platform.
                 </p>
 
                 <!-- Feature list -->
-                <div class="space-y-4">
-                    <div class="flex items-center gap-3 text-white/90 group">
-                        <div
-                            class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center flex-shrink-0">
-                            <i-lucide name="users" class="w-4 h-4 text-white"></i-lucide>
+                <div class="space-y-6 animate-fade-in-up" style="animation-delay: 0.8s">
+                    <div class="flex items-center gap-4 text-white/90 group cursor-default">
+                        <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center flex-shrink-0 transition-all group-hover:bg-primary-500/30 group-hover:scale-110">
+                            <i-lucide name="users" class="w-5 h-5 text-white"></i-lucide>
                         </div>
-                        <span class="text-sm font-semibold">Role-based access for Admins, Doctors & Patients</span>
+                        <span class="text-sm font-semibold tracking-wide">ROLE-BASED PATIENT PORTALS</span>
                     </div>
-                    <div class="flex items-center gap-3 text-white/90 group">
-                        <div
-                            class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center flex-shrink-0">
-                            <i-lucide name="calendar" class="w-4 h-4 text-white"></i-lucide>
+                    <div class="flex items-center gap-4 text-white/90 group cursor-default">
+                        <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center flex-shrink-0 transition-all group-hover:bg-primary-500/30 group-hover:scale-110">
+                            <i-lucide name="calendar" class="w-5 h-5 text-white"></i-lucide>
                         </div>
-                        <span class="text-sm font-semibold">Smart appointment scheduling & tracking</span>
+                        <span class="text-sm font-semibold tracking-wide">SMART APPOINTMENT SCHEDULING</span>
                     </div>
-                    <div class="flex items-center gap-3 text-white/90 group">
-                        <div
-                            class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center flex-shrink-0">
-                            <i-lucide name="activity" class="w-4 h-4 text-white"></i-lucide>
+                    <div class="flex items-center gap-4 text-white/90 group cursor-default">
+                        <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center flex-shrink-0 transition-all group-hover:bg-primary-500/30 group-hover:scale-110">
+                            <i-lucide name="activity" class="w-5 h-5 text-white"></i-lucide>
                         </div>
-                        <span class="text-sm font-semibold">Patient recovery progress monitoring</span>
-                    </div>
-                    <div class="flex items-center gap-3 text-white/90 group">
-                        <div
-                            class="w-9 h-9 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center flex-shrink-0">
-                            <i-lucide name="shield" class="w-4 h-4 text-white"></i-lucide>
-                        </div>
-                        <span class="text-sm font-semibold">Secure, real-time data with Firebase</span>
+                        <span class="text-sm font-semibold tracking-wide">PROGRESS TRACKING & ANALYTICS</span>
                     </div>
                 </div>
             </div>
 
             <!-- Bottom trust info -->
-            <div class="flex items-center gap-4 text-white/50 text-xs font-medium">
-                <span>500+ Patients Served</span>
-                <span class="w-1 h-1 bg-white/30 rounded-full"></span>
-                <span>15+ Specialists</span>
-                <span class="w-1 h-1 bg-white/30 rounded-full"></span>
-                <span>98% Satisfaction</span>
+            <div class="flex items-center gap-6 text-white/50 text-xs font-bold tracking-widest uppercase animate-fade-in-up" style="animation-delay: 1s">
+                <span>500+ PATIENTS</span>
+                <span class="w-1.5 h-1.5 bg-primary-400 rounded-full animate-pulse"></span>
+                <span>15+ SPECIALISTS</span>
+                <span class="w-1.5 h-1.5 bg-primary-400 rounded-full animate-pulse"></span>
+                <span>98% SUCCESS</span>
             </div>
         </div>
     </div>
 
     <!-- ═══════════════════════════════════════════
        RIGHT PANEL — Login Form
-  ═══════════════════════════════════════════ -->
-    <div class="flex-1 flex flex-col items-center justify-center px-6 sm:px-10 py-12 bg-white dark:bg-slate-900 relative overflow-auto">
-
-        <!-- Subtle background decoration -->
-        <div
-            class="absolute top-0 right-0 w-72 h-72 bg-primary-50 dark:bg-primary-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none">
-        </div>
-        <div
-            class="absolute bottom-0 left-0 w-56 h-56 bg-secondary-50 dark:bg-secondary-900/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none">
-        </div>
-
-        <div class="w-full max-w-md relative z-10">
-
-            <!-- Mobile logo -->
-            <div class="flex items-center gap-2.5 mb-10 lg:hidden">
-                <div
-                    class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-md">
-                    <i-lucide name="activity" class="w-5 h-5 text-white"></i-lucide>
-                </div>
-                <span class="text-xl font-bold text-slate-800 dark:text-white font-heading">Physio<span
-                        class="text-primary-500">Pro</span></span>
-            </div>
-
-            <!-- Header -->
-            <div class="mb-8">
-                <h1 class="text-3xl font-black text-slate-900 dark:text-white font-heading mb-2">
-                    Welcome back
-                    <span class="inline-block animate-wave">👋</span>
-                </h1>
-                <p class="text-slate-500 dark:text-slate-400 text-sm">
-                    Sign in to your account. Your role will be detected automatically.
-                </p>
-            </div>
-
-            <!-- ── LOGIN FORM ── -->
-            <form (ngSubmit)="login()" class="space-y-5">
-
-                <!-- Error Alert -->
-                <div *ngIf="errorMessage"
-                    class="flex items-start gap-3 p-4 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/40">
-                    <i-lucide name="alert-circle" class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"></i-lucide>
-                    <p class="text-sm text-red-600 dark:text-red-400 font-medium">{{ errorMessage }}</p>
-                </div>
-
-                <!-- Email -->
-                <div>
-                    <label for="email"
-                        class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                        Email Address
-                    </label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                            <i-lucide name="mail" class="w-4 h-4 text-slate-400"></i-lucide>
-                        </div>
-                        <input id="email" type="email" [(ngModel)]="email" name="email" required
-                            placeholder="Enter your email"
-                            class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent focus:bg-white dark:focus:bg-slate-800 transition-all text-sm">
+    ═══════════════════════════════════════════ -->
+    <div class="flex-1 flex flex-col items-center px-4 sm:px-10 py-8 bg-transparent lg:bg-white lg:dark:bg-slate-900 relative z-10 transition-colors duration-500 overflow-y-auto">
+        
+        <!-- Center Container for Form -->
+        <div class="flex-1 flex flex-col items-center justify-center w-full">
+            <div class="w-full max-w-md">
+                <!-- Mobile logo -->
+                <div class="flex flex-col items-center justify-center gap-4 mb-12 lg:hidden animate-fade-in-up">
+                    <div class="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-2xl shadow-primary-500/40 border-2 border-white/20">
+                        <i-lucide name="activity" class="w-10 h-10 text-white"></i-lucide>
+                    </div>
+                    <div class="text-center">
+                        <h2 class="text-3xl font-black text-white font-heading tracking-tight">Physio<span class="text-primary-400">Pro</span></h2>
+                        <p class="text-white/50 text-[10px] font-bold tracking-[0.3em] uppercase">Premium Care Excellence</p>
                     </div>
                 </div>
 
-                <!-- Password -->
-                <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label for="password"
-                            class="text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
-                        <a href="#"
-                            class="text-xs font-semibold text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Forgot
-                            password?</a>
+                <!-- Header -->
+                <div class="mb-10 text-center lg:text-left animate-fade-in-up">
+                    <h1 class="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white lg:text-slate-900 font-heading mb-3">
+                        Welcome Back 
+                        <span class="inline-block animate-wave ml-1">👋</span>
+                    </h1>
+                    <p class="text-slate-500 dark:text-slate-400 lg:text-slate-500 text-base font-semibold">
+                        Please enter your credentials to access your portal.
+                    </p>
+                </div>
+
+                <!-- FORM -->
+                <form (ngSubmit)="login()" class="space-y-6">
+                    <div *ngIf="errorMessage" class="flex items-start gap-3 p-4 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/40 animate-shake">
+                        <i-lucide name="alert-circle" class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"></i-lucide>
+                        <p class="text-sm text-red-600 dark:text-red-400 font-medium">{{ errorMessage }}</p>
                     </div>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                            <i-lucide name="lock" class="w-4 h-4 text-slate-400"></i-lucide>
+
+                    <div class="form-group-1 animate-fade-in-up">
+                        <label for="email" class="block text-sm font-bold text-white lg:text-slate-700 dark:text-slate-300 mb-2 ml-1 uppercase tracking-widest">Email Address</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none transition-colors group-focus-within:text-primary-400">
+                                <i-lucide name="mail" class="w-5 h-5 text-slate-300 lg:text-slate-400"></i-lucide>
+                            </div>
+                            <input id="email" type="email" [(ngModel)]="email" name="email" required placeholder="name@example.com"
+                                class="w-full pl-12 pr-4 py-5 rounded-2xl border-2 border-white/20 lg:border-slate-100 bg-slate-900/60 lg:bg-slate-50 dark:bg-slate-800/80 text-white lg:text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-300 font-bold text-base shadow-xl backdrop-blur-xl">
                         </div>
-                        <input id="password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password"
-                            name="password" required placeholder="Enter your password"
-                            class="w-full pl-11 pr-12 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent focus:bg-white dark:focus:bg-slate-800 transition-all text-sm">
-                        <button type="button" (click)="togglePassword()"
-                            class="absolute inset-y-0 right-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
-                            <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" class="w-4 h-4"></i-lucide>
+                    </div>
+
+                    <div class="form-group-2 animate-fade-in-up">
+                        <div class="flex items-center justify-between mb-2 ml-1">
+                            <label for="password" class="text-sm font-bold text-white lg:text-slate-700 dark:text-slate-300 uppercase tracking-widest">Password</label>
+                            <a href="#" class="text-xs font-bold text-primary-400 lg:text-primary-500 hover:text-primary-300 lg:hover:text-primary-600 transition-colors">Forgot?</a>
+                        </div>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none transition-colors group-focus-within:text-primary-400">
+                                <i-lucide name="lock" class="w-5 h-5 text-slate-300 lg:text-slate-400"></i-lucide>
+                            </div>
+                            <input id="password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" required placeholder="••••••••"
+                                class="w-full pl-12 pr-14 py-5 rounded-2xl border-2 border-white/20 lg:border-slate-100 bg-slate-900/60 lg:bg-slate-50 dark:bg-slate-800/80 text-white lg:text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-300 font-bold text-base shadow-xl backdrop-blur-xl">
+                            <button type="button" (click)="togglePassword()" class="absolute inset-y-0 right-4 flex items-center text-slate-300 lg:text-slate-400 hover:text-white lg:hover:text-slate-600 transition-colors">
+                                <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" class="w-5 h-5"></i-lucide>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group-3 animate-fade-in-up pt-4">
+                        <button type="submit" [disabled]="isLoading"
+                            class="w-full login-button flex justify-center items-center gap-3 px-6 rounded-2xl font-black text-white shadow-[0_10px_30px_-10px_rgba(16,185,129,0.5)] transition-all duration-500 active:scale-[0.97] group relative overflow-hidden"
+                            [ngClass]="isLoading ? 'bg-primary-400' : 'bg-primary-500 hover:bg-primary-600 hover:-translate-y-1'">
+                            <div class="absolute inset-0 w-1/2 h-full bg-white/30 -skew-x-[30deg] -translate-x-[150%] group-hover:animate-shine pointer-events-none"></div>
+                            <span *ngIf="!isLoading" class="flex items-center gap-3 text-base tracking-[0.1em]">SIGN IN TO PORTAL <i-lucide name="arrow-right" class="w-5 h-5"></i-lucide></span>
+                            <span *ngIf="isLoading">AUTHENTICATING...</span>
                         </button>
                     </div>
+                </form>
+
+                <div class="flex items-center gap-4 my-10 form-group-4 animate-fade-in-up">
+                    <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800"></div>
+                    <span class="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">New Resident?</span>
+                    <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800"></div>
                 </div>
 
-                <!-- Login Button -->
-                <button type="submit" [disabled]="isLoading"
-                    class="w-full flex justify-center items-center gap-3 py-4 px-6 rounded-2xl font-bold text-white shadow-lg transition-all duration-300 active:scale-[0.98]"
-                    [ngClass]="isLoading
-            ? 'bg-primary-400 cursor-not-allowed shadow-primary-400/20'
-            : 'bg-primary-500 hover:bg-primary-600 shadow-primary-500/30 hover:shadow-primary-500/40 hover:-translate-y-0.5'">
-
-                    <!-- Spinner -->
-                    <svg *ngIf="isLoading" class="animate-spin w-5 h-5 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                        </circle>
-                        <path class="opacity-75" fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                        </path>
-                    </svg>
-
-                    <i-lucide *ngIf="!isLoading" name="arrow-right" class="w-5 h-5"></i-lucide>
-                    {{ isLoading ? 'Signing In...' : 'Sign In' }}
-                </button>
-            </form>
-
-            <!-- Divider -->
-            <div class="flex items-center gap-3 my-7">
-                <div class="flex-1 h-px bg-slate-100 dark:bg-slate-700"></div>
-                <span class="text-xs font-semibold text-slate-400 dark:text-slate-500">New to PhysioPro?</span>
-                <div class="flex-1 h-px bg-slate-100 dark:bg-slate-700"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 form-group-5 animate-fade-in-up pb-8">
+                    <a routerLink="/patient/register" class="flex items-center justify-center gap-3 py-4 px-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm font-black hover:border-primary-500 transition-all shadow-sm">
+                        <i-lucide name="heart" class="w-5 h-5 text-red-500"></i-lucide> PATIENT JOIN
+                    </a>
+                    <a routerLink="/doctor/register" class="flex items-center justify-center gap-3 py-4 px-4 rounded-2xl border-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm font-black hover:border-secondary-500 transition-all shadow-sm">
+                        <i-lucide name="stethoscope" class="w-5 h-5 text-blue-500"></i-lucide> DOCTOR JOIN
+                    </a>
+                </div>
             </div>
+        </div>
 
-            <!-- Register links -->
-            <div class="grid grid-cols-2 gap-3">
-                <a routerLink="/patient/register"
-                    class="flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:border-primary-200 dark:hover:border-primary-700 hover:text-primary-600 dark:hover:text-primary-400 transition-all shadow-sm">
-                    <i-lucide name="heart" class="w-4 h-4 text-accent-500"></i-lucide>
-                    Register as Patient
-                </a>
-                <a routerLink="/doctor/register"
-                    class="flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-semibold hover:bg-secondary-50 dark:hover:bg-secondary-900/20 hover:border-secondary-200 dark:hover:border-secondary-700 hover:text-secondary-600 dark:hover:text-secondary-400 transition-all shadow-sm">
-                    <i-lucide name="stethoscope" class="w-4 h-4 text-secondary-500"></i-lucide>
-                    Register as Doctor
-                </a>
-            </div>
-
+        <!-- Footer -->
+        <div class="w-full pt-8 pb-4 text-center animate-fade-in-up">
+            <p class="text-[10px] font-black tracking-[0.3em] text-slate-300 dark:text-slate-600 uppercase">&copy; 2026 PhysioPro Excellence • All Rights Reserved</p>
         </div>
     </div>
-
 </div>
