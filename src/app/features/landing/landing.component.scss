@@ -116,6 +116,8 @@ html {
 /* ── Navbar ── */
 nav {
   background: transparent;
+  padding-top: env(safe-area-inset-top, 0px);
+  min-height: 80px; /* Ensures height is maintained even with safe area */
 
   &.nav-scrolled {
     background: rgba(255, 255, 255, 0.95);
@@ -806,4 +808,32 @@ button {
     bottom: 5.5rem !important;
     right: 1rem !important;
   }
+}
+
+/* ── Custom Utilities for Slider ── */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}
+
+/* ── Animation for AI loading bars ── */
+@keyframes loadingBar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-loading-bar {
+  animation: loadingBar 2s ease-out forwards;
+}
+
+@keyframes pulseSlow {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 4s ease-in-out infinite;
 }

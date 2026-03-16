@@ -5,7 +5,7 @@
 
   <!-- ══════════════════ NAVBAR ══════════════════ -->
   <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-400" [class.nav-scrolled]="navScrolled">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
 
       <!-- Logo -->
       <a href="#" class="flex items-center gap-2.5 group" aria-label="PhysioPro Home">
@@ -34,9 +34,13 @@
 
       <!-- Desktop CTA -->
       <div class="hidden md:flex items-center gap-3">
-        <button (click)="goToRegister()"
+        <button *ngIf="!isLoggedIn" (click)="goToLogin()"
+          class="text-sm font-bold text-slate-700 hover:text-primary-600 px-4 py-2 transition-colors">
+          Login
+        </button>
+        <button (click)="isLoggedIn ? goToDashboard() : goToRegister()"
           class="btn-primary px-5 py-2.5 rounded-xl text-white text-sm font-bold shadow-md shadow-primary-500/30">
-          Book Appointment
+          {{ isLoggedIn ? 'Go to Dashboard' : 'Book Appointment' }}
         </button>
       </div>
 
@@ -65,16 +69,20 @@
         <button (click)="goToDoctorRegister(); closeMobileMenu()" class="mobile-nav-item">
           <i-lucide name="stethoscope" class="w-4 h-4 text-secondary-400"></i-lucide> For Physiotherapists
         </button>
-        <div class="flex gap-3 pt-3 border-t border-slate-100 mt-2">
-          <button (click)="goToRegister(); closeMobileMenu()"
-            class="flex-1 py-3 rounded-xl btn-primary text-white font-bold text-sm">Book Appointment</button>
+        <div class="flex flex-col gap-2 pt-3 border-t border-slate-100 mt-2">
+          <button *ngIf="!isLoggedIn" (click)="goToLogin(); closeMobileMenu()"
+            class="w-full py-3 rounded-xl border border-slate-200 text-slate-700 font-bold text-sm">Login</button>
+          <button (click)="isLoggedIn ? goToDashboard() : goToRegister(); closeMobileMenu()"
+            class="w-full py-3 rounded-xl btn-primary text-white font-bold text-sm">
+            {{ isLoggedIn ? 'Go to Dashboard' : 'Book Appointment' }}
+          </button>
         </div>
       </div>
     </div>
   </nav>
 
   <!-- ══════════════════ HERO ══════════════════ -->
-  <section class="hero-section relative pt-16 overflow-hidden">
+  <section class="hero-section relative pt-20 overflow-hidden">
 
     <!-- Rich layered background -->
     <div class="hero-bg-gradient absolute inset-0"></div>
@@ -544,6 +552,98 @@
               <div class="h-4 skeleton-shimmer rounded-lg w-3/4"></div>
               <div class="h-3 skeleton-shimmer rounded-lg w-1/2"></div>
               <div class="h-10 skeleton-shimmer rounded-xl mt-4"></div>
+            </div>
+          </div>
+          }
+        </div>
+      </ng-template>
+    </div>
+  </section>
+
+  <!-- ══════════════════ DIAGNOSTIC LABS (SLIDER) ══════════════════ -->
+  <section id="labs" class="py-20 sm:py-28 bg-slate-50 border-t border-slate-100 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal">
+        <div class="max-w-xl">
+          <span class="section-chip">Trusted Network</span>
+          <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-4">
+            Our Partner <span class="text-gradient">Diagnostic Labs</span>
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base">
+            Quick diagnostics are key to effective recovery. Access world-class laboratory services through our verified partners.
+          </p>
+        </div>
+        <div class="hidden md:flex gap-2 mt-6 md:mt-0">
+          <button class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white" aria-label="Previous">
+            <i-lucide name="chevron-left" class="w-5 h-5"></i-lucide>
+          </button>
+          <button class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white" aria-label="Next">
+            <i-lucide name="chevron-right" class="w-5 h-5"></i-lucide>
+          </button>
+        </div>
+      </div>
+
+      <ng-container *ngIf="labs$ | async as labs; else loadingLabs">
+        <!-- Horizontal Slider Container -->
+        <div class="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth no-scrollbar" style="scrollbar-width: none; -ms-overflow-style: none;">
+          @for (lab of labs; track lab.id; let i = $index) {
+          <div class="flex-shrink-0 w-[280px] sm:w-[350px] snap-start reveal" [style.transition-delay]="(i * 100) + 'ms'">
+            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden group hover:shadow-xl transition-all duration-500 h-full">
+              <!-- Lab Image -->
+              <div class="relative h-48 overflow-hidden">
+                <img [src]="getLabImage(lab, i)" 
+                  alt="{{ lab.fullName }}"
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+                
+                <div class="absolute top-4 left-4">
+                  <span class="bg-white/90 backdrop-blur-sm text-[10px] font-black tracking-widest uppercase px-3 py-1.5 rounded-full text-primary-700 shadow-sm">
+                    PARTNER LAB
+                  </span>
+                </div>
+              </div>
+
+              <!-- Lab Details -->
+              <div class="p-6">
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="text-lg font-black text-slate-900 font-heading truncate">{{ lab.fullName }}</h3>
+                  <div class="flex items-center gap-1 text-amber-400">
+                    <i-lucide name="star" class="w-4 h-4 fill-current"></i-lucide>
+                    <span class="text-slate-900 font-bold text-sm">{{ (4.5 + (i % 5)*0.1).toFixed(1) }}</span>
+                  </div>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                  <div class="flex items-center gap-2.5 text-slate-500 text-xs">
+                    <i-lucide name="map-pin" class="w-3.5 h-3.5 text-primary-500"></i-lucide>
+                    <span class="truncate">{{ lab.address || 'Bandra West, Mumbai' }}</span>
+                  </div>
+                  <div class="flex items-center gap-2.5 text-slate-500 text-xs">
+                    <i-lucide name="clock" class="w-3.5 h-3.5 text-primary-500"></i-lucide>
+                    <span>Reports in 24 Hours</span>
+                  </div>
+                </div>
+
+                <button class="w-full py-3.5 rounded-2xl bg-primary-50 text-primary-700 font-bold text-sm hover:bg-primary-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
+                  <i-lucide name="test-tube" class="w-4 h-4"></i-lucide>
+                  View Test Lists
+                </button>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </ng-container>
+
+      <ng-template #loadingLabs>
+        <div class="flex gap-6 overflow-hidden">
+          @for (i of [1,2,3]; track i) {
+          <div class="flex-shrink-0 w-[350px] bg-white rounded-3xl border border-slate-100 overflow-hidden">
+            <div class="h-48 skeleton-shimmer"></div>
+            <div class="p-6 space-y-4">
+              <div class="h-5 skeleton-shimmer rounded-lg w-3/4"></div>
+              <div class="h-3 skeleton-shimmer rounded-lg w-1/2"></div>
+              <div class="h-12 skeleton-shimmer rounded-2xl mt-4"></div>
             </div>
           </div>
           }

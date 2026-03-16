@@ -26,6 +26,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     private bookingService = inject(BookingService);
 
     doctors$: Observable<any[]> | undefined;
+    labs$: Observable<any[]> | undefined;
     feedbacks$: Observable<BookedAppointment[]> | undefined;
     mobileMenuOpen = false;
     navScrolled = false;
@@ -63,6 +64,13 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             caption: 'Get back to peak performance after injury'
         },
 
+    ];
+
+    private labImages = [
+      'https://images.unsplash.com/photo-1579152276503-0852bc239270?q=80&w=400&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=400&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1582719471384-894fbb16e074?q=80&w=400&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=400&auto=format&fit=crop'
     ];
 
     // Unsplash doctor profile image collection
@@ -184,8 +192,14 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
         this.doctors$ = this.api.getDoctors().pipe(
             map(docs => docs.filter(doc => doc.active))
         );
+        this.labs$ = this.api.getLabTechnicians().pipe(
+            map(labs => labs.filter(lab => lab.active))
+        );
         // Re-trigger observer whenever doctors load
         this.doctors$.subscribe(() => {
+            setTimeout(() => this.setupScrollAnimations(), 200);
+        });
+        this.labs$.subscribe(() => {
             setTimeout(() => this.setupScrollAnimations(), 200);
         });
 
@@ -324,5 +338,12 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             return doc.image;
         }
         return this.doctorImages[index % this.doctorImages.length];
+    }
+
+    getLabImage(lab: any, index: number): string {
+        if (lab.image && !lab.image.includes('ui-avatars.com')) {
+            return lab.image;
+        }
+        return this.labImages[index % this.labImages.length];
     }
 }
