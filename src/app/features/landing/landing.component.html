@@ -4,7 +4,8 @@
 <div class="landing-page font-sans">
 
   <!-- ══════════════════ NAVBAR ══════════════════ -->
-  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-400" [class.nav-scrolled]="navScrolled" [class.mobile-menu-active]="mobileMenuOpen">
+  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-400" [class.nav-scrolled]="navScrolled"
+    [class.mobile-menu-active]="mobileMenuOpen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
 
       <!-- Logo -->
@@ -82,7 +83,7 @@
   </nav>
 
   <!-- ══════════════════ HERO ══════════════════ -->
-  <section class="hero-section relative pt-20 overflow-hidden">
+  <section class="hero-section relative pt-0 overflow-hidden">
 
     <!-- Rich layered background -->
     <div class="hero-bg-gradient absolute inset-0"></div>
@@ -92,19 +93,19 @@
     <div class="orb orb-3 absolute w-72 h-72 top-1/2 left-1/3 pointer-events-none"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 lg:py-16 relative z-10">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 items-center min-h-[calc(100svh-4rem)]">
+      <div class="grid grid-cols-1 lg:grid-cols-2  xl:gap-20 items-center min-h-[calc(100svh-4rem)]">
 
         <!-- ── LEFT CONTENT ── -->
         <div class="hero-content flex flex-col justify-center">
 
           <!-- Platform trust badge -->
-          <div
+          <!-- <div
             class="hero-badge inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-primary-200 text-primary-700 text-xs font-bold px-4 py-2.5 rounded-xl mb-6 shadow-sm w-fit">
             <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
             India's #1 Physiotherapy Platform
             <span
               class="ml-1 bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full text-[10px] font-bold">VERIFIED</span>
-          </div>
+          </div> -->
 
           <!-- Headline -->
           <h1
@@ -114,14 +115,14 @@
             <span class="text-slate-600 text-3xl sm:text-4xl lg:text-[2.4rem] font-bold">starts here.</span>
           </h1>
 
-          <p class="text-base sm:text-[1.05rem] text-slate-600 mb-8 leading-relaxed max-w-md">
+          <!-- <p class="text-base sm:text-[1.05rem] text-slate-600 mb-8 leading-relaxed max-w-md">
             Book certified physiotherapists for <strong class="text-slate-800 font-semibold">in-clinic, online or home
               visits</strong>.
             Personalised treatment. Expert care. Real results.
-          </p>
+          </p> -->
 
           <!-- Search Widget -->
-          <div
+          <!-- <div
             class="search-widget bg-white rounded-2xl shadow-xl shadow-primary-100/60 border border-slate-200/80 mb-6 overflow-hidden">
             <div class="flex flex-col sm:flex-row">
               <div class="flex items-center gap-3 flex-1 px-4 py-3.5">
@@ -141,10 +142,10 @@
                 Find a Physio
               </button>
             </div>
-          </div>
+          </div> -->
 
           <!-- Popular conditions chips -->
-          <div class="flex flex-wrap gap-2 mb-8">
+          <!-- <div class="flex flex-wrap gap-2 mb-8">
             <span class="text-xs text-slate-500 font-semibold self-center">Trending: </span>
             @for (c of conditions.slice(0, 5); track c.label) {
             <button (click)="bookCondition(c.label)"
@@ -153,7 +154,7 @@
               {{ c.label }}
             </button>
             }
-          </div>
+          </div> -->
 
           <!-- Social proof row -->
           <div class="flex flex-wrap items-center gap-6 pt-5 border-t border-slate-200/60">
@@ -190,7 +191,7 @@
         </div>
 
         <!-- ── MOBILE Hero Image (visible only on small screens) ── -->
-        <div class="hero-mobile-image block lg:hidden mt-8 mb-4 reveal">
+        <div style="margin-bottom: 128px;" class="hero-mobile-image block lg:hidden mb-8 reveal">
           <div class="relative mx-auto max-w-sm">
             <div
               class="absolute inset-[-6px] bg-gradient-to-br from-primary-300/30 to-secondary-400/20 rounded-3xl blur-sm">
@@ -478,8 +479,7 @@
 
             <!-- Doctor image -->
             <div class="relative h-52 bg-gradient-to-br from-primary-400 to-primary-700 overflow-hidden">
-              <img [src]="getDoctorImage(doc, i)" 
-                alt="{{ doc.fullName }}"
+              <img [src]="getDoctorImage(doc, i)" alt="{{ doc.fullName }}"
                 class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-600 ease-out">
               <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
 
@@ -570,14 +570,19 @@
             Our Partner <span class="text-gradient">Diagnostic Labs</span>
           </h2>
           <p class="text-slate-600 text-sm sm:text-base">
-            Quick diagnostics are key to effective recovery. Access world-class laboratory services through our verified partners.
+            Quick diagnostics are key to effective recovery. Access world-class laboratory services through our verified
+            partners.
           </p>
         </div>
         <div class="hidden md:flex gap-2 mt-6 md:mt-0">
-          <button class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white" aria-label="Previous">
+          <button
+            class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white"
+            aria-label="Previous">
             <i-lucide name="chevron-left" class="w-5 h-5"></i-lucide>
           </button>
-          <button class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white" aria-label="Next">
+          <button
+            class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white"
+            aria-label="Next">
             <i-lucide name="chevron-right" class="w-5 h-5"></i-lucide>
           </button>
         </div>
@@ -585,19 +590,22 @@
 
       <ng-container *ngIf="labs$ | async as labs; else loadingLabs">
         <!-- Horizontal Slider Container -->
-        <div class="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth no-scrollbar" style="scrollbar-width: none; -ms-overflow-style: none;">
+        <div class="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth no-scrollbar"
+          style="scrollbar-width: none; -ms-overflow-style: none;">
           @for (lab of labs; track lab.id; let i = $index) {
-          <div class="flex-shrink-0 w-[280px] sm:w-[350px] snap-start reveal" [style.transition-delay]="(i * 100) + 'ms'">
-            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden group hover:shadow-xl transition-all duration-500 h-full">
+          <div class="flex-shrink-0 w-[280px] sm:w-[350px] snap-start reveal"
+            [style.transition-delay]="(i * 100) + 'ms'">
+            <div
+              class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden group hover:shadow-xl transition-all duration-500 h-full">
               <!-- Lab Image -->
               <div class="relative h-48 overflow-hidden">
-                <img [src]="getLabImage(lab, i)" 
-                  alt="{{ lab.fullName }}"
+                <img [src]="getLabImage(lab, i)" alt="{{ lab.fullName }}"
                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-                
+
                 <div class="absolute top-4 left-4">
-                  <span class="bg-white/90 backdrop-blur-sm text-[10px] font-black tracking-widest uppercase px-3 py-1.5 rounded-full text-primary-700 shadow-sm">
+                  <span
+                    class="bg-white/90 backdrop-blur-sm text-[10px] font-black tracking-widest uppercase px-3 py-1.5 rounded-full text-primary-700 shadow-sm">
                     PARTNER LAB
                   </span>
                 </div>
@@ -612,7 +620,7 @@
                     <span class="text-slate-900 font-bold text-sm">{{ (4.5 + (i % 5)*0.1).toFixed(1) }}</span>
                   </div>
                 </div>
-                
+
                 <div class="space-y-3 mb-6">
                   <div class="flex items-center gap-2.5 text-slate-500 text-xs">
                     <i-lucide name="map-pin" class="w-3.5 h-3.5 text-primary-500"></i-lucide>
@@ -624,7 +632,8 @@
                   </div>
                 </div>
 
-                <button class="w-full py-3.5 rounded-2xl bg-primary-50 text-primary-700 font-bold text-sm hover:bg-primary-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
+                <button
+                  class="w-full py-3.5 rounded-2xl bg-primary-50 text-primary-700 font-bold text-sm hover:bg-primary-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
                   <i-lucide name="test-tube" class="w-4 h-4"></i-lucide>
                   View Test Lists
                 </button>
@@ -656,21 +665,25 @@
   <section class="py-24 sm:py-32 relative overflow-hidden bg-slate-900">
     <!-- Animated background patterns -->
     <div class="absolute inset-0 opacity-20">
-      <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#10b981_0,transparent_50%)] animate-pulse-slow"></div>
+      <div
+        class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#10b981_0,transparent_50%)] animate-pulse-slow">
+      </div>
     </div>
-    
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <!-- AI Visual Side -->
         <div class="reveal relative">
-          <div class="relative bg-white/5 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 p-8 sm:p-12 overflow-hidden shadow-2xl">
+          <div
+            class="relative bg-white/5 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 p-8 sm:p-12 overflow-hidden shadow-2xl">
             <div class="absolute -top-24 -left-24 w-64 h-64 bg-emerald-500/20 rounded-full blur-[80px]"></div>
-            
+
             <!-- Simulated AI Report UI -->
             <div class="relative z-10 space-y-4 animate-float">
               <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/40">
+                  <div
+                    class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/40">
                     <i-lucide name="sparkles" class="w-5 h-5 text-white"></i-lucide>
                   </div>
                   <div>
@@ -709,18 +722,20 @@
                   <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
                   <p class="text-xs font-bold text-white">Phase 2 Protocol Generated</p>
                 </div>
-                <p class="text-[11px] text-white/60 leading-relaxed">Dynamic load-bearing integration with glenohumeral stabilization drills...</p>
+                <p class="text-[11px] text-white/60 leading-relaxed">Dynamic load-bearing integration with glenohumeral
+                  stabilization drills...</p>
               </div>
             </div>
           </div>
-          
+
           <!-- Decorative Elements -->
           <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-secondary-500/30 rounded-full blur-3xl"></div>
         </div>
 
         <!-- AI Text Side -->
         <div class="reveal">
-          <span class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase border border-emerald-500/20 mb-6">
+          <span
+            class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase border border-emerald-500/20 mb-6">
             <i-lucide name="cpu" class="w-3.5 h-3.5 animate-pulse"></i-lucide>
             Precision recovery
           </span>
@@ -728,32 +743,38 @@
             AI-Powered <span class="text-emerald-400">Recovery Roadmaps</span>
           </h2>
           <p class="text-slate-400 text-lg leading-relaxed mb-8">
-            Our proprietary clinical AI analyzes your consultation notes and treatment history to generate a detailed biomechanical progression plan. 
+            Our proprietary clinical AI analyzes your consultation notes and treatment history to generate a detailed
+            biomechanical progression plan.
           </p>
-          
+
           <div class="space-y-6">
             <div class="flex gap-4">
-              <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-emerald-500 flex-shrink-0">
+              <div
+                class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-emerald-500 flex-shrink-0">
                 <i-lucide name="zap" class="w-6 h-6"></i-lucide>
               </div>
               <div>
                 <h4 class="text-white font-bold mb-1 text-lg">Instant Analysis</h4>
-                <p class="text-slate-500 text-sm">Download your professional recovery report within seconds of completing a session.</p>
+                <p class="text-slate-500 text-sm">Download your professional recovery report within seconds of
+                  completing a session.</p>
               </div>
             </div>
-            
+
             <div class="flex gap-4">
-              <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-emerald-500 flex-shrink-0">
+              <div
+                class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-emerald-500 flex-shrink-0">
                 <i-lucide name="map" class="w-6 h-6"></i-lucide>
               </div>
               <div>
                 <h4 class="text-white font-bold mb-1 text-lg">Phased Progression</h4>
-                <p class="text-slate-500 text-sm">Get structured goals and therapeutic focus for every phase of your recovery journey.</p>
+                <p class="text-slate-500 text-sm">Get structured goals and therapeutic focus for every phase of your
+                  recovery journey.</p>
               </div>
             </div>
           </div>
-          
-          <button (click)="goToRegister()" class="mt-10 btn-primary px-8 py-4 rounded-2xl text-white font-bold transition-all shadow-glow hover:scale-105 active:scale-95">
+
+          <button (click)="goToRegister()"
+            class="mt-10 btn-primary px-8 py-4 rounded-2xl text-white font-bold transition-all shadow-glow hover:scale-105 active:scale-95">
             Book Session & Get Your AI Report
           </button>
         </div>
@@ -863,54 +884,59 @@
       <!-- Featured testimonial (Real Feedback from Patients) -->
       <ng-container *ngIf="feedbacks$ | async as realFeedbacks; else staticTestimonials">
         <div class="max-w-2xl mx-auto mb-10" *ngIf="realFeedbacks.length > 0">
-            <div class="testimonial-featured-card bg-white/7 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-7 sm:p-10">
-                <div class="flex gap-1 mb-4">
-                    <i-lucide name="star" *ngFor="let s of [1,2,3,4,5]" 
-                              [class.text-amber-400]="s <= realFeedbacks[activeTestimonial % realFeedbacks.length].feedback!.rating"
-                              [class.text-slate-200]="s > realFeedbacks[activeTestimonial % realFeedbacks.length].feedback!.rating"
-                              class="w-4 h-4" [ngStyle]="{'fill': (s <= realFeedbacks[activeTestimonial % realFeedbacks.length].feedback!.rating ? 'currentColor' : 'none')}"></i-lucide>
-                    <span class="ml-2 text-xs font-medium text-slate-400 self-center">Verified Patient Feedback</span>
-                </div>
-                <p class="text-white/90 text-sm sm:text-base leading-relaxed mb-6 italic min-h-[4.5rem]">
-                    "{{ realFeedbacks[activeTestimonial % realFeedbacks.length].feedback?.comment || 'Exceptional service and care.' }}"
-                </p>
-                <div class="flex items-center gap-3">
-                    <img [src]="realFeedbacks[activeTestimonial % realFeedbacks.length].patientImage" 
-                         alt="{{ realFeedbacks[activeTestimonial % realFeedbacks.length].patientName }}"
-                         class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-400/40">
-                    <div>
-                        <p class="font-bold text-white text-sm">{{ realFeedbacks[activeTestimonial % realFeedbacks.length].patientName }}</p>
-                        <p class="text-primary-300 text-xs">Patient of Dr. {{ realFeedbacks[activeTestimonial % realFeedbacks.length].doctorName }}</p>
-                    </div>
-                    <div class="ml-auto text-right">
-                        <p class="text-xs text-slate-500">{{ realFeedbacks[activeTestimonial % realFeedbacks.length].feedback?.createdAt.toDate() | date:'shortDate' }}</p>
-                    </div>
-                </div>
+          <div
+            class="testimonial-featured-card bg-white/7 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-7 sm:p-10">
+            <div class="flex gap-1 mb-4">
+              <i-lucide name="star" *ngFor="let s of [1,2,3,4,5]"
+                [class.text-amber-400]="s <= realFeedbacks[activeTestimonial % realFeedbacks.length].feedback!.rating"
+                [class.text-slate-200]="s > realFeedbacks[activeTestimonial % realFeedbacks.length].feedback!.rating"
+                class="w-4 h-4"
+                [ngStyle]="{'fill': (s <= realFeedbacks[activeTestimonial % realFeedbacks.length].feedback!.rating ? 'currentColor' : 'none')}"></i-lucide>
+              <span class="ml-2 text-xs font-medium text-slate-400 self-center">Verified Patient Feedback</span>
             </div>
+            <p class="text-white/90 text-sm sm:text-base leading-relaxed mb-6 italic min-h-[4.5rem]">
+              "{{ realFeedbacks[activeTestimonial % realFeedbacks.length].feedback?.comment || 'Exceptional service and
+              care.' }}"
+            </p>
+            <div class="flex items-center gap-3">
+              <img [src]="realFeedbacks[activeTestimonial % realFeedbacks.length].patientImage"
+                alt="{{ realFeedbacks[activeTestimonial % realFeedbacks.length].patientName }}"
+                class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-400/40">
+              <div>
+                <p class="font-bold text-white text-sm">{{ realFeedbacks[activeTestimonial %
+                  realFeedbacks.length].patientName }}</p>
+                <p class="text-primary-300 text-xs">Patient of Dr. {{ realFeedbacks[activeTestimonial %
+                  realFeedbacks.length].doctorName }}</p>
+              </div>
+              <div class="ml-auto text-right">
+                <p class="text-xs text-slate-500">{{ realFeedbacks[activeTestimonial %
+                  realFeedbacks.length].feedback?.createdAt.toDate() | date:'shortDate' }}</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Mini cards grid (Latest 3) -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" *ngIf="realFeedbacks.length > 0">
-            @for (fb of realFeedbacks.slice(0, 3); track fb.id; let i = $index) {
-            <div (click)="setTestimonial(i)"
-                class="mini-testimonial-card reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
-                [class.active-card]="i === (activeTestimonial % realFeedbacks.length)">
-                <div class="flex gap-0.5 mb-3">
-                    <i-lucide name="star" *ngFor="let s of [1,2,3,4,5]" 
-                              [class.text-amber-400]="s <= fb.feedback!.rating"
-                              [class.text-slate-600]="s > fb.feedback!.rating"
-                              class="w-3 h-3" [ngStyle]="{'fill': (s <= fb.feedback!.rating ? 'currentColor' : 'none')}"></i-lucide>
-                </div>
-                <p class="text-white/70 text-xs italic mb-4 line-clamp-3 leading-relaxed">"{{ fb.feedback?.comment }}"</p>
-                <div class="flex items-center gap-2">
-                    <img [src]="fb.patientImage" alt="" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-500/30">
-                    <div>
-                        <p class="font-bold text-white text-xs">{{ fb.patientName }}</p>
-                        <p class="text-primary-400 text-[10px]">Treated for {{ fb.type }}</p>
-                    </div>
-                </div>
+          @for (fb of realFeedbacks.slice(0, 3); track fb.id; let i = $index) {
+          <div (click)="setTestimonial(i)"
+            class="mini-testimonial-card reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
+            [class.active-card]="i === (activeTestimonial % realFeedbacks.length)">
+            <div class="flex gap-0.5 mb-3">
+              <i-lucide name="star" *ngFor="let s of [1,2,3,4,5]" [class.text-amber-400]="s <= fb.feedback!.rating"
+                [class.text-slate-600]="s > fb.feedback!.rating" class="w-3 h-3"
+                [ngStyle]="{'fill': (s <= fb.feedback!.rating ? 'currentColor' : 'none')}"></i-lucide>
             </div>
-            }
+            <p class="text-white/70 text-xs italic mb-4 line-clamp-3 leading-relaxed">"{{ fb.feedback?.comment }}"</p>
+            <div class="flex items-center gap-2">
+              <img [src]="fb.patientImage" alt="" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-500/30">
+              <div>
+                <p class="font-bold text-white text-xs">{{ fb.patientName }}</p>
+                <p class="text-primary-400 text-[10px]">Treated for {{ fb.type }}</p>
+              </div>
+            </div>
+          </div>
+          }
         </div>
       </ng-container>
 
@@ -929,10 +955,12 @@
               "{{ testimonials[activeTestimonial % testimonials.length].text }}"
             </p>
             <div class="flex items-center gap-3">
-              <img [src]="testimonials[activeTestimonial % testimonials.length].avatar" alt="{{ testimonials[activeTestimonial % testimonials.length].name }}"
+              <img [src]="testimonials[activeTestimonial % testimonials.length].avatar"
+                alt="{{ testimonials[activeTestimonial % testimonials.length].name }}"
                 class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-400/40">
               <div>
-                <p class="font-bold text-white text-sm">{{ testimonials[activeTestimonial % testimonials.length].name }}</p>
+                <p class="font-bold text-white text-sm">{{ testimonials[activeTestimonial % testimonials.length].name }}
+                </p>
                 <p class="text-primary-300 text-xs">{{ testimonials[activeTestimonial % testimonials.length].role }}</p>
               </div>
               <div class="ml-auto text-right">
