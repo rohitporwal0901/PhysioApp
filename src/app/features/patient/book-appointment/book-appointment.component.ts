@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { MockApiService } from '../../../core/services/mock-api.service';
 import { BookingService } from '../../../core/services/booking.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
@@ -45,7 +45,9 @@ export class BookAppointmentComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
-    this.doctors$ = this.api.getDoctors();
+    this.doctors$ = this.api.getDoctors().pipe(
+      map(docs => docs.filter(doc => doc.active))
+    );
   }
 
   get patientName(): string {

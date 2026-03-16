@@ -59,7 +59,8 @@ export class MockApiService {
       ...doctor,
       role: 'doctor',
       createdAt: Timestamp.now(),
-      isAvailable: true
+      isAvailable: true,
+      isActive: true
     });
   }
 
@@ -73,6 +74,18 @@ export class MockApiService {
     return this.removeUser(uid);
   }
 
+  /** Toggle doctor active status */
+  async toggleDoctorActive(uid: string): Promise<void> {
+    const docRef = doc(this.firestore, 'users', uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      await updateDoc(docRef, {
+        isActive: data['isActive'] === undefined ? false : !data['isActive']
+      });
+    }
+  }
+
   /** Toggle doctor availability */
   async toggleDoctorAvailability(uid: string): Promise<void> {
     const docRef = doc(this.firestore, 'users', uid);
@@ -81,6 +94,50 @@ export class MockApiService {
       const data = docSnap.data();
       await updateDoc(docRef, {
         isAvailable: !data['isAvailable']
+      });
+    }
+  }
+
+  /** Get all registered lab technicians from 'users' collection */
+  getLabTechnicians(): Observable<any[]> {
+    const q = query(
+      collection(this.firestore, 'users'),
+      where('role', '==', 'lab_technician')
+    );
+    return this.collectionToObservable(q);
+  }
+
+  /** Add a new lab technician */
+  addLabTechnician(tech: any): Promise<any> {
+    return addDoc(collection(this.firestore, 'users'), {
+      ...tech,
+      role: 'lab_technician',
+      createdAt: Timestamp.now(),
+      isAvailable: true,
+      isActive: true
+    });
+  }
+
+  /** Toggle lab technician availability */
+  async toggleLabTechnicianAvailability(uid: string): Promise<void> {
+    const docRef = doc(this.firestore, 'users', uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      await updateDoc(docRef, {
+        isAvailable: !data['isAvailable']
+      });
+    }
+  }
+
+  /** Toggle lab technician active status */
+  async toggleLabTechnicianActive(uid: string): Promise<void> {
+    const docRef = doc(this.firestore, 'users', uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      await updateDoc(docRef, {
+        isActive: data['isActive'] === undefined ? false : !data['isActive']
       });
     }
   }
@@ -97,6 +154,8 @@ export class MockApiService {
             ...docData,
             // Fallback for availability field naming inconsistency
             available: docData.available ?? docData.isAvailable ?? false,
+            // Fallback for active field
+            active: docData.active ?? docData.isActive ?? false,
             // Ensure rating exists for UI
             rating: docData.rating ?? 4.5
           };

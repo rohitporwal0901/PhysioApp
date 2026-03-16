@@ -50,6 +50,11 @@ export const routes: Routes = [
                 canActivate: [roleGuard(['admin'])],
                 loadComponent: () => import('./features/admin/patients/patients.component').then(m => m.PatientsComponent)
             },
+            {
+                path: 'admin/lab-technicians',
+                canActivate: [roleGuard(['admin'])],
+                loadComponent: () => import('./features/admin/lab-technicians/lab-technicians.component').then(m => m.LabTechniciansComponent)
+            },
             // Doctor routes
             {
                 path: 'doctor/dashboard',
@@ -81,6 +86,11 @@ export const routes: Routes = [
                 path: 'patient/sessions',
                 canActivate: [roleGuard(['patient'])],
                 loadComponent: () => import('./features/patient/my-sessions/my-sessions.component').then(m => m.MySessionsComponent)
+            },
+            {
+                path: 'patient/lab-services',
+                canActivate: [roleGuard(['patient'])],
+                loadComponent: () => import('./features/patient/lab-services/lab-services.component').then(m => m.LabServicesComponent)
             }
         ]
     },

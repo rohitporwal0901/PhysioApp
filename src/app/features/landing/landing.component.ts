@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { MockApiService } from '../../core/services/mock-api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { BookingService, BookedAppointment } from '../../core/services/booking.service';
@@ -181,7 +181,9 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.doctors$ = this.api.getDoctors();
+        this.doctors$ = this.api.getDoctors().pipe(
+            map(docs => docs.filter(doc => doc.active))
+        );
         // Re-trigger observer whenever doctors load
         this.doctors$.subscribe(() => {
             setTimeout(() => this.setupScrollAnimations(), 200);

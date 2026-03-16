@@ -1,0 +1,124 @@
+<div class="max-w-7xl mx-auto pb-12">
+    
+    <!-- Hero Header -->
+    <div class="relative overflow-hidden bg-slate-900 rounded-[2.5rem] p-8 md:p-12 mb-10 shadow-2xl">
+        <div class="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
+            <i-lucide name="microscope" class="w-full h-full text-white"></i-lucide>
+        </div>
+        
+        <div class="relative z-10 max-w-2xl">
+            <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary-500/20 text-secondary-400 text-xs font-bold uppercase tracking-widest mb-6 border border-secondary-500/30 backdrop-blur-sm">
+                <i-lucide name="sparkles" class="w-3.5 h-3.5"></i-lucide>
+                Premium Diagnostic Support
+            </span>
+            <h1 class="text-4xl md:text-5xl font-black text-white mb-4 font-heading leading-tight">Home Sample <span class="text-secondary-400">Collection</span></h1>
+            <p class="text-slate-400 text-lg mb-8 leading-relaxed">Book certified lab technicians for hassle-free sample collection from the comfort of your home. Professional care, verified results.</p>
+            
+            <div class="flex flex-wrap gap-4 text-sm font-bold">
+                <div class="flex items-center gap-2 text-white">
+                    <div class="w-8 h-8 rounded-full bg-status-success/20 flex items-center justify-center">
+                        <i-lucide name="check-circle" class="w-4 h-4 text-status-success"></i-lucide>
+                    </div>
+                    Safe & Hygienic
+                </div>
+                <div class="flex items-center gap-2 text-white">
+                    <div class="w-8 h-8 rounded-full bg-status-success/20 flex items-center justify-center">
+                        <i-lucide name="check-circle" class="w-4 h-4 text-status-success"></i-lucide>
+                    </div>
+                    Fast Reports
+                </div>
+                <div class="flex items-center gap-2 text-white">
+                    <div class="w-8 h-8 rounded-full bg-status-success/20 flex items-center justify-center">
+                        <i-lucide name="check-circle" class="w-4 h-4 text-status-success"></i-lucide>
+                    </div>
+                    Verified Techs
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Techs List Section -->
+    <div class="flex items-center justify-between mb-8 px-4">
+        <div>
+            <h2 class="text-2xl font-black text-slate-800 dark:text-white font-heading">Available Specialists</h2>
+            <p class="text-slate-500 dark:text-slate-400 text-sm">Directly contact your preferred technician for scheduling.</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4" *ngIf="labTechs$ | async as techs">
+        <div *ngFor="let tech of techs" 
+            class="group relative bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+            
+            <!-- Availability indicator -->
+            <div class="absolute top-4 right-4 z-20">
+                <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider backdrop-blur-md"
+                    [ngClass]="tech.available ? 'bg-status-success/90 text-white' : 'bg-slate-700/80 text-slate-200'">
+                    {{ tech.available ? 'Ready Now' : 'Busy' }}
+                </span>
+            </div>
+
+            <!-- Profile Info Row -->
+            <div class="p-8">
+                <div class="flex items-start gap-6 mb-8">
+                    <div class="relative">
+                        <div class="w-20 h-20 rounded-2xl overflow-hidden shadow-lg border-2 border-slate-50 dark:border-slate-700">
+                            <img [src]="tech.image" 
+                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=LabTech&background=4F46E5&color=fff&size=200'"
+                                class="w-full h-full object-cover">
+                        </div>
+                        <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-secondary-500 rounded-xl flex items-center justify-center text-white shadow-lg border-2 border-white dark:border-slate-800">
+                            <i-lucide name="microscope" class="w-4 h-4"></i-lucide>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-xl font-black text-slate-900 dark:text-white font-heading truncate mb-1">{{ tech.name }}</h3>
+                        <p class="text-secondary-600 dark:text-secondary-400 text-sm font-bold tracking-wide uppercase">{{ tech.specialty }}</p>
+                        <div class="flex items-center gap-1.5 mt-2">
+                            <i-lucide name="award" class="w-3.5 h-3.5 text-amber-500"></i-lucide>
+                            <span class="text-xs font-bold text-slate-500">{{ tech.experience || '5' }}+ Years of Service</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bio/Details -->
+                <div class="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-4 mb-8 border border-slate-100 dark:border-slate-800">
+                    <div class="flex items-center gap-3 text-slate-600 dark:text-slate-400 mb-2 last:mb-0">
+                        <i-lucide name="graduation-cap" class="w-4 h-4 text-slate-400"></i-lucide>
+                        <span class="text-sm font-medium">{{ tech.qualification || 'Certified Lab Technician' }}</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                        <i-lucide name="map-pin" class="w-3.5 h-3.5 text-slate-400"></i-lucide>
+                        <span class="text-sm font-medium">Covers all local city areas</span>
+                    </div>
+                </div>
+
+                <!-- Contact Actions -->
+                <div class="grid grid-cols-2 gap-4">
+                    <button (click)="callTech(tech.phone)"
+                        class="flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 transition-all font-bold text-sm shadow-lg shadow-slate-200 dark:shadow-none active:scale-95">
+                        <i-lucide name="phone" class="w-4 h-4"></i-lucide>
+                        Call Now
+                    </button>
+                    <button (click)="chatOnWhatsapp(tech.whatsapp)"
+                        class="flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-[#25D366] text-white hover:shadow-xl transition-all font-bold text-sm shadow-lg shadow-emerald-200 dark:shadow-none active:scale-95">
+                        <i-lucide name="message-circle" class="w-4 h-4"></i-lucide>
+                        WhatsApp
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Bottom Accent -->
+            <div class="h-1.5 w-full bg-secondary-500/20 group-hover:bg-secondary-500 transition-colors duration-500"></div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="(labTechs$ | async)?.length === 0" class="flex flex-col items-center justify-center py-24 px-4 text-center">
+        <div class="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-3xl flex items-center justify-center mb-6">
+            <i-lucide name="microscope" class="w-12 h-12 text-slate-300"></i-lucide>
+        </div>
+        <h3 class="text-2xl font-black text-slate-800 dark:text-white font-heading">No Specialists Online</h3>
+        <p class="text-slate-500 dark:text-slate-400 max-w-sm mt-2">Our lab technicians are currently offline. Please check back later or contact support for urgent sample collection.</p>
+    </div>
+</div>
