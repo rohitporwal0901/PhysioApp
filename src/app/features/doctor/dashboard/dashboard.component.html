@@ -2,12 +2,12 @@
 
     <!-- Top Overview Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center py-4 gap-4">
-        <div>
-            <h1 class="text-3xl font-bold text-slate-800 dark:text-white tracking-tight">Overview Dashboard</h1>
-            <p class="text-slate-500 dark:text-slate-400 mt-1">Real-time statistics and upcoming patient appointments.</p>
+        <div class="w-full md:w-auto">
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-white tracking-tight">Overview Dashboard</h1>
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 mt-1">Real-time statistics and upcoming patient appointments.</p>
         </div>
-        <div class="flex space-x-3 w-full md:w-auto">
-            <div class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl shadow-sm text-sm font-semibold flex items-center justify-center">
+        <div class="w-full md:w-auto">
+            <div class="px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl shadow-sm text-xs sm:text-sm font-semibold flex items-center justify-center">
                 <i-lucide name="calendar" class="w-4 h-4 mr-2 text-primary-500"></i-lucide>
                 {{ todayDate | date:'fullDate' }}
             </div>
@@ -15,51 +15,51 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
         <!-- Today's Confirmed Patients -->
-        <div class="bg-surface dark:bg-slate-800 p-5 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 transition-colors">
+        <div class="bg-surface dark:bg-slate-800 p-4 sm:p-5 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 transition-colors">
             <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 flex items-center justify-center">
-                    <i-lucide name="calendar-check" class="w-5 h-5"></i-lucide>
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 flex items-center justify-center">
+                    <i-lucide name="calendar-check" class="w-4 h-4 sm:w-5 sm:h-5"></i-lucide>
                 </div>
-                <span class="text-[10px] font-bold text-primary-500 bg-primary-50 dark:bg-primary-900/40 px-2 py-1 rounded-md uppercase tracking-wider">Today</span>
+                <span class="text-[8px] sm:text-[10px] font-bold text-primary-500 bg-primary-50 dark:bg-primary-900/40 px-2 py-1 rounded-md uppercase tracking-wider">Today</span>
             </div>
-            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Patients Today</p>
-            <h3 class="text-2xl font-black text-slate-800 dark:text-white">{{ stats.todayPatients }}</h3>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">Patients Today</p>
+            <h3 class="text-xl sm:text-2xl font-black text-slate-800 dark:text-white">{{ stats.todayPatients }}</h3>
         </div>
 
         <!-- Pending Confirmations -->
-        <div class="bg-surface dark:bg-slate-800 p-5 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 transition-colors">
+        <div class="bg-surface dark:bg-slate-800 p-3.5 sm:p-5 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 transition-colors">
             <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-                    <i-lucide name="clock" class="w-5 h-5"></i-lucide>
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                    <i-lucide name="clock" class="w-4 h-4 sm:w-5 sm:h-5"></i-lucide>
                 </div>
-                <span class="text-[10px] font-bold text-amber-500 bg-amber-50 dark:bg-amber-900/40 px-2 py-1 rounded-md uppercase tracking-wider">Action Required</span>
+                <span class="text-[7px] min-[400px]:text-[8px] sm:text-[10px] font-bold text-amber-500 bg-amber-50 dark:bg-amber-900/40 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md uppercase tracking-wider">Action Required</span>
             </div>
-            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Pending Requests</p>
-            <h3 class="text-2xl font-black text-slate-800 dark:text-white">{{ stats.pendingConfirmations }}</h3>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">Pending Requests</p>
+            <h3 class="text-xl sm:text-2xl font-black text-slate-800 dark:text-white">{{ stats.pendingConfirmations }}</h3>
         </div>
 
         <!-- Total Unique Patients -->
-        <div class="bg-surface dark:bg-slate-800 p-5 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 transition-colors">
+        <div class="bg-surface dark:bg-slate-800 p-4 sm:p-5 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 transition-colors">
             <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-                    <i-lucide name="users" class="w-5 h-5"></i-lucide>
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                    <i-lucide name="users" class="w-4 h-4 sm:w-5 sm:h-5"></i-lucide>
                 </div>
             </div>
-            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Total Patient Base</p>
-            <h3 class="text-2xl font-black text-slate-800 dark:text-white">{{ stats.totalPatients }}</h3>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">Total Patients</p>
+            <h3 class="text-xl sm:text-2xl font-black text-slate-800 dark:text-white">{{ stats.totalPatients }}</h3>
         </div>
 
         <!-- Active Confirmed Sessions (Total) -->
-        <div class="bg-surface dark:bg-slate-800 p-5 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 transition-colors">
+        <div class="bg-surface dark:bg-slate-800 p-4 sm:p-5 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 transition-colors">
             <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 flex items-center justify-center">
-                    <i-lucide name="activity" class="w-5 h-5"></i-lucide>
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+                    <i-lucide name="activity" class="w-4 h-4 sm:w-5 sm:h-5"></i-lucide>
                 </div>
             </div>
-            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Confirmed Sessions</p>
-            <h3 class="text-2xl font-black text-slate-800 dark:text-white">{{ stats.activeSessions }}</h3>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">Confirmed Sessions</p>
+            <h3 class="text-xl sm:text-2xl font-black text-slate-800 dark:text-white">{{ stats.activeSessions }}</h3>
         </div>
     </div>
 
@@ -71,12 +71,12 @@
             <div
                 class="bg-surface dark:bg-slate-800 rounded-3xl shadow-glass border border-slate-100 dark:border-slate-700 overflow-hidden transition-colors">
                 <div
-                    class="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
+                    class="px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50/50 dark:bg-slate-800/50 gap-3">
                     <div class="flex items-center">
-                        <div class="w-2 h-6 bg-primary-500 rounded-full mr-3"></div>
-                        <h3 class="text-lg font-bold text-slate-800 dark:text-white tracking-tight">Recent Appointment Activity</h3>
+                        <div class="w-1.5 h-6 bg-primary-500 rounded-full mr-3"></div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white tracking-tight leading-tight">Recent Appointment Activity</h3>
                     </div>
-                    <a routerLink="/doctor/agenda" class="text-xs font-bold text-primary-500 hover:text-primary-600 uppercase tracking-widest">View Full Agenda &rarr;</a>
+                    <a routerLink="/doctor/agenda" class="text-[10px] sm:text-xs font-bold text-primary-500 hover:text-primary-600 uppercase tracking-widest whitespace-nowrap">View Full Agenda &rarr;</a>
                 </div>
 
                 <div class="divide-y divide-slate-100 dark:divide-slate-700 p-2">
@@ -106,13 +106,13 @@
                             </div>
 
                             <!-- Right Actions / Status -->
-                            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto z-10">
-                                <span class="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-xl" [ngClass]="getStatusClass(apt.status)">
+                            <div class="flex flex-row items-center justify-between sm:justify-end w-full sm:w-auto z-10 sm:mt-0">
+                                <span class="px-2.5 py-1.5 text-[9px] sm:text-[10px] font-black uppercase tracking-widest rounded-xl whitespace-nowrap" [ngClass]="getStatusClass(apt.status)">
                                     {{ apt.status }}
                                 </span>
 
                                 <div class="flex space-x-2 ml-4">
-                                    <button [routerLink]="['/doctor/agenda']" class="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-primary-50 hover:text-primary-600 transition-all">
+                                    <button [routerLink]="['/doctor/agenda']" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-primary-50 hover:text-primary-600 transition-all">
                                         <i-lucide name="chevron-right" class="w-4 h-4"></i-lucide>
                                     </button>
                                 </div>
