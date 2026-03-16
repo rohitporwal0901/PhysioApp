@@ -128,7 +128,7 @@
                                 <i-lucide name="mail" class="w-5 h-5 text-slate-300 lg:text-slate-400"></i-lucide>
                             </div>
                             <input id="email" type="email" [(ngModel)]="email" name="email" required placeholder="name@example.com"
-                                class="w-full pl-12 pr-4 py-5 rounded-2xl border-2 border-white/20 lg:border-slate-100 bg-slate-900/60 lg:bg-slate-50 dark:bg-slate-800/80 text-white lg:text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-300 font-bold text-base shadow-xl backdrop-blur-xl">
+                                class="w-full pl-12 pr-4 py-5 rounded-2xl border-2 border-white/10 lg:border-slate-200 bg-slate-900/60 lg:bg-slate-50 dark:bg-slate-800/80 text-white lg:text-slate-900 dark:text-white placeholder-slate-400 lg:placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-300 font-bold text-base shadow-xl backdrop-blur-xl">
                         </div>
                     </div>
 
@@ -142,7 +142,7 @@
                                 <i-lucide name="lock" class="w-5 h-5 text-slate-300 lg:text-slate-400"></i-lucide>
                             </div>
                             <input id="password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" required placeholder="••••••••"
-                                class="w-full pl-12 pr-14 py-5 rounded-2xl border-2 border-white/20 lg:border-slate-100 bg-slate-900/60 lg:bg-slate-50 dark:bg-slate-800/80 text-white lg:text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-300 font-bold text-base shadow-xl backdrop-blur-xl">
+                                class="w-full pl-12 pr-14 py-5 rounded-2xl border-2 border-white/10 lg:border-slate-200 bg-slate-900/60 lg:bg-slate-50 dark:bg-slate-800/80 text-white lg:text-slate-900 dark:text-white placeholder-slate-400 lg:placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-300 font-bold text-base shadow-xl backdrop-blur-xl">
                             <button type="button" (click)="togglePassword()" class="absolute inset-y-0 right-4 flex items-center text-slate-300 lg:text-slate-400 hover:text-white lg:hover:text-slate-600 transition-colors">
                                 <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" class="w-5 h-5"></i-lucide>
                             </button>
