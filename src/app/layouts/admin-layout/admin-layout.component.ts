@@ -39,9 +39,12 @@ export class AdminLayoutComponent implements OnInit {
 
   updateLayoutState(url: string) {
     if (url.includes('agenda')) this.pageTitle = 'My Agenda';
-    else if (url.includes('book-appointment')) this.pageTitle = 'Book Appointment';
+    else if (url.includes('book-appointment') || url.includes('book-session')) this.pageTitle = 'Book Appointment';
     else if (url.includes('patients')) this.pageTitle = 'Patients Directory';
     else if (url.includes('doctors')) this.pageTitle = 'Doctors Directory';
+    else if (url.includes('lab-services')) this.pageTitle = 'Lab Services';
+    else if (url.includes('sessions')) this.pageTitle = 'My Sessions';
+    else if (url.includes('lab-technicians')) this.pageTitle = 'Lab Technicians';
     else this.pageTitle = 'Dashboard';
   }
 

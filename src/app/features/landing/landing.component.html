@@ -4,7 +4,7 @@
 <div class="landing-page font-sans">
 
   <!-- ══════════════════ NAVBAR ══════════════════ -->
-  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-400" [class.nav-scrolled]="navScrolled">
+  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-400" [class.nav-scrolled]="navScrolled" [class.mobile-menu-active]="mobileMenuOpen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
 
       <!-- Logo -->
@@ -53,7 +53,7 @@
 
     <!-- Mobile menu -->
     <div class="mobile-menu md:hidden" [class.mobile-menu--open]="mobileMenuOpen">
-      <div class="px-4 pb-5 pt-2 bg-white/96 backdrop-blur-xl border-t border-slate-100 space-y-1">
+      <div class="px-4 pb-5 bg-white/96 backdrop-blur-xl space-y-1">
         <a href="#services" (click)="closeMobileMenu()" class="mobile-nav-item">
           <i-lucide name="activity" class="w-4 h-4 text-primary-400"></i-lucide> Services
         </a>

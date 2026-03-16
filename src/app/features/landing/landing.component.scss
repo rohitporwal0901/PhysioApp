@@ -126,6 +126,13 @@ nav {
     box-shadow: 0 1px 20px rgba(0, 0, 0, 0.06);
     border-bottom: 1px solid rgba(226, 232, 240, 0.6);
   }
+
+  &.mobile-menu-active {
+    background: white !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.06);
+  }
 }
 
 /* Nav link underline on hover */

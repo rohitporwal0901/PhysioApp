@@ -1,0 +1,10 @@
+header {
+  padding-top: env(safe-area-inset-top, 0px);
+  
+  /* Ensure header doesn't overlap content on mobile by making it sticky */
+  @media (max-width: 1023px) {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+}
