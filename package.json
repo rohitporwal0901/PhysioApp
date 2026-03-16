@@ -7,7 +7,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng build && npx firebase-tools deploy"
+    "deploy": "ng build && npx firebase-tools deploy",
+    "cap:sync": "npx cap sync",
+    "cap:open": "npx cap open android",
+    "build:mobile": "npm run build && npx cap sync"
   },
   "private": true,
   "dependencies": {
@@ -22,6 +25,9 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
+    "@capacitor/android": "^8.2.0",
+    "@capacitor/cli": "^7.6.0",
+    "@capacitor/core": "^8.2.0",
     "@google/generative-ai": "^0.24.1",
     "firebase": "^12.9.0",
     "jspdf": "^4.2.0",

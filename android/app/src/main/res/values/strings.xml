@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PhysioApp</string>
+    <string name="title_activity_main">PhysioApp</string>
+    <string name="package_name">com.physioapp.app</string>
+    <string name="custom_url_scheme">com.physioapp.app</string>
+</resources>
