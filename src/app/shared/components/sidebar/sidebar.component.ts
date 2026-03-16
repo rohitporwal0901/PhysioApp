@@ -79,7 +79,7 @@ export class SidebarComponent {
           { label: 'My Dashboard', icon: 'layout-dashboard', path: '/patient/dashboard' },
           { label: 'Book Session', icon: 'calendar-plus', path: '/patient/book-appointment', badge: 'New', badgeColor: 'bg-status-success/10 text-status-success dark:bg-status-success/20' },
           { label: 'My Sessions', icon: 'activity', path: '/patient/sessions' },
-          { label: 'Lab Services', icon: 'microscope', path: '/patient/lab-services' },
+          { label: 'Diagnostic Labs', icon: 'microscope', path: '/patient/lab-services' },
         ];
       case 'admin':
       default:
@@ -87,7 +87,7 @@ export class SidebarComponent {
           { label: 'Dashboard', icon: 'layout-dashboard', path: '/admin/dashboard' },
           { label: 'Doctors', icon: 'activity', path: '/admin/doctors' },
           { label: 'Patients', icon: 'users', path: '/admin/patients' },
-          { label: 'Lab Technicians', icon: 'microscope', path: '/admin/lab-technicians' },
+          { label: 'Diagnostic Labs', icon: 'microscope', path: '/admin/lab-technicians' },
         ];
     }
   }

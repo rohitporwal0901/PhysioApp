@@ -14,15 +14,15 @@ import { MockApiService } from '../../../core/services/mock-api.service';
 })
 export class LabServicesComponent implements OnInit {
     private api = inject(MockApiService);
-    labTechs$: Observable<any[]> | undefined;
+    labs$: Observable<any[]> | undefined;
 
     ngOnInit() {
-        this.labTechs$ = this.api.getLabTechnicians().pipe(
+        this.labs$ = this.api.getLabTechnicians().pipe(
             map(techs => techs.filter(t => t.active))
         );
     }
 
-    callTech(phone: string) {
+    callLab(phone: string) {
         if (phone) window.open(`tel:${phone}`, '_self');
         else alert('Phone number not available');
     }

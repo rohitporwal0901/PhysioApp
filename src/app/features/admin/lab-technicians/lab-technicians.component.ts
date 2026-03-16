@@ -16,9 +16,9 @@ import { MockApiService } from '../../../core/services/mock-api.service';
 export class LabTechniciansComponent implements OnInit {
     private api = inject(MockApiService);
     
-    allTechs: any[] = [];
-    filteredTechs: any[] = [];
-    paginatedTechs: any[] = [];
+    allLabs: any[] = [];
+    filteredLabs: any[] = [];
+    paginatedLabs: any[] = [];
     
     // Pagination
     currentPage = 1;
@@ -28,53 +28,46 @@ export class LabTechniciansComponent implements OnInit {
     showAddModal = false;
     searchQuery = '';
 
-    newTech = {
+    newLab = {
         name: '',
-        specialty: '',
         phone: '',
         whatsapp: '',
         image: '',
-        qualification: '',
-        experience: ''
+        address: '',
+        experience: 'Open 24/7'
     };
 
-    specialties = [
-        'Blood Collection', 'Imaging/Radiology', 'Pathology Specialist', 
-        'ECG Technician', 'Diagnostic Support', 'Home Sample Collection'
-    ];
-
     ngOnInit() {
-        this.api.getLabTechnicians().subscribe(techs => {
-            this.allTechs = techs;
+        this.api.getLabTechnicians().subscribe(labs => {
+            this.allLabs = labs;
             this.applyFilters();
         });
     }
 
     applyFilters() {
         if (!this.searchQuery) {
-            this.filteredTechs = this.allTechs;
+            this.filteredLabs = this.allLabs;
         } else {
             const query = this.searchQuery.toLowerCase();
-            this.filteredTechs = this.allTechs.filter(tech => 
-                tech.name.toLowerCase().includes(query) || 
-                tech.specialty.toLowerCase().includes(query)
+            this.filteredLabs = this.allLabs.filter(lab => 
+                lab.name.toLowerCase().includes(query)
             );
         }
-        this.totalPages = Math.ceil(this.filteredTechs.length / this.pageSize);
+        this.totalPages = Math.ceil(this.filteredLabs.length / this.pageSize);
         this.currentPage = 1;
-        this.updatePaginatedTechs();
+        this.updatePaginatedLabs();
     }
 
-    updatePaginatedTechs() {
+    updatePaginatedLabs() {
         const start = (this.currentPage - 1) * this.pageSize;
         const end = start + this.pageSize;
-        this.paginatedTechs = this.filteredTechs.slice(start, end);
+        this.paginatedLabs = this.filteredLabs.slice(start, end);
     }
 
     setPage(page: number) {
         if (page >= 1 && page <= this.totalPages) {
             this.currentPage = page;
-            this.updatePaginatedTechs();
+            this.updatePaginatedLabs();
         }
     }
 
@@ -83,27 +76,26 @@ export class LabTechniciansComponent implements OnInit {
     }
 
     openAddModal() {
-        this.newTech = { 
+        this.newLab = { 
             name: '', 
-            specialty: '', 
             phone: '', 
             whatsapp: '', 
             image: '',
-            qualification: '',
-            experience: ''
+            address: '',
+            experience: 'Open 24/7'
         };
         this.showAddModal = true;
     }
 
-    addTech() {
-        if (this.newTech.name && this.newTech.specialty) {
-            this.api.addLabTechnician(this.newTech);
+    addLab() {
+        if (this.newLab.name) {
+            this.api.addLabTechnician(this.newLab);
             this.showAddModal = false;
         }
     }
 
-    removeTech(id: string) {
-        if (confirm('Are you sure you want to remove this lab technician?')) {
+    removeLab(id: string) {
+        if (confirm('Are you sure you want to remove this lab?')) {
             this.api.removeUser(id);
         }
     }
