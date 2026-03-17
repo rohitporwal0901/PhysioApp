@@ -1,0 +1,100 @@
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    &::-webkit-scrollbar {
+        display: none; /* Chrome, Safari and Opera */
+    }
+}
+
+.agenda-slider-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 1rem;
+    gap: 1rem;
+
+    @media (min-width: 768px) {
+        flex-direction: column;
+        overflow-x: hidden;
+        overflow-y: auto;
+        scroll-snap-type: none;
+        padding-bottom: 0;
+    }
+}
+
+.agenda-slide-item {
+    flex-shrink: 0;
+    width: 280px;
+    scroll-snap-align: center;
+    transition: transform 0.3s ease;
+
+    @media (min-width: 768px) {
+        width: 100%;
+        scroll-snap-align: none;
+    }
+    
+    &:active {
+        transform: scale(0.98);
+    }
+}
+
+/* ── DETAIL UI IMPROVEMENTS ── */
+.detail-header-compact {
+    padding: 1.5rem;
+    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.05), transparent);
+    
+    :host-context(.dark) & {
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent);
+    }
+    
+    @media (max-width: 768px) {
+        padding: 1rem;
+        text-align: center;
+    }
+}
+
+.detail-grid-compact {
+    display: grid;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    
+    @media (max-width: 640px) {
+        padding: 1rem;
+        gap: 1rem;
+    }
+}
+
+.detail-item-box {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+    
+    :host-context(.dark) & {
+        border-bottom-color: rgba(30, 41, 59, 1);
+    }
+    
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.info-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.info-value {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #1e293b;
+    
+    :host-context(.dark) & {
+        color: white;
+    }
+}

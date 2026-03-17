@@ -2,106 +2,80 @@
 
     <!-- Left Side: Agenda Timeline -->
     <div
-        class="w-full md:w-1/3 lg:w-1/4 flex flex-col min-h-[400px] md:min-h-0 bg-surface dark:bg-slate-800 rounded-3xl shadow-glass border border-slate-100 dark:border-slate-700 overflow-hidden transition-colors">
-        <div
-            class="px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800/80 z-10 transition-colors">
+        class="w-full md:w-1/3 lg:w-1/4 flex flex-col min-h-0 bg-surface dark:bg-slate-800 rounded-3xl shadow-glass border border-slate-100 dark:border-slate-700 overflow-hidden transition-colors flex-shrink-0">
+        
+        <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800/80 z-10 transition-colors">
             <h2 class="text-xl font-bold text-slate-800 dark:text-white tracking-tight">Your Agenda</h2>
             <div class="mt-3 flex items-center justify-between">
-                <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 outline-none focus:ring-2 focus:ring-primary-500/50">
+                <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 outline-none focus:ring-2 focus:ring-primary-500/50">
             </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto px-4 py-6 scroll-smooth">
-            <div class="relative">
+        <!-- Scrollable Container: Horizontal Slider on Mobile, Vertical on Desktop -->
+        <div class="flex-1 overflow-hidden">
+            <div class="relative h-full">
                 <ng-container *ngIf="!isLoading; else loadingAgenda">
-                    <div *ngIf="filteredAgenda.length === 0" class="text-center py-10 px-4">
-                        <i-lucide name="calendar" class="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-3"></i-lucide>
-                        <p class="text-slate-500 dark:text-slate-400 text-sm">No appointments for this date.</p>
-                    </div>
-
-                    <!-- Timeline line -->
+                    <!-- Timeline line - Desktop Only -->
                     <div *ngIf="filteredAgenda.length > 0"
-                        class="absolute inset-y-0 left-6 sm:left-8 w-px bg-slate-200 dark:bg-slate-700 transition-colors">
+                        class="hidden md:block absolute inset-y-0 left-8 w-px bg-slate-200 dark:bg-slate-700 transition-colors">
                     </div>
 
-                    <ul class="space-y-6 relative">
-                        <li *ngFor="let apt of filteredAgenda; let i = index" class="relative transition-all duration-300 group"
+                    <div *ngIf="filteredAgenda.length === 0" class="text-center py-20 px-4">
+                        <i-lucide name="calendar" class="w-12 h-12 text-slate-200 dark:text-slate-700 mx-auto mb-4"></i-lucide>
+                        <p class="text-slate-500 dark:text-slate-400 font-medium">No appointments for today.</p>
+                    </div>
+
+                    <ul class="agenda-slider-container scrollbar-hide px-4 md:px-0 md:space-y-6 md:py-6">
+                        <li *ngFor="let apt of filteredAgenda; let i = index" 
+                            class="agenda-slide-item relative group"
                             (click)="selectAppointment(apt)">
 
-                            <!-- Active state visual indicator -->
-                            <div class="absolute -inset-2 rounded-2xl transition-colors duration-200 z-0"
-                                [ngClass]="{'bg-primary-50 dark:bg-primary-900/10': selectedAppointment?.id === apt.id, 'group-hover:bg-slate-50 dark:group-hover:bg-slate-700/50': selectedAppointment?.id !== apt.id, 'cursor-pointer': true}">
+                            <!-- Active state background -->
+                            <div class="absolute -inset-1 md:-inset-2 rounded-2xl transition-all duration-300 z-0"
+                                [ngClass]="{'bg-primary-500/10 dark:bg-primary-500/20': selectedAppointment?.id === apt.id, 'group-hover:bg-slate-50 dark:group-hover:bg-slate-700/30': selectedAppointment?.id !== apt.id}">
                             </div>
 
-                            <div class="relative z-10 flex items-start">
-
-                                <!-- Timeline Dot & Time -->
-                                <div class="flex flex-col items-center mr-4 w-16 sm:w-20 pt-1">
-                                    <!-- Patient Avatar Small -->
-                                    <div class="h-10 w-10 rounded-xl overflow-hidden mb-2 ring-2 ring-white dark:ring-slate-800 shadow-sm">
+                            <div class="relative z-10 flex items-center p-1">
+                                <!-- Avatar & Time -->
+                                <div class="flex flex-col items-center mr-4 w-14 md:w-20">
+                                    <div class="h-12 w-12 rounded-2xl overflow-hidden mb-2 ring-2 ring-white dark:ring-slate-800 shadow-md relative group-hover:scale-105 transition-transform">
                                         <img [src]="getPatientImage(apt, i)" class="w-full h-full object-cover">
-                                    </div>
-                                    <span
-                                        class="text-xs font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap transition-colors">
-                                        {{ apt.time }}
-                                    </span>
-                                    <span
-                                        class="text-[10px] font-medium text-slate-400 dark:text-slate-500 mt-0.5 transition-colors">
-                                        {{ apt.date | date:'MMM d' }}
-                                    </span>
-
-                                    <div class="absolute left-6 sm:left-8 transform -translate-x-1/2 mt-10">
-                                        <div class="w-3 h-3 rounded-full border-2 border-white dark:border-slate-800 ring-4 ring-white dark:ring-slate-800 transition-colors"
+                                        <div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white dark:border-slate-800 shadow-sm"
                                             [ngClass]="{
-                           'bg-green-500': apt.status === 'confirmed',
-                           'bg-blue-500': apt.status === 'completed',
-                           'bg-amber-500': apt.status === 'pending',
-                           'bg-red-500': apt.status === 'cancelled'
-                         }">
+                                                'bg-green-500': apt.status === 'confirmed',
+                                                'bg-blue-500': apt.status === 'completed',
+                                                'bg-amber-500': apt.status === 'pending',
+                                                'bg-red-500': apt.status === 'cancelled'
+                                            }">
                                         </div>
                                     </div>
-                                </div>
-
-                                <!-- Appointment Card Content -->
-                                <div class="flex-1 rounded-2xl border p-4 shadow-sm transition-all duration-200 pointer-events-none"
-                                    [ngClass]="{
-                       'border-primary-200 dark:border-primary-700 bg-white dark:bg-slate-800 scale-[1.02] shadow-primary-500/10 dark:shadow-primary-900/20': selectedAppointment?.id === apt.id,
-                       'border-slate-100 dark:border-slate-700 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm': selectedAppointment?.id !== apt.id
-                     }">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <h3
-                                            class="text-base font-bold text-slate-900 dark:text-white transition-colors">
-                                            {{ apt.patientName }}</h3>
-                                    </div>
-                                    <p
-                                        class="text-sm font-medium text-primary-600 dark:text-primary-400 mb-3 transition-colors">
-                                        {{ apt.type }}</p>
-
-                                    <span
-                                        class="px-2.5 py-1 inline-flex items-center text-xs font-semibold rounded-full w-max transition-colors"
-                                        [ngClass]="getStatusClass(apt.status)">
-                                        <!-- Small icon prefix -->
-                                        <span class="w-1.5 h-1.5 rounded-full mr-1.5 transition-colors" [ngClass]="{
-                            'bg-green-500': apt.status === 'confirmed',
-                            'bg-blue-500': apt.status === 'completed',
-                            'bg-amber-500': apt.status === 'pending',
-                            'bg-red-500': apt.status === 'cancelled'
-                          }"></span>
-                                        {{ apt.status | titlecase }}
+                                    <span class="text-[11px] font-black text-slate-700 dark:text-slate-300">
+                                        {{ apt.time }}
                                     </span>
                                 </div>
 
+                                <!-- Card Wrapper -->
+                                <div class="flex-1 rounded-2xl border p-4 shadow-sm transition-all duration-300 pointer-events-none"
+                                    [ngClass]="{
+                                        'border-primary-500/30 bg-white dark:bg-slate-800 shadow-lg shadow-primary-500/10': selectedAppointment?.id === apt.id,
+                                        'border-slate-100 dark:border-slate-700 bg-white/40 dark:bg-slate-800/40 backdrop-blur-md': selectedAppointment?.id !== apt.id
+                                    }">
+                                    <p class="text-[10px] font-black text-primary-500 dark:text-primary-400 uppercase tracking-widest mb-1">
+                                        {{ apt.type }}</p>
+                                    <h3 class="text-sm font-black text-slate-900 dark:text-white truncate">
+                                        {{ apt.patientName }}</h3>
+                                    <div class="mt-2 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter">
+                                        {{ apt.status }}
+                                    </div>
+                                </div>
                             </div>
                         </li>
                     </ul>
                 </ng-container>
 
                 <ng-template #loadingAgenda>
-                    <div class="space-y-8 pl-16 animate-pulse">
-                        <div *ngFor="let i of [1,2,3,4]" class="flex flex-col space-y-3">
-                            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/4"></div>
-                            <div class="h-24 bg-slate-200 dark:bg-slate-700 rounded-xl w-full"></div>
-                        </div>
+                    <div class="agenda-slider-container px-4 md:px-0">
+                        <div *ngFor="let i of [1,2,3]" class="agenda-slide-item h-28 bg-slate-100 dark:bg-slate-800/50 rounded-2xl animate-pulse"></div>
                     </div>
                 </ng-template>
             </div>
@@ -110,187 +84,164 @@
 
     <!-- Right Side: Patient Detail / Notes -->
     <div
-        class="flex-1 bg-surface dark:bg-slate-800 rounded-3xl shadow-glass border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col items-center justify-center p-8 lg:p-12 relative transition-colors">
+        class="flex-1 bg-surface dark:bg-slate-800 rounded-3xl shadow-glass border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col relative transition-colors min-w-0">
 
         <!-- Empty State -->
-        <div *ngIf="!selectedAppointment" class="text-center animate-fade-in-up max-w-sm">
+        <div *ngIf="!selectedAppointment" class="flex-1 flex flex-col items-center justify-center p-8 lg:p-12 text-center animate-fade-in-up">
             <div
                 class="mx-auto w-24 h-24 bg-primary-50 dark:bg-primary-900/20 rounded-full flex items-center justify-center mb-6 text-primary-300 dark:text-primary-600 transition-colors">
                 <i-lucide name="activity-square" class="w-12 h-12"></i-lucide>
             </div>
-            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2 transition-colors">No Appointment Selected
-            </h3>
-            <p class="text-slate-500 dark:text-slate-400 leading-relaxed transition-colors">Select an appointment from
-                your agenda timeline to view patient
-                details and update status.</p>
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2 transition-colors">No Appointment Selected</h3>
+            <p class="text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed transition-colors">Select an appointment from your agenda timeline to view patient details and update status.</p>
         </div>
 
         <!-- Active Details View -->
         <div *ngIf="selectedAppointment"
-            class="w-full h-full flex flex-col animate-fade-in-up transition-all duration-300">
+            class="w-full h-full flex flex-col animate-fade-in-up transition-all duration-300 overflow-hidden">
 
-            <!-- Patient Headers -->
-            <div
-                class="flex flex-col sm:flex-row items-center sm:items-start justify-between pb-8 border-b border-slate-100 dark:border-slate-700 flex-shrink-0 transition-colors">
-                <div class="flex items-center text-center sm:text-left mb-6 sm:mb-0">
-                    <div class="relative mr-6">
-                        <img [src]="selectedAppointment.patientImage || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedAppointment.patientName) + '&background=random&color=fff'" 
-                             class="h-16 w-16 md:h-20 md:w-20 rounded-2xl object-cover shadow-md shadow-primary-500/20" alt="">
-                    </div>
-                    <div>
-                        <h2
-                            class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight transition-colors">
-                            {{ selectedAppointment.patientName }}</h2>
-                        <div
-                            class="flex flex-col sm:flex-row items-center sm:space-x-4 mt-2 text-sm font-medium text-slate-500 dark:text-slate-400 transition-colors">
-                            <span class="flex items-center"><i-lucide name="clock" class="w-4 h-4 mr-1.5"></i-lucide> {{
-                                selectedAppointment.time }} on {{ selectedAppointment.date | date }}</span>
-                            <span class="hidden sm:inline text-slate-300 dark:text-slate-600">&bull;</span>
-                            <span class="text-primary-600 dark:text-primary-400 font-semibold transition-colors">{{
-                                selectedAppointment.type }}</span>
+            <!-- Sticky Header for Details -->
+            <div class="detail-header-compact border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div class="flex flex-col sm:flex-row items-center gap-4 md:gap-6">
+                        <div class="relative">
+                            <img [src]="selectedAppointment.patientImage || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedAppointment.patientName) + '&background=random&color=fff'" 
+                                 class="h-16 w-16 md:h-20 md:w-20 rounded-2xl md:rounded-3xl object-cover shadow-2xl ring-4 ring-white dark:ring-slate-800" alt="">
+                            <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white dark:border-slate-800 shadow-sm"
+                                [ngClass]="{
+                                    'bg-green-500': selectedAppointment.status === 'confirmed',
+                                    'bg-blue-500': selectedAppointment.status === 'completed',
+                                    'bg-amber-500': selectedAppointment.status === 'pending',
+                                    'bg-red-500': selectedAppointment.status === 'cancelled'
+                                }">
+                            </div>
                         </div>
-                        <p class="text-xs text-slate-400 mt-1">{{ selectedAppointment.patientEmail }}</p>
+                        <div class="text-center sm:text-left">
+                            <h2 class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight mb-1">
+                                {{ selectedAppointment.patientName }}
+                            </h2>
+                            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-1 text-xs font-bold uppercase tracking-wide">
+                                <span class="text-primary-600 dark:text-primary-400 font-black">{{ selectedAppointment.type }}</span>
+                                <span class="text-slate-300 dark:text-slate-600">&bull;</span>
+                                <span class="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                                    <i-lucide name="clock" class="w-3.5 h-3.5"></i-lucide> {{ selectedAppointment.time }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="flex space-x-3" *ngIf="selectedAppointment.status === 'pending'">
-                    <button (click)="rejectAppointment(selectedAppointment)"
-                        [disabled]="actionLoading"
-                        class="px-5 py-2.5 bg-white dark:bg-slate-800 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 font-medium text-sm rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-all shadow-sm flex items-center gap-2">
-                        <svg *ngIf="actionLoading" class="animate-spin h-4 w-4 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Reject
-                    </button>
-                    <button (click)="confirmAppointment(selectedAppointment)"
-                        [disabled]="actionLoading"
-                        class="px-5 py-2.5 bg-green-500 text-white font-semibold text-sm rounded-xl hover:bg-green-600 transition-all shadow-md shadow-green-500/20 flex items-center gap-2">
-                        <svg *ngIf="actionLoading" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Confirm
-                    </button>
-                </div>
+                    <!-- Action Buttons / Status -->
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <ng-container *ngIf="selectedAppointment.status === 'pending'">
+                            <button (click)="rejectAppointment(selectedAppointment)" [disabled]="actionLoading"
+                                class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 bg-red-50/50 dark:bg-red-900/10 hover:bg-red-100 transition-all flex items-center justify-center">
+                                <i-lucide *ngIf="!actionLoading" name="x-circle" class="w-4 h-4"></i-lucide>
+                                <span class="ml-2 text-sm font-bold">Reject</span>
+                            </button>
+                            <button (click)="confirmAppointment(selectedAppointment)" [disabled]="actionLoading"
+                                class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-green-500 text-white font-black text-sm shadow-lg shadow-green-500/20 hover:bg-green-600 transition-all flex items-center justify-center">
+                                <i-lucide *ngIf="!actionLoading" name="check-circle" class="w-4 h-4"></i-lucide>
+                                <span class="ml-2">Confirm</span>
+                            </button>
+                        </ng-container>
 
-                <div class="flex items-center gap-3" *ngIf="selectedAppointment.status !== 'pending'">
-                   <span class="px-4 py-2 rounded-xl text-sm font-bold capitalize" [ngClass]="getStatusClass(selectedAppointment.status)">
-                       Status: {{ selectedAppointment.status }}
-                   </span>
-                   
-                   <!-- Mark as Completed button for Confirmed appointments -->
-                   <button *ngIf="selectedAppointment.status === 'confirmed'" 
-                       (click)="completeAppointment(selectedAppointment)"
-                       [disabled]="actionLoading"
-                       class="px-5 py-2.5 bg-blue-500 text-white font-semibold text-sm rounded-xl hover:bg-blue-600 transition-all shadow-md shadow-blue-500/20 flex items-center gap-2">
-                       <svg *ngIf="actionLoading" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                       <i-lucide *ngIf="!actionLoading" name="check-circle" class="w-4 h-4"></i-lucide> 
-                       {{ actionLoading ? 'Processing...' : 'Mark as Completed' }}
-                   </button>
+                        <ng-container *ngIf="selectedAppointment.status !== 'pending'">
+                            <div class="status-badge px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-100 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm"
+                                [ngClass]="getStatusClass(selectedAppointment.status)">
+                                {{ selectedAppointment.status }}
+                            </div>
+                            
+                            <button *ngIf="selectedAppointment.status === 'confirmed'" 
+                                (click)="completeAppointment(selectedAppointment)" [disabled]="actionLoading"
+                                class="flex-1 sm:flex-none px-5 py-2.5 bg-blue-500 text-white font-black text-sm rounded-xl hover:bg-blue-600 transition-all shadow-xl shadow-blue-500/20 flex items-center justify-center">
+                                <i-lucide name="check-circle" class="w-4 h-4 mr-2"></i-lucide>
+                                Mark Done
+                            </button>
+                        </ng-container>
+                    </div>
                 </div>
             </div>
 
-            <!-- Notes Layout -->
-            <div class="flex-1 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8 overflow-y-auto pr-2">
-
-                <!-- Clinical Notes Area -->
-                <div class="lg:col-span-2 space-y-6">
-                    <div
-                        class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 h-full flex flex-col transition-colors">
-                        <h3
-                            class="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center transition-colors">
-                            <i-lucide name="clipboard-list" class="w-5 h-5 mr-2 text-primary-500"></i-lucide>
-                            Appointment Details
-                        </h3>
-                        <div class="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 text-slate-700 dark:text-slate-200">
-                           <div class="flex items-center gap-6 mb-8 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
-                               <div class="w-20 h-20 rounded-2xl overflow-hidden shadow-lg ring-4 ring-white dark:ring-slate-800">
-                                   <img [src]="getPatientImage(selectedAppointment, 0)" 
-                                        class="w-full h-full object-cover">
-                               </div>
-                               <div>
-                                   <h4 class="text-xl font-black text-slate-800 dark:text-white leading-tight">{{ selectedAppointment.patientName }}</h4>
-                                   <p class="text-sm font-medium text-slate-500">{{ selectedAppointment.patientCondition || 'General Consultation' }}</p>
-                                   <div class="flex items-center gap-2 mt-2">
-                                       <span class="px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase rounded-md border border-blue-100 dark:border-blue-800">
-                                           #PAT-{{ selectedAppointment.patientId.slice(-4) || 'XXXX' }}
-                                       </span>
-                                   </div>
-                               </div>
-                           </div>
-                           
-                           <div class="grid grid-cols-2 gap-6">
-                               <div>
-                                   <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Patient Name</label>
-                                   <p class="text-base font-bold text-slate-800 dark:text-white">{{ selectedAppointment.patientName }}</p>
-                               </div>
-                               <div>
-                                   <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Gender</label>
-                                   <p class="text-sm font-semibold">{{ selectedAppointment.patientGender || 'Not Specified' }}</p>
-                               </div>
-                               <div>
-                                   <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Phone Number</label>
-                                   <p class="text-sm font-semibold">{{ selectedAppointment.patientPhone || 'No Phone' }}</p>
-                               </div>
-                               <div>
-                                   <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Appointment Type</label>
-                                   <p class="text-sm font-bold text-primary-500">{{ selectedAppointment.type }}</p>
-                               </div>
-                               <div class="col-span-2">
-                                   <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Condition / Complaint</label>
-                                   <p class="text-sm font-medium text-slate-600 dark:text-slate-300">{{ selectedAppointment.patientCondition || 'General Consultation' }}</p>
-                               </div>
-
-                               <div class="col-span-2" *ngIf="selectedAppointment.notes">
-                                   <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Patient's Initial Complaint</label>
-                                   <div class="mt-1 p-3 bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-800/30">
-                                       <p class="text-sm italic text-slate-600 dark:text-slate-400">"{{ selectedAppointment.notes }}"</p>
-                                   </div>
-                               </div>
-
-                               <div class="col-span-2 pt-4 border-t border-slate-100 dark:border-slate-700">
-                                   <label class="text-sm font-bold text-slate-800 dark:text-white mb-2 block">Physiotherapy Treatment Notes</label>
-                                   <textarea 
-                                       [(ngModel)]="clinicalNotes"
-                                       [disabled]="selectedAppointment.status === 'completed' || selectedAppointment.status === 'cancelled'"
-                                       placeholder="Enter treatment plan, exercises prescribed, and recovery progress..."
-                                       class="w-full h-32 p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary-500/50 outline-none resize-none transition-all"
-                                   ></textarea>
-                                   <p *ngIf="selectedAppointment.status === 'completed'" class="text-[10px] text-slate-400 mt-1 italic">
-                                       Treatment history is locked after completion.
-                                   </p>
-                               </div>
-                           </div>
+            <!-- Content Area Scrollable -->
+            <div class="flex-1 overflow-y-auto detail-grid-compact scrollbar-hide">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Main Info Column -->
+                    <div class="lg:col-span-2 space-y-6">
+                        
+                        <!-- Appointment Metadata Grid -->
+                        <div class="bg-white dark:bg-slate-900/40 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+                            <div class="px-6 py-4 bg-slate-50/50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800">
+                                <h3 class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center">
+                                    <i-lucide name="info" class="w-3.5 h-3.5 mr-2"></i-lucide> Patient Overview
+                                </h3>
+                            </div>
+                            <div class="p-6 grid grid-cols-2 md:grid-cols-3 gap-6">
+                                <div class="detail-item-box col-span-2 md:col-span-1">
+                                    <span class="info-label">Full Name</span>
+                                    <span class="info-value">{{ selectedAppointment.patientName }}</span>
+                                </div>
+                                <div class="detail-item-box">
+                                    <span class="info-label">Gender</span>
+                                    <span class="info-value capitalize">{{ selectedAppointment.patientGender || 'N/A' }}</span>
+                                </div>
+                                <div class="detail-item-box">
+                                    <span class="info-label">Appointment ID</span>
+                                    <span class="info-value text-primary-500">#PAT-{{ (selectedAppointment.patientId | slice:-4) || 'XXXX' }}</span>
+                                </div>
+                                <div class="detail-item-box col-span-2 md:col-span-1">
+                                    <span class="info-label">Contact</span>
+                                    <span class="info-value mb-1 block">{{ selectedAppointment.patientPhone || 'N/A' }}</span>
+                                    <span class="text-[10px] text-slate-400 font-medium lowercase">{{ selectedAppointment.patientEmail }}</span>
+                                </div>
+                                <div class="detail-item-box col-span-2">
+                                    <span class="info-label">Condition</span>
+                                    <span class="info-value">{{ selectedAppointment.patientCondition || 'General Consultation' }}</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Right Side Stats / Vitals -->
-                <div class="space-y-6">
-                    <div
-                        class="bg-primary-50 dark:bg-primary-900/20 p-5 rounded-2xl border border-primary-100 dark:border-primary-800 transition-colors">
-                        <h4
-                            class="text-xs font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-2 transition-colors">
-                            Quick Actions</h4>
+                        <!-- Initial Complaint Box -->
+                        <div *ngIf="selectedAppointment.notes" class="bg-blue-50/30 dark:bg-blue-900/10 p-5 rounded-3xl border border-blue-100/50 dark:border-blue-900/20">
+                            <h3 class="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-3 flex items-center">
+                                <i-lucide name="message-square" class="w-3.5 h-3.5 mr-2"></i-lucide> Patient's Note
+                            </h3>
+                            <p class="text-sm italic text-slate-600 dark:text-slate-300 leading-relaxed font-medium">"{{ selectedAppointment.notes }}"</p>
+                        </div>
+
+                        <!-- Clinical Notes -->
                         <div class="space-y-3">
-                           <button (click)="sendWhatsApp(selectedAppointment)"
-                               class="w-full text-left p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-sm font-semibold hover:border-primary-300 transition-all flex items-center justify-between group">
-                               <div class="flex items-center gap-2">
-                                   <i-lucide name="message-circle" class="w-4 h-4 text-green-500 group-hover:scale-110 transition-transform"></i-lucide>
-                                   <span>Send WhatsApp Message</span>
-                               </div>
-                               <i-lucide name="chevron-right" class="w-4 h-4"></i-lucide>
-                           </button>
+                            <label class="text-xs font-black text-slate-800 dark:text-white uppercase tracking-widest block ml-1">Treatment Plan & Notes</label>
+                            <textarea 
+                                [(ngModel)]="clinicalNotes"
+                                [disabled]="selectedAppointment.status === 'completed' || selectedAppointment.status === 'cancelled'"
+                                placeholder="Describe recovery progress and exercise plans..."
+                                class="w-full h-40 p-5 bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-[2rem] text-sm focus:border-primary-500/50 outline-none resize-none shadow-glass transition-all"
+                            ></textarea>
+                            <p *ngIf="selectedAppointment.status === 'completed'" class="text-[10px] text-slate-400 font-bold italic ml-2">
+                                &bull; History finalized.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Side Column: Stats & Actions -->
+                    <div class="space-y-6">
+                        <div class="bg-emerald-50 dark:bg-emerald-950/20 p-5 rounded-3xl border border-emerald-100 dark:border-emerald-900/30 shadow-glass">
+                            <h4 class="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-4">Patient Outreach</h4>
+                            <button (click)="sendWhatsApp(selectedAppointment!)"
+                               class="w-full p-4 rounded-2xl bg-white dark:bg-slate-900 border border-emerald-100 dark:border-emerald-800 text-sm font-black text-slate-800 dark:text-white hover:border-emerald-500 transition-all flex items-center justify-between group shadow-sm">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
+                                        <i-lucide name="message-circle" class="w-4 h-4 text-emerald-500"></i-lucide>
+                                    </div>
+                                    <span>WhatsApp</span>
+                                </div>
+                                <i-lucide name="arrow-right" class="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform"></i-lucide>
+                            </button>
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 </div>
