@@ -38,7 +38,7 @@ export class DoctorsComponent implements OnInit {
 
     // Pagination
     currentPage = 1;
-    pageSize = 8;
+    pageSize = 4;
     totalPages = 1;
 
     showAddModal = false;
@@ -48,7 +48,12 @@ export class DoctorsComponent implements OnInit {
         name: '',
         specialty: '',
         image: '',
-        phone: ''
+        phone: '',
+        experience: 0,
+        qualification: '',
+        consultationFee: 0,
+        city: '',
+        state: ''
     };
 
     specialties = [
@@ -102,7 +107,11 @@ export class DoctorsComponent implements OnInit {
     }
 
     openAddModal() {
-        this.newDoctor = { name: '', specialty: '', image: '', phone: '' };
+        this.newDoctor = {
+            name: '', specialty: '', image: '', phone: '',
+            experience: 0, qualification: '', consultationFee: 0,
+            city: '', state: ''
+        };
         this.showAddModal = true;
     }
 
@@ -112,7 +121,14 @@ export class DoctorsComponent implements OnInit {
             try {
                 await this.api.addDoctor({
                     ...this.newDoctor,
-                    fullName: this.newDoctor.name // Dashboard expects fullName
+                    fullName: this.newDoctor.name, // Compatibility
+                    specialization: this.newDoctor.specialty, // Compatibility
+                    active: true,
+                    available: true,
+                    isActive: true,
+                    isAvailable: true,
+                    role: 'doctor',
+                    createdAt: new Date().toISOString()
                 });
                 this.toast.success('New doctor profile has been created.', 'Doctor Added');
                 this.showAddModal = false;

@@ -13,7 +13,8 @@ import {
   ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
   TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone,
   LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut, Sparkles, MessageSquare, Loader,
-  Accessibility, Footprints, Brain, Cpu, Map, Microscope, Info, AlertTriangle
+  Accessibility, Footprints, Brain, Cpu, Map, Microscope, Info, AlertTriangle,
+  SearchX, Briefcase, ExternalLink, IndianRupee
 } from 'lucide-angular';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -47,7 +48,8 @@ export const appConfig: ApplicationConfig = {
       ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
       TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone,
       LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut, Sparkles, MessageSquare, Loader,
-      Accessibility, Footprints, Brain, Cpu, Map, Microscope, Info, AlertTriangle
+      Accessibility, Footprints, Brain, Cpu, Map, Microscope, Info, AlertTriangle,
+      SearchX, Briefcase, ExternalLink, IndianRupee
     }))
   ]
 };
