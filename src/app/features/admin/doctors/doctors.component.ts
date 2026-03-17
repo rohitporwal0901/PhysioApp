@@ -42,6 +42,8 @@ export class DoctorsComponent implements OnInit {
     totalPages = 1;
 
     showAddModal = false;
+    showViewModal = false;
+    selectedDoctor: any = null;
     searchQuery = '';
 
     newDoctor = {
@@ -104,6 +106,11 @@ export class DoctorsComponent implements OnInit {
 
     onSearchChange() {
         this.applyFilters();
+    }
+
+    openViewModal(doc: any) {
+        this.selectedDoctor = doc;
+        this.showViewModal = true;
     }
 
     openAddModal() {
