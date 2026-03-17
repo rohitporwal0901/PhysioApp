@@ -363,9 +363,9 @@ export class MySessionsComponent implements OnInit {
         }).then(({ uri }) => {
           return CapShare.share({
             title: 'PhysioPro Clinical Report',
-            text: `Rehabilitation Roadmap for ${session.patientName}`,
-            url: uri, // Share the local file URI
-            dialogTitle: 'Share Clinical Report'
+            text: `Clinical Report for ${session.patientName}`,
+            files: [uri], // Use files array for native sharing
+            dialogTitle: 'Share Report'
           });
         }).catch(err => {
           console.error('Native share failed:', err);
