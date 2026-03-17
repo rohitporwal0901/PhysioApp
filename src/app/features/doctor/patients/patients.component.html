@@ -6,19 +6,19 @@
             <h2 class="text-2xl font-bold text-slate-800 dark:text-white tracking-tight mb-2">My Patients</h2>
             <p class="text-slate-500 dark:text-slate-400 text-sm">View your active and discharged patient records.</p>
         </div>
-        <div class="flex items-center space-x-3 mt-4 md:mt-0">
+        <!-- <div class="flex items-center space-x-3 mt-4 md:mt-0">
             <div class="relative w-full md:w-64">
                 <i-lucide name="search"
                     class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i-lucide>
                 <input type="text" placeholder="Search patients..."
                     class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none dark:text-white transition-colors">
             </div>
-            <!-- Doctor usually doesn't add patient directly, but let's keep a button for e.g. Add Notes -->
+            Doctor usually doesn't add patient directly, but let's keep a button for e.g. Add Notes
             <button
                 class="flex items-center justify-center bg-primary-500 hover:bg-primary-600 text-white font-bold py-2.5 px-6 rounded-xl transition-colors shadow-md shadow-primary-500/20 whitespace-nowrap">
                 <i-lucide name="plus" class="w-4 h-4 mr-2"></i-lucide> Action
             </button>
-        </div>
+        </div> -->
     </div>
 
     <!-- Patients Grid -->
@@ -33,19 +33,23 @@
                     <div class="p-6 pb-4">
                         <div class="flex items-start justify-between mb-4">
                             <div class="relative">
-                                <div class="w-16 h-16 rounded-2xl overflow-hidden ring-4 ring-white dark:ring-slate-700 shadow-md">
-                                    <img [src]="getPatientImage(p, i)" 
-                                         alt="Patient"
-                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                                <div
+                                    class="w-16 h-16 rounded-2xl overflow-hidden ring-4 ring-white dark:ring-slate-700 shadow-md">
+                                    <img [src]="getPatientImage(p, i)" alt="Patient"
+                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                                 </div>
-                                <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-status-success rounded-full border-2 border-white dark:border-slate-800 shadow-sm"></div>
+                                <div
+                                    class="absolute -bottom-1 -right-1 w-5 h-5 bg-status-success rounded-full border-2 border-white dark:border-slate-800 shadow-sm">
+                                </div>
                             </div>
-                            <span class="px-3 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-[10px] font-bold uppercase tracking-widest rounded-full">
+                            <span
+                                class="px-3 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-[10px] font-bold uppercase tracking-widest rounded-full">
                                 #PAT-{{ p.uid?.slice(-4) || 'XXXX' }}
                             </span>
                         </div>
 
-                        <h3 class="text-lg font-black text-slate-800 dark:text-white leading-tight mb-1 group-hover:text-primary-500 transition-colors">
+                        <h3
+                            class="text-lg font-black text-slate-800 dark:text-white leading-tight mb-1 group-hover:text-primary-500 transition-colors">
                             {{ p.name }}
                         </h3>
                         <div class="flex items-center text-xs text-slate-400 dark:text-slate-500 font-medium">
@@ -57,26 +61,33 @@
                     <!-- Details Section -->
                     <div class="px-6 space-y-4 flex-1">
                         <!-- Condition -->
-                        <div class="p-3 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-700/50">
-                            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Chief Complaint</label>
-                            <p class="text-sm font-bold text-slate-700 dark:text-slate-300 line-clamp-1">{{ p.condition || 'General Observation' }}</p>
+                        <div
+                            class="p-3 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-700/50">
+                            <label
+                                class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Chief
+                                Complaint</label>
+                            <p class="text-sm font-bold text-slate-700 dark:text-slate-300 line-clamp-1">{{ p.condition
+                                || 'General Observation' }}</p>
                         </div>
 
                         <!-- Upcoming Session Card -->
                         <div class="p-4 rounded-2xl border-2 border-dashed transition-colors"
-                             [ngClass]="p.nextSession ? 'bg-primary-50/50 dark:bg-primary-900/10 border-primary-100 dark:border-primary-800/30' : 'bg-slate-50/30 dark:bg-slate-900/20 border-slate-100 dark:border-slate-800'">
-                            <label class="text-[9px] font-black text-primary-500 uppercase tracking-widest block mb-2">Upcoming Session</label>
-                            
+                            [ngClass]="p.nextSession ? 'bg-primary-50/50 dark:bg-primary-900/10 border-primary-100 dark:border-primary-800/30' : 'bg-slate-50/30 dark:bg-slate-900/20 border-slate-100 dark:border-slate-800'">
+                            <label
+                                class="text-[9px] font-black text-primary-500 uppercase tracking-widest block mb-2">Upcoming
+                                Session</label>
+
                             <div *ngIf="p.nextSession" class="flex items-center">
                                 <div class="mr-3 bg-white dark:bg-slate-800 p-2 rounded-xl shadow-sm">
                                     <i-lucide name="calendar" class="w-4 h-4 text-primary-500"></i-lucide>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-bold text-slate-800 dark:text-white">{{ p.nextSession.date | date:'MMM d, E' }}</p>
+                                    <p class="text-xs font-bold text-slate-800 dark:text-white">{{ p.nextSession.date |
+                                        date:'MMM d, E' }}</p>
                                     <p class="text-[10px] font-medium text-slate-500">{{ p.nextSession.time }}</p>
                                 </div>
                             </div>
-                            
+
                             <div *ngIf="!p.nextSession" class="flex items-center text-slate-400 italic">
                                 <i-lucide name="calendar-off" class="w-4 h-4 mr-2 opacity-50"></i-lucide>
                                 <span class="text-[10px] font-medium">No sessions scheduled</span>
@@ -86,11 +97,13 @@
 
                     <!-- Footer Actions -->
                     <div class="p-6 pt-4 mt-auto border-t border-slate-50 dark:border-slate-700/50 flex space-x-2">
-                        <button class="flex-1 py-3 bg-slate-900 dark:bg-slate-700 hover:bg-primary-600 dark:hover:bg-primary-500 text-white text-xs font-bold rounded-2xl transition-all shadow-lg shadow-slate-900/10 hover:shadow-primary-500/30 flex items-center justify-center">
+                        <button
+                            class="flex-1 py-3 bg-slate-900 dark:bg-slate-700 hover:bg-primary-600 dark:hover:bg-primary-500 text-white text-xs font-bold rounded-2xl transition-all shadow-lg shadow-slate-900/10 hover:shadow-primary-500/30 flex items-center justify-center">
                             <i-lucide name="clipboard-list" class="w-3.5 h-3.5 mr-2"></i-lucide>
                             Clinical Records
                         </button>
-                        <button class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 rounded-2xl transition-colors border border-slate-100 dark:border-slate-700">
+                        <button
+                            class="w-12 h-12 flex items-center justify-center bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-600 rounded-2xl transition-colors border border-slate-100 dark:border-slate-700">
                             <i-lucide name="message-square" class="w-4 h-4"></i-lucide>
                         </button>
                     </div>
