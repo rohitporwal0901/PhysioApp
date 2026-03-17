@@ -102,26 +102,20 @@ export class MySessionsComponent implements OnInit {
 
     // 2. Otherwise, generate new report via AI
     this.generatingReportId = session.id;
-
     let aiAnalysis;
 
     try {
-      if (session) {
-        try {
-          const aiRawResponse = await this.aiService.generateClinicalReport({
-            condition: session.patientCondition || session.type,
-            notes: (session.notes || '') + " " + (session.treatmentNotes || ""),
-            patientName: session.patientName,
-            doctorName: session.doctorName
-          });
-          aiAnalysis = this.aiService.parseAIResponse(aiRawResponse);
-        } catch (apiError) {
-          console.error("Gemini API failed, using high-quality local template:", apiError);
-          aiAnalysis = this.performLocalAIReview(session);
-        }
-      } else {
+      try {
+        const aiRawResponse = await this.aiService.generateClinicalReport({
+          condition: session.patientCondition || session.type,
+          notes: (session.notes || '') + " " + (session.treatmentNotes || ""),
+          patientName: session.patientName,
+          doctorName: session.doctorName
+        });
+        aiAnalysis = this.aiService.parseAIResponse(aiRawResponse);
+      } catch (apiError) {
+        console.error("Gemini API failed, using high-quality local template:", apiError);
         aiAnalysis = this.performLocalAIReview(session);
-        await new Promise(resolve => setTimeout(resolve, 2000));
       }
 
       // 3. PERSIST the report to database
@@ -134,15 +128,13 @@ export class MySessionsComponent implements OnInit {
           generatedAt: new Date()
         };
         this.toast.success('AI Report generated successfully!', 'Success');
+        this.generatePDF(session, aiAnalysis);
       }
-
-      this.generatePDF(session, aiAnalysis);
 
     } catch (globalError) {
       console.error("Report Generation Error:", globalError);
       this.toast.error("Could not generate report. Please try again later.", "Error");
     } finally {
-      // Stop Loading Overlay
       this.generatingReportId = null;
     }
   }
@@ -320,22 +312,36 @@ export class MySessionsComponent implements OnInit {
 
     const fileName = `Report_${session.patientName.replace(/\s+/g, '_')}.pdf`;
 
-    // MOBILE APP FIX: For Capacitor/Mobile App, sometimes .save() fails or is silent.
-    // We try to open a blob URL in a new window/tab as well.
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      try {
+    // ROBUST MOBILE DOWNLOAD: Instead of window.open, we use a hidden link approach 
+    // which is more reliable across mobile browsers and webviews like Android APK.
+    try {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobile) {
         const blob = doc.output('blob');
-        const url = URL.createObjectURL(blob);
-        window.open(url, '_blank');
-      } catch (e) {
-        console.error('Blob URL failed, falling back to save', e);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup
+        setTimeout(() => {
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        }, 1000);
+        
+        this.toast.success('Report download started.', 'Mobile Download');
+      } else {
         doc.save(fileName);
+        this.toast.success('Report downloaded successfully.', 'Success');
       }
-    } else {
+    } catch (e) {
+      console.error('Download error:', e);
+      // Fallback
       doc.save(fileName);
-      this.toast.success('Report downloaded successfully.', 'Success');
     }
   }
 
