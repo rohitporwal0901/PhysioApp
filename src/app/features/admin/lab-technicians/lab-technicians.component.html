@@ -1,5 +1,4 @@
 <div class="h-full flex flex-col gap-6 max-w-7xl mx-auto pb-10">
-
     <!-- Header Controls -->
     <div
         class="flex flex-col md:flex-row justify-between items-start md:items-center p-6 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-card transition-all duration-300">
@@ -15,7 +14,7 @@
                     class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none dark:text-white transition-colors">
             </div>
             <button (click)="openAddModal()"
-                class="flex items-center justify-center bg-primary-500 hover:bg-primary-600 text-white font-bold py-2.5 px-5 rounded-xl transition-all shadow-md shadow-primary-500/25 whitespace-nowrap gap-2 active:scale-95">
+                class="flex items-center justify-center bg-primary-500 hover:bg-primary-600 text-white font-bold py-2.5 px-5 rounded-xl transition-all shadow-lg shadow-primary-500/25 whitespace-nowrap gap-2 active:scale-95">
                 <i-lucide name="plus" class="w-4 h-4"></i-lucide>
                 Add Lab
             </button>
@@ -23,86 +22,66 @@
     </div>
 
     <!-- Labs Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        <div *ngFor="let lab of paginatedLabs; let i = index"
-            class="doctor-card bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden group">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div *ngFor="let lab of paginatedLabs"
+            class="group relative bg-white dark:bg-slate-800/40 rounded-[2rem] border border-slate-100 dark:border-slate-700/50 shadow-sm hover:shadow-2xl hover:-translate-y-1 backdrop-blur-xl transition-all duration-500 overflow-hidden flex flex-col h-full">
+            
+            <!-- Decorative Gradient Backdrop -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary-500/10 dark:bg-primary-500/5 rounded-full blur-3xl group-hover:bg-primary-500/20 transition-colors duration-700"></div>
 
-            <!-- Card Header: Lab Photo & Basic Info -->
-            <div class="relative h-44 bg-slate-100 dark:bg-slate-900 overflow-hidden">
-                <img [src]="lab.image"
-                    onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Lab&background=4F46E5&color=fff&size=200'"
-                    alt="Lab Avatar"
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
-                
-                <div class="absolute bottom-4 left-5 right-5">
-                    <h3 class="text-white font-black text-xl leading-tight drop-shadow-lg">{{ lab.name }}</h3>
-                    <p class="text-white/80 text-xs font-bold uppercase tracking-widest mt-0.5">Diagnostic Services</p>
+            <!-- Card Body -->
+            <div class="p-5 flex-1 space-y-4">
+                <!-- Top Row: Avatar & Status -->
+                <div class="flex items-start justify-between">
+                    <div class="relative">
+                        <img [src]="lab.image"
+                            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=' + (lab.fullName || lab.name) + '&background=4F46E5&color=fff'"
+                            class="w-16 h-16 rounded-2xl object-cover ring-2 ring-white dark:ring-slate-700 shadow-md group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-800 shadow-sm"></div>
+                    </div>
+                    <span class="px-2.5 py-0.5 bg-slate-100 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 text-[9px] font-black uppercase tracking-widest rounded-md border border-slate-200/50 dark:border-slate-600/30">
+                        {{ (lab.isAvailable || lab.available) ? 'Online' : 'Offline' }}
+                    </span>
                 </div>
-            </div>
 
-            <div class="p-6">
-                <!-- Management Toggles Section -->
-                <div class="space-y-4 mb-6">
-                    <!-- Toggle 1: Visibility -->
-                    <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-900/30 transition-all group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center transition-transform group-hover:scale-110">
-                                <i-lucide [name]="lab.active ? 'eye' : 'eye-off'" 
-                                          [class]="lab.active ? 'text-emerald-500' : 'text-slate-400'" 
-                                          class="w-5 h-5"></i-lucide>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Portal Listing</span>
-                                <span class="text-xs font-bold text-slate-700 dark:text-slate-200">{{ lab.active ? 'VISIBLE' : 'HIDDEN' }}</span>
-                            </div>
+                <!-- Info Section -->
+                <div>
+                    <h3 class="text-base font-black text-slate-800 dark:text-white leading-tight group-hover:text-primary-500 transition-colors">{{ lab.fullName || lab.name }}</h3>
+                    <p class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">{{ lab.specialty || 'Diagnostic Services' }}</p>
+                </div>
+
+                <!-- Toggles Box -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700/30">
+                        <div class="flex items-center gap-2">
+                            <i-lucide [name]="(lab.isActive || lab.active) ? 'eye' : 'eye-off'" [class]="(lab.isActive || lab.active) ? 'text-emerald-500' : 'text-slate-400'" class="w-3.5 h-3.5"></i-lucide>
+                            <span class="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Visible</span>
                         </div>
-                        <button type="button" 
-                                (click)="$event.stopPropagation(); toggleActive(lab.id)" 
-                                class="relative w-12 h-12 flex items-center justify-center rounded-xl hover:bg-emerald-500/5 transition-colors group/btn">
-                            <div class="toggle-switch" [class.checked]="lab.active"></div>
+                        <button (click)="$event.stopPropagation(); toggleActive(lab.id)" class="relative w-8 h-8 flex items-center justify-center">
+                            <div class="toggle-switch scale-[0.6]" [class.checked]="lab.isActive || lab.active"></div>
                         </button>
                     </div>
-
-                    <!-- Toggle 2: Availability -->
-                    <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-secondary-200 dark:hover:border-secondary-900/30 transition-all group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center transition-transform group-hover:scale-110">
-                                <i-lucide name="clock" 
-                                          [class]="lab.available ? 'text-secondary-500' : 'text-slate-400'" 
-                                          class="w-5 h-5"></i-lucide>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Operation Status</span>
-                                <span class="text-xs font-bold text-slate-700 dark:text-slate-200">{{ lab.available ? 'OPEN NOW' : 'CLOSED' }}</span>
-                            </div>
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700/30">
+                        <div class="flex items-center gap-2">
+                            <i-lucide name="clock" [class]="(lab.isAvailable || lab.available) ? 'text-secondary-500' : 'text-slate-400'" class="w-3.5 h-3.5"></i-lucide>
+                            <span class="text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Open Status</span>
                         </div>
-                        <button type="button" 
-                                (click)="$event.stopPropagation(); toggleAvailability(lab.id)" 
-                                class="relative w-12 h-12 flex items-center justify-center rounded-xl hover:bg-secondary-500/5 transition-colors group/btn">
-                            <div class="toggle-switch secondary" [class.checked]="lab.available"></div>
+                        <button (click)="$event.stopPropagation(); toggleAvailability(lab.id)" class="relative w-8 h-8 flex items-center justify-center">
+                            <div class="toggle-switch scale-[0.6] secondary" [class.checked]="lab.isAvailable || lab.available"></div>
                         </button>
                     </div>
                 </div>
 
-                <!-- Footer Phone & Actions -->
-                <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-5">
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center gap-2 text-slate-500">
-                            <i-lucide name="phone" class="w-4 h-4"></i-lucide>
-                            <span class="text-xs font-bold">{{ lab.phone || '+91 ...' }}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-2">
-                        <button class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-secondary-500 hover:bg-secondary-50 dark:hover:bg-secondary-900/20 transition-all active:scale-95">
-                            <i-lucide name="edit-2" class="w-4 h-4"></i-lucide>
-                        </button>
-                        <button (click)="removeLab(lab.id)" 
-                                class="p-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-500 hover:text-white transition-all active:scale-95">
-                            <i-lucide name="trash-2" class="w-4 h-4"></i-lucide>
-                        </button>
-                    </div>
+                <!-- Action Details -->
+                <div class="flex items-center gap-2 pt-2 text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-700/50">
+                    <button (click)="callLaboratory(lab.phone)" class="flex items-center gap-2 hover:text-primary-500 transition-colors">
+                        <i-lucide name="phone" class="w-3 h-3"></i-lucide>
+                        <span class="text-[10px] font-bold tracking-tight">{{ lab.phone || 'N/A' }}</span>
+                    </button>
+                    <span class="mx-auto"></span>
+                    <button (click)="removeLab(lab.id)" class="p-1.5 rounded-lg text-red-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                        <i-lucide name="trash-2" class="w-3.5 h-3.5"></i-lucide>
+                    </button>
                 </div>
             </div>
         </div>
@@ -114,29 +93,28 @@
             <i-lucide name="microscope" class="w-8 h-8 text-slate-400"></i-lucide>
         </div>
         <h3 class="text-lg font-bold text-slate-800 dark:text-white">No diagnostic labs found</h3>
-        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-xs text-center mt-1">Add your first laboratory to the system.</p>
+        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-xs text-center mt-1">Try adjusting your search or add a new lab.</p>
     </div>
 
     <!-- Pagination -->
-    <div *ngIf="totalPages > 1" class="flex justify-center items-center gap-2 mt-8 mb-10">
+    <div *ngIf="totalPages > 1" class="flex justify-center items-center gap-2 mt-10 mb-6">
         <button [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)"
-            class="w-10 h-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+            class="w-10 h-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm">
             <i-lucide name="chevron-left" class="w-4 h-4"></i-lucide>
         </button>
         
         <div class="flex items-center gap-1">
-            <button *ngFor="let p of [].constructor(totalPages); let i = index"
-                (click)="setPage(i + 1)"
+            <button *ngFor="let p of [].constructor(totalPages); let i = index" (click)="setPage(i + 1)"
                 [class]="currentPage === (i + 1) ? 
-                    'w-10 h-10 rounded-xl bg-primary-500 text-white font-bold' : 
-                    'w-10 h-10 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-semibold'"
+                    'w-10 h-10 rounded-xl bg-primary-500 text-white font-bold shadow-lg shadow-primary-500/25' : 
+                    'w-10 h-10 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 font-semibold'"
                 class="transition-all">
                 {{ i + 1 }}
             </button>
         </div>
 
         <button [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)"
-            class="w-10 h-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+            class="w-10 h-10 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm">
             <i-lucide name="chevron-right" class="w-4 h-4"></i-lucide>
         </button>
     </div>
@@ -144,71 +122,125 @@
 </div>
 
 <!-- ── ADD LAB MODAL ── -->
-<div *ngIf="showAddModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+<div *ngIf="showAddModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in text-slate-800 dark:text-white">
     <!-- Backdrop -->
-    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" (click)="showAddModal = false"></div>
+    <div class="absolute inset-0 bg-slate-900/70 backdrop-blur-md" (click)="showAddModal = false"></div>
 
     <!-- Modal -->
-    <div
-        class="relative bg-white dark:bg-slate-800 rounded-[2rem] shadow-2xl border border-slate-100 dark:border-slate-700 w-full max-w-xl p-8 animate-fade-in-up max-h-[90vh] overflow-y-auto">
-
-        <!-- Close button -->
-        <button (click)="showAddModal = false"
-            class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
-            <i-lucide name="x" class="w-4 h-4"></i-lucide>
-        </button>
-
-        <div class="mb-6">
-            <div class="w-12 h-12 rounded-2xl bg-secondary-50 dark:bg-secondary-900/30 flex items-center justify-center mb-4">
-                <i-lucide name="microscope" class="w-6 h-6 text-secondary-500"></i-lucide>
+    <div class="relative bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-slate-700 w-full max-w-2xl overflow-hidden animate-fade-in-up flex flex-col max-h-[90vh]">
+        
+        <!-- Header -->
+        <div class="p-8 pb-4 flex items-start justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center text-primary-500">
+                    <i-lucide name="microscope" class="w-7 h-7"></i-lucide>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-black tracking-tight leading-tight">Register Laboratory</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Create a new diagnostic services profile.</p>
+                </div>
             </div>
-            <h3 class="text-xl font-black text-slate-900 dark:text-white font-heading">Add Lab/Diagnostic Center</h3>
-            <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">This lab will be listed for patients to contact for testing.</p>
+            <button (click)="showAddModal = false"
+                class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-900 flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors">
+                <i-lucide name="x" class="w-5 h-5"></i-lucide>
+            </button>
         </div>
 
-        <form (ngSubmit)="addLab()" class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div class="md:col-span-2">
-                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Lab Name *</label>
-                <input type="text" [(ngModel)]="newLab.name" name="name" required placeholder="City Diagnostic Lab"
-                    class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-secondary-400 focus:border-transparent outline-none text-slate-800 dark:text-white placeholder-slate-400 transition-all text-sm">
-            </div>
+        <!-- Form Content -->
+        <div class="flex-1 overflow-y-auto p-8 pt-4 custom-scrollbar">
+            <form #labForm="ngForm" (ngSubmit)="labForm.form.valid && addLab()" class="space-y-6">
+                <!-- Basic Info Grid -->
+                <div class="grid grid-cols-2 gap-5">
+                    <div class="col-span-2">
+                        <label class="flex items-center text-xs font-black text-slate-400 uppercase tracking-[0.1em] mb-2 leading-none">
+                            Lab Name <span class="text-red-500 ml-1 mt-0.5">*</span>
+                        </label>
+                        <input type="text" [(ngModel)]="newLab.fullName" name="fullName" #fullName="ngModel" required 
+                            class="w-full px-5 py-3.5 rounded-2xl border bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-sm font-bold"
+                            [class]="fullName.invalid && fullName.touched ? 'border-red-400 ring-4 ring-red-400/5' : 'border-slate-200 dark:border-slate-700 focus:ring-4 focus:ring-primary-400/10 focus:border-primary-500'">
+                        <p *ngIf="fullName.invalid && fullName.touched" class="text-[10px] font-black text-red-500 uppercase tracking-widest mt-1.5 ml-1 animate-fade-in">Lab name is required</p>
+                    </div>
 
-            <div>
-                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Phone Number *</label>
-                <input type="tel" [(ngModel)]="newLab.phone" name="phone" required placeholder="+91 ..."
-                    class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-secondary-400 focus:border-transparent outline-none text-slate-800 dark:text-white placeholder-slate-400 transition-all text-sm">
-            </div>
+                    <div class="col-span-1">
+                        <label class="flex items-center text-xs font-black text-slate-400 uppercase tracking-[0.1em] mb-2 leading-none">
+                            Specialty <span class="text-red-500 ml-1 mt-0.5">*</span>
+                        </label>
+                        <input type="text" [(ngModel)]="newLab.specialty" name="specialty" #specialty="ngModel" required placeholder="e.g. Blood Collection"
+                            class="w-full px-5 py-3.5 rounded-2xl border bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-sm font-bold"
+                            [class]="specialty.invalid && specialty.touched ? 'border-red-400 ring-4 ring-red-400/5' : 'border-slate-200 dark:border-slate-700 focus:ring-4 focus:ring-primary-400/10 focus:border-primary-500'">
+                    </div>
 
-            <div>
-                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">WhatsApp Number</label>
-                <input type="tel" [(ngModel)]="newLab.whatsapp" name="whatsapp" placeholder="+91 ..."
-                    class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-secondary-400 focus:border-transparent outline-none text-slate-800 dark:text-white placeholder-slate-400 transition-all text-sm">
-            </div>
+                    <div class="col-span-1">
+                        <label class="flex items-center text-xs font-black text-slate-400 uppercase tracking-[0.1em] mb-2 leading-none">
+                            Qualification
+                        </label>
+                        <input type="text" [(ngModel)]="newLab.qualification" name="qualification" placeholder="e.g. DMLT, B.Sc MLT"
+                            class="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:ring-4 focus:ring-primary-400/10 focus:border-primary-500 outline-none transition-all text-sm font-bold">
+                    </div>
+                </div>
 
-            <div class="md:col-span-2">
-                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Full Address</label>
-                <input type="text" [(ngModel)]="newLab.address" name="address" placeholder="123 Main St, Central Arcade..."
-                    class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-secondary-400 focus:border-transparent outline-none text-slate-800 dark:text-white placeholder-slate-400 transition-all text-sm">
-            </div>
+                <!-- Contact Grid -->
+                <div class="grid grid-cols-2 gap-5">
+                    <div>
+                        <label class="flex items-center text-xs font-black text-slate-400 uppercase tracking-[0.1em] mb-2 leading-none">
+                            Phone Number <span class="text-red-500 ml-1 mt-0.5">*</span>
+                        </label>
+                        <div class="relative">
+                            <input type="tel" [(ngModel)]="newLab.phone" name="phone" #phone="ngModel" required placeholder="+91 ..."
+                                class="w-full pl-11 pr-5 py-3.5 rounded-2xl border bg-slate-50 dark:bg-slate-900/50 outline-none transition-all text-sm font-bold"
+                                [class]="phone.invalid && phone.touched ? 'border-red-400 ring-4 ring-red-400/5' : 'border-slate-200 dark:border-slate-700 focus:ring-4 focus:ring-primary-400/10 focus:border-primary-500'">
+                            <i-lucide name="phone" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i-lucide>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="flex items-center text-xs font-black text-slate-400 uppercase tracking-[0.1em] mb-2 leading-none">
+                            WhatsApp
+                        </label>
+                        <div class="relative">
+                            <input type="tel" [(ngModel)]="newLab.whatsapp" name="whatsapp" placeholder="+91 ..."
+                                class="w-full pl-11 pr-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:ring-4 focus:ring-primary-400/10 focus:border-primary-500 outline-none transition-all text-sm font-bold">
+                            <i-lucide name="message-circle" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i-lucide>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="md:col-span-2">
-                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Profile Photo URL</label>
-                <input type="url" [(ngModel)]="newLab.image" name="image" placeholder="https://..."
-                    class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-secondary-400 focus:border-transparent outline-none text-slate-800 dark:text-white placeholder-slate-400 transition-all text-sm">
-            </div>
+                <!-- Additional Info -->
+                <div class="space-y-5">
+                    <div>
+                        <label class="flex items-center text-xs font-black text-slate-400 uppercase tracking-[0.1em] mb-2 leading-none">
+                            Full Address
+                        </label>
+                        <textarea [(ngModel)]="newLab.address" name="address" rows="2" placeholder="Street, City, State..."
+                            class="w-full px-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:ring-4 focus:ring-primary-400/10 focus:border-primary-500 outline-none transition-all text-sm font-bold resize-none"></textarea>
+                    </div>
 
-            <div class="md:col-span-2 flex gap-3 pt-4">
-                <button type="button" (click)="showAddModal = false"
-                    class="flex-1 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-sm">
-                    Cancel
-                </button>
-                <button type="submit"
-                    class="flex-1 py-3 rounded-2xl bg-secondary-500 hover:bg-secondary-600 text-white font-bold shadow-md shadow-secondary-500/25 active:scale-95 transition-all text-sm flex items-center justify-center gap-2">
-                    <i-lucide name="plus" class="w-4 h-4"></i-lucide>
-                    Save Lab
-                </button>
-            </div>
-        </form>
+                    <div>
+                        <label class="flex items-center text-xs font-black text-slate-400 uppercase tracking-[0.1em] mb-2 leading-none">
+                            Profile Photo URL
+                        </label>
+                        <div class="relative">
+                            <input type="url" [(ngModel)]="newLab.image" name="image" placeholder="https://..."
+                                class="w-full pl-11 pr-5 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:ring-4 focus:ring-primary-400/10 focus:border-primary-500 outline-none transition-all text-sm font-bold">
+                            <i-lucide name="camera" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i-lucide>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="flex gap-4 pt-4 border-t border-slate-100 dark:border-slate-700/50">
+                    <button type="button" (click)="showAddModal = false"
+                        class="flex-1 py-4 px-6 rounded-2xl bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 font-black text-xs uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:scale-95">
+                        Cancel
+                    </button>
+                    <button type="submit" [disabled]="labForm.form.invalid || isProcessing"
+                        class="flex-[2] py-4 px-6 rounded-2xl bg-primary-500 text-white font-black text-xs uppercase tracking-widest shadow-xl shadow-primary-500/30 hover:bg-primary-600 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group flex items-center justify-center gap-3">
+                        <i-lucide *ngIf="isProcessing" name="loader" class="w-4 h-4 animate-spin"></i-lucide>
+                        <i-lucide *ngIf="!isProcessing" name="plus" class="w-4 h-4"></i-lucide>
+                        {{ isProcessing ? 'Processing...' : 'Register Laboratory' }}
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -223,3 +255,5 @@
   (confirmed)="confirmConfig.action(); confirmConfig.isOpen = false"
   (cancelled)="confirmConfig.isOpen = false">
 </app-confirm-dialog>
+
+

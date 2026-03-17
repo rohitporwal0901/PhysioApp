@@ -599,7 +599,8 @@
               class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden group hover:shadow-xl transition-all duration-500 h-full">
               <!-- Lab Image -->
               <div class="relative h-48 overflow-hidden">
-                <img [src]="getLabImage(lab, i)" alt="{{ lab.fullName }}"
+                <img [src]="getLabImage(lab, i)" alt="{{ lab.fullName || lab.name }}"
+                  onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=' + (lab.fullName || lab.name) + '&background=4F46E5&color=fff'"
                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
 
@@ -613,30 +614,45 @@
 
               <!-- Lab Details -->
               <div class="p-6">
-                <div class="flex items-center justify-between mb-3">
-                  <h3 class="text-lg font-black text-slate-900 font-heading truncate">{{ lab.fullName }}</h3>
+                <div class="flex items-center justify-between mb-2">
+                  <h3 class="text-lg font-black text-slate-900 font-heading truncate">{{ lab.fullName || lab.name }}</h3>
                   <div class="flex items-center gap-1 text-amber-400">
                     <i-lucide name="star" class="w-4 h-4 fill-current"></i-lucide>
                     <span class="text-slate-900 font-bold text-sm">{{ (4.5 + (i % 5)*0.1).toFixed(1) }}</span>
                   </div>
                 </div>
 
+                <!-- Availability Badge -->
+                <div class="mb-4">
+                  <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm"
+                    [ngClass]="(lab.isAvailable || lab.available) ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-500 border border-rose-100'">
+                    {{ (lab.isAvailable || lab.available) ? '● OPEN NOW' : '○ CLOSED NOW' }}
+                  </span>
+                </div>
+
                 <div class="space-y-3 mb-6">
                   <div class="flex items-center gap-2.5 text-slate-500 text-xs">
                     <i-lucide name="map-pin" class="w-3.5 h-3.5 text-primary-500"></i-lucide>
-                    <span class="truncate">{{ lab.address || 'Bandra West, Mumbai' }}</span>
+                    <span class="truncate">{{ lab.address || 'Diagnostic Services Available' }}</span>
                   </div>
                   <div class="flex items-center gap-2.5 text-slate-500 text-xs">
                     <i-lucide name="clock" class="w-3.5 h-3.5 text-primary-500"></i-lucide>
-                    <span>Reports in 24 Hours</span>
+                    <span>{{ (lab.isAvailable || lab.available) ? 'Fastest Reports (24h)' : 'Next Opening: Tomorrow' }}</span>
                   </div>
                 </div>
 
-                <button
-                  class="w-full py-3.5 rounded-2xl bg-primary-50 text-primary-700 font-bold text-sm hover:bg-primary-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
-                  <i-lucide name="test-tube" class="w-4 h-4"></i-lucide>
-                  View Test Lists
-                </button>
+                <div class="grid grid-cols-5 gap-3">
+                    <button (click)="callLab(lab.phone)"
+                      class="col-span-2 py-3 rounded-2xl bg-white border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                      <i-lucide name="phone" class="w-4 h-4"></i-lucide>
+                      Call
+                    </button>
+                    <button
+                      class="col-span-3 py-3 rounded-2xl bg-primary-50 text-primary-700 font-bold text-xs hover:bg-primary-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
+                      <i-lucide name="test-tube" class="w-4 h-4"></i-lucide>
+                      View Tests
+                    </button>
+                </div>
               </div>
             </div>
           </div>

@@ -26,3 +26,44 @@
 .shadow-card {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
 }
+
+// Toggle Switch Styles
+.toggle-switch {
+    width: 36px;
+    height: 20px;
+    background: #e2e8f0;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: white;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: all 0.3s;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    &.checked {
+        background: #10b981;
+        &::after {
+            left: 18px;
+        }
+    }
+    
+    &.secondary.checked {
+        background: #0ea5e9;
+    }
+}
+
+.dark {
+    .toggle-switch {
+        background: #334155;
+    }
+}

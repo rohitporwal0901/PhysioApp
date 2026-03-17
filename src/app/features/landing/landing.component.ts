@@ -193,7 +193,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             map(docs => docs.filter(doc => doc.active))
         );
         this.labs$ = this.api.getLabTechnicians().pipe(
-            map(labs => labs.filter(lab => lab.active))
+            map(labs => labs.filter(lab => lab.isActive))
         );
         // Re-trigger observer whenever doctors load
         this.doctors$.subscribe(() => {
@@ -345,5 +345,11 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             return lab.image;
         }
         return this.labImages[index % this.labImages.length];
+    }
+
+    callLab(phone: string) {
+        if (phone) {
+            window.location.href = `tel:${phone}`;
+        }
     }
 }

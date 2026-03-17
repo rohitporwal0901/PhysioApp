@@ -39,19 +39,21 @@ export class LabTechniciansComponent implements OnInit {
     
     // Pagination
     currentPage = 1;
-    pageSize = 8;
+    pageSize = 4;
     totalPages = 1;
 
     showAddModal = false;
     searchQuery = '';
 
     newLab = {
-        name: '',
+        fullName: '',
         phone: '',
         whatsapp: '',
         image: '',
         address: '',
-        experience: 'Open 24/7'
+        experience: '',
+        qualification: '',
+        specialty: ''
     };
 
     ngOnInit() {
@@ -98,18 +100,20 @@ export class LabTechniciansComponent implements OnInit {
 
     openAddModal() {
         this.newLab = { 
-            name: '', 
+            fullName: '', 
             phone: '', 
             whatsapp: '', 
             image: '',
             address: '',
-            experience: 'Open 24/7'
+            experience: '',
+            qualification: '',
+            specialty: ''
         };
         this.showAddModal = true;
     }
 
     async addLab() {
-        if (this.newLab.name) {
+        if (this.newLab.fullName) {
             this.isProcessing = true;
             try {
                 await this.api.addLabTechnician(this.newLab);
@@ -157,6 +161,12 @@ export class LabTechniciansComponent implements OnInit {
             this.toast.info('Lab visibility updated.', 'Status Update');
         } catch (error) {
             this.toast.error('Failed to update visibility.', 'Error');
+        }
+    }
+
+    callLaboratory(phone: string) {
+        if (phone) {
+            window.location.href = `tel:${phone}`;
         }
     }
 }
