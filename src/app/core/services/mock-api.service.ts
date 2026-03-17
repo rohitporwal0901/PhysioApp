@@ -38,6 +38,16 @@ export class MockApiService {
     return this.collectionToObservable(q);
   }
 
+  /** Add a new patient */
+  addPatient(patient: any): Promise<any> {
+    return addDoc(collection(this.firestore, 'users'), {
+      ...patient,
+      role: 'patient',
+      createdAt: Timestamp.now(),
+      status: 'active'
+    });
+  }
+
   /** Get patients specifically assigned to a doctor (through their bookings) */
   getPatientsByDoctor(doctorId: string): Observable<any[]> {
     const q = query(
