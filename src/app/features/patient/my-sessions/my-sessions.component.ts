@@ -329,7 +329,6 @@ export class MySessionsComponent implements OnInit {
         const blob = doc.output('blob');
         const url = URL.createObjectURL(blob);
         window.open(url, '_blank');
-        this.toast.success('Report opened in new tab. You can save it from there.', 'Report Ready');
       } catch (e) {
         console.error('Blob URL failed, falling back to save', e);
         doc.save(fileName);
