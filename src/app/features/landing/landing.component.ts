@@ -1,6 +1,6 @@
 import {
     Component, inject, OnInit, OnDestroy, AfterViewInit,
-    HostListener, ChangeDetectorRef
+    HostListener, ChangeDetectorRef, ViewChild, ElementRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -34,6 +34,9 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     private observers: IntersectionObserver[] = [];
     activeTestimonial = 0;
     private testimonialInterval: any;
+    private feedbackCount = 5;
+    @ViewChild('doctorsSlider') doctorsSlider: ElementRef | undefined;
+    @ViewChild('labsSlider') labsSlider: ElementRef | undefined;
     openFaqIndex: number | null = null;
 
     get isLoggedIn() { return this.authService.isLoggedIn; }
@@ -206,8 +209,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
         this.feedbacks$ = this.bookingService.getLatestFeedbacks(5);
         this.feedbacks$.subscribe(feedbacks => {
             if (feedbacks && feedbacks.length > 0) {
-                // If we have real feedbacks, we might want to update the rotation logic
-                // But for now let's just make sure they are available in the template
+                this.feedbackCount = feedbacks.length;
             }
         });
 
@@ -267,7 +269,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
     startTestimonialRotation() {
         this.testimonialInterval = setInterval(() => {
-            this.activeTestimonial = (this.activeTestimonial + 1) % this.testimonials.length;
+            this.activeTestimonial = (this.activeTestimonial + 1) % this.feedbackCount;
             this.cdr.markForCheck();
         }, 4500);
     }
@@ -294,6 +296,30 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
     toggleFaq(index: number) {
         this.openFaqIndex = this.openFaqIndex === index ? null : index;
+    }
+
+    scrollDoctors(direction: 'next' | 'prev') {
+      if (this.doctorsSlider && this.doctorsSlider.nativeElement) {
+        const el = this.doctorsSlider.nativeElement;
+        const scrollAmount = el.clientWidth * 0.8;
+        if (direction === 'next') {
+          el.scrollTo({ left: el.scrollLeft + scrollAmount, behavior: 'smooth' });
+        } else {
+          el.scrollTo({ left: el.scrollLeft - scrollAmount, behavior: 'smooth' });
+        }
+      }
+    }
+
+    scrollLabs(direction: 'next' | 'prev') {
+      if (this.labsSlider && this.labsSlider.nativeElement) {
+        const el = this.labsSlider.nativeElement;
+        const scrollAmount = el.clientWidth * 0.8;
+        if (direction === 'next') {
+          el.scrollTo({ left: el.scrollLeft + scrollAmount, behavior: 'smooth' });
+        } else {
+          el.scrollTo({ left: el.scrollLeft - scrollAmount, behavior: 'smooth' });
+        }
+      }
     }
 
     bookCondition(condition: string) {

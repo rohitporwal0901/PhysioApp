@@ -460,21 +460,36 @@
   <!-- ══════════════════ DOCTORS ══════════════════ -->
   <section id="doctors" class="py-20 sm:py-28 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-14 reveal">
-        <span class="section-chip">Verified Specialists</span>
-        <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-4">
-          Meet Our <span class="text-gradient">Clinical Team</span>
-        </h2>
-        <p class="text-slate-600 max-w-2xl mx-auto text-base sm:text-lg">
-          All physiotherapists are background-verified, certified and reviewed by real patients.
-        </p>
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal">
+        <div class="max-w-xl">
+          <span class="section-chip">Verified Specialists</span>
+          <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-4">
+            Meet Our <span class="text-gradient">Clinical Team</span>
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base">
+            All physiotherapists are background-verified, certified and reviewed by real patients.
+          </p>
+        </div>
+        <div class="hidden sm:flex gap-2 mt-6 md:mt-0">
+          <button (click)="scrollDoctors('prev')"
+            class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white"
+            aria-label="Previous">
+            <i-lucide name="chevron-left" class="w-5 h-5"></i-lucide>
+          </button>
+          <button (click)="scrollDoctors('next')"
+            class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white"
+            aria-label="Next">
+            <i-lucide name="chevron-right" class="w-5 h-5"></i-lucide>
+          </button>
+        </div>
       </div>
 
       <ng-container *ngIf="doctors$ | async as doctors; else loadingDoctors">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Doctors Slider Container -->
+        <div #doctorsSlider class="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth no-scrollbar">
           @for (doc of doctors; track doc.id; let i = $index) {
           <div (click)="openDoctorProfile(doc)"
-            class="doctor-card reveal group bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-400 overflow-hidden cursor-pointer hover:-translate-y-2"
+            class="doctor-card reveal flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[350px] snap-start group bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-400 overflow-hidden cursor-pointer hover:-translate-y-2"
             [style.transition-delay]="(i * 80) + 'ms'">
 
             <!-- Doctor image -->
@@ -544,9 +559,10 @@
       </ng-container>
 
       <ng-template #loadingDoctors>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          @for (i of [1,2,3,4,5,6]; track i) {
-          <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+        <div class="flex gap-6 overflow-hidden pb-8">
+          @for (i of [1,2,3,4]; track i) {
+          <div
+            class="flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[350px] bg-white rounded-2xl border border-slate-100 overflow-hidden">
             <div class="h-52 skeleton-shimmer"></div>
             <div class="p-5 space-y-3">
               <div class="h-4 skeleton-shimmer rounded-lg w-3/4"></div>
@@ -574,13 +590,13 @@
             partners.
           </p>
         </div>
-        <div class="hidden md:flex gap-2 mt-6 md:mt-0">
-          <button
+        <div class="hidden sm:flex gap-2 mt-6 md:mt-0">
+          <button (click)="scrollLabs('prev')"
             class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white"
             aria-label="Previous">
             <i-lucide name="chevron-left" class="w-5 h-5"></i-lucide>
           </button>
-          <button
+          <button (click)="scrollLabs('next')"
             class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white"
             aria-label="Next">
             <i-lucide name="chevron-right" class="w-5 h-5"></i-lucide>
@@ -590,10 +606,10 @@
 
       <ng-container *ngIf="labs$ | async as labs; else loadingLabs">
         <!-- Horizontal Slider Container -->
-        <div class="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth no-scrollbar"
+        <div #labsSlider class="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth no-scrollbar"
           style="scrollbar-width: none; -ms-overflow-style: none;">
           @for (lab of labs; track lab.id; let i = $index) {
-          <div class="flex-shrink-0 w-[280px] sm:w-[350px] snap-start reveal"
+          <div class="flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[350px] snap-start reveal"
             [style.transition-delay]="(i * 100) + 'ms'">
             <div
               class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden group hover:shadow-xl transition-all duration-500 h-full">
@@ -615,7 +631,8 @@
               <!-- Lab Details -->
               <div class="p-6">
                 <div class="flex items-center justify-between mb-2">
-                  <h3 class="text-lg font-black text-slate-900 font-heading truncate">{{ lab.fullName || lab.name }}</h3>
+                  <h3 class="text-lg font-black text-slate-900 font-heading truncate">{{ lab.fullName || lab.name }}
+                  </h3>
                   <div class="flex items-center gap-1 text-amber-400">
                     <i-lucide name="star" class="w-4 h-4 fill-current"></i-lucide>
                     <span class="text-slate-900 font-bold text-sm">{{ (4.5 + (i % 5)*0.1).toFixed(1) }}</span>
@@ -637,21 +654,22 @@
                   </div>
                   <div class="flex items-center gap-2.5 text-slate-500 text-xs">
                     <i-lucide name="clock" class="w-3.5 h-3.5 text-primary-500"></i-lucide>
-                    <span>{{ (lab.isAvailable || lab.available) ? 'Fastest Reports (24h)' : 'Next Opening: Tomorrow' }}</span>
+                    <span>{{ (lab.isAvailable || lab.available) ? 'Fastest Reports (24h)' : 'Next Opening: Tomorrow'
+                      }}</span>
                   </div>
                 </div>
 
                 <div class="grid grid-cols-5 gap-3">
-                    <button (click)="callLab(lab.phone)"
-                      class="col-span-2 py-3 rounded-2xl bg-white border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
-                      <i-lucide name="phone" class="w-4 h-4"></i-lucide>
-                      Call
-                    </button>
-                    <button
-                      class="col-span-3 py-3 rounded-2xl bg-primary-50 text-primary-700 font-bold text-xs hover:bg-primary-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
-                      <i-lucide name="test-tube" class="w-4 h-4"></i-lucide>
-                      View Tests
-                    </button>
+                  <button (click)="callLab(lab.phone)"
+                    class="col-span-2 py-3 rounded-2xl bg-white border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                    <i-lucide name="phone" class="w-4 h-4"></i-lucide>
+                    Call
+                  </button>
+                  <button
+                    class="col-span-3 py-3 rounded-2xl bg-primary-50 text-primary-700 font-bold text-xs hover:bg-primary-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
+                    <i-lucide name="test-tube" class="w-4 h-4"></i-lucide>
+                    View Tests
+                  </button>
                 </div>
               </div>
             </div>
@@ -662,8 +680,9 @@
 
       <ng-template #loadingLabs>
         <div class="flex gap-6 overflow-hidden">
-          @for (i of [1,2,3]; track i) {
-          <div class="flex-shrink-0 w-[350px] bg-white rounded-3xl border border-slate-100 overflow-hidden">
+          @for (i of [1,2,3,4]; track i) {
+          <div
+            class="flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[350px] bg-white rounded-3xl border border-slate-100 overflow-hidden">
             <div class="h-48 skeleton-shimmer"></div>
             <div class="p-6 space-y-4">
               <div class="h-5 skeleton-shimmer rounded-lg w-3/4"></div>
@@ -676,123 +695,117 @@
       </ng-template>
     </div>
   </section>
-
-  <!-- ══════════════════ AI POWERED RECOVERY (NEW SECTION) ══════════════════ -->
-  <section class="py-24 sm:py-32 relative overflow-hidden bg-slate-900">
-    <!-- Animated background patterns -->
-    <div class="absolute inset-0 opacity-20">
-      <div
-        class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#10b981_0,transparent_50%)] animate-pulse-slow">
-      </div>
+  <!-- ══════════════════ AI POWERED RECOVERY (SLIM REDESIGN) ══════════════════ -->
+  <section class="py-12 sm:py-20 bg-slate-950 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-30 pointer-events-none">
+      <div class="absolute top-0 left-1/4 w-96 h-96 bg-emerald-600/10 rounded-full blur-[100px]"></div>
+      <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-600/10 rounded-full blur-[100px]"></div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        <!-- AI Visual Side -->
-        <div class="reveal relative">
-          <div
-            class="relative bg-white/5 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 p-8 sm:p-12 overflow-hidden shadow-2xl">
-            <div class="absolute -top-24 -left-24 w-64 h-64 bg-emerald-500/20 rounded-full blur-[80px]"></div>
-
-            <!-- Simulated AI Report UI -->
-            <div class="relative z-10 space-y-4 animate-float">
-              <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/40">
-                    <i-lucide name="sparkles" class="w-5 h-5 text-white"></i-lucide>
-                  </div>
-                  <div>
-                    <p class="text-white font-bold">AI Clinical Analysis</p>
-                    <p class="text-emerald-400 text-[10px] font-black tracking-widest uppercase">Generation Active</p>
-                  </div>
-                </div>
-                <div class="bg-white/10 px-3 py-1 rounded-full text-[10px] text-white/60">#PHY-8829</div>
-              </div>
-
-              <!-- Animated Data Lines -->
-              <div class="space-y-3">
-                <div class="h-2 bg-white/10 rounded-full w-full overflow-hidden">
-                  <div class="h-full bg-emerald-500 w-3/4 animate-loading-bar"></div>
-                </div>
-                <div class="h-2 bg-white/10 rounded-full w-2/3 overflow-hidden">
-                  <div class="h-full bg-emerald-400 w-1/2 animate-loading-bar animation-delay-500"></div>
-                </div>
-              </div>
-
-              <!-- AI Cards -->
-              <div class="grid grid-cols-2 gap-4 mt-8">
-                <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
-                  <p class="text-white/40 text-[10px] uppercase font-bold mb-1">Recovery Score</p>
-                  <p class="text-2xl font-black text-white">84%</p>
-                </div>
-                <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
-                  <p class="text-white/40 text-[10px] uppercase font-bold mb-1">Biomechanical</p>
-                  <p class="text-2xl font-black text-emerald-400">Stable</p>
-                </div>
-              </div>
-
-              <!-- Roadmap Preview -->
-              <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4 mt-4">
-                <div class="flex items-center gap-2 mb-2">
-                  <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                  <p class="text-xs font-bold text-white">Phase 2 Protocol Generated</p>
-                </div>
-                <p class="text-[11px] text-white/60 leading-relaxed">Dynamic load-bearing integration with glenohumeral
-                  stabilization drills...</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Decorative Elements -->
-          <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-secondary-500/30 rounded-full blur-3xl"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+      <div
+        class="bg-slate-900/40 backdrop-blur-xl rounded-[2.5rem] border border-white/10 overflow-hidden relative group shadow-2xl">
+        <!-- Animated border effect -->
+        <div
+          class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent">
         </div>
 
-        <!-- AI Text Side -->
-        <div class="reveal">
-          <span
-            class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase border border-emerald-500/20 mb-6">
-            <i-lucide name="cpu" class="w-3.5 h-3.5 animate-pulse"></i-lucide>
-            Precision recovery
-          </span>
-          <h2 class="text-4xl sm:text-5xl font-black font-heading text-white leading-[1.1] mb-6">
-            AI-Powered <span class="text-emerald-400">Recovery Roadmaps</span>
-          </h2>
-          <p class="text-slate-400 text-lg leading-relaxed mb-8">
-            Our proprietary clinical AI analyzes your consultation notes and treatment history to generate a detailed
-            biomechanical progression plan.
-          </p>
-
-          <div class="space-y-6">
-            <div class="flex gap-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-emerald-500 flex-shrink-0">
-                <i-lucide name="zap" class="w-6 h-6"></i-lucide>
+        <div class="flex flex-col lg:flex-row items-stretch">
+          <!-- Left Visual: AI Stats Card -->
+          <div
+            class="w-full lg:w-2/5 bg-slate-900/60 p-8 sm:p-12 relative flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-white/5">
+            <div class="relative z-10">
+              <div class="flex items-center gap-3 mb-8">
+                <div
+                  class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                  <i-lucide name="sparkles" class="w-5 h-5 text-emerald-400"></i-lucide>
+                </div>
+                <div>
+                  <p class="text-white font-bold text-sm tracking-tight">Clinical AI Engine</p>
+                  <p class="text-[10px] uppercase font-black text-emerald-400 tracking-[0.2em]">Active Analysis</p>
+                </div>
               </div>
-              <div>
-                <h4 class="text-white font-bold mb-1 text-lg">Instant Analysis</h4>
-                <p class="text-slate-500 text-sm">Download your professional recovery report within seconds of
-                  completing a session.</p>
+
+              <div class="space-y-6">
+                <div class="bg-white/5 rounded-2xl p-5 border border-white/5 relative group/card overflow-hidden">
+                  <div
+                    class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity">
+                  </div>
+                  <div class="relative z-10 flex justify-between items-end">
+                    <div>
+                      <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Recovery Score</p>
+                      <p class="text-4xl font-black text-white">84%</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-emerald-400 text-xs font-bold mb-1 uppercase tracking-wider">Optimized</p>
+                      <div class="w-16 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-emerald-500 w-full animate-pulse"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex gap-4">
+                  <div class="flex-1 bg-white/5 rounded-2xl p-4 border border-white/5">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Stability</p>
+                    <p class="text-xl font-black text-white">High</p>
+                  </div>
+                  <div class="flex-1 bg-white/5 rounded-2xl p-4 border border-white/5">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Progress</p>
+                    <p class="text-xl font-black text-white">+12%</p>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div class="flex gap-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-emerald-500 flex-shrink-0">
-                <i-lucide name="map" class="w-6 h-6"></i-lucide>
-              </div>
-              <div>
-                <h4 class="text-white font-bold mb-1 text-lg">Phased Progression</h4>
-                <p class="text-slate-500 text-sm">Get structured goals and therapeutic focus for every phase of your
-                  recovery journey.</p>
-              </div>
+            <!-- Glow backdrop -->
+            <div
+              class="absolute -bottom-20 -left-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none">
             </div>
           </div>
 
-          <button (click)="goToRegister()"
-            class="mt-10 btn-primary px-8 py-4 rounded-2xl text-white font-bold transition-all shadow-glow hover:scale-105 active:scale-95">
-            Book Session & Get Your AI Report
-          </button>
+          <!-- Right Content: Information & CTA -->
+          <div class="w-full lg:w-3/5 p-8 sm:p-12 lg:p-16 flex flex-col justify-center relative">
+            <div class="relative z-10">
+              <span
+                class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[10px] uppercase font-black tracking-widest text-emerald-400 mb-6">
+                <i-lucide name="zap" class="w-3.5 h-3.5"></i-lucide>
+                Smart Recovery Reports
+              </span>
+
+              <h2 class="text-3xl sm:text-4xl font-black font-heading text-white leading-tight mb-6">
+                A Smarter Way to <br class="hidden sm:block"> <span class="text-gradient">Track Your Progress</span>
+              </h2>
+
+              <p class="text-slate-400 text-base sm:text-lg leading-relaxed mb-10 max-w-lg">
+                Our clinical AI instantly analyzes your assessment data to generate professional therapeutic roadmaps
+                and progress reports.
+              </p>
+
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10">
+                <button (click)="goToRegister()"
+                  class="btn-primary px-8 py-4 rounded-2xl text-white font-bold text-sm shadow-xl shadow-emerald-600/20 hover:-translate-y-1 active:scale-95 transition-all">
+                  Get Your Free AI Report
+                </button>
+
+                <div class="flex items-center gap-4">
+                  <div class="flex -space-x-3">
+                    @for (i of [1,2,3]; track i) {
+                    <div
+                      class="w-9 h-9 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center text-[10px] font-bold text-white overflow-hidden">
+                      <img [src]="'https://i.pravatar.cc/100?u=' + i" alt="User">
+                    </div>
+                    }
+                  </div>
+                  <p class="text-slate-500 text-xs font-semibold">Joined by 10k+ <br> Recovering Patients</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Corner detail -->
+            <div class="absolute top-0 right-0 p-8 hidden lg:block opacity-20">
+              <i-lucide name="cpu" class="w-20 h-20 text-emerald-500 rotate-12"></i-lucide>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -932,11 +945,13 @@
           </div>
         </div>
 
-        <!-- Mini cards grid (Latest 3) -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" *ngIf="realFeedbacks.length > 0">
-          @for (fb of realFeedbacks.slice(0, 3); track fb.id; let i = $index) {
+        <!-- Mini cards slider on mobile, grid on desktop -->
+        <div
+          class="flex sm:grid sm:grid-cols-3 gap-4 overflow-x-auto sm:overflow-x-visible pb-6 sm:pb-0 snap-x snap-mandatory no-scrollbar"
+          *ngIf="realFeedbacks.length > 0">
+          @for (fb of realFeedbacks.slice(0, 5); track fb.id; let i = $index) {
           <div (click)="setTestimonial(i)"
-            class="mini-testimonial-card reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
+            class="mini-testimonial-card flex-shrink-0 w-[260px] sm:w-auto snap-start reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
             [class.active-card]="i === (activeTestimonial % realFeedbacks.length)">
             <div class="flex gap-0.5 mb-3">
               <i-lucide name="star" *ngFor="let s of [1,2,3,4,5]" [class.text-amber-400]="s <= fb.feedback!.rating"
@@ -986,10 +1001,11 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          @for (t of testimonials.slice(0, 3); track t.name; let i = $index) {
+        <div
+          class="flex sm:grid sm:grid-cols-3 gap-4 overflow-x-auto sm:overflow-x-visible pb-6 sm:pb-0 snap-x snap-mandatory no-scrollbar">
+          @for (t of testimonials.slice(0, 5); track t.name; let i = $index) {
           <div (click)="setTestimonial(i)"
-            class="mini-testimonial-card reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
+            class="mini-testimonial-card flex-shrink-0 w-[260px] sm:w-auto snap-start reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
             [class.active-card]="i === (activeTestimonial % testimonials.length)">
             <div class="flex gap-0.5 mb-3">
               @for (s of [1,2,3,4,5]; track s) {
@@ -1056,35 +1072,6 @@
     </div>
   </section>
 
-  <!-- ══════════════════ CTA BANNER ══════════════════ -->
-  <section
-    class="py-16 sm:py-20 bg-gradient-to-r from-primary-500 via-primary-600 to-secondary-500 relative overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none">
-      <div class="absolute -top-20 -right-20 w-72 h-72 bg-white/8 rounded-full"></div>
-      <div class="absolute -bottom-20 -left-20 w-72 h-72 bg-white/8 rounded-full"></div>
-    </div>
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 reveal">
-      <p class="text-primary-100 text-sm font-semibold uppercase tracking-widest mb-3">Start Today — It's Free</p>
-      <h2 class="text-3xl sm:text-4xl font-black font-heading text-white mb-4">
-        Ready to Begin Your <br class="hidden sm:block">Recovery Journey?
-      </h2>
-      <p class="text-primary-100 text-base sm:text-lg mb-8 max-w-xl mx-auto">
-        Book your first assessment at no cost. No referral, no waiting list — just expert care.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <button (click)="goToRegister()"
-          class="bg-white text-primary-600 font-bold text-sm sm:text-base py-4 px-8 rounded-xl shadow-xl hover:bg-primary-50 active:scale-95 transition-all duration-300 flex items-center gap-2 justify-center">
-          <i-lucide name="calendar-check" class="w-5 h-5"></i-lucide>
-          Book Free Appointment
-        </button>
-        <a href="tel:+919876543210"
-          class="bg-white/15 backdrop-blur-sm text-white font-bold text-sm py-4 px-8 rounded-xl border border-white/30 hover:bg-white/25 active:scale-95 transition-all flex items-center gap-2 justify-center">
-          <i-lucide name="phone" class="w-5 h-5"></i-lucide>
-          +91 98765 43210
-        </a>
-      </div>
-    </div>
-  </section>
 
   <!-- ══════════════════ FOOTER ══════════════════ -->
   <footer id="contact" class="bg-slate-950 text-slate-400 pt-14 sm:pt-18 pb-8">
@@ -1101,12 +1088,12 @@
             <span class="text-xl font-bold text-white font-heading">Physio<span
                 class="text-primary-400">Pro</span></span>
           </div>
-          <p class="text-sm leading-relaxed max-w-xs">
+          <p class="hidden sm:block text-sm leading-relaxed max-w-xs">
             India's trusted physiotherapy platform — connecting patients with certified specialists for in-clinic,
             online and home-visit care.
           </p>
           <!-- Accreditation icons -->
-          <div class="flex flex-wrap gap-3 pt-2">
+          <div class="hidden sm:flex flex-wrap gap-3 pt-2">
             @for (badge of trustBadges; track badge.label) {
             <div
               class="flex items-center gap-1.5 bg-slate-800 px-3 py-1.5 rounded-lg text-xs text-slate-400 font-medium">
@@ -1127,8 +1114,7 @@
           </div>
         </div>
 
-        <!-- Quick Links -->
-        <div>
+        <div class="hidden sm:block">
           <h4 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">Platform</h4>
           <ul class="space-y-3 text-sm">
             <li><a href="#how-it-works" class="hover:text-primary-400 transition-colors">How It Works</a></li>
@@ -1163,8 +1149,7 @@
             </li>
           </ul>
 
-          <!-- Newsletter mini form -->
-          <div class="mt-6">
+          <div class="hidden sm:block mt-6">
             <p class="text-xs text-slate-500 mb-2 font-medium">Get health tips in your inbox</p>
             <div class="flex rounded-xl overflow-hidden border border-slate-700">
               <input type="email" placeholder="Your email"
@@ -1178,10 +1163,9 @@
         </div>
       </div>
 
-      <!-- Bottom row -->
-      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-        <p>© 2025 PhysioPro · All rights reserved. Built with care for better health.</p>
-        <div class="flex gap-5">
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
+        <p>© 2025 PhysioPro · All rights reserved.</p>
+        <div class="hidden sm:flex gap-5">
           <a href="#" class="hover:text-primary-400 transition-colors">Privacy Policy</a>
           <a href="#" class="hover:text-primary-400 transition-colors">Terms of Service</a>
           <a href="#" class="hover:text-primary-400 transition-colors">Impressum</a>
