@@ -10,11 +10,13 @@ import { Observable, map } from 'rxjs';
 import { MockApiService } from '../../core/services/mock-api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { BookingService, BookedAppointment } from '../../core/services/booking.service';
+import { SettingsService, AppSettings } from '../../core/services/settings.service';
+import { SafePipe } from '../../shared/pipes/safe.pipe';
 
 @Component({
     selector: 'app-landing',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule],
+    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule, SafePipe],
     templateUrl: './landing.component.html',
     styleUrl: './landing.component.scss'
 })
@@ -24,6 +26,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     private cdr = inject(ChangeDetectorRef);
     private authService = inject(AuthService);
     private bookingService = inject(BookingService);
+    private settingsService = inject(SettingsService);
 
     doctors$: Observable<any[]> | undefined;
     labs$: Observable<any[]> | undefined;
@@ -38,6 +41,9 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('doctorsSlider') doctorsSlider: ElementRef | undefined;
     @ViewChild('labsSlider') labsSlider: ElementRef | undefined;
     openFaqIndex: number | null = null;
+    
+    // Dynamic Hero Video
+    heroVideoSettings: AppSettings['heroVideo'] | null = null;
 
     get isLoggedIn() { return this.authService.isLoggedIn; }
     get userRole() { return this.authService.userRole; }
@@ -210,6 +216,12 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
         this.feedbacks$.subscribe(feedbacks => {
             if (feedbacks && feedbacks.length > 0) {
                 this.feedbackCount = feedbacks.length;
+            }
+        });
+
+        this.settingsService.settings$.subscribe(settings => {
+            if (settings) {
+                this.heroVideoSettings = settings.heroVideo;
             }
         });
 

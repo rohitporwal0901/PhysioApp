@@ -1,0 +1,12 @@
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.shadow-glass {
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}

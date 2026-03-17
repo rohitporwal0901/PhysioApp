@@ -55,6 +55,11 @@ export const routes: Routes = [
                 canActivate: [roleGuard(['admin'])],
                 loadComponent: () => import('./features/admin/lab-technicians/lab-technicians.component').then(m => m.LabTechniciansComponent)
             },
+            {
+                path: 'admin/video-settings',
+                canActivate: [roleGuard(['admin'])],
+                loadComponent: () => import('./features/admin/video-settings/video-settings.component').then(m => m.VideoSettingsComponent)
+            },
             // Doctor routes
             {
                 path: 'doctor/dashboard',
