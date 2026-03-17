@@ -140,6 +140,7 @@ export class DoctorsComponent implements OnInit {
     }
 
     async toggleAvailability(id: string) {
+        alert('for available')
         try {
             await this.api.toggleDoctorAvailability(id);
             this.toast.info('Availability status updated.', 'Status Update');
@@ -149,6 +150,7 @@ export class DoctorsComponent implements OnInit {
     }
 
     async toggleActive(id: string) {
+        ('for active')
         try {
             await this.api.toggleDoctorActive(id);
             this.toast.info('Visibility status updated.', 'Status Update');

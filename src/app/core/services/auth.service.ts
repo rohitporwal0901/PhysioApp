@@ -11,6 +11,7 @@ export interface AppUser {
   fullName: string;
   createdAt?: Date;
   available?: boolean;
+  active?: boolean
 }
 
 @Injectable({ providedIn: 'root' })
@@ -188,6 +189,7 @@ export class AuthService {
         email: data.email,
         role: 'doctor',
         available: true,
+        active:true,
         fullName: data.fullName,
         createdAt: new Date()
       };

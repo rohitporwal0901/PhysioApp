@@ -82,7 +82,7 @@ export class MockApiService {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
-        const currentActive = data['isActive'] ?? data['active'] ?? false;
+        const currentActive =  data['active'] ?? false;
         await updateDoc(docRef, {
           isActive: !currentActive,
           active: !currentActive // Map to both for compatibility
@@ -105,7 +105,7 @@ export class MockApiService {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
-        const currentAvailable = data['isAvailable'] ?? data['available'] ?? false;
+        const currentAvailable =  data['available'] ?? false;
         await updateDoc(docRef, {
           isAvailable: !currentAvailable,
           available: !currentAvailable // Map both
