@@ -39,6 +39,14 @@
                 <div class="absolute bottom-4 left-5 right-5">
                     <h3 class="text-white font-black text-xl leading-tight drop-shadow-lg">{{ doc.name }}</h3>
                     <p class="text-white/80 text-xs font-bold uppercase tracking-widest mt-0.5">{{ doc.specialty }}</p>
+                    <div class="flex gap-2 mt-2">
+                        <a *ngIf="doc.phone" [href]="'tel:' + doc.phone" class="text-white/90 hover:text-white transition-colors" title="Call">
+                            <i-lucide name="phone" class="w-3.5 h-3.5"></i-lucide>
+                        </a>
+                        <a *ngIf="doc.phone" [href]="'https://wa.me/' + doc.phone" target="_blank" class="text-white/90 hover:text-white transition-colors" title="WhatsApp">
+                            <i-lucide name="message-circle" class="w-3.5 h-3.5"></i-lucide>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -184,6 +192,12 @@
                     <option [value]="spec">{{ spec }}</option>
                     }
                 </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Phone Number *</label>
+                <input type="tel" [(ngModel)]="newDoctor.phone" name="phone" required placeholder="+1 234 567 890"
+                    class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-primary-400 focus:border-transparent outline-none text-slate-800 dark:text-white placeholder-slate-400 transition-all text-sm">
             </div>
 
             <div>

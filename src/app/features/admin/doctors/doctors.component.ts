@@ -19,23 +19,23 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 export class DoctorsComponent implements OnInit {
     private api = inject(MockApiService);
     private toast = inject(ToastService);
-    
+
     isProcessing = false;
-    
+
     // Confirmation dialog state
     confirmConfig = {
-      isOpen: false,
-      title: '',
-      message: '',
-      confirmText: '',
-      confirmBtnClass: '',
-      icon: '',
-      action: () => {}
+        isOpen: false,
+        title: '',
+        message: '',
+        confirmText: '',
+        confirmBtnClass: '',
+        icon: '',
+        action: () => { }
     };
     allDoctors: any[] = [];
     filteredDoctors: any[] = [];
     paginatedDoctors: any[] = [];
-    
+
     // Pagination
     currentPage = 1;
     pageSize = 8;
@@ -47,7 +47,8 @@ export class DoctorsComponent implements OnInit {
     newDoctor = {
         name: '',
         specialty: '',
-        image: ''
+        image: '',
+        phone: ''
     };
 
     specialties = [
@@ -69,17 +70,17 @@ export class DoctorsComponent implements OnInit {
             this.filteredDoctors = this.allDoctors;
         } else {
             const query = this.searchQuery.toLowerCase();
-            this.filteredDoctors = this.allDoctors.filter(doc => 
-                doc.name.toLowerCase().includes(query) || 
+            this.filteredDoctors = this.allDoctors.filter(doc =>
+                doc.name.toLowerCase().includes(query) ||
                 doc.specialty.toLowerCase().includes(query)
             );
         }
         this.totalPages = Math.ceil(this.filteredDoctors.length / this.pageSize);
-        
+
         if (!preservePage || this.currentPage > this.totalPages) {
             this.currentPage = 1;
         }
-        
+
         this.updatePaginatedDoctors();
     }
 
@@ -101,15 +102,18 @@ export class DoctorsComponent implements OnInit {
     }
 
     openAddModal() {
-        this.newDoctor = { name: '', specialty: '', image: '' };
+        this.newDoctor = { name: '', specialty: '', image: '', phone: '' };
         this.showAddModal = true;
     }
 
     async addDoctor() {
-        if (this.newDoctor.name && this.newDoctor.specialty) {
+        if (this.newDoctor.name && this.newDoctor.specialty && this.newDoctor.phone) {
             this.isProcessing = true;
             try {
-                await this.api.addDoctor(this.newDoctor);
+                await this.api.addDoctor({
+                    ...this.newDoctor,
+                    fullName: this.newDoctor.name // Dashboard expects fullName
+                });
                 this.toast.success('New doctor profile has been created.', 'Doctor Added');
                 this.showAddModal = false;
             } catch (error) {
@@ -122,25 +126,24 @@ export class DoctorsComponent implements OnInit {
 
     removeDoctor(id: string) {
         this.confirmConfig = {
-          isOpen: true,
-          title: 'Remove Doctor?',
-          message: 'This action will permanently delete the doctor from the database. Are you sure?',
-          confirmText: 'Delete Doctor',
-          confirmBtnClass: 'bg-red-500 hover:bg-red-600 shadow-red-500/20',
-          icon: 'trash-2',
-          action: async () => {
-            try {
-                await this.api.removeDoctor(id);
-                this.toast.success('Doctor has been removed successfully.', 'Deleted');
-            } catch (error) {
-                this.toast.error('Failed to remove doctor.', 'Error');
+            isOpen: true,
+            title: 'Remove Doctor?',
+            message: 'This action will permanently delete the doctor from the database. Are you sure?',
+            confirmText: 'Delete Doctor',
+            confirmBtnClass: 'bg-red-500 hover:bg-red-600 shadow-red-500/20',
+            icon: 'trash-2',
+            action: async () => {
+                try {
+                    await this.api.removeDoctor(id);
+                    this.toast.success('Doctor has been removed successfully.', 'Deleted');
+                } catch (error) {
+                    this.toast.error('Failed to remove doctor.', 'Error');
+                }
             }
-          }
         };
     }
 
     async toggleAvailability(id: string) {
-        alert('for available')
         try {
             await this.api.toggleDoctorAvailability(id);
             this.toast.info('Availability status updated.', 'Status Update');
@@ -150,7 +153,6 @@ export class DoctorsComponent implements OnInit {
     }
 
     async toggleActive(id: string) {
-        ('for active')
         try {
             await this.api.toggleDoctorActive(id);
             this.toast.info('Visibility status updated.', 'Status Update');
