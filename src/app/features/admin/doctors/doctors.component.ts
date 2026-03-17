@@ -6,16 +6,32 @@ import { LucideAngularModule } from 'lucide-angular';
 import { Observable } from 'rxjs';
 import { MockApiService } from '../../../core/services/mock-api.service';
 
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+
 @Component({
     selector: 'app-admin-doctors',
     standalone: true,
-    imports: [CommonModule, RouterModule, FormsModule, LucideAngularModule],
+    imports: [CommonModule, RouterModule, FormsModule, LucideAngularModule, ConfirmDialogComponent],
     templateUrl: './doctors.component.html',
     styleUrl: './doctors.component.scss'
 })
 export class DoctorsComponent implements OnInit {
     private api = inject(MockApiService);
-    doctors$: Observable<any[]> | undefined;
+    private toast = inject(ToastService);
+    
+    isProcessing = false;
+    
+    // Confirmation dialog state
+    confirmConfig = {
+      isOpen: false,
+      title: '',
+      message: '',
+      confirmText: '',
+      confirmBtnClass: '',
+      icon: '',
+      action: () => {}
+    };
     allDoctors: any[] = [];
     filteredDoctors: any[] = [];
     paginatedDoctors: any[] = [];
@@ -42,12 +58,13 @@ export class DoctorsComponent implements OnInit {
 
     ngOnInit() {
         this.api.getDoctors().subscribe(docs => {
+            console.log('Doctors updated in component:', docs);
             this.allDoctors = docs;
-            this.applyFilters();
+            this.applyFilters(true); // true to preserve current page if possible
         });
     }
 
-    applyFilters() {
+    applyFilters(preservePage: boolean = false) {
         if (!this.searchQuery) {
             this.filteredDoctors = this.allDoctors;
         } else {
@@ -58,7 +75,11 @@ export class DoctorsComponent implements OnInit {
             );
         }
         this.totalPages = Math.ceil(this.filteredDoctors.length / this.pageSize);
-        this.currentPage = 1;
+        
+        if (!preservePage || this.currentPage > this.totalPages) {
+            this.currentPage = 1;
+        }
+        
         this.updatePaginatedDoctors();
     }
 
@@ -84,24 +105,55 @@ export class DoctorsComponent implements OnInit {
         this.showAddModal = true;
     }
 
-    addDoctor() {
+    async addDoctor() {
         if (this.newDoctor.name && this.newDoctor.specialty) {
-            this.api.addDoctor(this.newDoctor);
-            this.showAddModal = false;
+            this.isProcessing = true;
+            try {
+                await this.api.addDoctor(this.newDoctor);
+                this.toast.success('New doctor profile has been created.', 'Doctor Added');
+                this.showAddModal = false;
+            } catch (error) {
+                this.toast.error('Failed to add doctor.', 'Error');
+            } finally {
+                this.isProcessing = false;
+            }
         }
     }
 
     removeDoctor(id: string) {
-        if (confirm('Are you sure you want to remove this doctor?')) {
-            this.api.removeDoctor(id);
+        this.confirmConfig = {
+          isOpen: true,
+          title: 'Remove Doctor?',
+          message: 'This action will permanently delete the doctor from the database. Are you sure?',
+          confirmText: 'Delete Doctor',
+          confirmBtnClass: 'bg-red-500 hover:bg-red-600 shadow-red-500/20',
+          icon: 'trash-2',
+          action: async () => {
+            try {
+                await this.api.removeDoctor(id);
+                this.toast.success('Doctor has been removed successfully.', 'Deleted');
+            } catch (error) {
+                this.toast.error('Failed to remove doctor.', 'Error');
+            }
+          }
+        };
+    }
+
+    async toggleAvailability(id: string) {
+        try {
+            await this.api.toggleDoctorAvailability(id);
+            this.toast.info('Availability status updated.', 'Status Update');
+        } catch (error) {
+            this.toast.error('Failed to update status.', 'Error');
         }
     }
 
-    toggleAvailability(id: string) {
-        this.api.toggleDoctorAvailability(id);
-    }
-
-    toggleActive(id: string) {
-        this.api.toggleDoctorActive(id);
+    async toggleActive(id: string) {
+        try {
+            await this.api.toggleDoctorActive(id);
+            this.toast.info('Visibility status updated.', 'Status Update');
+        } catch (error) {
+            this.toast.error('Failed to update status.', 'Error');
+        }
     }
 }

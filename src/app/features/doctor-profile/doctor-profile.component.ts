@@ -8,6 +8,8 @@ import { BookingService } from '../../core/services/booking.service';
 import { Observable, of } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 
+import { ToastService } from '../../core/services/toast.service';
+
 @Component({
     selector: 'app-doctor-profile',
     standalone: true,
@@ -21,9 +23,11 @@ export class DoctorProfileComponent implements OnInit {
     private api = inject(MockApiService);
     private bookingService = inject(BookingService);
     private authService = inject(AuthService);
+    private toast = inject(ToastService);
 
     doctor: any = null;
     activeTab: 'profile' | 'book' = 'profile';
+    isProcessing = false;
 
     // Booking form
     selectedDate = new Date().toISOString().split('T')[0];
@@ -155,6 +159,10 @@ export class DoctorProfileComponent implements OnInit {
                 this.bookingError = 'Please describe your condition/complaint (min 10 characters).';
                 return;
             }
+            
+            this.isProcessing = true;
+            this.bookingError = '';
+
             const result = await this.bookingService.bookAppointment({
                 doctorId: this.doctor.id,
                 doctorName: this.doctor.fullName || this.doctor.name || 'Doctor',
@@ -166,13 +174,17 @@ export class DoctorProfileComponent implements OnInit {
                 notes: this.patientNotes
             });
 
+            this.isProcessing = false;
+
             if (result.success) {
+                this.toast.success('Your appointment has been requested!', 'Success');
                 this.bookingConfirmed = true;
                 this.bookingError = '';
                 // Refresh booked slots
                 this.bookedSlots = await this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
             } else {
-                this.bookingError = result.error || 'This slot is already booked or you are not registered. Please try another slot.';
+                this.bookingError = result.error || 'This slot is already booked or you are not registered.';
+                this.toast.error(this.bookingError, 'Booking Failed');
             }
         }
     }

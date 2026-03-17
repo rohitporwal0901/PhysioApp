@@ -1,0 +1,112 @@
+.admin-doctors-container {
+    padding-bottom: 3rem;
+}
+
+.doctor-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    
+    &.active {
+        background: #10b9811a;
+        color: #10b981;
+        border: 1px solid #10b98133;
+    }
+    
+    &.inactive {
+        background: #ef44441a;
+        color: #ef4444;
+        border: 1px solid #ef444433;
+    }
+}
+
+.toggle-switch {
+    width: 36px;
+    height: 20px;
+    background: #e2e8f0;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: white;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: all 0.3s;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    &.checked {
+        background: #10b981;
+        &::after {
+            left: 18px;
+        }
+    }
+    
+    &.secondary.checked {
+        background: #0ea5e9;
+    }
+}
+
+.dark {
+    .toggle-switch {
+        background: #334155;
+    }
+    .status-badge {
+        &.active { background: #10b98126; }
+        &.inactive { background: #ef444426; }
+    }
+}
+
+.mgmt-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    
+    th {
+        padding: 1rem 1.5rem;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #64748b;
+        border-bottom: 2px solid #f1f5f9;
+    }
+    
+    td {
+        padding: 1.25rem 1.5rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+        transition: background 0.2s;
+    }
+    
+    tr:hover td {
+        background: #f8fafc;
+    }
+}
+
+.dark .mgmt-table {
+    th { color: #94a3b8; border-color: #1e293b; }
+    td { border-color: #1e293b; }
+    tr:hover td { background: #0f172a; }
+}

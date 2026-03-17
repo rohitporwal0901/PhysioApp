@@ -8,6 +8,8 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Observable, map } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
 
+import { ToastService } from '../../../core/services/toast.service';
+
 @Component({
   selector: 'app-book-appointment',
   standalone: true,
@@ -20,6 +22,7 @@ export class BookAppointmentComponent implements OnInit {
   private bookingService = inject(BookingService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   doctors$: Observable<any[]> | null = null;
 
@@ -126,9 +129,11 @@ export class BookAppointmentComponent implements OnInit {
     this.isProcessing = false;
 
     if (result.success) {
+      this.toast.success('Your appointment has been requested!', 'Booking Successful');
       this.currentStep = 3;
     } else {
       this.bookingError = result.error || 'Booking failed.';
+      this.toast.error(this.bookingError, 'Booking Failed');
       this.refreshBookedSlots(); // Refresh in case it was just booked
     }
   }

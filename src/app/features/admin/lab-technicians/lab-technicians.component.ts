@@ -6,15 +6,32 @@ import { LucideAngularModule } from 'lucide-angular';
 import { Observable } from 'rxjs';
 import { MockApiService } from '../../../core/services/mock-api.service';
 
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+
 @Component({
     selector: 'app-admin-lab-technicians',
     standalone: true,
-    imports: [CommonModule, RouterModule, FormsModule, LucideAngularModule],
+    imports: [CommonModule, RouterModule, FormsModule, LucideAngularModule, ConfirmDialogComponent],
     templateUrl: './lab-technicians.component.html',
     styleUrl: './lab-technicians.component.scss'
 })
 export class LabTechniciansComponent implements OnInit {
     private api = inject(MockApiService);
+    private toast = inject(ToastService);
+    
+    isProcessing = false;
+    
+    // Confirmation dialog state
+    confirmConfig = {
+      isOpen: false,
+      title: '',
+      message: '',
+      confirmText: '',
+      confirmBtnClass: '',
+      icon: '',
+      action: () => {}
+    };
     
     allLabs: any[] = [];
     filteredLabs: any[] = [];
@@ -40,11 +57,11 @@ export class LabTechniciansComponent implements OnInit {
     ngOnInit() {
         this.api.getLabTechnicians().subscribe(labs => {
             this.allLabs = labs;
-            this.applyFilters();
+            this.applyFilters(true);
         });
     }
 
-    applyFilters() {
+    applyFilters(preservePage: boolean = false) {
         if (!this.searchQuery) {
             this.filteredLabs = this.allLabs;
         } else {
@@ -54,7 +71,11 @@ export class LabTechniciansComponent implements OnInit {
             );
         }
         this.totalPages = Math.ceil(this.filteredLabs.length / this.pageSize);
-        this.currentPage = 1;
+        
+        if (!preservePage || this.currentPage > this.totalPages) {
+            this.currentPage = 1;
+        }
+        
         this.updatePaginatedLabs();
     }
 
@@ -87,24 +108,55 @@ export class LabTechniciansComponent implements OnInit {
         this.showAddModal = true;
     }
 
-    addLab() {
+    async addLab() {
         if (this.newLab.name) {
-            this.api.addLabTechnician(this.newLab);
-            this.showAddModal = false;
+            this.isProcessing = true;
+            try {
+                await this.api.addLabTechnician(this.newLab);
+                this.toast.success('Diagnostic lab has been registered.', 'Lab Added');
+                this.showAddModal = false;
+            } catch (error) {
+                this.toast.error('Failed to add laboratory.', 'Error');
+            } finally {
+                this.isProcessing = false;
+            }
         }
     }
 
     removeLab(id: string) {
-        if (confirm('Are you sure you want to remove this lab?')) {
-            this.api.removeUser(id);
+        this.confirmConfig = {
+          isOpen: true,
+          title: 'Remove Laboratory?',
+          message: 'This will remove the lab and all associated data. Are you sure?',
+          confirmText: 'Delete Lab',
+          confirmBtnClass: 'bg-red-500 hover:bg-red-600 shadow-red-500/20',
+          icon: 'trash-2',
+          action: async () => {
+            try {
+                await this.api.removeUser(id);
+                this.toast.success('Laboratory removed successfully.', 'Deleted');
+            } catch (error) {
+                this.toast.error('Failed to remove lab.', 'Error');
+            }
+          }
+        };
+    }
+
+    async toggleAvailability(id: string) {
+        try {
+            await this.api.toggleLabTechnicianAvailability(id);
+            this.toast.info('Availability status updated.', 'Status Update');
+        } catch (error) {
+            this.toast.error('Failed to update status.', 'Error');
         }
     }
 
-    toggleAvailability(id: string) {
-        this.api.toggleLabTechnicianAvailability(id);
-    }
-
-    toggleActive(id: string) {
-        this.api.toggleLabTechnicianActive(id);
+    async toggleActive(id: string) {
+        try {
+            await this.api.toggleLabTechnicianActive(id);
+            this.toast.info('Lab visibility updated.', 'Status Update');
+        } catch (error) {
+            this.toast.error('Failed to update visibility.', 'Error');
+        }
     }
 }

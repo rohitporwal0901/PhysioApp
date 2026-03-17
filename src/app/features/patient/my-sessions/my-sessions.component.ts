@@ -10,6 +10,8 @@ import { environment } from '../../../../environments/environment';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+import { ToastService } from '../../../core/services/toast.service';
+
 @Component({
   selector: 'app-my-sessions',
   standalone: true,
@@ -21,6 +23,7 @@ export class MySessionsComponent implements OnInit {
   private bookingService = inject(BookingService);
   private authService = inject(AuthService);
   private aiService = inject(AiService);
+  private toast = inject(ToastService);
 
   upcomingSessions: BookedAppointment[] = [];
   pastSessions: BookedAppointment[] = [];
@@ -121,22 +124,23 @@ export class MySessionsComponent implements OnInit {
         await new Promise(resolve => setTimeout(resolve, 2000));
       }
 
-      // 3. PERSIST the report to database (Important: Move this outside the try/catch)
+      // 3. PERSIST the report to database
       if (aiAnalysis) {
         await this.bookingService.updateAiReport(session.id, aiAnalysis);
-        
+
         // Update local state immediately for better UX
         session.aiReport = {
           ...aiAnalysis,
           generatedAt: new Date()
         };
+        this.toast.success('AI Report generated successfully!', 'Success');
       }
 
       this.generatePDF(session, aiAnalysis);
 
     } catch (globalError) {
       console.error("Report Generation Error:", globalError);
-      alert("Could not generate report. Please try again later.");
+      this.toast.error("Could not generate report. Please try again later.", "Error");
     } finally {
       // Stop Loading Overlay
       this.generatingReportId = null;
@@ -157,14 +161,14 @@ export class MySessionsComponent implements OnInit {
     doc.rect(5, 5, 200, 287);
 
     // Slim Premium Header
-    doc.setFillColor(15, 23, 42); 
+    doc.setFillColor(15, 23, 42);
     doc.rect(5, 5, 200, 35, 'F');
-    
+
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(28);
     doc.setFont('times', 'bold');
     doc.text('PhysioPro', 15, 25);
-    
+
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(16, 185, 129);
@@ -222,7 +226,7 @@ export class MySessionsComponent implements OnInit {
     doc.setFontSize(11);
     doc.setFont('times', 'bold');
     doc.text('EXPERT CLINICAL OBSERVATIONS', 15, currentY + 10);
-    
+
     doc.setTextColor(51, 65, 85);
     doc.setFont('times', 'normal');
     doc.setFontSize(9.5);
@@ -257,7 +261,7 @@ export class MySessionsComponent implements OnInit {
       theme: 'grid',
       headStyles: { fillColor: [15, 23, 42], textColor: 255, font: 'times', fontSize: 9 },
       styles: { fontSize: 8, cellPadding: 3 },
-      columnStyles: { 
+      columnStyles: {
         0: { fontStyle: 'bold', textColor: [16, 185, 129], cellWidth: 20 },
         1: { cellWidth: 40 },
         2: { cellWidth: 55 },
@@ -301,20 +305,39 @@ export class MySessionsComponent implements OnInit {
     doc.setFontSize(10);
     doc.setFont('times', 'bold');
     doc.text('FINAL CLINICAL RECOMMENDATION', 15, finalY + 7);
-    
+
     doc.setTextColor(69, 26, 3);
     doc.setFont('times', 'italic'); // Changed to times for consistency
     doc.setFontSize(9);
     doc.text(advice, 15, finalY + 13);
 
-    // Footer Signature Line
+    // Signature
     doc.setDrawColor(203, 213, 225);
     doc.line(140, 275, 190, 275);
     doc.setFontSize(8);
     doc.setTextColor(100, 116, 139);
     doc.text('Certified Clinical Signatory', 145, 280);
 
-    doc.save(`Report_${session.patientName.replace(/\s+/g, '_')}.pdf`);
+    const fileName = `Report_${session.patientName.replace(/\s+/g, '_')}.pdf`;
+
+    // MOBILE APP FIX: For Capacitor/Mobile App, sometimes .save() fails or is silent.
+    // We try to open a blob URL in a new window/tab as well.
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      try {
+        const blob = doc.output('blob');
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        this.toast.success('Report opened in new tab. You can save it from there.', 'Report Ready');
+      } catch (e) {
+        console.error('Blob URL failed, falling back to save', e);
+        doc.save(fileName);
+      }
+    } else {
+      doc.save(fileName);
+      this.toast.success('Report downloaded successfully.', 'Success');
+    }
   }
 
   private drawWatermark(doc: jsPDF) {
@@ -342,7 +365,7 @@ export class MySessionsComponent implements OnInit {
       { phase: 'Phase 2', goal: 'Mobility', exercises: 'Active stretching', focus: 'Range', videoUrl: 'https://www.youtube.com/results?search_query=physiotherapy+mobility+exercises' },
       { phase: 'Phase 3', goal: 'Integration', exercises: 'Functional drills', focus: 'Power', videoUrl: 'https://www.youtube.com/results?search_query=physiotherapy+functional+return' }
     ];
-    
+
     if (c.includes('back') || c.includes('spine')) {
       summary = "Spinal assessment suggests reduced mechanical stress. Core stability is improving, allowing for increased functional load-bearing capacity.";
       roadmap[0] = { ...roadmap[0], goal: 'Decompression', exercises: 'Pelvic tilts', focus: 'Relief', videoUrl: 'https://www.youtube.com/results?search_query=physiotherapy+back+decompression' };
@@ -380,10 +403,11 @@ export class MySessionsComponent implements OnInit {
         comment: this.feedbackComment,
         createdAt: new Date()
       };
+      this.toast.success('Thank you for your valuable feedback!', 'Feedback Submitted');
       this.closeFeedbackModal();
     } catch (error) {
       console.error('Feedback error:', error);
-      alert('Failed to submit feedback.');
+      this.toast.error('Failed to submit feedback. Please try again.', 'Error');
     } finally {
       this.isSubmittingFeedback = false;
     }

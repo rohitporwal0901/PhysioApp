@@ -6,10 +6,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Observable, of } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
 
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+
 @Component({
   selector: 'app-agenda',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule, ConfirmDialogComponent],
   templateUrl: './agenda.component.html',
   styleUrl: './agenda.component.scss'
 })
@@ -22,7 +24,19 @@ export class AgendaComponent implements OnInit {
   selectedDate: string = new Date().toISOString().split('T')[0];
   selectedAppointment: BookedAppointment | null = null;
   isLoading = true;
+  actionLoading = false;
   clinicalNotes: string = '';
+
+  // Confirmation dialog state
+  confirmConfig = {
+    isOpen: false,
+    title: '',
+    message: '',
+    confirmText: '',
+    confirmBtnClass: '',
+    icon: '',
+    action: () => {}
+  };
   
   // Unsplash profile image collections for patients
   private patientImages = [
@@ -71,44 +85,92 @@ export class AgendaComponent implements OnInit {
   }
 
   async confirmAppointment(apt: BookedAppointment) {
-    if (!apt.id) return;
-    try {
-      await this.bookingService.updateAppointmentStatus(apt.id, 'confirmed');
-      if (this.selectedAppointment?.id === apt.id) {
-        this.selectedAppointment.status = 'confirmed';
+    if (!apt.id || this.actionLoading) return;
+    
+    this.confirmConfig = {
+      isOpen: true,
+      title: 'Confirm Appointment',
+      message: `Are you sure you want to confirm this session with ${apt.patientName}?`,
+      confirmText: 'Confirm Session',
+      confirmBtnClass: 'bg-gradient-to-r from-green-500 to-green-600 shadow-green-500/25',
+      icon: 'check-circle',
+      action: async () => {
+        this.actionLoading = true;
+        try {
+          if (apt.id) {
+            await this.bookingService.updateAppointmentStatus(apt.id, 'confirmed');
+            if (this.selectedAppointment?.id === apt.id) {
+              this.selectedAppointment.status = 'confirmed';
+            }
+          }
+        } catch (error) {
+          console.error('Error confirming appointment', error);
+        } finally {
+          this.actionLoading = false;
+        }
       }
-    } catch (error) {
-      console.error('Error confirming appointment', error);
-    }
+    };
   }
 
   async rejectAppointment(apt: BookedAppointment) {
-    if (!apt.id) return;
-    try {
-      // Rejection cancels the appointment, opening the slot back up
-      await this.bookingService.updateAppointmentStatus(apt.id, 'cancelled');
-      if (this.selectedAppointment?.id === apt.id) {
-        this.selectedAppointment.status = 'cancelled';
+    if (!apt.id || this.actionLoading) return;
+
+    this.confirmConfig = {
+      isOpen: true,
+      title: 'Reject Appointment',
+      message: `Do you want to decline this request from ${apt.patientName}?`,
+      confirmText: 'Decline',
+      confirmBtnClass: 'bg-gradient-to-r from-red-500 to-red-600 shadow-red-500/25',
+      icon: 'alert-circle',
+      action: async () => {
+        this.actionLoading = true;
+        try {
+          if (apt.id) {
+            // Rejection cancels the appointment, opening the slot back up
+            await this.bookingService.updateAppointmentStatus(apt.id, 'cancelled');
+            if (this.selectedAppointment?.id === apt.id) {
+              this.selectedAppointment.status = 'cancelled';
+            }
+          }
+        } catch (error) {
+          console.error('Error rejecting appointment', error);
+        } finally {
+          this.actionLoading = false;
+        }
       }
-    } catch (error) {
-      console.error('Error rejecting appointment', error);
-    }
+    };
   }
 
   async completeAppointment(apt: BookedAppointment) {
-    if (!apt.id) return;
-    try {
-      if (this.clinicalNotes) {
-        await this.bookingService.updateTreatmentNotes(apt.id, this.clinicalNotes);
+    if (!apt.id || this.actionLoading) return;
+
+    this.confirmConfig = {
+      isOpen: true,
+      title: 'Complete Session',
+      message: `Mark this session with ${apt.patientName} as completed?`,
+      confirmText: 'Mark Completed',
+      confirmBtnClass: 'bg-gradient-to-r from-blue-500 to-blue-600 shadow-blue-500/25',
+      icon: 'award',
+      action: async () => {
+        this.actionLoading = true;
+        try {
+          if (apt.id) {
+            if (this.clinicalNotes) {
+              await this.bookingService.updateTreatmentNotes(apt.id, this.clinicalNotes);
+            }
+            await this.bookingService.updateAppointmentStatus(apt.id, 'completed');
+            if (this.selectedAppointment?.id === apt.id) {
+              this.selectedAppointment.status = 'completed';
+              this.selectedAppointment.treatmentNotes = this.clinicalNotes;
+            }
+          }
+        } catch (error) {
+          console.error('Error completing appointment', error);
+        } finally {
+          this.actionLoading = false;
+        }
       }
-      await this.bookingService.updateAppointmentStatus(apt.id, 'completed');
-      if (this.selectedAppointment?.id === apt.id) {
-        this.selectedAppointment.status = 'completed';
-        this.selectedAppointment.treatmentNotes = this.clinicalNotes;
-      }
-    } catch (error) {
-      console.error('Error completing appointment', error);
-    }
+    };
   }
 
   getStatusClass(status: string): string {

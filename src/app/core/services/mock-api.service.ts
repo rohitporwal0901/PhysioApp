@@ -76,25 +76,45 @@ export class MockApiService {
 
   /** Toggle doctor active status */
   async toggleDoctorActive(uid: string): Promise<void> {
+    console.log('Toggling Active for Doctor:', uid);
     const docRef = doc(this.firestore, 'users', uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      await updateDoc(docRef, {
-        isActive: data['isActive'] === undefined ? false : !data['isActive']
-      });
+    try {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const currentActive = data['isActive'] ?? data['active'] ?? false;
+        await updateDoc(docRef, {
+          isActive: !currentActive,
+          active: !currentActive // Map to both for compatibility
+        });
+        console.log('Update successful: isActive ->', !currentActive);
+      } else {
+        console.warn('Doctor document not found:', uid);
+      }
+    } catch (error) {
+      console.error('Error in toggleDoctorActive:', error);
+      throw error;
     }
   }
 
   /** Toggle doctor availability */
   async toggleDoctorAvailability(uid: string): Promise<void> {
+    console.log('Toggling Availability for Doctor:', uid);
     const docRef = doc(this.firestore, 'users', uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      await updateDoc(docRef, {
-        isAvailable: !data['isAvailable']
-      });
+    try {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const currentAvailable = data['isAvailable'] ?? data['available'] ?? false;
+        await updateDoc(docRef, {
+          isAvailable: !currentAvailable,
+          available: !currentAvailable // Map both
+        });
+        console.log('Update successful: isAvailable ->', !currentAvailable);
+      }
+    } catch (error) {
+      console.error('Error in toggleDoctorAvailability:', error);
+      throw error;
     }
   }
 

@@ -99,8 +99,39 @@
 .login-button {
     height: 60px;
     letter-spacing: 0.1em;
+
+    @media (max-width: 640px) {
+        height: 56px;
+    }
+}
+
+@media (max-width: 480px) {
+    .lg\:bg-white {
+        background-color: transparent !important;
+    }
+    
+    // Better spacing for 6.5 inch screens
+    .px-4 {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+
+    form {
+        margin-top: 1rem;
+    }
+}
+
+/* Ensure background image is really covering */
+.lg\:hidden img {
+    filter: brightness(0.7) contrast(1.1);
 }
 
 .left-panel-content {
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Fix for safe area in mobile apps */
+.min-h-screen {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
 }

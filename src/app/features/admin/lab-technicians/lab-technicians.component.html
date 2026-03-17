@@ -23,77 +23,86 @@
     </div>
 
     <!-- Labs Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         <div *ngFor="let lab of paginatedLabs; let i = index"
-            class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-card transition-all duration-300 overflow-hidden group">
+            class="doctor-card bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden group">
 
-            <!-- Card photo top -->
-            <div class="relative h-48 bg-gradient-to-br from-secondary-400 to-secondary-600 overflow-hidden">
+            <!-- Card Header: Lab Photo & Basic Info -->
+            <div class="relative h-44 bg-slate-100 dark:bg-slate-900 overflow-hidden">
                 <img [src]="lab.image"
                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Lab&background=4F46E5&color=fff&size=200'"
                     alt="Lab Avatar"
-                    class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-
-                <!-- Status badges (top left) -->
-                <div class="absolute top-3 left-3 flex flex-col gap-2">
-                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-md"
-                        [ngClass]="lab.active ? 'bg-status-success/90 text-white' : 'bg-red-500/90 text-white'">
-                        {{ lab.active ? 'Active' : 'Hidden' }}
-                    </span>
-                    <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-md"
-                        [ngClass]="lab.available ? 'bg-secondary-500/90 text-white' : 'bg-slate-700/90 text-slate-100'">
-                        {{ lab.available ? 'Open' : 'Closed' }}
-                    </span>
-                </div>
-
-                <!-- Floating Toggles (top right) -->
-                <div class="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <button (click)="toggleActive(lab.id)"
-                        class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center hover:bg-white/40 transition-all active:scale-90"
-                        [title]="lab.active ? 'Deactivate' : 'Activate'">
-                        <i-lucide [name]="lab.active ? 'eye-off' : 'eye'" class="w-4 h-4 text-white"></i-lucide>
-                    </button>
-                    <button (click)="toggleAvailability(lab.id)"
-                        class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center hover:bg-white/40 transition-all active:scale-90"
-                        [title]="lab.available ? 'Mark Closed' : 'Mark Open'">
-                        <i-lucide name="clock" class="w-4 h-4 text-white"></i-lucide>
-                    </button>
-                </div>
-
-                <!-- Quick Info Overlay (bottom left) -->
-                <div class="absolute bottom-4 left-4 right-4">
-                    <h3 class="text-white font-bold text-lg leading-tight mb-0.5 drop-shadow-md">{{ lab.name }}</h3>
-                    <div class="flex items-center gap-2">
-                        <span class="text-white/80 text-xs font-medium">All Lab Tests Available</span>
-                    </div>
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
+                
+                <div class="absolute bottom-4 left-5 right-5">
+                    <h3 class="text-white font-black text-xl leading-tight drop-shadow-lg">{{ lab.name }}</h3>
+                    <p class="text-white/80 text-xs font-bold uppercase tracking-widest mt-0.5">Diagnostic Services</p>
                 </div>
             </div>
 
-            <!-- Card Content/Stats -->
-            <div class="p-5">
-                <div class="space-y-3 mb-5">
-                    <div class="flex items-center gap-3 text-slate-600 dark:text-slate-400">
-                        <i-lucide name="phone" class="w-3.5 h-3.5"></i-lucide>
-                        <span class="text-xs font-semibold">{{ lab.phone || '+91 ...' }}</span>
+            <div class="p-6">
+                <!-- Management Toggles Section -->
+                <div class="space-y-4 mb-6">
+                    <!-- Toggle 1: Visibility -->
+                    <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-900/30 transition-all group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center transition-transform group-hover:scale-110">
+                                <i-lucide [name]="lab.active ? 'eye' : 'eye-off'" 
+                                          [class]="lab.active ? 'text-emerald-500' : 'text-slate-400'" 
+                                          class="w-5 h-5"></i-lucide>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Portal Listing</span>
+                                <span class="text-xs font-bold text-slate-700 dark:text-slate-200">{{ lab.active ? 'VISIBLE' : 'HIDDEN' }}</span>
+                            </div>
+                        </div>
+                        <button type="button" 
+                                (click)="$event.stopPropagation(); toggleActive(lab.id)" 
+                                class="relative w-12 h-12 flex items-center justify-center rounded-xl hover:bg-emerald-500/5 transition-colors group/btn">
+                            <div class="toggle-switch" [class.checked]="lab.active"></div>
+                        </button>
                     </div>
-                    <div class="flex items-center gap-3 text-slate-600 dark:text-slate-400">
-                        <i-lucide name="map-pin" class="w-3.5 h-3.5"></i-lucide>
-                        <span class="text-xs font-semibold truncate">{{ lab.address || 'Location details...' }}</span>
+
+                    <!-- Toggle 2: Availability -->
+                    <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 hover:border-secondary-200 dark:hover:border-secondary-900/30 transition-all group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center transition-transform group-hover:scale-110">
+                                <i-lucide name="clock" 
+                                          [class]="lab.available ? 'text-secondary-500' : 'text-slate-400'" 
+                                          class="w-5 h-5"></i-lucide>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Operation Status</span>
+                                <span class="text-xs font-bold text-slate-700 dark:text-slate-200">{{ lab.available ? 'OPEN NOW' : 'CLOSED' }}</span>
+                            </div>
+                        </div>
+                        <button type="button" 
+                                (click)="$event.stopPropagation(); toggleAvailability(lab.id)" 
+                                class="relative w-12 h-12 flex items-center justify-center rounded-xl hover:bg-secondary-500/5 transition-colors group/btn">
+                            <div class="toggle-switch secondary" [class.checked]="lab.available"></div>
+                        </button>
                     </div>
                 </div>
 
-                <!-- Actions -->
-                <div class="flex gap-2">
-                    <button
-                        class="flex-1 py-2.5 text-sm font-bold rounded-2xl text-secondary-600 dark:text-secondary-400 bg-secondary-50 dark:bg-secondary-900/20 hover:bg-secondary-500 hover:text-white dark:hover:bg-secondary-500 transition-all duration-300 flex items-center justify-center gap-2">
-                        <i-lucide name="edit-2" class="w-3.5 h-3.5"></i-lucide>
-                        Edit
-                    </button>
-                    <button (click)="removeLab(lab.id)"
-                        class="w-11 h-10 flex items-center justify-center rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300">
-                        <i-lucide name="trash-2" class="w-4 h-4"></i-lucide>
-                    </button>
+                <!-- Footer Phone & Actions -->
+                <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-5">
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2 text-slate-500">
+                            <i-lucide name="phone" class="w-4 h-4"></i-lucide>
+                            <span class="text-xs font-bold">{{ lab.phone || '+91 ...' }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-secondary-500 hover:bg-secondary-50 dark:hover:bg-secondary-900/20 transition-all active:scale-95">
+                            <i-lucide name="edit-2" class="w-4 h-4"></i-lucide>
+                        </button>
+                        <button (click)="removeLab(lab.id)" 
+                                class="p-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-500 hover:text-white transition-all active:scale-95">
+                            <i-lucide name="trash-2" class="w-4 h-4"></i-lucide>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -202,3 +211,15 @@
         </form>
     </div>
 </div>
+
+<!-- Confirmation Dialog -->
+<app-confirm-dialog 
+  [isOpen]="confirmConfig.isOpen"
+  [title]="confirmConfig.title"
+  [message]="confirmConfig.message"
+  [confirmText]="confirmConfig.confirmText"
+  [confirmBtnClass]="confirmConfig.confirmBtnClass"
+  [icon]="confirmConfig.icon"
+  (confirmed)="confirmConfig.action(); confirmConfig.isOpen = false"
+  (cancelled)="confirmConfig.isOpen = false">
+</app-confirm-dialog>

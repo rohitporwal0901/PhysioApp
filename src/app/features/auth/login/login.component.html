@@ -104,46 +104,46 @@
                 </div>
 
                 <!-- Header -->
-                <div class="mb-10 text-center lg:text-left animate-fade-in-up">
-                    <h1 class="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white lg:text-slate-900 font-heading mb-3">
+                <div class="mb-8 lg:mb-10 text-center lg:text-left animate-fade-in-up">
+                    <h1 class="text-3xl lg:text-4xl font-black text-white lg:text-slate-900 dark:text-white font-heading mb-3">
                         Welcome Back 
                         <span class="inline-block animate-wave ml-1">👋</span>
                     </h1>
-                    <p class="text-slate-500 dark:text-slate-400 lg:text-slate-500 text-base font-semibold">
+                    <p class="text-slate-300 lg:text-slate-500 dark:text-slate-400 text-base font-semibold">
                         Please enter your credentials to access your portal.
                     </p>
                 </div>
 
                 <!-- FORM -->
-                <form (ngSubmit)="login()" class="space-y-6">
-                    <div *ngIf="errorMessage" class="flex items-start gap-3 p-4 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/40 animate-shake">
+                <form (ngSubmit)="login()" class="space-y-5 lg:space-y-6">
+                    <div *ngIf="errorMessage" class="flex items-start gap-3 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 backdrop-blur-md animate-shake">
                         <i-lucide name="alert-circle" class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"></i-lucide>
-                        <p class="text-sm text-red-600 dark:text-red-400 font-medium">{{ errorMessage }}</p>
+                        <p class="text-sm text-red-200 dark:text-red-400 font-medium">{{ errorMessage }}</p>
                     </div>
 
                     <div class="form-group-1 animate-fade-in-up">
-                        <label for="email" class="block text-sm font-bold text-white lg:text-slate-700 dark:text-slate-300 mb-2 ml-1 uppercase tracking-widest">Email Address</label>
+                        <label for="email" class="block text-xs font-black text-white/50 lg:text-slate-500 dark:text-slate-400 mb-2 ml-1 uppercase tracking-[0.2em]">Email Address</label>
                         <div class="relative group">
                             <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none transition-colors group-focus-within:text-primary-400">
-                                <i-lucide name="mail" class="w-5 h-5 text-slate-300 lg:text-slate-400"></i-lucide>
+                                <i-lucide name="mail" class="w-5 h-5 text-slate-400 lg:text-slate-400"></i-lucide>
                             </div>
                             <input id="email" type="email" [(ngModel)]="email" name="email" required placeholder="name@example.com"
-                                class="w-full pl-12 pr-4 py-5 rounded-2xl border-2 border-white/10 lg:border-slate-200 bg-slate-900/60 lg:bg-slate-50 dark:bg-slate-800/80 text-white lg:text-slate-900 dark:text-white placeholder-slate-400 lg:placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-300 font-bold text-base shadow-xl backdrop-blur-xl">
+                                class="w-full pl-12 pr-4 py-4 lg:py-5 rounded-2xl border-2 border-white/5 lg:border-slate-200 bg-white/5 lg:bg-slate-50 dark:bg-slate-800/80 text-white lg:text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-300 font-bold text-base shadow-2xl backdrop-blur-xl">
                         </div>
                     </div>
 
                     <div class="form-group-2 animate-fade-in-up">
                         <div class="flex items-center justify-between mb-2 ml-1">
-                            <label for="password" class="text-sm font-bold text-white lg:text-slate-700 dark:text-slate-300 uppercase tracking-widest">Password</label>
+                            <label for="password" class="text-xs font-black text-white/50 lg:text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em]">Password</label>
                             <a href="#" class="text-xs font-bold text-primary-400 lg:text-primary-500 hover:text-primary-300 lg:hover:text-primary-600 transition-colors">Forgot?</a>
                         </div>
                         <div class="relative group">
                             <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none transition-colors group-focus-within:text-primary-400">
-                                <i-lucide name="lock" class="w-5 h-5 text-slate-300 lg:text-slate-400"></i-lucide>
+                                <i-lucide name="lock" class="w-5 h-5 text-slate-400 lg:text-slate-400"></i-lucide>
                             </div>
                             <input id="password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" required placeholder="••••••••"
-                                class="w-full pl-12 pr-14 py-5 rounded-2xl border-2 border-white/10 lg:border-slate-200 bg-slate-900/60 lg:bg-slate-50 dark:bg-slate-800/80 text-white lg:text-slate-900 dark:text-white placeholder-slate-400 lg:placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-300 font-bold text-base shadow-xl backdrop-blur-xl">
-                            <button type="button" (click)="togglePassword()" class="absolute inset-y-0 right-4 flex items-center text-slate-300 lg:text-slate-400 hover:text-white lg:hover:text-slate-600 transition-colors">
+                                class="w-full pl-12 pr-14 py-4 lg:py-5 rounded-2xl border-2 border-white/5 lg:border-slate-200 bg-white/5 lg:bg-slate-50 dark:bg-slate-800/80 text-white lg:text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-300 font-bold text-base shadow-2xl backdrop-blur-xl">
+                            <button type="button" (click)="togglePassword()" class="absolute inset-y-0 right-4 flex items-center text-slate-400 lg:text-slate-400 hover:text-white lg:hover:text-slate-600 transition-colors">
                                 <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" class="w-5 h-5"></i-lucide>
                             </button>
                         </div>
@@ -152,15 +152,21 @@
                     <div class="form-group-3 animate-fade-in-up pt-4">
                         <button type="submit" [disabled]="isLoading"
                             class="w-full login-button flex justify-center items-center gap-3 px-6 rounded-2xl font-black text-white shadow-[0_10px_30px_-10px_rgba(16,185,129,0.5)] transition-all duration-500 active:scale-[0.97] group relative overflow-hidden"
-                            [ngClass]="isLoading ? 'bg-primary-400' : 'bg-primary-500 hover:bg-primary-600 hover:-translate-y-1'">
-                            <div class="absolute inset-0 w-1/2 h-full bg-white/30 -skew-x-[30deg] -translate-x-[150%] group-hover:animate-shine pointer-events-none"></div>
+                            [ngClass]="isLoading ? 'bg-primary-600/50' : 'bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 hover:-translate-y-1'">
+                            <div class="absolute inset-0 w-1/2 h-full bg-white/20 -skew-x-[30deg] -translate-x-[150%] group-hover:animate-shine pointer-events-none"></div>
                             <span *ngIf="!isLoading" class="flex items-center gap-3 text-base tracking-[0.1em]">SIGN IN TO PORTAL <i-lucide name="arrow-right" class="w-5 h-5"></i-lucide></span>
-                            <span *ngIf="isLoading">AUTHENTICATING...</span>
+                            <div *ngIf="isLoading" class="flex items-center gap-3">
+                                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span>AUTHENTICATING...</span>
+                            </div>
                         </button>
                     </div>
                 </form>
 
-                <div class="flex items-center gap-4 my-10 form-group-4 animate-fade-in-up">
+                <div class="flex items-center gap-4 my-8 lg:my-10 form-group-4 animate-fade-in-up">
                     <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800"></div>
                     <span class="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">New Resident?</span>
                     <div class="flex-1 h-px bg-slate-100 dark:bg-slate-800"></div>

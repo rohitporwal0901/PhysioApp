@@ -12,10 +12,12 @@ interface MenuItem {
   badgeColor?: string;
 }
 
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, LucideAngularModule],
+  imports: [CommonModule, RouterModule, LucideAngularModule, ConfirmDialogComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
@@ -25,6 +27,7 @@ export class SidebarComponent {
   @Output() closeMenu = new EventEmitter<void>();
 
   private authService = inject(AuthService);
+  showLogoutConfirm = false;
 
   get currentUser(): AppUser | null {
     return this.authService.currentUser;
@@ -93,6 +96,11 @@ export class SidebarComponent {
   }
 
   async onLogout() {
+    this.showLogoutConfirm = true;
+  }
+
+  async confirmLogout() {
     await this.authService.logout();
+    this.showLogoutConfirm = false;
   }
 }
