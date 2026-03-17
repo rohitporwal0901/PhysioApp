@@ -35,9 +35,9 @@ export class AgendaComponent implements OnInit {
     confirmText: '',
     confirmBtnClass: '',
     icon: '',
-    action: () => {}
+    action: () => { }
   };
-  
+
   // Unsplash profile image collections for patients
   private patientImages = [
     'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=400&auto=format&fit=crop',
@@ -66,11 +66,11 @@ export class AgendaComponent implements OnInit {
   filterAgenda() {
     const parseTime = (timeStr: string) => {
       const match = timeStr.match(/(\d+):(\d+)\s+(AM|PM)/i);
-      if(!match) return 0;
+      if (!match) return 0;
       let hours = parseInt(match[1]);
       const minutes = parseInt(match[2]);
-      if(match[3].toUpperCase() === 'PM' && hours < 12) hours += 12;
-      if(match[3].toUpperCase() === 'AM' && hours === 12) hours = 0;
+      if (match[3].toUpperCase() === 'PM' && hours < 12) hours += 12;
+      if (match[3].toUpperCase() === 'AM' && hours === 12) hours = 0;
       return hours * 60 + minutes;
     };
 
@@ -86,12 +86,12 @@ export class AgendaComponent implements OnInit {
 
   async confirmAppointment(apt: BookedAppointment) {
     if (!apt.id || this.actionLoading) return;
-    
+
     this.confirmConfig = {
       isOpen: true,
       title: 'Confirm Appointment',
       message: `Are you sure you want to confirm this session with ${apt.patientName}?`,
-      confirmText: 'Confirm Session',
+      confirmText: 'Confirm',
       confirmBtnClass: 'bg-gradient-to-r from-green-500 to-green-600 shadow-green-500/25',
       icon: 'check-circle',
       action: async () => {
@@ -185,7 +185,7 @@ export class AgendaComponent implements OnInit {
 
   sendWhatsApp(apt: BookedAppointment) {
     if (!apt) return;
-    
+
     const message = `Hello ${apt.patientName}, I am your Physiotherapist. This is regarding your appointment on ${apt.date} at ${apt.time}.`;
     const url = `https://wa.me/?text=${this.encodeURIComponent(message)}`;
     window.open(url, '_blank');
