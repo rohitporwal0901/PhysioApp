@@ -12,6 +12,8 @@ import autoTable from 'jspdf-autotable';
 
 import { ToastService } from '../../../core/services/toast.service';
 import { Capacitor } from '@capacitor/core';
+import { Share as CapShare } from '@capacitor/share';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 
 @Component({
   selector: 'app-my-sessions',
@@ -146,11 +148,10 @@ export class MySessionsComponent implements OnInit {
   async shareReport(session: BookedAppointment) {
     if (!session.id) return;
 
-    if (!navigator.share) {
-      this.toast.error('Sharing is not supported on this device.', 'Share Error');
-      return;
-    }
-
+    // Capacitor Native Share works differently than navigator.share
+    const isNative = Capacitor.isNativePlatform();
+    
+    // Check if AI report exists or generate it
     if (!session.aiReport) {
       this.generatingReportId = session.id;
       try {
@@ -348,30 +349,55 @@ export class MySessionsComponent implements OnInit {
     const fileName = `Report_${session.patientName.replace(/\s+/g, '_')}.pdf`;
 
     // CASE 1: SHARE (Mobile APK / Modern Mobile Browsers)
-    if (action === 'share' && navigator.share) {
-      try {
-        const blob = doc.output('blob');
-        const file = new File([blob], fileName, { type: 'application/pdf' });
-
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          navigator.share({
-            files: [file],
-            title: 'PhysioPro Report',
-            text: `Clinical Report for ${session.patientName}`
-          }).then(() => {
-            this.toast.success('Report shared successfully.', 'Shared');
-          }).catch(err => {
-            if (err.name !== 'AbortError') {
-              console.error('Share error:', err);
-              this.toast.error('Sharing failed. Try downloading instead.', 'Share Error');
-            }
+    if (action === 'share') {
+      const isNative = Capacitor.isNativePlatform();
+      
+      if (isNative) {
+        // Native Capacitor Share (Best for APK)
+        const pdfBase64 = doc.output('datauristring').split(',')[1];
+        
+        Filesystem.writeFile({
+          path: fileName,
+          data: pdfBase64,
+          directory: Directory.Cache
+        }).then(({ uri }) => {
+          return CapShare.share({
+            title: 'PhysioPro Clinical Report',
+            text: `Rehabilitation Roadmap for ${session.patientName}`,
+            url: uri, // Share the local file URI
+            dialogTitle: 'Share Clinical Report'
           });
-          return;
-        } else {
-          this.toast.error('File sharing not supported by your system.', 'Feature Limited');
+        }).catch(err => {
+          console.error('Native share failed:', err);
+          this.toast.error('Sharing failed. Please try again.', 'Native Share Error');
+        });
+        return;
+      } else if (navigator.share) {
+        // Web Share API fallback (for Mobile Browsers)
+        try {
+          const blob = doc.output('blob');
+          const file = new File([blob], fileName, { type: 'application/pdf' });
+          
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            navigator.share({
+              files: [file],
+              title: 'PhysioPro Report',
+              text: `Clinical Report for ${session.patientName}`
+            }).then(() => {
+              this.toast.success('Report shared successfully.', 'Shared');
+            }).catch(err => {
+              if (err.name !== 'AbortError') {
+                console.error('Share error:', err);
+                this.toast.error('Sharing failed. Try downloading instead.', 'Share Error');
+              }
+            });
+            return;
+          }
+        } catch (e) {
+          console.error('File prep for share failed', e);
         }
-      } catch (e) {
-        console.error('File prep for share failed', e);
+      } else {
+        this.toast.error('Sharing is not supported on this device/browser.', 'Share Error');
       }
     }
 
