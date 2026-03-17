@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule, SearchX, Briefcase, ExternalLink, IndianRupee, Share, Share2 } from 'lucide-angular';
 import { FormsModule } from '@angular/forms';
 import { BookingService, BookedAppointment } from '../../../core/services/booking.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -11,6 +11,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 import { ToastService } from '../../../core/services/toast.service';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-my-sessions',
@@ -29,6 +30,7 @@ export class MySessionsComponent implements OnInit {
   pastSessions: BookedAppointment[] = [];
   activeTab: 'upcoming' | 'past' = 'upcoming';
   isLoading = true;
+  isMobileDevice = false;
 
   // Feedback Modal State
   isFeedbackModalOpen = false;
@@ -63,6 +65,8 @@ export class MySessionsComponent implements OnInit {
         this.isLoading = false;
       });
     }
+
+    this.isMobileDevice = Capacitor.getPlatform() !== 'web';
   }
 
   private compareDateTime(a: BookedAppointment, b: BookedAppointment): number {
@@ -96,7 +100,7 @@ export class MySessionsComponent implements OnInit {
 
     // 1. If AI Report already exists, just generate the PDF immediately
     if (session.aiReport) {
-      this.generatePDF(session, session.aiReport);
+      this.generatePDF(session, session.aiReport, 'download');
       return;
     }
 
@@ -128,7 +132,7 @@ export class MySessionsComponent implements OnInit {
           generatedAt: new Date()
         };
         this.toast.success('AI Report generated successfully!', 'Success');
-        this.generatePDF(session, aiAnalysis);
+        this.generatePDF(session, aiAnalysis, 'download');
       }
 
     } catch (globalError) {
@@ -139,7 +143,38 @@ export class MySessionsComponent implements OnInit {
     }
   }
 
-  private generatePDF(session: BookedAppointment, ai: any) {
+  async shareReport(session: BookedAppointment) {
+    if (!session.id) return;
+
+    if (!navigator.share) {
+      this.toast.error('Sharing is not supported on this device.', 'Share Error');
+      return;
+    }
+
+    if (!session.aiReport) {
+      this.generatingReportId = session.id;
+      try {
+        const aiRawResponse = await this.aiService.generateClinicalReport({
+          condition: session.patientCondition || session.type,
+          notes: (session.notes || '') + " " + (session.treatmentNotes || ""),
+          patientName: session.patientName,
+          doctorName: session.doctorName
+        });
+        const aiAnalysis = this.aiService.parseAIResponse(aiRawResponse);
+        await this.bookingService.updateAiReport(session.id, aiAnalysis);
+        session.aiReport = { ...aiAnalysis, generatedAt: new Date() };
+        this.generatePDF(session, session.aiReport, 'share');
+      } catch (err) {
+        this.toast.error('Could not generate report for sharing.', 'Error');
+      } finally {
+        this.generatingReportId = null;
+      }
+    } else {
+      this.generatePDF(session, session.aiReport, 'share');
+    }
+  }
+
+  private generatePDF(session: BookedAppointment, ai: any, action: 'download' | 'share' = 'download') {
     const doc = new jsPDF();
     const primaryColor = [16, 185, 129];
     const classicNavy = [15, 23, 42];
@@ -312,11 +347,38 @@ export class MySessionsComponent implements OnInit {
 
     const fileName = `Report_${session.patientName.replace(/\s+/g, '_')}.pdf`;
 
-    // ROBUST MOBILE DOWNLOAD: Instead of window.open, we use a hidden link approach 
-    // which is more reliable across mobile browsers and webviews like Android APK.
+    // CASE 1: SHARE (Mobile APK / Modern Mobile Browsers)
+    if (action === 'share' && navigator.share) {
+      try {
+        const blob = doc.output('blob');
+        const file = new File([blob], fileName, { type: 'application/pdf' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({
+            files: [file],
+            title: 'PhysioPro Report',
+            text: `Clinical Report for ${session.patientName}`
+          }).then(() => {
+            this.toast.success('Report shared successfully.', 'Shared');
+          }).catch(err => {
+            if (err.name !== 'AbortError') {
+              console.error('Share error:', err);
+              this.toast.error('Sharing failed. Try downloading instead.', 'Share Error');
+            }
+          });
+          return;
+        } else {
+          this.toast.error('File sharing not supported by your system.', 'Feature Limited');
+        }
+      } catch (e) {
+        console.error('File prep for share failed', e);
+      }
+    }
+
+    // CASE 2: DOWNLOAD (Fallback or Default)
     try {
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      
+
       if (isMobile) {
         const blob = doc.output('blob');
         const url = window.URL.createObjectURL(blob);
@@ -326,13 +388,13 @@ export class MySessionsComponent implements OnInit {
         link.style.display = 'none';
         document.body.appendChild(link);
         link.click();
-        
+
         // Cleanup
         setTimeout(() => {
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
         }, 1000);
-        
+
         this.toast.success('Report download started.', 'Mobile Download');
       } else {
         doc.save(fileName);

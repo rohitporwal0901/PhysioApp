@@ -120,12 +120,22 @@
                           [ngClass]="session.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
                         {{ session.status }}
                     </span>
-                    <button *ngIf="session.status === 'completed'" (click)="downloadReport(session)" [disabled]="generatingReportId === session.id"
+                    <!-- DESKTOP: Show Download/Generate Button -->
+                    <button *ngIf="session.status === 'completed' && !isMobileDevice" (click)="downloadReport(session)" [disabled]="generatingReportId === session.id"
                         class="px-3 py-1.5 bg-emerald-500 text-white text-xs font-bold rounded-lg hover:bg-emerald-600 transition-all flex items-center btn-ai-glow animate-ai-pulse shadow-lg shadow-emerald-500/20 disabled:opacity-75 disabled:cursor-not-allowed">
                         <i-lucide [name]="generatingReportId === session.id ? 'loader' : 'sparkles'" 
                                   [class.animate-spin]="generatingReportId === session.id"
                                   class="w-3.5 h-3.5 mr-1.5"></i-lucide>
-                        {{ generatingReportId === session.id ? 'Analyzing...' : (session.aiReport ? '📁 Download AI Report' : '⚡ Generate AI Report') }}
+                        {{ generatingReportId === session.id ? 'Analyzing...' : (session.aiReport ? '📁 Download AI' : '⚡ Generate AI') }}
+                    </button>
+
+                    <!-- MOBILE: Show ONLY Share Button -->
+                    <button *ngIf="session.status === 'completed' && isMobileDevice" (click)="shareReport(session)" [disabled]="generatingReportId === session.id"
+                        class="px-4 py-1.5 bg-blue-500 text-white text-xs font-black rounded-lg hover:bg-blue-600 transition-all flex items-center shadow-lg shadow-blue-500/20 disabled:opacity-75">
+                        <i-lucide [name]="generatingReportId === session.id ? 'loader' : 'share-2'" 
+                                  [class.animate-spin]="generatingReportId === session.id"
+                                  class="w-3.5 h-3.5 mr-1.5"></i-lucide>
+                        {{ generatingReportId === session.id ? 'Analyzing...' : 'Share Report' }}
                     </button>
                     <button *ngIf="session.status === 'completed' && !session.feedback" (click)="openFeedbackModal(session)"
                         class="px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 text-xs font-bold rounded-lg border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors flex items-center">
