@@ -390,4 +390,8 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             window.location.href = `tel:${phone}`;
         }
     }
+
+    onTestImgError(event: any, name: string) {
+        event.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=4F46E5&color=fff`;
+    }
 }

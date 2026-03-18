@@ -632,7 +632,7 @@
               <!-- Lab Image -->
               <div class="relative h-48 overflow-hidden">
                 <img [src]="getLabImage(lab, i)" alt="{{ lab.fullName || lab.name }}"
-                  onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=' + (lab.fullName || lab.name) + '&background=4F46E5&color=fff'"
+                  (error)="onTestImgError($event, lab.fullName || lab.name)"
                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
 
