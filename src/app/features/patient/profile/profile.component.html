@@ -7,13 +7,23 @@
     <div class="relative z-10 flex flex-col items-center md:flex-row md:items-end gap-6 sm:gap-8">
       <!-- Avatar Section -->
       <div class="relative group">
-        <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-3xl overflow-hidden border-4 border-white/10 shadow-2xl backdrop-blur-md">
+        <div class="relative w-32 h-32 sm:w-40 sm:h-40 rounded-3xl overflow-hidden border-4 border-white/10 shadow-2xl backdrop-blur-md">
           <img [src]="user?.image || 'https://ui-avatars.com/api/?name=' + (user?.fullName || 'User') + '&background=random&size=200'"
                class="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500"
+               [ngClass]="{'opacity-50 blur-sm': isUploadingImage}"
                [alt]="user?.fullName">
+          
+          <!-- Loading Overlay -->
+          <div *ngIf="isUploadingImage" class="absolute inset-0 flex items-center justify-center bg-black/20">
+             <i-lucide name="loader" class="w-8 h-8 text-white animate-spin"></i-lucide>
+          </div>
         </div>
-        <button label="Change"
-                class="absolute -bottom-2 -right-2 w-10 h-10 bg-primary-500 hover:bg-primary-600 text-white rounded-xl shadow-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95">
+        
+        <!-- Hidden File Input -->
+        <input #photoInput type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden">
+
+        <button (click)="photoInput.click()" [disabled]="isUploadingImage"
+                class="absolute -bottom-2 -right-2 w-10 h-10 bg-primary-500 hover:bg-primary-600 text-white rounded-xl shadow-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95 disabled:opacity-50">
           <i-lucide name="camera" class="w-5 h-5"></i-lucide>
         </button>
       </div>
@@ -139,62 +149,71 @@
     <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-md" (click)="toggleEditModal()"></div>
     
     <!-- Modal Content -->
-    <div class="relative bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+    <div class="relative bg-white dark:bg-slate-900 w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] rounded-2xl sm:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col">
       <!-- Header -->
-      <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
-        <h3 class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Edit Profile</h3>
-        <button (click)="toggleEditModal()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 transition-colors">
-          <i-lucide name="x" class="w-5 h-5"></i-lucide>
+      <div class="px-5 py-4 sm:px-8 sm:py-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/50 sticky top-0 z-10 backdrop-blur-md">
+        <h3 class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Edit Profile</h3>
+        <button (click)="toggleEditModal()" class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-400 hover:text-red-500 transition-all duration-300">
+          <i-lucide name="x" class="w-5 h-5 sm:w-6 sm:h-6"></i-lucide>
         </button>
       </div>
-
-      <!-- Form -->
-      <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()" class="p-6 space-y-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div class="space-y-2">
-            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Full Name</label>
-            <input formControlName="fullName" type="text" 
-                   class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent focus:border-primary-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-slate-800 dark:text-slate-200 font-bold">
+ 
+      <!-- Modal Body (Scrollable) -->
+      <div class="overflow-y-auto p-5 sm:p-8 custom-scrollbar">
+        <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()" class="space-y-6 sm:space-y-8">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div class="space-y-2">
+              <label class="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Full Name</label>
+              <input formControlName="fullName" type="text" 
+                     class="w-full px-4 py-3 sm:py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 focus:border-primary-500 focus:bg-white dark:focus:bg-slate-910 outline-none transition-all text-slate-800 dark:text-white font-bold text-xs sm:text-sm">
+            </div>
+            <div class="space-y-2">
+              <label class="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Phone</label>
+              <input formControlName="phone" type="tel" 
+                     class="w-full px-4 py-3 sm:py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 focus:border-primary-500 focus:bg-white dark:focus:bg-slate-910 outline-none transition-all text-slate-800 dark:text-white font-bold text-xs sm:text-sm">
+            </div>
+            <div class="space-y-2">
+              <label class="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Emergency Contact</label>
+              <input formControlName="emergencyContact" type="tel" 
+                     class="w-full px-4 py-3 sm:py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 focus:border-primary-500 focus:bg-white dark:focus:bg-slate-910 outline-none transition-all text-slate-800 dark:text-white font-bold text-xs sm:text-sm">
+            </div>
+            <div class="space-y-2">
+              <label class="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Gender</label>
+              <div class="relative">
+                <select formControlName="gender" 
+                        class="w-full px-4 py-3 sm:py-4 pr-10 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 focus:border-primary-500 focus:bg-white dark:focus:bg-slate-910 outline-none transition-all text-slate-800 dark:text-white font-bold text-xs sm:text-sm appearance-none cursor-pointer">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+                <i-lucide name="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i-lucide>
+              </div>
+            </div>
+            <div class="space-y-2 sm:col-span-2">
+              <label class="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Address</label>
+              <textarea formControlName="address" rows="3"
+                        class="w-full px-4 py-3 sm:py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 focus:border-primary-500 focus:bg-white dark:focus:bg-slate-910 outline-none transition-all text-slate-800 dark:text-white font-bold text-xs sm:text-sm resize-none"
+                        placeholder="Your full address..."></textarea>
+            </div>
           </div>
-          <div class="space-y-2">
-            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Phone</label>
-            <input formControlName="phone" type="tel" 
-                   class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent focus:border-primary-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-slate-800 dark:text-slate-200 font-bold">
+ 
+          <!-- Footer Actions -->
+          <div class="flex gap-3 pt-6 border-t border-slate-100 dark:border-slate-800 sticky bottom-0 bg-white dark:bg-slate-900 pb-2 z-10 transition-all">
+            <button type="button" (click)="toggleEditModal()"
+                    class="flex-1 py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-black uppercase text-[10px] tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+              Cancel
+            </button>
+            <button type="submit" [disabled]="profileForm.invalid || isUpdating"
+                    class="flex-[2] py-3 sm:py-4 px-4 rounded-xl sm:rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary-500/25 active:scale-95 transition-all disabled:opacity-50 group">
+              <span *ngIf="!isUpdating" class="flex items-center justify-center gap-2">
+                <i-lucide name="save" class="w-4 h-4 group-hover:scale-110 transition-transform"></i-lucide>
+                Save Profile
+              </span>
+              <div *ngIf="isUpdating" class="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/20 border-t-white rounded-full animate-spin mx-auto"></div>
+            </button>
           </div>
-          <div class="space-y-2">
-            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Emergency Contact</label>
-            <input formControlName="emergencyContact" type="tel" 
-                   class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent focus:border-primary-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-slate-800 dark:text-slate-200 font-bold">
-          </div>
-          <div class="space-y-2">
-            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Gender</label>
-            <select formControlName="gender" 
-                    class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent focus:border-primary-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-slate-800 dark:text-slate-200 font-bold appearance-none">
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div class="space-y-2 sm:col-span-2">
-            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Address</label>
-            <textarea formControlName="address" rows="3"
-                      class="w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent focus:border-primary-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-slate-800 dark:text-slate-200 font-bold resize-none"></textarea>
-          </div>
-        </div>
-
-        <!-- Footer Actions -->
-        <div class="flex gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
-          <button type="button" (click)="toggleEditModal()"
-                  class="flex-1 py-4 px-6 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-black uppercase text-[10px] tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
-            Cancel
-          </button>
-          <button type="submit" [disabled]="profileForm.invalid || isUpdating"
-                  class="flex-[2] py-4 px-6 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-black uppercase text-[10px] tracking-widest shadow-xl shadow-primary-500/20 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-            <span *ngIf="!isUpdating">Save Changes</span>
-            <div *ngIf="isUpdating" class="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mx-auto"></div>
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 </div>

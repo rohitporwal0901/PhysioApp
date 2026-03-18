@@ -1,38 +1,60 @@
 <div class="max-w-7xl mx-auto p-2 sm:p-6 lg:p-8 space-y-4 sm:space-y-8">
   <!-- Profile Header Card -->
-  <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 rounded-[2rem] p-5 sm:p-10 shadow-2xl transition-all duration-700">
+  <div
+    class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 rounded-[2rem] p-5 sm:p-10 shadow-2xl transition-all duration-700">
     <div class="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl animate-pulse"></div>
     <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl animate-pulse"></div>
 
     <div class="relative z-10 flex flex-col items-center md:flex-row md:items-end gap-4 sm:gap-10">
       <!-- Avatar Section -->
-      <div class="relative group">
-        <div class="w-28 h-28 sm:w-48 sm:h-48 rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border-4 border-white/10 shadow-2xl backdrop-blur-md ring-4 sm:ring-8 ring-white/5">
-          <img [src]="user?.image || 'https://ui-avatars.com/api/?name=' + (user?.fullName || 'Doctor') + '&background=random&size=200'"
-               class="w-full h-full object-cover transition-transform group-hover:scale-110 duration-700"
-               [alt]="user?.fullName">
+      <div class="relative group cursor-pointer" (click)="fileInput.click()">
+        <div
+          class="w-28 h-28 sm:w-48 sm:h-48 rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border-4 border-white/10 shadow-2xl backdrop-blur-md ring-4 sm:ring-8 ring-white/5 relative">
+          <img
+            [src]="user?.image || 'https://ui-avatars.com/api/?name=' + (user?.fullName || 'Doctor') + '&background=random&size=200'"
+            class="w-full h-full object-cover transition-transform group-hover:scale-110 duration-700"
+            [ngClass]="{'opacity-50 blur-sm': isUploadingImage}" [alt]="user?.fullName">
+
+          <!-- Upload Overlay -->
+          <div
+            class="absolute inset-0 flex flex-col items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <i-lucide *ngIf="!isUploadingImage" name="camera" class="w-8 h-8 text-white mb-1"></i-lucide>
+            <div *ngIf="isUploadingImage"
+              class="w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+            <span class="text-[8px] font-black uppercase text-white tracking-widest mt-1">{{ isUploadingImage ?
+              'Uploading...' : 'Change Photo' }}</span>
+          </div>
         </div>
-        <div class="absolute -bottom-1 -right-1 bg-emerald-500 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full border-2 sm:border-4 border-slate-900 flex items-center gap-1 shadow-xl">
-           <div class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>
-           <span class="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white">Active</span>
+
+        <!-- Hidden File Input -->
+        <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden">
+
+        <div
+          class="absolute -bottom-1 -right-1 bg-emerald-500 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full border-2 sm:border-4 border-slate-900 flex items-center gap-1 shadow-xl z-20">
+          <div class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>
+          <span class="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white">Active</span>
         </div>
       </div>
 
       <!-- Info Section -->
       <div class="flex-1 text-center md:text-left">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-emerald-300 text-[8px] sm:text-[10px] font-black uppercase tracking-widest mb-3">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-emerald-300 text-[8px] sm:text-[10px] font-black uppercase tracking-widest mb-3">
           <i-lucide name="stethoscope" class="w-3 h-3"></i-lucide>
           Doctor Profile • {{ user?.specialization || 'General' }}
         </div>
-        <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-white mb-1.5 font-heading tracking-tight drop-shadow-sm">
+        <h1
+          class="text-2xl sm:text-4xl lg:text-5xl font-black text-white mb-1.5 font-heading tracking-tight drop-shadow-sm">
           {{ user?.fullName }}
         </h1>
-        <p class="text-slate-300 font-bold text-xs sm:text-lg mb-3 flex items-center justify-center md:justify-start gap-1.5 max-w-lg mx-auto md:mx-0">
+        <p
+          class="text-slate-300 font-bold text-xs sm:text-lg mb-3 flex items-center justify-center md:justify-start gap-1.5 max-w-lg mx-auto md:mx-0">
           <i-lucide name="graduation-cap" class="w-4 h-4 text-emerald-400"></i-lucide>
           {{ user?.qualification || 'Physiotherapy Specialist' }}
         </p>
-        
-        <div class="flex flex-wrap justify-center md:justify-start gap-2 text-slate-400 text-[10px] sm:text-sm font-bold">
+
+        <div
+          class="flex flex-wrap justify-center md:justify-start gap-2 text-slate-400 text-[10px] sm:text-sm font-bold">
           <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/5">
             <i-lucide name="mail" class="w-3.5 h-3.5 text-emerald-400"></i-lucide>
             {{ user?.email }}
@@ -47,8 +69,9 @@
       <!-- Actions -->
       <div class="mt-4 md:mt-0 w-full md:w-auto">
         <button (click)="toggleEditModal()"
-                class="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-emerald-50 text-slate-900 rounded-xl sm:rounded-2xl font-black uppercase text-[10px] sm:text-xs tracking-widest transition-all shadow-xl hover:shadow-2xl group">
-          <i-lucide name="settings" class="w-3.5 h-3.5 text-emerald-600 group-hover:rotate-180 transition-all"></i-lucide>
+          class="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-emerald-50 text-slate-900 rounded-xl sm:rounded-2xl font-black uppercase text-[10px] sm:text-xs tracking-widest transition-all shadow-xl hover:shadow-2xl group">
+          <i-lucide name="settings"
+            class="w-3.5 h-3.5 text-emerald-600 group-hover:rotate-180 transition-all"></i-lucide>
           Edit Profile
         </button>
       </div>
@@ -62,81 +85,102 @@
       { label: 'Consult Fee', value: '₹' + (user?.consultationFee || '0'), unit: '' },
       { label: 'Follow Up', value: '₹' + (user?.followUpFee || '0'), unit: '' },
       { label: 'Patients', value: '500+', unit: '' }
-    ]" class="bg-white dark:bg-slate-800 p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm text-center">
-      <p class="text-[8px] sm:text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1 sm:mb-2 tracking-widest">{{ stat.label }}</p>
-      <h4 class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white">{{ stat.value }} <span class="text-[10px] sm:text-xs text-primary-500">{{ stat.unit }}</span></h4>
+    ]"
+      class="bg-white dark:bg-slate-800 p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm text-center">
+      <p
+        class="text-[8px] sm:text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1 sm:mb-2 tracking-widest">
+        {{ stat.label }}</p>
+      <h4 class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white">{{ stat.value }} <span
+          class="text-[10px] sm:text-xs text-primary-500">{{ stat.unit }}</span></h4>
     </div>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
     <!-- Professional Core -->
     <div class="lg:col-span-2 space-y-4 sm:space-y-8">
-      <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-slate-100 dark:border-slate-700 shadow-sm">
+      <div
+        class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-slate-100 dark:border-slate-700 shadow-sm">
         <h3 class="text-sm sm:text-xl font-black text-slate-900 dark:text-white mb-4 sm:mb-6 flex items-center gap-2.5">
-          <span class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-500">
+          <span
+            class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-500">
             <i-lucide name="award" class="w-4 h-4 sm:w-6 sm:h-6"></i-lucide>
           </span>
           Professional Expertise
         </h3>
-        
+
         <div class="space-y-6 sm:space-y-8">
-           <div>
-             <label class="text-[8px] sm:text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black mb-2 sm:mb-3 block tracking-widest">Areas of Interest</label>
-             <div class="flex flex-wrap gap-1.5 sm:gap-2.5">
-               <span *ngFor="let area of user?.areasOfInterest" 
-                     class="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg border border-emerald-100/50 dark:border-emerald-800/50 text-[9px] sm:text-[11px] font-black uppercase">
-                 {{ area }}
-               </span>
-             </div>
-           </div>
+          <div>
+            <label
+              class="text-[8px] sm:text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black mb-2 sm:mb-3 block tracking-widest">Areas
+              of Interest</label>
+            <div class="flex flex-wrap gap-1.5 sm:gap-2.5">
+              <span *ngFor="let area of user?.areasOfInterest"
+                class="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg border border-emerald-100/50 dark:border-emerald-800/50 text-[9px] sm:text-[11px] font-black uppercase">
+                {{ area }}
+              </span>
+            </div>
+          </div>
 
-           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
-              <!-- Practice Info -->
-              <div class="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-800 space-y-3">
-                <label class="text-[8px] text-slate-400 uppercase font-black block tracking-widest grayscale opacity-70">Practice Details</label>
-                <div class="flex items-center gap-2.5">
-                   <div class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <i-lucide name="home" class="w-4 h-4 text-emerald-500"></i-lucide>
-                   </div>
-                   <div class="min-w-0">
-                      <p class="text-[8px] text-slate-400 uppercase font-bold">Address</p>
-                      <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 truncate">{{ user?.address || 'Dewas, MP' }}</p>
-                   </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
+            <!-- Practice Info -->
+            <div
+              class="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-800 space-y-3">
+              <label
+                class="text-[8px] text-slate-400 uppercase font-black block tracking-widest grayscale opacity-70">Practice
+                Details</label>
+              <div class="flex items-center gap-2.5">
+                <div
+                  class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <i-lucide name="home" class="w-4 h-4 text-emerald-500"></i-lucide>
                 </div>
-                <div class="flex items-center gap-2.5">
-                   <div class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <i-lucide name="building" class="w-4 h-4 text-emerald-500"></i-lucide>
-                   </div>
-                   <div class="min-w-0">
-                      <p class="text-[8px] text-slate-400 uppercase font-bold">Location</p>
-                      <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 truncate">{{ user?.city }}, {{ user?.state }}</p>
-                   </div>
+                <div class="min-w-0">
+                  <p class="text-[8px] text-slate-400 uppercase font-bold">Address</p>
+                  <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 truncate">{{
+                    user?.address || 'Dewas, MP' }}</p>
                 </div>
               </div>
-
-              <!-- Registration -->
-              <div class="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-800 space-y-3">
-                <label class="text-[8px] text-slate-400 uppercase font-black block tracking-widest grayscale opacity-70">Registration</label>
-                <div class="flex items-center gap-2.5">
-                   <div class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <i-lucide name="file-text" class="w-4 h-4 text-primary-500"></i-lucide>
-                   </div>
-                   <div class="min-w-0">
-                      <p class="text-[8px] text-slate-400 uppercase font-bold">Reg Number</p>
-                      <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 truncate">{{ user?.registrationNumber || 'Pending' }}</p>
-                   </div>
+              <div class="flex items-center gap-2.5">
+                <div
+                  class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <i-lucide name="building" class="w-4 h-4 text-emerald-500"></i-lucide>
                 </div>
-                <div class="flex items-center gap-2.5">
-                   <div class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <i-lucide name="landmark" class="w-4 h-4 text-primary-500"></i-lucide>
-                   </div>
-                   <div class="min-w-0">
-                      <p class="text-[8px] text-slate-400 uppercase font-bold">Council</p>
-                      <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 truncate">{{ user?.council || 'State Physical Therapy' }}</p>
-                   </div>
+                <div class="min-w-0">
+                  <p class="text-[8px] text-slate-400 uppercase font-bold">Location</p>
+                  <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 truncate">{{ user?.city
+                    }}, {{ user?.state }}</p>
                 </div>
               </div>
-           </div>
+            </div>
+
+            <!-- Registration -->
+            <div
+              class="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-800 space-y-3">
+              <label
+                class="text-[8px] text-slate-400 uppercase font-black block tracking-widest grayscale opacity-70">Registration</label>
+              <div class="flex items-center gap-2.5">
+                <div
+                  class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <i-lucide name="file-text" class="w-4 h-4 text-primary-500"></i-lucide>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-[8px] text-slate-400 uppercase font-bold">Reg Number</p>
+                  <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 truncate">{{
+                    user?.registrationNumber || 'Pending' }}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <div
+                  class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <i-lucide name="landmark" class="w-4 h-4 text-primary-500"></i-lucide>
+                </div>
+                <div class="min-w-0">
+                  <p class="text-[8px] text-slate-400 uppercase font-bold">Council</p>
+                  <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 truncate">{{
+                    user?.council || 'State Physical Therapy' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -144,44 +188,188 @@
     <!-- Right Sidebar -->
     <div class="space-y-4 sm:space-y-8">
       <!-- Status Card -->
-      <div class="bg-emerald-500 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl shadow-emerald-500/10 relative overflow-hidden">
+      <div
+        class="bg-emerald-500 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl shadow-emerald-500/10 relative overflow-hidden">
         <h3 class="text-sm sm:text-xl font-black mb-4 flex items-center gap-2.5">
           <i-lucide name="clock" class="w-5 h-5 sm:w-6 sm:h-6"></i-lucide>
           Working Status
         </h3>
-        
+
         <div class="space-y-4">
-           <div class="flex items-center justify-between p-3 bg-white/10 rounded-xl border border-white/10">
-              <span class="text-[10px] font-black uppercase tracking-widest opacity-80">Today</span>
-              <span class="px-2.5 py-1 bg-white text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-wider">Available</span>
-           </div>
-           <div class="flex flex-wrap gap-1.5 focus:outline-none">
-             <span *ngFor="let day of user?.availableDays" class="px-2.5 py-1.5 bg-white/10 rounded-lg text-[9px] font-black uppercase border border-white/5">{{ day | slice:0:3 }}</span>
-           </div>
+          <div class="flex items-center justify-between p-3 bg-white/10 rounded-xl border border-white/10">
+            <span class="text-[10px] font-black uppercase tracking-widest opacity-80">Today</span>
+            <span
+              class="px-2.5 py-1 bg-white text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-wider">Available</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5 focus:outline-none">
+            <span *ngFor="let day of user?.availableDays"
+              class="px-2.5 py-1.5 bg-white/10 rounded-lg text-[9px] font-black uppercase border border-white/5">{{ day
+              | slice:0:3 }}</span>
+          </div>
         </div>
       </div>
 
       <!-- Quick Stats -->
-      <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-100 dark:border-slate-700 shadow-sm grid grid-cols-2 lg:grid-cols-1 gap-4">
-           <div>
-              <p class="text-[8px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1.5 tracking-widest">Consult Mode</p>
-              <span class="px-2 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-600 rounded-md text-[9px] font-black uppercase">{{ user?.consultationType || 'Hybrid' }}</span>
-           </div>
-           
-           <div>
-              <p class="text-[8px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1.5 tracking-widest">Gender</p>
-              <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 capitalize">{{ user?.gender }}</p>
-           </div>
-           
-           <div>
-              <p class="text-[8px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1.5 tracking-widest">Birth Date</p>
-              <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200">{{ user?.dob }}</p>
-           </div>
-           
-           <div>
-              <p class="text-[8px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1.5 tracking-widest">Member Since</p>
-              <p class="text-[10px] sm:text-xs font-black text-slate-700 dark:text-slate-200">{{ user?.createdAt | date:'MMM yyyy' }}</p>
-           </div>
+      <div
+        class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-100 dark:border-slate-700 shadow-sm grid grid-cols-2 lg:grid-cols-1 gap-4">
+        <div>
+          <p class="text-[8px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1.5 tracking-widest">Consult
+            Mode</p>
+          <span
+            class="px-2 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-600 rounded-md text-[9px] font-black uppercase">{{
+            user?.consultationType || 'Hybrid' }}</span>
+        </div>
+
+        <div>
+          <p class="text-[8px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1.5 tracking-widest">Gender
+          </p>
+          <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 capitalize">{{ user?.gender }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[8px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1.5 tracking-widest">Birth
+            Date</p>
+          <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200">{{ user?.dob }}</p>
+        </div>
+
+        <div>
+          <p class="text-[8px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1.5 tracking-widest">Member
+            Since</p>
+          <p class="text-[10px] sm:text-xs font-black text-slate-700 dark:text-slate-200">{{ user?.createdAt | date:'MMM
+            yyyy' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div *ngIf="isEditModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/90 backdrop-blur-md" (click)="toggleEditModal()"></div>
+
+    <div
+      class="relative bg-white dark:bg-slate-900 w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 flex flex-col">
+      <!-- Modal Header -->
+      <div
+        class="px-5 py-4 sm:px-8 sm:py-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900 z-10 sticky top-0">
+        <div>
+          <h3 class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Edit
+            Profile</h3>
+          <p class="text-[9px] sm:text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">Professional details
+            & fees</p>
+        </div>
+        <button (click)="toggleEditModal()"
+          class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-xl sm:rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-400 hover:text-red-500 transition-all duration-300">
+          <i-lucide name="x" class="w-5 h-5 sm:w-6 sm:h-6"></i-lucide>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="overflow-y-auto p-5 sm:p-8 scrollbar-hide">
+        <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()" class="space-y-6 sm:space-y-10">
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
+            <!-- Full Name -->
+            <div class="space-y-2">
+              <label class="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Full
+                Name</label>
+              <div class="relative group">
+                <!-- <i-lucide name="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-300 group-focus-within:text-emerald-500 transition-colors"></i-lucide> -->
+                <input formControlName="fullName" type="text"
+                  class="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 focus:border-emerald-500/30 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-slate-800 dark:text-white font-bold text-xs sm:text-sm"
+                  placeholder="Enter your full name">
+              </div>
+            </div>
+
+            <!-- Specialization -->
+            <div class="space-y-2">
+              <label
+                class="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Specialization</label>
+              <div class="relative group">
+                <!-- <i-lucide name="activity" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-300 group-focus-within:text-emerald-500 transition-colors"></i-lucide> -->
+                <input formControlName="specialization" type="text"
+                  class="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 focus:border-emerald-500/30 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-slate-800 dark:text-white font-bold text-xs sm:text-sm"
+                  placeholder="e.g. Orthopaedic">
+              </div>
+            </div>
+
+            <!-- Qualification -->
+            <div class="space-y-2">
+              <label
+                class="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Qualification</label>
+              <div class="relative group">
+                <!-- <i-lucide name="graduation-cap" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-300 group-focus-within:text-emerald-500 transition-colors"></i-lucide> -->
+                <input formControlName="qualification" type="text"
+                  class="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 focus:border-emerald-500/30 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-slate-800 dark:text-white font-bold text-xs sm:text-sm"
+                  placeholder="e.g. Master in Physio">
+              </div>
+            </div>
+
+            <!-- Fees & Experience -->
+            <div class="space-y-2">
+              <label class="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Consult Fee
+                (₹)</label>
+              <div class="relative group">
+                <span
+                  class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-[10px] sm:text-xs text-slate-300 group-focus-within:text-emerald-500 transition-colors">₹</span>
+                <input formControlName="consultationFee" type="number"
+                  class="w-full pl-8 sm:pl-10 pr-4 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 focus:border-emerald-500/30 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-slate-800 dark:text-white font-bold text-xs sm:text-sm">
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Follow Up
+                Fee (₹)</label>
+              <div class="relative group">
+                <span
+                  class="absolute left-4 top-1/2 -translate-y-1/2 font-black text-[10px] sm:text-xs text-slate-300 group-focus-within:text-emerald-500 transition-colors">₹</span>
+                <input formControlName="followUpFee" type="number"
+                  class="w-full pl-8 sm:pl-10 pr-4 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 focus:border-emerald-500/30 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-slate-800 dark:text-white font-bold text-xs sm:text-sm">
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Experience
+                (Yrs)</label>
+              <div class="relative group">
+                <i-lucide name="clock"
+                  class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-300 group-focus-within:text-emerald-500 transition-colors"></i-lucide>
+                <input formControlName="experience" type="number"
+                  class="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 focus:border-emerald-500/30 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-slate-800 dark:text-white font-bold text-xs sm:text-sm">
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div class="space-y-2">
+              <label class="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">City</label>
+              <div class="relative group">
+                <i-lucide name="map-pin"
+                  class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-300 group-focus-within:text-emerald-500 transition-colors"></i-lucide>
+                <input formControlName="city" type="text"
+                  class="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-800 focus:border-emerald-500/30 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-slate-800 dark:text-white font-bold text-xs sm:text-sm">
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Actions Section -->
+          <div
+            class="flex gap-3 sm:gap-4 pt-6 sm:pt-10 border-t border-slate-100 dark:border-slate-800 sticky bottom-0 bg-white dark:bg-slate-900 z-10 pb-2">
+            <button type="button" (click)="toggleEditModal()"
+              class="flex-1 py-3 sm:py-5 px-4 sm:px-8 rounded-xl sm:rounded-3xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-black uppercase text-[10px] sm:text-xs tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+              Discard
+            </button>
+            <button type="submit" [disabled]="profileForm.invalid || isUpdating"
+              class="flex-[2] py-3 sm:py-5 px-4 sm:px-8 rounded-xl sm:rounded-3xl bg-emerald-500 hover:bg-emerald-600 text-white font-black uppercase text-[10px] sm:text-xs tracking-widest shadow-xl shadow-emerald-500/30 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              <span *ngIf="!isUpdating" class="flex items-center justify-center gap-2">
+                <i-lucide name="save" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i-lucide>
+                Update
+              </span>
+              <div *ngIf="isUpdating"
+                class="w-4 h-4 sm:w-5 sm:h-5 border-2 sm:border-3 border-white/20 border-t-white rounded-full animate-spin mx-auto">
+              </div>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

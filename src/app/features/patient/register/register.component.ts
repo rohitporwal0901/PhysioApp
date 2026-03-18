@@ -1,115 +1,141 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
+import { ImageUploadService } from '../../../core/services/image-upload.service';
 
 @Component({
-    selector: 'app-patient-register',
-    standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule],
-    templateUrl: './register.component.html',
-    styleUrl: './register.component.scss'
+  selector: 'app-patient-register',
+  standalone: true,
+  imports: [CommonModule, FormsModule, LucideAngularModule, RouterModule],
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.scss'
 })
-export class PatientRegisterComponent {
-    private router = inject(Router);
-    private route = inject(ActivatedRoute);
-    private authService = inject(AuthService);
+export class PatientRegisterComponent implements OnInit {
+  private auth = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private imageUpload = inject(ImageUploadService);
 
-    isLoading = false;
-    showPassword = false;
-    showConfirmPassword = false;
-    currentStep = 1; // 1 = personal, 2 = medical + account
-    errorMessage = '';
-    successMessage = '';
+  // Form Fields
+  fullName = '';
+  email = '';
+  phone = '';
+  dob = '';
+  gender = '';
+  address = '';
+  condition = '';
+  emergencyContact = '';
+  password = '';
+  confirmPassword = '';
+  agreeTerms = false;
+  
+  // Profile Photo
+  profilePhotoUrl: string = '';
+  isUploadingPhoto: boolean = false;
 
-    // Step 1 — Personal Info
-    fullName = '';
-    email = '';
-    phone = '';
-    dob = '';
-    gender = '';
-    address = '';
+  // UI States
+  currentStep = 1;
+  isLoading = false;
+  showPassword = false;
+  errorMessage = '';
 
-    // Step 2 — Medical / Account
-    password = '';
-    confirmPassword = '';
-    condition = '';
-    emergencyContact = '';
-    agreeTerms = false;
+  // Options
+  genders = ['Male', 'Female', 'Other'];
+  conditions = [
+    'Back Pain', 'Neck Pain', 'Shoulder Injury', 
+    'Knee Pain', 'Sports Injury', 'Post-Surgery Recovery',
+    'Arthritis', 'Neurological Condition', 'General Wellness'
+  ];
 
-    // Doctor context (passed from doctor-profile page)
-    private doctorId: string | null = null;
+  ngOnInit() {
+    // Check for doctor context
+    this.route.queryParams.subscribe(params => {
+      if (params['dr']) {
+        // Can be used to auto-assign doctor after registration
+      }
+    });
+  }
 
-    conditions = [
-        'Back Pain', 'Knee Injury', 'Shoulder Pain', 'Neck Pain',
-        'Sports Injury', 'Post Surgery', 'Frozen Shoulder', 'Arthritis',
-        'Sciatica', 'Stroke Rehab', 'Other'
-    ];
+  get step1Valid(): boolean {
+    return !!(this.fullName && this.email && this.phone && this.dob && this.gender);
+  }
 
-    genders = ['Male', 'Female', 'Non-binary', 'Prefer not to say'];
+  get step2Valid(): boolean {
+    return !!(this.password && this.confirmPassword && this.passwordsMatch && this.agreeTerms);
+  }
 
-    ngOnInit() {
-        this.doctorId = this.route.snapshot.queryParamMap.get('doctorId');
+  get passwordsMatch(): boolean {
+    return this.password === this.confirmPassword;
+  }
+
+  async onPhotoSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const validation = this.imageUpload.validateFile(file);
+    if (!validation.valid) {
+      alert(validation.error);
+      return;
     }
 
-    get passwordsMatch(): boolean {
-        return this.password === this.confirmPassword;
+    this.isUploadingPhoto = true;
+    try {
+      const path = `profiles/patients/temp_${Date.now()}`;
+      this.profilePhotoUrl = await this.imageUpload.uploadImage(file, path);
+    } catch (err: any) {
+      alert('Photo upload failed: ' + err.message);
+    } finally {
+      this.isUploadingPhoto = false;
     }
+  }
 
-    get step1Valid(): boolean {
-        return !!(this.fullName && this.email && this.phone && this.dob && this.gender);
+  nextStep() {
+    if (this.step1Valid) this.currentStep = 2;
+  }
+
+  prevStep() {
+    this.currentStep = 1;
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  async register() {
+    if (!this.step2Valid) return;
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    const patientData = {
+      fullName: this.fullName,
+      email: this.email,
+      phone: this.phone,
+      dob: this.dob,
+      gender: this.gender,
+      address: this.address,
+      condition: this.condition,
+      emergencyContact: this.emergencyContact,
+      image: this.profilePhotoUrl,
+      password: this.password, // Include password here
+      role: 'patient',
+      createdAt: new Date().toISOString()
+    };
+
+    try {
+      const res = await this.auth.registerPatient(patientData);
+      if (res.success) {
+        this.router.navigate(['/patient/dashboard']);
+      } else {
+        this.errorMessage = res.error || 'Registration failed';
+      }
+    } catch (err: any) {
+      this.errorMessage = err.message || 'An unexpected error occurred';
+    } finally {
+      this.isLoading = false;
     }
-
-    get step2Valid(): boolean {
-        return !!(this.password && this.password.length >= 6 && this.passwordsMatch && this.agreeTerms);
-    }
-
-    togglePassword() { this.showPassword = !this.showPassword; }
-    toggleConfirmPassword() { this.showConfirmPassword = !this.showConfirmPassword; }
-
-    nextStep() {
-        if (this.step1Valid) {
-            this.currentStep = 2;
-            this.errorMessage = '';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }
-
-    prevStep() {
-        this.currentStep = 1;
-        this.errorMessage = '';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    async register() {
-        if (!this.step2Valid) return;
-        this.isLoading = true;
-        this.errorMessage = '';
-
-        const result = await this.authService.registerPatient({
-            email: this.email,
-            password: this.password,
-            fullName: this.fullName,
-            phone: this.phone,
-            dob: this.dob,
-            gender: this.gender,
-            address: this.address,
-            condition: this.condition,
-            emergencyContact: this.emergencyContact
-        });
-
-        this.isLoading = false;
-
-        if (result.success) {
-            if (this.doctorId) {
-                this.router.navigate(['/doctor-profile', this.doctorId], { queryParams: { tab: 'book' } });
-            } else {
-                this.router.navigate(['/patient/dashboard']);
-            }
-        } else {
-            this.errorMessage = result.error ?? 'Registration failed. Please try again.';
-        }
-    }
+  }
 }

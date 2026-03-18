@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
+import { ImageUploadService } from '../../../core/services/image-upload.service';
 
 @Component({
     selector: 'app-doctor-register',
@@ -15,6 +16,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class DoctorRegisterComponent {
     private router = inject(Router);
     private authService = inject(AuthService);
+    private imageUpload = inject(ImageUploadService);
 
     isLoading = false;
     showPassword = false;
@@ -65,6 +67,8 @@ export class DoctorRegisterComponent {
     confirmPassword = '';
     agreeTerms = false;
     profilePhotoName = '';
+    profilePhotoUrl = '';
+    isUploadingPhoto = false;
     certificateName = '';
     idProofName = '';
 
@@ -169,9 +173,30 @@ export class DoctorRegisterComponent {
     onFileSelect(type: 'photo' | 'certificate' | 'id', event: any) {
         const file = event?.target?.files?.[0];
         if (file) {
-            if (type === 'photo') this.profilePhotoName = file.name;
             if (type === 'certificate') this.certificateName = file.name;
             if (type === 'id') this.idProofName = file.name;
+        }
+    }
+
+    async onPhotoSelected(event: any) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const validation = this.imageUpload.validateFile(file);
+        if (!validation.valid) {
+            alert(validation.error);
+            return;
+        }
+
+        this.isUploadingPhoto = true;
+        try {
+            const path = `profiles/doctors/temp_${Date.now()}`;
+            this.profilePhotoUrl = await this.imageUpload.uploadImage(file, path);
+            this.profilePhotoName = file.name;
+        } catch (err: any) {
+            alert('Photo upload failed: ' + err.message);
+        } finally {
+            this.isUploadingPhoto = false;
         }
     }
 
@@ -199,7 +224,8 @@ export class DoctorRegisterComponent {
             consultationFee: this.consultationFee,
             followUpFee: this.followUpFee,
             consultationType: this.consultationType,
-            availableDays: this.availableDays
+            availableDays: this.availableDays,
+            image: this.profilePhotoUrl
         });
 
         this.isLoading = false;

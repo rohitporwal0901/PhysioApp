@@ -84,6 +84,30 @@
                         </div>
                     </div>
 
+                    <!-- Profile Photo Selection -->
+                    <div class="flex flex-col items-center mb-10 pt-4">
+                        <div class="relative group cursor-pointer" (click)="photoInput.click()">
+                            <div class="w-32 h-32 rounded-[2rem] overflow-hidden bg-slate-50 dark:bg-slate-800 border-4 border-white dark:border-slate-800 shadow-2xl relative ring-8 ring-slate-100/50 dark:ring-slate-900/50 transition-all group-hover:ring-primary-500/10">
+                                <img *ngIf="profilePhotoUrl" [src]="profilePhotoUrl" class="w-full h-full object-cover">
+                                <div *ngIf="!profilePhotoUrl" class="w-full h-full flex flex-col items-center justify-center text-slate-300">
+                                    <i-lucide name="camera" class="w-10 h-10 mb-2"></i-lucide>
+                                    <span class="text-[8px] font-black uppercase tracking-widest text-center px-4">Upload Photo</span>
+                                </div>
+                                
+                                <!-- Uploading Overlay -->
+                                <div *ngIf="isUploadingPhoto" class="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+                                    <i-lucide name="loader" class="w-8 h-8 text-white animate-spin"></i-lucide>
+                                </div>
+                            </div>
+                            <!-- Small plus badge -->
+                            <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-primary-500 rounded-2xl flex items-center justify-center text-white border-4 border-white dark:border-slate-800 shadow-xl group-hover:scale-110 transition-transform">
+                                <i-lucide name="plus" class="w-5 h-5"></i-lucide>
+                            </div>
+                        </div>
+                        <input #photoInput type="file" (change)="onPhotoSelected($event)" accept="image/*" class="hidden">
+                        <p class="text-[10px] font-bold text-slate-400 mt-6 uppercase tracking-[0.2em]">Profile Picture</p>
+                    </div>
+
                     <div class="form-grid">
                         <div class="field full">
                             <label class="label">Full Name <span class="req">*</span></label>
@@ -293,20 +317,7 @@
                     </div>
 
                     <div class="form-grid">
-                        <!-- Profile Photo -->
-                        <div class="field full">
-                            <label class="label">Profile Photo</label>
-                            <div class="upload-box" (click)="photoInput.click()">
-                                <input #photoInput type="file" accept="image/*" hidden
-                                    (change)="onFileSelect('photo', $event)" />
-                                <div class="upload-icon">
-                                    <i-lucide name="camera" class="w-6 h-6 text-slate-400"></i-lucide>
-                                </div>
-                                <p class="upload-text" *ngIf="!profilePhotoName">Click to upload profile photo</p>
-                                <p class="upload-text uploaded" *ngIf="profilePhotoName">{{ profilePhotoName }}</p>
-                                <p class="upload-hint">JPG, PNG — Max 5 MB</p>
-                            </div>
-                        </div>
+                        <!-- Certificate -->
 
                         <!-- Certificate -->
                         <div class="field">

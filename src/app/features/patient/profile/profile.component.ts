@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { LucideAngularModule } from 'lucide-angular';
 import { AuthService, AppUser } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { ImageUploadService } from '../../../core/services/image-upload.service';
 
 @Component({
   selector: 'app-profile',
@@ -16,11 +17,13 @@ export class ProfileComponent implements OnInit {
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
   private fb = inject(FormBuilder);
+  private imageUpload = inject(ImageUploadService);
 
   user: any = null;
   isEditModalOpen = false;
   profileForm!: FormGroup;
   isUpdating = false;
+  isUploadingImage = false;
 
   ngOnInit() {
     this.authService.currentUser$.subscribe(user => {
@@ -62,6 +65,39 @@ export class ProfileComponent implements OnInit {
       this.isEditModalOpen = false;
     } else {
       this.toastService.error(result.error || 'Failed to update profile');
+    }
+  }
+
+  async onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate
+    const validation = this.imageUpload.validateFile(file);
+    if (!validation.valid) {
+      this.toastService.error(validation.error || 'Invalid file');
+      return;
+    }
+
+    this.isUploadingImage = true;
+    try {
+      // 1. Upload to Firebase Storage
+      const path = `profiles/patients/${this.user.uid}_${Date.now()}`;
+      const publicUrl = await this.imageUpload.uploadImage(file, path);
+      
+      // 2. Update Firestore profile with new public URL
+      const updateRes = await this.authService.updateProfile(this.user.uid, { image: publicUrl });
+      
+      if (updateRes.success) {
+        this.user = { ...this.user, image: publicUrl };
+        this.toastService.success('Profile image updated!');
+      } else {
+        this.toastService.error('Update failed: ' + updateRes.error);
+      }
+    } catch (err: any) {
+      this.toastService.error('Upload failed: ' + err.message);
+    } finally {
+      this.isUploadingImage = false;
     }
   }
 }
