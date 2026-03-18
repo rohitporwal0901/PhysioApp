@@ -6,6 +6,7 @@ export const routes: Routes = [
     // Public landing page
     {
         path: '',
+        pathMatch: 'full',
         loadComponent: () => import('./features/landing/landing.component').then(m => m.LandingComponent)
     },
     // Doctor public profile (accessible without login)
@@ -96,6 +97,11 @@ export const routes: Routes = [
                 path: 'patient/lab-services',
                 canActivate: [roleGuard(['patient'])],
                 loadComponent: () => import('./features/patient/lab-services/lab-services.component').then(m => m.LabServicesComponent)
+            },
+            {
+                path: 'patient/profile',
+                canActivate: [roleGuard(['patient'])],
+                loadComponent: () => import('./features/patient/profile/profile.component').then(m => m.ProfileComponent)
             }
         ]
     },

@@ -9,7 +9,15 @@ export interface AppUser {
   email: string;
   role: 'admin' | 'doctor' | 'patient';
   fullName: string;
-  createdAt?: Date;
+  phone?: string;
+  dob?: string;
+  gender?: string;
+  address?: string;
+  condition?: string;
+  emergencyContact?: string;
+  image?: string;
+  assignedDoctors?: string[];
+  createdAt?: any;
   available?: boolean;
   active?: boolean
 }
@@ -207,6 +215,23 @@ export class AuthService {
     } catch (err: any) {
       console.error('Doctor registration error details:', err);
       return { success: false, error: this.mapFirebaseError(err.code) };
+    }
+  }
+
+  async updateProfile(uid: string, data: any): Promise<{ success: boolean; error?: string }> {
+    try {
+      const ref = doc(this.firestore, 'users', uid);
+      await setDoc(ref, data, { merge: true });
+      
+      // Update local state if it's the current user
+      const current = this.currentUserSubject.getValue();
+      if (current && current.uid === uid) {
+        this.currentUserSubject.next({ ...current, ...data });
+      }
+      return { success: true };
+    } catch (err: any) {
+      console.error('Update profile error:', err);
+      return { success: false, error: err.message };
     }
   }
 

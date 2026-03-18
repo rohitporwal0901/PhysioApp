@@ -45,6 +45,7 @@ export class AdminLayoutComponent implements OnInit {
     else if (url.includes('lab-services')) this.pageTitle = 'Lab Services';
     else if (url.includes('sessions')) this.pageTitle = 'My Sessions';
     else if (url.includes('lab-technicians')) this.pageTitle = 'Lab Technicians';
+    else if (url.includes('profile')) this.pageTitle = 'My Profile';
     else this.pageTitle = 'Dashboard';
   }
 

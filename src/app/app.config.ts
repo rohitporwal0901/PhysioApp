@@ -14,7 +14,7 @@ import {
   TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone,
   LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut, Sparkles, MessageSquare, Loader,
   Accessibility, Footprints, Brain, Cpu, Map, Microscope, Info, AlertTriangle,
-  SearchX, Briefcase, ExternalLink, IndianRupee, Share, Share2, Download, FileDown
+  SearchX, Briefcase, ExternalLink, IndianRupee, Share, Share2, Download, FileDown, IdCard
 } from 'lucide-angular';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -49,7 +49,7 @@ export const appConfig: ApplicationConfig = {
       TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone,
       LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut, Sparkles, MessageSquare, Loader,
       Accessibility, Footprints, Brain, Cpu, Map, Microscope, Info, AlertTriangle,
-      SearchX, Briefcase, ExternalLink, IndianRupee, Share, Share2, Download, FileDown
+      SearchX, Briefcase, ExternalLink, IndianRupee, Share, Share2, Download, FileDown, IdCard
     }))
   ]
 };

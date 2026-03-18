@@ -83,6 +83,7 @@ export class SidebarComponent {
           { label: 'Book Session', icon: 'calendar-plus', path: '/patient/book-appointment', badge: 'New', badgeColor: 'bg-status-success/10 text-status-success dark:bg-status-success/20' },
           { label: 'My Sessions', icon: 'activity', path: '/patient/sessions' },
           { label: 'Diagnostic Labs', icon: 'microscope', path: '/patient/lab-services' },
+          { label: 'My Profile', icon: 'user', path: '/patient/profile' },
         ];
       case 'admin':
       default:
