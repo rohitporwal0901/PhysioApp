@@ -148,7 +148,7 @@ export class AgendaComponent implements OnInit {
       isOpen: true,
       title: 'Complete Session',
       message: `Mark this session with ${apt.patientName} as completed?`,
-      confirmText: 'Mark Completed',
+      confirmText: 'Completed',
       confirmBtnClass: 'bg-gradient-to-r from-blue-500 to-blue-600 shadow-blue-500/25',
       icon: 'award',
       action: async () => {

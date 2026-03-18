@@ -8,12 +8,13 @@
 
 .agenda-slider-container {
     display: flex;
+    flex-direction: row;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 1rem;
-    gap: 1rem;
+    padding-bottom: 0.75rem;
+    gap: 0.75rem;
 
     @media (min-width: 768px) {
         flex-direction: column;
@@ -21,28 +22,32 @@
         overflow-y: auto;
         scroll-snap-type: none;
         padding-bottom: 0;
+        gap: 0;
     }
 }
 
 .agenda-slide-item {
     flex-shrink: 0;
-    width: 280px;
+    width: 170px; /* More compact for mobile */
     scroll-snap-align: center;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+    border-radius: 1rem;
+    cursor: pointer;
 
     @media (min-width: 768px) {
         width: 100%;
         scroll-snap-align: none;
+        margin-bottom: 1rem;
     }
     
     &:active {
-        transform: scale(0.98);
+        transform: scale(0.96);
     }
 }
 
 /* ── DETAIL UI IMPROVEMENTS ── */
 .detail-header-compact {
-    padding: 1.5rem;
+    padding: 1rem 1rem 0.5rem;
     background: linear-gradient(to bottom, rgba(15, 23, 42, 0.05), transparent);
     
     :host-context(.dark) & {
@@ -57,18 +62,18 @@
 
 .detail-grid-compact {
     display: grid;
-    gap: 1.25rem;
-    padding: 1.5rem;
+    gap: 0.75rem;
+    padding: 1rem;
     
     @media (max-width: 640px) {
-        padding: 1rem;
-        gap: 1rem;
+        padding: 0.75rem;
+        gap: 0.75rem;
     }
 }
 
 .detail-item-box {
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.4);
     
     :host-context(.dark) & {
         border-bottom-color: rgba(30, 41, 59, 1);
@@ -80,18 +85,18 @@
 }
 
 .info-label {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #94a3b8;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.2rem;
     display: block;
 }
 
 .info-value {
-    font-size: 0.9375rem;
-    font-weight: 700;
+    font-size: 0.875rem;
+    font-weight: 800;
     color: #1e293b;
     
     :host-context(.dark) & {
