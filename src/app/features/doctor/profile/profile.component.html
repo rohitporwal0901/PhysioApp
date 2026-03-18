@@ -1,0 +1,188 @@
+<div class="max-w-7xl mx-auto p-2 sm:p-6 lg:p-8 space-y-4 sm:space-y-8">
+  <!-- Profile Header Card -->
+  <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 rounded-[2rem] p-5 sm:p-10 shadow-2xl transition-all duration-700">
+    <div class="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl animate-pulse"></div>
+
+    <div class="relative z-10 flex flex-col items-center md:flex-row md:items-end gap-4 sm:gap-10">
+      <!-- Avatar Section -->
+      <div class="relative group">
+        <div class="w-28 h-28 sm:w-48 sm:h-48 rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden border-4 border-white/10 shadow-2xl backdrop-blur-md ring-4 sm:ring-8 ring-white/5">
+          <img [src]="user?.image || 'https://ui-avatars.com/api/?name=' + (user?.fullName || 'Doctor') + '&background=random&size=200'"
+               class="w-full h-full object-cover transition-transform group-hover:scale-110 duration-700"
+               [alt]="user?.fullName">
+        </div>
+        <div class="absolute -bottom-1 -right-1 bg-emerald-500 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full border-2 sm:border-4 border-slate-900 flex items-center gap-1 shadow-xl">
+           <div class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>
+           <span class="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white">Active</span>
+        </div>
+      </div>
+
+      <!-- Info Section -->
+      <div class="flex-1 text-center md:text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-emerald-300 text-[8px] sm:text-[10px] font-black uppercase tracking-widest mb-3">
+          <i-lucide name="stethoscope" class="w-3 h-3"></i-lucide>
+          Doctor Profile • {{ user?.specialization || 'General' }}
+        </div>
+        <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-white mb-1.5 font-heading tracking-tight drop-shadow-sm">
+          {{ user?.fullName }}
+        </h1>
+        <p class="text-slate-300 font-bold text-xs sm:text-lg mb-3 flex items-center justify-center md:justify-start gap-1.5 max-w-lg mx-auto md:mx-0">
+          <i-lucide name="graduation-cap" class="w-4 h-4 text-emerald-400"></i-lucide>
+          {{ user?.qualification || 'Physiotherapy Specialist' }}
+        </p>
+        
+        <div class="flex flex-wrap justify-center md:justify-start gap-2 text-slate-400 text-[10px] sm:text-sm font-bold">
+          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/5">
+            <i-lucide name="mail" class="w-3.5 h-3.5 text-emerald-400"></i-lucide>
+            {{ user?.email }}
+          </span>
+          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/5">
+            <i-lucide name="phone" class="w-3.5 h-3.5 text-emerald-400"></i-lucide>
+            {{ user?.phone }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-4 md:mt-0 w-full md:w-auto">
+        <button (click)="toggleEditModal()"
+                class="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-emerald-50 text-slate-900 rounded-xl sm:rounded-2xl font-black uppercase text-[10px] sm:text-xs tracking-widest transition-all shadow-xl hover:shadow-2xl group">
+          <i-lucide name="settings" class="w-3.5 h-3.5 text-emerald-600 group-hover:rotate-180 transition-all"></i-lucide>
+          Edit Profile
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+    <div *ngFor="let stat of [
+      { label: 'Experience', value: user?.experience || '0+', unit: 'Yrs' },
+      { label: 'Consult Fee', value: '₹' + (user?.consultationFee || '0'), unit: '' },
+      { label: 'Follow Up', value: '₹' + (user?.followUpFee || '0'), unit: '' },
+      { label: 'Patients', value: '500+', unit: '' }
+    ]" class="bg-white dark:bg-slate-800 p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm text-center">
+      <p class="text-[8px] sm:text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1 sm:mb-2 tracking-widest">{{ stat.label }}</p>
+      <h4 class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white">{{ stat.value }} <span class="text-[10px] sm:text-xs text-primary-500">{{ stat.unit }}</span></h4>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
+    <!-- Professional Core -->
+    <div class="lg:col-span-2 space-y-4 sm:space-y-8">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 border border-slate-100 dark:border-slate-700 shadow-sm">
+        <h3 class="text-sm sm:text-xl font-black text-slate-900 dark:text-white mb-4 sm:mb-6 flex items-center gap-2.5">
+          <span class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-500">
+            <i-lucide name="award" class="w-4 h-4 sm:w-6 sm:h-6"></i-lucide>
+          </span>
+          Professional Expertise
+        </h3>
+        
+        <div class="space-y-6 sm:space-y-8">
+           <div>
+             <label class="text-[8px] sm:text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black mb-2 sm:mb-3 block tracking-widest">Areas of Interest</label>
+             <div class="flex flex-wrap gap-1.5 sm:gap-2.5">
+               <span *ngFor="let area of user?.areasOfInterest" 
+                     class="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg border border-emerald-100/50 dark:border-emerald-800/50 text-[9px] sm:text-[11px] font-black uppercase">
+                 {{ area }}
+               </span>
+             </div>
+           </div>
+
+           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
+              <!-- Practice Info -->
+              <div class="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-800 space-y-3">
+                <label class="text-[8px] text-slate-400 uppercase font-black block tracking-widest grayscale opacity-70">Practice Details</label>
+                <div class="flex items-center gap-2.5">
+                   <div class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <i-lucide name="home" class="w-4 h-4 text-emerald-500"></i-lucide>
+                   </div>
+                   <div class="min-w-0">
+                      <p class="text-[8px] text-slate-400 uppercase font-bold">Address</p>
+                      <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 truncate">{{ user?.address || 'Dewas, MP' }}</p>
+                   </div>
+                </div>
+                <div class="flex items-center gap-2.5">
+                   <div class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <i-lucide name="building" class="w-4 h-4 text-emerald-500"></i-lucide>
+                   </div>
+                   <div class="min-w-0">
+                      <p class="text-[8px] text-slate-400 uppercase font-bold">Location</p>
+                      <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 truncate">{{ user?.city }}, {{ user?.state }}</p>
+                   </div>
+                </div>
+              </div>
+
+              <!-- Registration -->
+              <div class="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-800 space-y-3">
+                <label class="text-[8px] text-slate-400 uppercase font-black block tracking-widest grayscale opacity-70">Registration</label>
+                <div class="flex items-center gap-2.5">
+                   <div class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <i-lucide name="file-text" class="w-4 h-4 text-primary-500"></i-lucide>
+                   </div>
+                   <div class="min-w-0">
+                      <p class="text-[8px] text-slate-400 uppercase font-bold">Reg Number</p>
+                      <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 truncate">{{ user?.registrationNumber || 'Pending' }}</p>
+                   </div>
+                </div>
+                <div class="flex items-center gap-2.5">
+                   <div class="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <i-lucide name="landmark" class="w-4 h-4 text-primary-500"></i-lucide>
+                   </div>
+                   <div class="min-w-0">
+                      <p class="text-[8px] text-slate-400 uppercase font-bold">Council</p>
+                      <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 truncate">{{ user?.council || 'State Physical Therapy' }}</p>
+                   </div>
+                </div>
+              </div>
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="space-y-4 sm:space-y-8">
+      <!-- Status Card -->
+      <div class="bg-emerald-500 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white shadow-xl shadow-emerald-500/10 relative overflow-hidden">
+        <h3 class="text-sm sm:text-xl font-black mb-4 flex items-center gap-2.5">
+          <i-lucide name="clock" class="w-5 h-5 sm:w-6 sm:h-6"></i-lucide>
+          Working Status
+        </h3>
+        
+        <div class="space-y-4">
+           <div class="flex items-center justify-between p-3 bg-white/10 rounded-xl border border-white/10">
+              <span class="text-[10px] font-black uppercase tracking-widest opacity-80">Today</span>
+              <span class="px-2.5 py-1 bg-white text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-wider">Available</span>
+           </div>
+           <div class="flex flex-wrap gap-1.5 focus:outline-none">
+             <span *ngFor="let day of user?.availableDays" class="px-2.5 py-1.5 bg-white/10 rounded-lg text-[9px] font-black uppercase border border-white/5">{{ day | slice:0:3 }}</span>
+           </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-100 dark:border-slate-700 shadow-sm grid grid-cols-2 lg:grid-cols-1 gap-4">
+           <div>
+              <p class="text-[8px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1.5 tracking-widest">Consult Mode</p>
+              <span class="px-2 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-600 rounded-md text-[9px] font-black uppercase">{{ user?.consultationType || 'Hybrid' }}</span>
+           </div>
+           
+           <div>
+              <p class="text-[8px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1.5 tracking-widest">Gender</p>
+              <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200 capitalize">{{ user?.gender }}</p>
+           </div>
+           
+           <div>
+              <p class="text-[8px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1.5 tracking-widest">Birth Date</p>
+              <p class="text-[11px] sm:text-sm font-black text-slate-700 dark:text-slate-200">{{ user?.dob }}</p>
+           </div>
+           
+           <div>
+              <p class="text-[8px] text-slate-400 dark:text-slate-500 uppercase font-black mb-1.5 tracking-widest">Member Since</p>
+              <p class="text-[10px] sm:text-xs font-black text-slate-700 dark:text-slate-200">{{ user?.createdAt | date:'MMM yyyy' }}</p>
+           </div>
+      </div>
+    </div>
+  </div>
+</div>

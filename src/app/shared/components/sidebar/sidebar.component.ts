@@ -76,6 +76,7 @@ export class SidebarComponent {
           { label: 'Dashboard', icon: 'layout-dashboard', path: '/doctor/dashboard' },
           { label: 'My Agenda', icon: 'calendar', path: '/doctor/agenda', badge: 'Today', badgeColor: 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400' },
           { label: 'My Patients', icon: 'users', path: '/doctor/patients' },
+          { label: 'My Profile', icon: 'user', path: '/doctor/profile' },
         ];
       case 'patient':
         return [

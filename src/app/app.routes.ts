@@ -77,6 +77,11 @@ export const routes: Routes = [
                 canActivate: [roleGuard(['doctor'])],
                 loadComponent: () => import('./features/doctor/patients/patients.component').then(m => m.PatientsComponent)
             },
+            {
+                path: 'doctor/profile',
+                canActivate: [roleGuard(['doctor'])],
+                loadComponent: () => import('./features/doctor/profile/profile.component').then(m => m.ProfileComponent)
+            },
             // Patient routes
             {
                 path: 'patient/dashboard',
