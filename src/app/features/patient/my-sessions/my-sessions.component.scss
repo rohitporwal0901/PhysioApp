@@ -75,36 +75,3 @@
     animation: pulseSlow 4s ease-in-out infinite;
 }
 
-// Explicit Centering Utility
-.fixed-center-overlay {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    z-index: 99999 !important;
-    pointer-events: auto;
-    
-    // Ensure the backdrop also takes full size
-    .absolute.inset-0 {
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-    }
-}
-
-.premium-modal-card {
-    position: relative;
-    z-index: 100000;
-    margin: auto; // Works with flex centering to ensure middle placement
-    width: 100%;
-    max-width: 500px; // Slightly wider for a more premium feel, but keeps it contained
-    max-height: calc(100vh - 4rem);
-    overflow-y: auto;
-    box-sizing: border-box;
-}
