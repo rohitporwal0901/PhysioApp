@@ -47,23 +47,23 @@
                 <div class="doctor-list fade-in-up">
                     <div *ngFor="let doc of doctors" class="doctor-card group" (click)="selectDoctor(doc)">
                         <div class="doctor-card-left">
-                            <div class="relative w-16 h-16 mr-4 flex-shrink-0">
+                            <div class="relative w-12 h-12 sm:w-14 sm:h-14 mr-3 sm:mr-4 flex-shrink-0">
                                 <img [src]="'https://ui-avatars.com/api/?name=' + encodeURIComponent(doc.fullName) + '&background=0D8ABC&color=fff&size=128'"
-                                    class="w-16 h-16 rounded-2xl object-cover shadow-md transition-transform duration-300 group-hover:scale-110"
+                                    class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl object-cover shadow-md transition-transform duration-300 group-hover:scale-110"
                                     alt="">
                                 <div
-                                    class="absolute -bottom-1 -right-1 w-5 h-5 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-sm">
+                                    class="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-sm">
                                     <div
-                                        class="w-3 h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-800">
+                                        class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-800">
                                     </div>
                                 </div>
                             </div>
                             <div class="doctor-info">
-                                <div class="flex items-center gap-1.5 mb-1">
+                                <div class="flex items-center gap-1 sm:gap-1.5 mb-0.5 sm:mb-1">
                                     <h3
                                         class="text-slate-900 dark:text-white font-black tracking-tight leading-none group-hover:text-primary-600 transition-colors">
                                         {{ doc.fullName }}</h3>
-                                    <i-lucide name="check-circle" class="w-4 h-4 text-primary-500"></i-lucide>
+                                    <i-lucide name="check-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-500"></i-lucide>
                                 </div>
                                 <p class="text-slate-500 dark:text-slate-400 font-semibold text-xs mb-2">{{
                                     doc.specialization || doc.specialty }}</p>
@@ -124,29 +124,46 @@
                 <!-- Doctor Summary -->
                 <div class="doc-summary-card">
                     <div class="doc-summary-bg"></div>
-                    <div class="relative mx-auto w-24 h-24 mb-4 z-10 group">
-                        <img [src]="'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedDoctor.fullName) + '&background=0D8ABC&color=fff&size=128'"
-                            class="w-24 h-24 rounded-[2rem] object-cover ring-4 ring-white dark:ring-slate-800 shadow-2xl transition-all duration-500 group-hover:rotate-6"
-                            alt="">
-                        <div
-                            class="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-1.5 rounded-xl border-4 border-white dark:border-slate-800 shadow-lg">
-                            <i-lucide name="check" class="w-4 h-4"></i-lucide>
+                    <!-- Mobile: Horizontal compact layout -->
+                    <div class="flex sm:hidden items-center gap-3 relative z-10">
+                        <div class="relative flex-shrink-0">
+                            <img [src]="'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedDoctor.fullName) + '&background=0D8ABC&color=fff&size=128'"
+                                class="w-14 h-14 rounded-xl object-cover ring-2 ring-white dark:ring-slate-700 shadow-lg" alt="">
+                            <div class="absolute -bottom-1 -right-1 bg-emerald-500 text-white p-0.5 rounded-md border-2 border-white dark:border-slate-800">
+                                <i-lucide name="check" class="w-2.5 h-2.5"></i-lucide>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-black text-sm text-slate-900 dark:text-white tracking-tight truncate">{{ selectedDoctor.fullName }}</p>
+                            <p class="text-[10px] font-bold text-primary-500 uppercase tracking-wider mt-0.5">{{ selectedDoctor.specialization || selectedDoctor.specialty }}</p>
+                            <div class="flex items-center gap-3 mt-1.5 text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                                <span class="flex items-center gap-1"><i-lucide name="clock" class="w-3 h-3 text-primary-400"></i-lucide>45 Min</span>
+                                <span class="flex items-center gap-1"><i-lucide name="map-pin" class="w-3 h-3 text-primary-400"></i-lucide>Clinic</span>
+                            </div>
                         </div>
                     </div>
-                    <p class="doc-summary-name relative z-10 font-black tracking-tight text-xl">{{
-                        selectedDoctor.fullName }}</p>
-                    <p
-                        class="doc-summary-spec relative z-10 font-bold uppercase tracking-widest text-[10px] opacity-70">
-                        {{ selectedDoctor.specialization || selectedDoctor.specialty }}</p>
-
-                    <div class="doc-details-box relative z-10">
-                        <div class="doc-detail-row">
-                            <i-lucide name="clock" class="w-3.5 h-3.5 text-primary-400"></i-lucide>
-                            Consultation (45 Min)
+                    <!-- Desktop: Vertical centered layout -->
+                    <div class="hidden sm:block">
+                        <div class="relative mx-auto w-24 h-24 mb-4 z-10 group">
+                            <img [src]="'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedDoctor.fullName) + '&background=0D8ABC&color=fff&size=128'"
+                                class="w-24 h-24 rounded-[2rem] object-cover ring-4 ring-white dark:ring-slate-800 shadow-2xl transition-all duration-500 group-hover:rotate-6"
+                                alt="">
+                            <div class="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-1.5 rounded-xl border-4 border-white dark:border-slate-800 shadow-lg">
+                                <i-lucide name="check" class="w-4 h-4"></i-lucide>
+                            </div>
                         </div>
-                        <div class="doc-detail-row">
-                            <i-lucide name="map-pin" class="w-3.5 h-3.5 text-primary-400"></i-lucide>
-                            Clinic Visit
+                        <p class="doc-summary-name relative z-10 font-black tracking-tight">{{ selectedDoctor.fullName }}</p>
+                        <p class="doc-summary-spec relative z-10 font-bold uppercase tracking-widest text-[10px] opacity-70">
+                            {{ selectedDoctor.specialization || selectedDoctor.specialty }}</p>
+                        <div class="doc-details-box relative z-10">
+                            <div class="doc-detail-row">
+                                <i-lucide name="clock" class="w-3.5 h-3.5 text-primary-400"></i-lucide>
+                                Consultation (45 Min)
+                            </div>
+                            <div class="doc-detail-row">
+                                <i-lucide name="map-pin" class="w-3.5 h-3.5 text-primary-400"></i-lucide>
+                                Clinic Visit
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -156,13 +173,13 @@
                     <h3 class="slot-card-title">Select <span>Date & Time</span></h3>
 
                     <p class="booking-as-info">
-                        <i-lucide name="user-check" class="w-4 h-4"></i-lucide>
+                        <i-lucide name="user-check" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i-lucide>
                         Patient: <strong>{{ patientName }}</strong>
                     </p>
 
                     <!-- Error -->
                     <div *ngIf="bookingError" class="booking-error-inline">
-                        <i-lucide name="alert-circle" class="w-4 h-4"></i-lucide>
+                        <i-lucide name="alert-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0"></i-lucide>
                         {{ bookingError }}
                     </div>
 
@@ -180,17 +197,17 @@
                         </button>
                     </div>
 
-                    <div class="mt-6">
-                        <label class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 block">Personal Note /
+                    <div class="mt-3 sm:mt-5">
+                        <label class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5 sm:mb-2 block">Personal Note /
                             Complaint (Optional)</label>
                         <textarea [(ngModel)]="patientNotes" placeholder="Describe your symptoms or condition..."
-                            class="w-full h-24 p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary-500/50 outline-none resize-none transition-all"></textarea>
+                            class="w-full h-20 sm:h-24 p-2.5 sm:p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-primary-500/50 outline-none resize-none transition-all"></textarea>
                     </div>
 
                     <button [disabled]="!selectedTimeSlot || isProcessing" (click)="confirmBooking()"
-                        class="confirm-btn" [class.active]="selectedTimeSlot" [class.inactive]="!selectedTimeSlot">
-                        <i-lucide name="loader" class="w-5 h-5 animate-spin" *ngIf="isProcessing"></i-lucide>
-                        <i-lucide name="calendar-check" class="w-5 h-5"
+                        class="confirm-btn mt-3 sm:mt-4" [class.active]="selectedTimeSlot" [class.inactive]="!selectedTimeSlot">
+                        <i-lucide name="loader" class="w-4 h-4 sm:w-5 sm:h-5 animate-spin" *ngIf="isProcessing"></i-lucide>
+                        <i-lucide name="calendar-check" class="w-4 h-4 sm:w-5 sm:h-5"
                             *ngIf="selectedTimeSlot && !isProcessing"></i-lucide>
                         {{ isProcessing ? 'Processing...' : (selectedTimeSlot ? 'Confirm Appointment' : 'Select a Time')
                         }}
@@ -210,35 +227,35 @@
                     <div class="success-icon-wrap">
                         <div class="success-icon-glow"></div>
                         <div class="success-icon-circle">
-                            <i-lucide name="check" class="w-12 h-12 text-white"></i-lucide>
+                            <i-lucide name="check" class="w-10 h-10 sm:w-12 sm:h-12 text-white"></i-lucide>
                         </div>
                     </div>
 
                     <h2 class="success-title">Booking Requested! 🥳</h2>
                     <p class="success-desc">
-                        Your request for <strong style="color:#0f172a">{{ selectedDoctor?.fullName }}</strong>
+                        Your request for <strong class="text-slate-900 dark:text-white">{{ selectedDoctor?.fullName }}</strong>
                         has been sent. You'll be notified once the doctor confirms your slot.
                     </p>
 
                     <!-- Booking Summary -->
-                    <div class="booking-summary mt-6">
+                    <div class="booking-summary mt-4 sm:mt-6">
                         <div
-                            class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            class="flex items-center justify-between p-3 sm:p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-700">
                             <div class="flex items-center">
-                                <i-lucide name="calendar" class="w-5 h-5 text-primary-500 mr-2"></i-lucide>
-                                <span class="text-sm font-bold">{{ formattedDate }}</span>
+                                <i-lucide name="calendar" class="w-4 h-4 sm:w-5 sm:h-5 text-primary-500 mr-1.5 sm:mr-2"></i-lucide>
+                                <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">{{ formattedDate }}</span>
                             </div>
                             <div class="flex items-center">
-                                <i-lucide name="clock" class="w-5 h-5 text-secondary-500 mr-2"></i-lucide>
-                                <span class="text-sm font-bold">{{ selectedTimeSlot }}</span>
+                                <i-lucide name="clock" class="w-4 h-4 sm:w-5 sm:h-5 text-secondary-500 mr-1.5 sm:mr-2"></i-lucide>
+                                <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">{{ selectedTimeSlot }}</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Actions -->
-                    <div class="success-actions mt-8">
+                    <div class="success-actions mt-6 sm:mt-8">
                         <button (click)="goToPatientDashboard()"
-                            class="action-btn-primary w-full py-4 rounded-2xl font-bold bg-primary-600 text-white shadow-xl shadow-primary-500/20 hover:scale-[1.02] transition-all">
+                            class="action-btn-primary w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-white shadow-xl shadow-primary-500/20 hover:scale-[1.02] transition-all">
                             Go to My Appointments
                         </button>
                     </div>
