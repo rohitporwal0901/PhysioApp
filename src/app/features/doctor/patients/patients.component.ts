@@ -69,4 +69,18 @@ export class PatientsComponent implements OnInit {
         // Use a high-quality Unsplash image from our local array based on index
         return this.profileImages[index % this.profileImages.length];
     }
+
+    sendWhatsApp(patient: any): void {
+        const phone = patient.phone || patient.phoneNumber;
+        if (!phone) {
+            alert('Phone number not available for this patient');
+            return;
+        }
+        
+        // Clean the phone number (remove spaces, etc.)
+        const cleanedPhone = phone.replace(/\D/g, '');
+        const message = `Hello ${patient.fullName || patient.name}, this is your Physiotherapist. I hope you are doing well!`;
+        const url = `https://wa.me/${cleanedPhone}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+    }
 }
