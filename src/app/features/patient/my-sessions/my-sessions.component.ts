@@ -97,20 +97,16 @@ export class MySessionsComponent implements OnInit {
   //  AI-POWERED PDF REPORT GENERATION
   // ═══════════════════════════════════════
 
-  async downloadReport(session: BookedAppointment) {
-    if (!session.id) return;
+  /**
+   * STEP 1: Generate the AI report (no download/share).
+   * After generation, the template will show Download/Share buttons.
+   */
+  async generateAndHandleReport(session: BookedAppointment) {
+    if (!session.id || session.aiReport) return;
 
-    // 1. If AI Report already exists, just generate the PDF immediately
-    if (session.aiReport) {
-      this.generatePDF(session, session.aiReport, 'download');
-      return;
-    }
-
-    // 2. Otherwise, generate new report via AI
     this.generatingReportId = session.id;
-    let aiAnalysis;
-
     try {
+      let aiAnalysis;
       try {
         const aiRawResponse = await this.aiService.generateClinicalReport({
           condition: session.patientCondition || session.type,
@@ -120,23 +116,15 @@ export class MySessionsComponent implements OnInit {
         });
         aiAnalysis = this.aiService.parseAIResponse(aiRawResponse);
       } catch (apiError) {
-        console.error("Gemini API failed, using high-quality local template:", apiError);
+        console.error("Gemini API failed, using local template:", apiError);
         aiAnalysis = this.performLocalAIReview(session);
       }
 
-      // 3. PERSIST the report to database
       if (aiAnalysis) {
         await this.bookingService.updateAiReport(session.id, aiAnalysis);
-
-        // Update local state immediately for better UX
-        session.aiReport = {
-          ...aiAnalysis,
-          generatedAt: new Date()
-        };
-        this.toast.success('AI Report generated successfully!', 'Success');
-        this.generatePDF(session, aiAnalysis, 'download');
+        session.aiReport = { ...aiAnalysis, generatedAt: new Date() };
+        this.toast.success('AI Report generated! You can now download or share it.', 'Report Ready');
       }
-
     } catch (globalError) {
       console.error("Report Generation Error:", globalError);
       this.toast.error("Could not generate report. Please try again later.", "Error");
@@ -145,34 +133,20 @@ export class MySessionsComponent implements OnInit {
     }
   }
 
-  async shareReport(session: BookedAppointment) {
-    if (!session.id) return;
+  /**
+   * STEP 2a: Download the already-generated report as PDF (Web)
+   */
+  async downloadReport(session: BookedAppointment) {
+    if (!session.id || !session.aiReport) return;
+    this.generatePDF(session, session.aiReport, 'download');
+  }
 
-    // Capacitor Native Share works differently than navigator.share
-    const isNative = Capacitor.isNativePlatform();
-    
-    // Check if AI report exists or generate it
-    if (!session.aiReport) {
-      this.generatingReportId = session.id;
-      try {
-        const aiRawResponse = await this.aiService.generateClinicalReport({
-          condition: session.patientCondition || session.type,
-          notes: (session.notes || '') + " " + (session.treatmentNotes || ""),
-          patientName: session.patientName,
-          doctorName: session.doctorName
-        });
-        const aiAnalysis = this.aiService.parseAIResponse(aiRawResponse);
-        await this.bookingService.updateAiReport(session.id, aiAnalysis);
-        session.aiReport = { ...aiAnalysis, generatedAt: new Date() };
-        this.generatePDF(session, session.aiReport, 'share');
-      } catch (err) {
-        this.toast.error('Could not generate report for sharing.', 'Error');
-      } finally {
-        this.generatingReportId = null;
-      }
-    } else {
-      this.generatePDF(session, session.aiReport, 'share');
-    }
+  /**
+   * STEP 2b: Share the already-generated report as PDF (APK/Mobile)
+   */
+  async shareReport(session: BookedAppointment) {
+    if (!session.id || !session.aiReport) return;
+    this.generatePDF(session, session.aiReport, 'share');
   }
 
   private generatePDF(session: BookedAppointment, ai: any, action: 'download' | 'share' = 'download') {
