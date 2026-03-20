@@ -58,6 +58,7 @@ export class BookAppointmentComponent implements OnInit {
   }
 
   selectDoctor(doc: any) {
+    if (doc.available === false) return;
     this.selectedDoctor = doc;
     this.currentStep = 2;
     this.refreshBookedSlots();

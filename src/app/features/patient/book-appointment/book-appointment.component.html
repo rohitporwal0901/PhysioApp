@@ -45,7 +45,7 @@
             <!-- Doctor Cards -->
             <ng-container *ngIf="doctors$ | async as doctors; else loadingDocs">
                 <div class="doctor-list fade-in-up">
-                    <div *ngFor="let doc of doctors" class="doctor-card group" (click)="selectDoctor(doc)">
+                    <div *ngFor="let doc of doctors" class="doctor-card group" [class.unavailable]="doc.available === false" (click)="doc.available !== false && selectDoctor(doc)">
                         <div class="doctor-card-left">
                             <div class="relative w-12 h-12 sm:w-14 sm:h-14 mr-3 sm:mr-4 flex-shrink-0">
                                 <img [src]="'https://ui-avatars.com/api/?name=' + encodeURIComponent(doc.fullName) + '&background=0D8ABC&color=fff&size=128'"
@@ -80,9 +80,10 @@
                             </div>
                         </div>
                         <div class="doctor-card-right">
-                            <button class="view-btn">
-                                <span>Book Now</span>
-                                <i-lucide name="arrow-right" class="w-3.5 h-3.5 ml-1.5"></i-lucide>
+                            <button class="view-btn" [disabled]="doc.available === false">
+                                <span>{{ doc.available !== false ? 'Book Now' : 'Not Available' }}</span>
+                                <i-lucide [name]="doc.available !== false ? 'arrow-right' : 'slash'" 
+                                    class="w-3.5 h-3.5 ml-1.5"></i-lucide>
                             </button>
                         </div>
                     </div>

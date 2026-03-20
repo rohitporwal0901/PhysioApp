@@ -385,6 +385,20 @@
     &:active {
         transform: translateY(0) scale(0.98);
     }
+
+    &:disabled {
+        background: #94a3b8;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none !important;
+        opacity: 0.7;
+
+        :host-context(.dark) &,
+        &.dark {
+            background: #334155;
+            color: #64748b;
+        }
+    }
 }
 
 /* ── SKELETON LOADER ── */
