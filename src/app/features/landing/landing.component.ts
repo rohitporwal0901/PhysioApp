@@ -391,6 +391,15 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    getWhatsAppUrl(lab: any): string | null {
+        const isAvailable = lab.isAvailable || lab.available;
+        if (!isAvailable) return null;
+        const phone = lab.phone ? lab.phone.replace('+', '').replace(/\s/g, '') : '';
+        const name = lab.fullName || lab.name || '';
+        const msg = encodeURIComponent(`Hi, I would like to book a diagnostic test at ${name}`);
+        return `https://wa.me/${phone}?text=${msg}`;
+    }
+
     onTestImgError(event: any, name: string) {
         event.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=4F46E5&color=fff`;
     }

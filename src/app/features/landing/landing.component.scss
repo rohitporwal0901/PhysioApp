@@ -553,6 +553,21 @@ nav {
   box-shadow 0.45s ease !important;
 }
 
+/* ── Lab cards ── */
+.lab-card {
+  transition: all 0.4s ease;
+
+  &--unavailable {
+    opacity: 0.7;
+    filter: grayscale(0.3);
+
+    &:hover {
+      opacity: 0.8;
+      filter: grayscale(0.15);
+    }
+  }
+}
+
 /* ── Skeleton shimmer ── */
 .skeleton-shimmer {
   background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
@@ -753,17 +768,21 @@ nav {
   animation: scaleFade 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
 }
 
+/* ── Safe area for bottom CTA ── */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 /* ── Mobile responsiveness ── */
 @media (max-width: 640px) {
   .hero-section {
     min-height: 100dvh;
-    padding-bottom: 5.5rem;
-    /* space for sticky CTA */
+    padding-bottom: 4.5rem;
   }
 
   .hero-content h1 {
-    font-size: 2.4rem;
-    line-height: 1.15;
+    font-size: 2.2rem;
+    line-height: 1.12;
   }
 
   .search-widget {
@@ -774,21 +793,29 @@ nav {
     display: none !important;
   }
 
-  /* Better section spacing on mobile */
-  section {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-  }
-
   /* Better section headings on mobile */
   .section-chip {
     font-size: 0.65rem;
+    padding: 4px 10px;
+  }
+
+  /* Compact stat cards on smaller screens */
+  .stat-card {
+    .text-3xl {
+      font-size: 1.6rem;
+    }
   }
 }
 
 @media (max-width: 380px) {
   .hero-content h1 {
-    font-size: 2rem;
+    font-size: 1.9rem;
+  }
+
+  .stat-card {
+    .text-3xl {
+      font-size: 1.4rem;
+    }
   }
 }
 

@@ -92,11 +92,11 @@
     <div class="orb orb-2 absolute w-[500px] h-[500px] -bottom-40 -left-40 pointer-events-none"></div>
     <div class="orb orb-3 absolute w-72 h-72 top-1/2 left-1/3 pointer-events-none"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 lg:py-16 relative z-10">
-      <div class="grid grid-cols-1 lg:grid-cols-2  xl:gap-20 items-center min-h-[calc(100svh-4rem)]">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-8 sm:py-16 lg:py-16 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-20 items-center min-h-[calc(100svh-4rem)]">
 
         <!-- ── LEFT CONTENT ── -->
-        <div class="hero-content flex flex-col justify-center">
+        <div style="margin-top: 70px;" class="hero-content flex flex-col justify-center">
 
           <!-- Platform trust badge -->
           <!-- <div
@@ -157,7 +157,7 @@
           </div> -->
 
           <!-- Social proof row -->
-          <div class="flex flex-wrap items-center gap-6 pt-5 border-t border-slate-200/60">
+          <div class="flex flex-wrap items-center gap-4 sm:gap-6 pt-4 sm:pt-5 border-t border-slate-200/60">
             <!-- Avatar stack -->
             <div class="flex items-center gap-2">
               <div class="flex -space-x-2">
@@ -191,12 +191,13 @@
         </div>
 
         <!-- ── MOBILE Hero Image (visible only on small screens) ── -->
-        <div style="margin-bottom: 128px;" class="hero-mobile-image block lg:hidden mb-8 reveal">
+        <div class="hero-mobile-image block lg:hidden mt-6 mb-20 sm:mb-24 reveal">
           <div class="relative mx-auto max-w-sm">
             <div
               class="absolute inset-[-6px] bg-gradient-to-br from-primary-300/30 to-secondary-400/20 rounded-3xl blur-sm">
             </div>
-            <div *ngIf="heroVideoSettings?.isActive" class="relative w-full h-56 sm:h-72 rounded-3xl overflow-hidden shadow-xl bg-slate-900">
+            <div *ngIf="heroVideoSettings?.isActive"
+              class="relative w-full h-56 sm:h-72 rounded-3xl overflow-hidden shadow-xl bg-slate-900">
               <iframe class="absolute inset-0 w-full h-full"
                 [src]="'https://www.youtube.com/embed/' + heroVideoSettings?.videoId + '?autoplay=1&mute=1&loop=1&playlist=' + heroVideoSettings?.videoId + '&controls=0&showinfo=0&rel=0' | safe:'resourceUrl'"
                 title="Physiotherapy Mobile Dummy Video" frameborder="0"
@@ -222,8 +223,10 @@
             </div>
 
             <!-- Fallback Image if Video is disabled -->
-            <div *ngIf="!heroVideoSettings?.isActive" class="relative w-full h-56 sm:h-72 rounded-3xl overflow-hidden shadow-xl">
-               <img src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Physiotherapy">
+            <div *ngIf="!heroVideoSettings?.isActive"
+              class="relative w-full h-56 sm:h-72 rounded-3xl overflow-hidden shadow-xl">
+              <img src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=800&auto=format&fit=crop"
+                class="w-full h-full object-cover" alt="Physiotherapy">
             </div>
           </div>
         </div>
@@ -273,14 +276,15 @@
                 </div>
               </div>
 
-               <!-- Fallback Slideshow/Image if Video is disabled -->
-               <div *ngIf="!heroVideoSettings?.isActive"
+              <!-- Fallback Slideshow/Image if Video is disabled -->
+              <div *ngIf="!heroVideoSettings?.isActive"
                 class="hero-slideshow relative w-full h-[400px] xl:h-[460px] rounded-[2.8rem] overflow-hidden shadow-2xl z-10">
-                <img src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover" alt="Physiotherapy">
+                <img src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=1200&auto=format&fit=crop"
+                  class="w-full h-full object-cover" alt="Physiotherapy">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
                 <div class="absolute bottom-8 left-8 right-8 text-white">
-                    <p class="text-2xl font-black mb-2">Expert Care</p>
-                    <p class="text-sm opacity-80">Leading physiotherapy services at your doorstep.</p>
+                  <p class="text-2xl font-black mb-2">Expert Care</p>
+                  <p class="text-sm opacity-80">Leading physiotherapy services at your doorstep.</p>
                 </div>
               </div>
             </div>
@@ -346,12 +350,12 @@
   </section>
 
   <!-- ══════════════════ STAT COUNTERS ══════════════════ -->
-  <section class="py-10 sm:py-14 bg-white relative">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="stats-trigger grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+  <section class="py-8 sm:py-12 bg-white relative">
+    <div class="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="stats-trigger grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5">
         @for (stat of statCounters; track stat.label; let i = $index) {
         <div
-          class="stat-card relative text-center bg-gradient-to-br from-white to-primary-50/40 border border-primary-100/50 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300"
+          class="stat-card relative text-center bg-gradient-to-br from-white to-primary-50/40 border border-primary-100/50 rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300"
           [style.transition-delay]="(i * 120) + 'ms'">
           <!-- Decorative bg icon -->
           <div class="absolute top-2 right-2 opacity-[0.07] pointer-events-none">
@@ -368,9 +372,9 @@
   </section>
 
   <!-- ══════════════════ HOW IT WORKS ══════════════════ -->
-  <section id="how-it-works" class="py-20 sm:py-28 bg-slate-50 border-t border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-14 reveal">
+  <section id="how-it-works" class="py-12 sm:py-20 lg:py-24 bg-slate-50 border-t border-slate-100">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="text-center mb-10 sm:mb-14 reveal">
         <span class="section-chip">Simple Process</span>
         <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-4">
           How <span class="text-gradient">PhysioPro</span> Works
@@ -380,7 +384,7 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 relative">
         <!-- Connector line (desktop) -->
         <div
           class="hidden lg:block absolute top-10 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-primary-200 via-primary-300 to-primary-200 z-0">
@@ -388,7 +392,7 @@
 
         @for (step of howItWorks; track step.title; let i = $index) {
         <div
-          class="how-step reveal relative z-10 bg-white rounded-2xl p-6 sm:p-7 border border-slate-100 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300"
+          class="how-step reveal relative z-10 bg-white rounded-2xl p-5 sm:p-7 border border-slate-100 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300"
           [style.transition-delay]="(i * 100) + 'ms'">
           <!-- Step number -->
           <div class="flex items-center justify-between mb-5">
@@ -407,24 +411,24 @@
   </section>
 
   <!-- ══════════════════ CONDITIONS / TREATMENTS ══════════════════ -->
-  <section class="py-20 sm:py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12 reveal">
+  <section class="py-12 sm:py-20 lg:py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="text-center mb-8 sm:mb-12 reveal">
         <span class="section-chip">Conditions We Treat</span>
         <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-3">
           Find Care For <span class="text-gradient">Your Condition</span>
         </h2>
-        <p class="text-slate-600 max-w-xl mx-auto text-base">
+        <p class="text-slate-600 max-w-xl mx-auto text-sm sm:text-base">
           Click any condition to find specialist physios and book instantly.
         </p>
       </div>
-      <div class="reveal flex flex-wrap justify-center gap-3">
+      <div class="reveal flex flex-wrap justify-center gap-2 sm:gap-3">
         @for (c of conditions; track c.label; let i = $index) {
         <button (click)="bookCondition(c.label)"
-          class="condition-tag flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-medium text-sm hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 hover:shadow-sm transition-all duration-250 group"
+          class="condition-tag flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-medium text-xs sm:text-sm hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 hover:shadow-sm transition-all duration-250 group"
           [style.animation-delay]="(i * 60) + 'ms'">
           <i-lucide [name]="c.icon"
-            class="w-4 h-4 text-slate-400 group-hover:text-primary-500 transition-colors"></i-lucide>
+            class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 group-hover:text-primary-500 transition-colors"></i-lucide>
           {{ c.label }}
         </button>
         }
@@ -433,22 +437,22 @@
   </section>
 
   <!-- ══════════════════ SERVICES ══════════════════ -->
-  <section id="services" class="py-20 sm:py-28 bg-slate-50 border-t border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-14 reveal">
+  <section id="services" class="py-12 sm:py-20 lg:py-24 bg-slate-50 border-t border-slate-100">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="text-center mb-10 sm:mb-14 reveal">
         <span class="section-chip">Specialisations</span>
         <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-4">
           Comprehensive <span class="text-gradient">Care Services</span>
         </h2>
-        <p class="text-slate-600 max-w-2xl mx-auto text-base sm:text-lg">
+        <p class="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base lg:text-lg">
           From acute injuries to chronic conditions, our clinical team delivers targeted, evidence-based treatment.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
         @for (service of services; track service.title; let i = $index) {
         <div
-          class="service-card reveal group relative bg-white border border-slate-100 hover:border-primary-100 rounded-2xl p-6 sm:p-7 shadow-sm hover:shadow-card transition-all duration-350 hover:-translate-y-1.5 cursor-default overflow-hidden"
+          class="service-card reveal group relative bg-white border border-slate-100 hover:border-primary-100 rounded-2xl p-5 sm:p-6 lg:p-7 shadow-sm hover:shadow-card transition-all duration-350 hover:-translate-y-1.5 cursor-default overflow-hidden"
           [style.transition-delay]="(i * 80) + 'ms'">
           <div
             class="absolute -top-8 -right-8 w-24 h-24 bg-primary-50/50 rounded-full group-hover:scale-[2.5] transition-transform duration-500 z-0 pointer-events-none">
@@ -474,9 +478,9 @@
   </section>
 
   <!-- ══════════════════ DOCTORS ══════════════════ -->
-  <section id="doctors" class="py-20 sm:py-28 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal">
+  <section id="doctors" class="py-12 sm:py-20 lg:py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 reveal">
         <div class="max-w-xl">
           <span class="section-chip">Verified Specialists</span>
           <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-4">
@@ -593,12 +597,12 @@
   </section>
 
   <!-- ══════════════════ DIAGNOSTIC LABS (SLIDER) ══════════════════ -->
-  <section id="labs" class="py-20 sm:py-28 bg-slate-50 border-t border-slate-100 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal">
+  <section id="labs" class="py-12 sm:py-20 lg:py-24 bg-slate-50 border-t border-slate-100 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 reveal">
         <div class="max-w-xl">
           <span class="section-chip">Trusted Network</span>
-          <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-4">
+          <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-3 sm:mb-4">
             Our Partner <span class="text-gradient">Diagnostic Labs</span>
           </h2>
           <p class="text-slate-600 text-sm sm:text-base">
@@ -622,70 +626,93 @@
 
       <ng-container *ngIf="labs$ | async as labs; else loadingLabs">
         <!-- Horizontal Slider Container -->
-        <div #labsSlider class="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth no-scrollbar"
+        <div #labsSlider
+          class="flex gap-4 sm:gap-5 overflow-x-auto pb-6 sm:pb-8 snap-x snap-mandatory scroll-smooth no-scrollbar"
           style="scrollbar-width: none; -ms-overflow-style: none;">
           @for (lab of labs; track lab.id; let i = $index) {
-          <div class="flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[350px] snap-start reveal"
+          <div class="flex-shrink-0 w-[270px] sm:w-[310px] lg:w-[340px] snap-start reveal"
             [style.transition-delay]="(i * 100) + 'ms'">
             <div
-              class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden group hover:shadow-xl transition-all duration-500 h-full">
+              class="lab-card bg-white rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm overflow-hidden group hover:shadow-xl transition-all duration-500 h-full"
+              [class.lab-card--unavailable]="!(lab.isAvailable || lab.available)">
               <!-- Lab Image -->
-              <div class="relative h-48 overflow-hidden">
+              <div class="relative h-40 sm:h-44 overflow-hidden">
                 <img [src]="getLabImage(lab, i)" alt="{{ lab.fullName || lab.name }}"
                   (error)="onTestImgError($event, lab.fullName || lab.name)"
-                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent"></div>
 
-                <div class="absolute top-4 left-4">
+                <!-- Top badges row -->
+                <div class="absolute top-3 left-3 right-3 flex items-center justify-between">
                   <span
-                    class="bg-white/90 backdrop-blur-sm text-[10px] font-black tracking-widest uppercase px-3 py-1.5 rounded-full text-primary-700 shadow-sm">
+                    class="bg-white/90 backdrop-blur-sm text-[9px] sm:text-[10px] font-black tracking-widest uppercase px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-primary-700 shadow-sm">
                     PARTNER LAB
                   </span>
+                  <span class="px-2 py-1 rounded-lg text-[9px] sm:text-[10px] font-bold shadow-sm backdrop-blur-sm"
+                    [ngClass]="(lab.isAvailable || lab.available) ? 'bg-emerald-500/90 text-white' : 'bg-slate-200/90 text-slate-600'">
+                    {{ (lab.isAvailable || lab.available) ? '● Open' : '○ Closed' }}
+                  </span>
+                </div>
+
+                <!-- Name overlay at bottom of image -->
+                <div class="absolute bottom-3 left-3 right-3">
+                  <h3 class="text-base sm:text-lg font-black text-white font-heading truncate drop-shadow-lg">{{
+                    lab.fullName || lab.name }}</h3>
                 </div>
               </div>
 
               <!-- Lab Details -->
-              <div class="p-6">
-                <div class="flex items-center justify-between mb-2">
-                  <h3 class="text-lg font-black text-slate-900 font-heading truncate">{{ lab.fullName || lab.name }}
-                  </h3>
-                  <div class="flex items-center gap-1 text-amber-400">
-                    <i-lucide name="star" class="w-4 h-4 fill-current"></i-lucide>
-                    <span class="text-slate-900 font-bold text-sm">{{ (4.5 + (i % 5)*0.1).toFixed(1) }}</span>
+              <div class="p-4 sm:p-5">
+                <!-- Rating & availability row -->
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-1.5">
+                    <div class="flex items-center gap-0.5 text-amber-400">
+                      <i-lucide name="star" class="w-3.5 h-3.5 fill-current"></i-lucide>
+                      <span class="text-slate-800 font-bold text-sm">{{ (4.5 + (i % 5)*0.1).toFixed(1) }}</span>
+                    </div>
+                    <span class="text-slate-400 text-xs">· Partner</span>
                   </div>
-                </div>
-
-                <!-- Availability Badge -->
-                <div class="mb-4">
-                  <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-sm"
-                    [ngClass]="(lab.isAvailable || lab.available) ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-500 border border-rose-100'">
-                    {{ (lab.isAvailable || lab.available) ? '● OPEN NOW' : '○ CLOSED NOW' }}
+                  <span class="text-[10px] font-medium px-2 py-0.5 rounded-full"
+                    [ngClass]="(lab.isAvailable || lab.available) ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-500'">
+                    {{ (lab.isAvailable || lab.available) ? 'Reports in 24h' : 'Unavailable' }}
                   </span>
                 </div>
 
-                <div class="space-y-3 mb-6">
-                  <div class="flex items-center gap-2.5 text-slate-500 text-xs">
-                    <i-lucide name="map-pin" class="w-3.5 h-3.5 text-primary-500"></i-lucide>
+                <!-- Info rows -->
+                <div class="space-y-2 mb-4">
+                  <div class="flex items-center gap-2 text-slate-500 text-xs">
+                    <i-lucide name="map-pin" class="w-3.5 h-3.5 text-primary-500 flex-shrink-0"></i-lucide>
                     <span class="truncate">{{ lab.address || 'Diagnostic Services Available' }}</span>
                   </div>
-                  <div class="flex items-center gap-2.5 text-slate-500 text-xs">
-                    <i-lucide name="clock" class="w-3.5 h-3.5 text-primary-500"></i-lucide>
-                    <span>{{ (lab.isAvailable || lab.available) ? 'Fastest Reports (24h)' : 'Next Opening: Tomorrow'
+                  <div class="flex items-center gap-2 text-slate-500 text-xs">
+                    <i-lucide name="clock" class="w-3.5 h-3.5 text-primary-500 flex-shrink-0"></i-lucide>
+                    <span>{{ (lab.isAvailable || lab.available) ? 'Mon–Sat: 8 AM – 8 PM' : 'Next Opening: Tomorrow'
                       }}</span>
                   </div>
                 </div>
 
-                <div class="grid grid-cols-5 gap-3">
-                  <button (click)="callLab(lab.phone)"
-                    class="col-span-2 py-3 rounded-2xl bg-white border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
-                    <i-lucide name="phone" class="w-4 h-4"></i-lucide>
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-5 gap-2.5">
+                  <button (click)="callLab(lab.phone); $event.stopPropagation()"
+                    class="col-span-2 py-2.5 sm:py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5"
+                    [ngClass]="(lab.isAvailable || lab.available)
+                      ? 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300'
+                      : 'bg-slate-100 border border-slate-100 text-slate-300 cursor-not-allowed'"
+                    [disabled]="!(lab.isAvailable || lab.available)">
+                    <i-lucide name="phone" class="w-3.5 h-3.5"></i-lucide>
                     Call
                   </button>
-                  <button
-                    class="col-span-3 py-3 rounded-2xl bg-primary-50 text-primary-700 font-bold text-xs hover:bg-primary-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
-                    <i-lucide name="test-tube" class="w-4 h-4"></i-lucide>
-                    View Tests
-                  </button>
+                  <a [href]="getWhatsAppUrl(lab)" [attr.target]="(lab.isAvailable || lab.available) ? '_blank' : null"
+                    class="col-span-3 py-2.5 sm:py-3 rounded-xl font-bold text-xs transition-all duration-300 flex items-center justify-center gap-1.5"
+                    [ngClass]="(lab.isAvailable || lab.available)
+                      ? 'bg-green-500 text-white hover:bg-green-600 shadow-sm hover:shadow-green-500/30 cursor-pointer'
+                      : 'bg-slate-100 text-slate-300 cursor-not-allowed pointer-events-none'">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    WhatsApp
+                  </a>
                 </div>
               </div>
             </div>
@@ -695,15 +722,15 @@
       </ng-container>
 
       <ng-template #loadingLabs>
-        <div class="flex gap-6 overflow-hidden">
+        <div class="flex gap-4 sm:gap-5 overflow-hidden">
           @for (i of [1,2,3,4]; track i) {
           <div
-            class="flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[350px] bg-white rounded-3xl border border-slate-100 overflow-hidden">
-            <div class="h-48 skeleton-shimmer"></div>
-            <div class="p-6 space-y-4">
-              <div class="h-5 skeleton-shimmer rounded-lg w-3/4"></div>
+            class="flex-shrink-0 w-[270px] sm:w-[310px] lg:w-[340px] bg-white rounded-2xl sm:rounded-3xl border border-slate-100 overflow-hidden">
+            <div class="h-40 sm:h-44 skeleton-shimmer"></div>
+            <div class="p-4 sm:p-5 space-y-3">
+              <div class="h-4 skeleton-shimmer rounded-lg w-3/4"></div>
               <div class="h-3 skeleton-shimmer rounded-lg w-1/2"></div>
-              <div class="h-12 skeleton-shimmer rounded-2xl mt-4"></div>
+              <div class="h-10 skeleton-shimmer rounded-xl mt-3"></div>
             </div>
           </div>
           }
@@ -712,13 +739,13 @@
     </div>
   </section>
   <!-- ══════════════════ AI POWERED RECOVERY (SLIM REDESIGN) ══════════════════ -->
-  <section class="py-12 sm:py-20 bg-slate-950 relative overflow-hidden">
+  <section class="py-10 sm:py-16 lg:py-20 bg-slate-950 relative overflow-hidden">
     <div class="absolute inset-0 opacity-30 pointer-events-none">
       <div class="absolute top-0 left-1/4 w-96 h-96 bg-emerald-600/10 rounded-full blur-[100px]"></div>
       <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-600/10 rounded-full blur-[100px]"></div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 relative z-10">
       <div
         class="bg-slate-900/40 backdrop-blur-xl rounded-[2.5rem] border border-white/10 overflow-hidden relative group shadow-2xl">
         <!-- Animated border effect -->
@@ -828,8 +855,8 @@
   </section>
 
   <!-- ══════════════════ WHY CHOOSE US ══════════════════ -->
-  <section class="py-20 sm:py-28 bg-slate-50 border-t border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-14 xl:gap-20 items-center">
+  <section class="py-12 sm:py-20 lg:py-24 bg-slate-50 border-t border-slate-100">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-20 items-center">
 
       <!-- Left: Platform USP card -->
       <div class="relative reveal order-2 lg:order-1">
@@ -908,15 +935,15 @@
   </section>
 
   <!-- ══════════════════ TESTIMONIALS ══════════════════ -->
-  <section id="testimonials" class="py-20 sm:py-28 relative overflow-hidden">
+  <section id="testimonials" class="py-12 sm:py-20 lg:py-24 relative overflow-hidden">
     <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-primary-950 to-slate-900"></div>
     <div class="absolute top-0 right-0 w-96 h-96 bg-primary-500/8 rounded-full blur-[100px] pointer-events-none"></div>
     <div class="absolute bottom-0 left-0 w-80 h-80 bg-secondary-500/8 rounded-full blur-[80px] pointer-events-none">
     </div>
     <div class="dark-grid absolute inset-0 opacity-15 pointer-events-none"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="text-center mb-14 reveal">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center mb-10 sm:mb-14 reveal">
         <span class="section-chip-dark">Patient Stories</span>
         <h2 class="text-3xl sm:text-4xl font-black font-heading text-white mt-3 mb-3">
           Real Patients. <span class="text-gradient">Real Outcomes.</span>
@@ -1044,9 +1071,9 @@
   </section>
 
   <!-- ══════════════════ FAQ ══════════════════ -->
-  <section id="faq" class="py-20 sm:py-28 bg-white">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12 reveal">
+  <section id="faq" class="py-12 sm:py-20 lg:py-24 bg-white">
+    <div class="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="text-center mb-8 sm:mb-12 reveal">
         <span class="section-chip">Patient Questions</span>
         <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-3">
           Frequently <span class="text-gradient">Asked Questions</span>
@@ -1090,9 +1117,10 @@
 
 
   <!-- ══════════════════ FOOTER ══════════════════ -->
-  <footer id="contact" class="bg-slate-950 text-slate-400 pt-14 sm:pt-18 pb-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
+  <footer id="contact" class="bg-slate-950 text-slate-400 pt-10 sm:pt-14 pb-6 sm:pb-8">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 pb-10 sm:pb-12 border-b border-slate-800">
 
         <!-- Brand -->
         <div class="sm:col-span-2 lg:col-span-2 space-y-4">
@@ -1179,7 +1207,8 @@
         </div>
       </div>
 
-      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
+      <div
+        class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
         <p>© 2025 PhysioPro · All rights reserved.</p>
         <div class="hidden sm:flex gap-5">
           <a href="#" class="hover:text-primary-400 transition-colors">Privacy Policy</a>
@@ -1191,12 +1220,14 @@
   </footer>
 
   <!-- Mobile sticky CTA -->
-  <div class="fixed bottom-4 left-4 right-4 z-50 sm:hidden">
-    <button (click)="goToRegister()"
-      class="btn-primary w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-white font-bold text-sm shadow-2xl shadow-primary-500/50">
-      <i-lucide name="calendar-check" class="w-4 h-4"></i-lucide>
-      Book Free Appointment
-    </button>
+  <div class="fixed bottom-0 left-0 right-0 z-50 sm:hidden safe-area-bottom">
+    <div class="px-4 pb-3 pt-2 bg-white/95 backdrop-blur-md border-t border-slate-200/60">
+      <button (click)="goToRegister()"
+        class="btn-primary w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-bold text-sm shadow-lg shadow-primary-500/30">
+        <i-lucide name="calendar-check" class="w-4 h-4"></i-lucide>
+        Book Free Appointment
+      </button>
+    </div>
   </div>
 
   <!-- Scroll to Top Button -->
