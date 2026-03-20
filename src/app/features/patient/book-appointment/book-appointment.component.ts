@@ -43,6 +43,8 @@ export class BookAppointmentComponent implements OnInit {
     '04:15 PM', '05:00 PM'
   ];
 
+  selectedConsultationType = '';
+
   ngOnInit() {
     if (!this.authService.isLoggedIn || this.authService.userRole !== 'patient') {
       this.router.navigate(['/login']);
@@ -60,6 +62,7 @@ export class BookAppointmentComponent implements OnInit {
   selectDoctor(doc: any) {
     if (doc.available === false) return;
     this.selectedDoctor = doc;
+    this.setDefaultConsultationType();
     this.currentStep = 2;
     this.refreshBookedSlots();
   }
@@ -110,6 +113,12 @@ export class BookAppointmentComponent implements OnInit {
     this.isProcessing = true;
     this.bookingError = '';
 
+    if (!this.selectedConsultationType) {
+      this.bookingError = 'Please select a consultation type.';
+      this.isProcessing = false;
+      return;
+    }
+
     if (!this.patientNotes || this.patientNotes.trim().length < 10) {
       this.bookingError = 'Please provide a brief description of your problem (at least 10 characters).';
       this.isProcessing = false;
@@ -123,7 +132,7 @@ export class BookAppointmentComponent implements OnInit {
       doctorImage: this.selectedDoctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(this.selectedDoctor.fullName || 'Doctor')}&background=0D8ABC&color=fff`,
       date: this.selectedDate,
       time: this.selectedTimeSlot,
-      type: 'Consultation',
+      type: this.selectedConsultationType || 'Consultation',
       notes: this.patientNotes
     });
 
@@ -177,5 +186,21 @@ export class BookAppointmentComponent implements OnInit {
 
   encodeURIComponent(str: string): string {
     return encodeURIComponent(str);
+  }
+
+  private setDefaultConsultationType() {
+    if (!this.selectedDoctor) return;
+    
+    const type = (this.selectedDoctor.consultationType || '').toLowerCase();
+    if (type === 'online') {
+        this.selectedConsultationType = 'Online';
+    } else if (type === 'in person' || type === 'in-person') {
+        this.selectedConsultationType = 'In Person';
+    } else if (type === 'both') {
+        this.selectedConsultationType = 'In Person'; // Default to In Person but allows choice
+    } else {
+        // Fallback for missing or other types
+        this.selectedConsultationType = 'In Person';
+    }
   }
 }
