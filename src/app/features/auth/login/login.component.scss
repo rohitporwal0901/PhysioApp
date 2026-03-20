@@ -2,9 +2,19 @@
 
 /* Wave animation for emoji */
 @keyframes wave {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(20deg); }
-    75% { transform: rotate(-10deg); }
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(20deg);
+    }
+
+    75% {
+        transform: rotate(-10deg);
+    }
 }
 
 .animate-wave {
@@ -15,28 +25,68 @@
 
 /* Page enter animations */
 @keyframes fadeInSlideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes fadeInSlideRight {
-    from { opacity: 0; transform: translateX(-30px); }
-    to { opacity: 1; transform: translateX(0); }
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 @keyframes shine {
-    100% { transform: translateX(200%) skewX(-30deg); }
+    100% {
+        transform: translateX(200%) skewX(-30deg);
+    }
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-5px);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(5px);
+    }
 }
 
 .animate-fade-in-up {
@@ -56,13 +106,20 @@
 }
 
 .animate-shake {
-    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
 }
 
 /* App Splash Feel */
 @keyframes splashScale {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .animate-splash {
@@ -71,15 +128,34 @@
 
 /* Ensure no overflow clipping */
 .min-h-screen {
-    min-height: -webkit-fill-available;
+    // min-height: -webkit-fill-available;
 }
 
 /* Staggered entry for form elements */
-.form-group-1 { animation-delay: 0.1s; opacity: 0; }
-.form-group-2 { animation-delay: 0.2s; opacity: 0; }
-.form-group-3 { animation-delay: 0.3s; opacity: 0; }
-.form-group-4 { animation-delay: 0.4s; opacity: 0; }
-.form-group-5 { animation-delay: 0.5s; opacity: 0; }
+.form-group-1 {
+    animation-delay: 0.1s;
+    opacity: 0;
+}
+
+.form-group-2 {
+    animation-delay: 0.2s;
+    opacity: 0;
+}
+
+.form-group-3 {
+    animation-delay: 0.3s;
+    opacity: 0;
+}
+
+.form-group-4 {
+    animation-delay: 0.4s;
+    opacity: 0;
+}
+
+.form-group-5 {
+    animation-delay: 0.5s;
+    opacity: 0;
+}
 
 .glass-card {
     background: rgba(255, 255, 255, 0.03);
@@ -109,7 +185,7 @@
     .lg\:bg-white {
         background-color: transparent !important;
     }
-    
+
     // Better spacing for 6.5 inch screens
     .px-4 {
         padding-left: 1.5rem !important;
