@@ -44,6 +44,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     
     // Dynamic Hero Video
     heroVideoSettings: AppSettings['heroVideo'] | null = null;
+    isAuthChecking = true;
 
     get isLoggedIn() { return this.authService.isLoggedIn; }
     get userRole() { return this.authService.userRole; }
@@ -227,6 +228,14 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.startTestimonialRotation();
         this.startHeroImageRotation();
+
+        // Manage auth checking state
+        this.authService.currentUser$.subscribe(user => {
+            if (user !== undefined) {
+                this.isAuthChecking = false;
+                this.cdr.markForCheck();
+            }
+        });
     }
 
     ngAfterViewInit() {

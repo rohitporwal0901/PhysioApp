@@ -35,14 +35,23 @@
 
       <!-- Desktop CTA -->
       <div class="hidden md:flex items-center gap-3">
-        <button *ngIf="!isLoggedIn" (click)="goToLogin()"
-          class="text-sm font-bold text-slate-700 hover:text-primary-600 px-4 py-2 transition-colors">
-          Login
-        </button>
-        <button (click)="isLoggedIn ? goToDashboard() : goToRegister()"
-          class="btn-primary px-5 py-2.5 rounded-xl text-white text-sm font-bold shadow-md shadow-primary-500/30">
-          {{ isLoggedIn ? 'Go to Dashboard' : 'Book Appointment' }}
-        </button>
+        <ng-container *ngIf="isAuthChecking; else authContent">
+          <!-- Loading state with animation -->
+          <div class="flex items-center gap-3 px-4 py-2 bg-slate-100/50 backdrop-blur-sm rounded-xl border border-slate-200/50 animate-pulse">
+            <div class="w-4 h-4 rounded-full border-2 border-primary-500 border-t-transparent animate-spin"></div>
+            <span class="text-xs font-bold text-slate-500 tracking-tight">Checking...</span>
+          </div>
+        </ng-container>
+        <ng-template #authContent>
+          <button *ngIf="!isLoggedIn" (click)="goToLogin()"
+            class="text-sm font-bold text-slate-700 hover:text-primary-600 px-4 py-2 transition-colors">
+            Login
+          </button>
+          <button (click)="isLoggedIn ? goToDashboard() : goToRegister()"
+            class="btn-primary px-5 py-2.5 rounded-xl text-white text-sm font-bold shadow-md shadow-primary-500/30">
+            {{ isLoggedIn ? 'Go to Dashboard' : 'Book Appointment' }}
+          </button>
+        </ng-template>
       </div>
 
       <!-- Mobile hamburger -->
@@ -71,12 +80,20 @@
           <i-lucide name="stethoscope" class="w-4 h-4 text-secondary-400"></i-lucide> For Physiotherapists
         </button>
         <div class="flex flex-col gap-2 pt-3 border-t border-slate-100 mt-2">
-          <button *ngIf="!isLoggedIn" (click)="goToLogin(); closeMobileMenu()"
-            class="w-full py-3 rounded-xl border border-slate-200 text-slate-700 font-bold text-sm">Login</button>
-          <button (click)="isLoggedIn ? goToDashboard() : goToRegister(); closeMobileMenu()"
-            class="w-full py-3 rounded-xl btn-primary text-white font-bold text-sm">
-            {{ isLoggedIn ? 'Go to Dashboard' : 'Book Appointment' }}
-          </button>
+          <ng-container *ngIf="isAuthChecking; else mobileAuthContent">
+             <div class="w-full py-3 px-4 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center gap-3">
+               <div class="w-4 h-4 rounded-full border-2 border-primary-500 border-t-transparent animate-spin"></div>
+               <span class="text-xs font-bold text-slate-500">Checking auth...</span>
+             </div>
+          </ng-container>
+          <ng-template #mobileAuthContent>
+            <button *ngIf="!isLoggedIn" (click)="goToLogin(); closeMobileMenu()"
+              class="w-full py-3 rounded-xl border border-slate-200 text-slate-700 font-bold text-sm">Login</button>
+            <button (click)="isLoggedIn ? goToDashboard() : goToRegister(); closeMobileMenu()"
+              class="w-full py-3 rounded-xl btn-primary text-white font-bold text-sm">
+              {{ isLoggedIn ? 'Go to Dashboard' : 'Book Appointment' }}
+            </button>
+          </ng-template>
         </div>
       </div>
     </div>
@@ -570,9 +587,9 @@
 
         <!-- See all CTA -->
         <div class="text-center mt-10 reveal">
-          <button (click)="goToLogin()"
+          <button (click)="isLoggedIn ? goToDashboard() : goToLogin()"
             class="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl border-2 border-primary-200 text-primary-600 font-bold text-sm hover:bg-primary-50 transition-all duration-200">
-            View All Specialists
+            {{ isLoggedIn ? 'View My Specialists' : 'View All Specialists' }}
             <i-lucide name="arrow-right" class="w-4 h-4"></i-lucide>
           </button>
         </div>
@@ -1106,10 +1123,10 @@
 
       <div class="text-center mt-10 reveal">
         <p class="text-slate-500 text-sm mb-3">Still have questions?</p>
-        <button (click)="goToLogin()"
+        <button (click)="isLoggedIn ? goToDashboard() : goToLogin()"
           class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary-50 text-primary-700 font-semibold text-sm hover:bg-primary-100 transition-all">
           <i-lucide name="message-circle" class="w-4 h-4"></i-lucide>
-          Chat with us
+          {{ isLoggedIn ? 'Contact Support' : 'Chat with us' }}
         </button>
       </div>
     </div>

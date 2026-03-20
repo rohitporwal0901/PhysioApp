@@ -25,13 +25,14 @@
             <div class="doctor-card fade-in-up">
 
                 <!-- Hero Photo -->
-                <div class="doctor-hero">
-                    <img [src]="getDoctorImage()"
-                        alt="Doctor">
+                <div class="doctor-hero" style="background: #f8fafc;">
+                    <img [src]="getDoctorImage()" #docImg
+                        (error)="docImg.src = 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=600&auto=format&fit=crop'"
+                        alt="Doctor" style="object-fit: cover;">
                     <div class="hero-overlay"></div>
-                    <span class="avail-badge" [class.available]="doctor.available"
-                        [class.unavailable]="!doctor.available">
-                        {{ doctor.available ? '✓ Available Today' : 'Currently Unavailable' }}
+                    <span class="avail-badge" [class.available]="doctor.available || doctor.isAvailable"
+                        [class.unavailable]="!(doctor.available || doctor.isAvailable)">
+                        {{ (doctor.available || doctor.isAvailable) ? '✓ Available Today' : 'Currently Unavailable' }}
                     </span>
                 </div>
 
@@ -57,16 +58,16 @@
                     <!-- Stats -->
                     <div class="stats-grid">
                         <div class="stat-box">
-                            <span class="stat-value">8+</span>
+                            <span class="stat-value">{{ doctor.experience || '8' }}+</span>
                             <span class="stat-label">Years Exp.</span>
                         </div>
                         <div class="stat-box">
-                            <span class="stat-value">500+</span>
-                            <span class="stat-label">Patients</span>
+                            <span class="stat-value">₹{{ doctor.consultationFee || '500' }}</span>
+                            <span class="stat-label">Consult Fee</span>
                         </div>
                         <div class="stat-box">
                             <span class="stat-value">99%</span>
-                            <span class="stat-label">Success</span>
+                            <span class="stat-label">Success Rate</span>
                         </div>
                     </div>
 
@@ -141,17 +142,8 @@
                                     <i-lucide name="graduation-cap" class="w-4 h-4 text-primary-600"></i-lucide>
                                 </div>
                                 <div>
-                                    <p class="info-label">Education</p>
-                                    <p class="info-value">BPT, MPT — Mumbai University</p>
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-icon-box">
-                                    <i-lucide name="award" class="w-4 h-4 text-primary-600"></i-lucide>
-                                </div>
-                                <div>
-                                    <p class="info-label">Certifications</p>
-                                    <p class="info-value">Certified Manual Therapist</p>
+                                    <p class="info-label">Education & Qualification</p>
+                                    <p class="info-value">{{ doctor.qualification || 'BPT, MPT' }}</p>
                                 </div>
                             </div>
                             <div class="info-item">
@@ -159,17 +151,30 @@
                                     <i-lucide name="clock" class="w-4 h-4 text-primary-600"></i-lucide>
                                 </div>
                                 <div>
-                                    <p class="info-label">Consultation</p>
-                                    <p class="info-value">45 min, In-person & Online</p>
+                                    <p class="info-label">Consultation Type</p>
+                                    <p class="info-value" style="text-transform: capitalize;">{{ doctor.consultationType || 'In-person & Online' }}</p>
                                 </div>
                             </div>
                             <div class="info-item">
                                 <div class="info-icon-box">
                                     <i-lucide name="map-pin" class="w-4 h-4 text-primary-600"></i-lucide>
                                 </div>
-                                <div>
-                                    <p class="info-label">Clinic</p>
-                                    <p class="info-value">PhysioPro Centre, Mumbai</p>
+                                <div class="flex-1">
+                                    <p class="info-label">Clinic Location</p>
+                                    <p class="info-value">{{ doctor.address }}{{ doctor.city ? ', ' + doctor.city : '' }}{{ doctor.state ? ', ' + doctor.state : '' }}</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-icon-box">
+                                    <i-lucide name="calendar" class="w-4 h-4 text-primary-600"></i-lucide>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="info-label">Working Days</p>
+                                    <div class="flex flex-wrap gap-1 mt-1">
+                                        @for (day of (doctor.availableDays || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']); track day) {
+                                            <span class="text-[9px] font-bold bg-primary-50 text-primary-600 px-1.5 py-0.5 rounded uppercase">{{ day.substring(0,3) }}</span>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -177,12 +182,19 @@
 
                     <!-- Specializations -->
                     <div class="content-card">
-                        <h3 class="content-card-title">Specializations</h3>
+                        <h3 class="content-card-title">Areas of Interest & Specializations</h3>
                         <div class="spec-tags">
-                            <span class="spec-tag"
-                                *ngFor="let tag of ['Manual Therapy', 'Sports Rehab', 'Post-Surgery Care', 'Pain Management', 'Exercise Therapy', 'Electrotherapy']">
-                                {{ tag }}
-                            </span>
+                            <ng-container *ngIf="doctor.areasOfInterest && doctor.areasOfInterest.length > 0; else defaultSpecs">
+                                <span class="spec-tag" *ngFor="let tag of doctor.areasOfInterest">
+                                    {{ tag }}
+                                </span>
+                            </ng-container>
+                            <ng-template #defaultSpecs>
+                                <span class="spec-tag"
+                                    *ngFor="let tag of ['Manual Therapy', 'Sports Rehab', 'Post-Surgery Care', 'Pain Management', 'Exercise Therapy']">
+                                    {{ tag }}
+                                </span>
+                            </ng-template>
                         </div>
                     </div>
 
@@ -263,6 +275,8 @@
                         </div>
 
                         <div class="booking-form">
+
+
                             <!-- Date picker -->
                             <div class="date-section">
                                 <label>Select Date</label>
@@ -300,7 +314,7 @@
                                 <div>
                                     <p class="doc-mini-name">{{ doctor.fullName || doctor.name }}</p>
                                     <p class="doc-mini-spec">{{ doctor.specialization || doctor.specialty }}</p>
-                                    <p class="doc-mini-meta">45 min • In-person consultation</p>
+                                    <p class="doc-mini-meta">45 min • Consultation</p>
                                 </div>
                             </div>
 
