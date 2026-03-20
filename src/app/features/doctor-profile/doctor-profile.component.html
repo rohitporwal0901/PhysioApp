@@ -67,7 +67,7 @@
                         </div>
                         <div class="stat-box">
                             <span class="stat-value">99%</span>
-                            <span class="stat-label">Success Rate</span>
+                            <span class="stat-label">Rate</span>
                         </div>
                     </div>
 
@@ -199,7 +199,7 @@
                     </div>
 
                     <!-- CTA -->
-                    <div class="cta-card">
+                    <div *ngIf="!isPatientRegistered" class="cta-card">
                         <div class="cta-text">
                             <h3>Ready to start your recovery?</h3>
                             <p>Register and book your first session with {{ doctor.fullName || doctor.name }} in under 2 minutes.</p>
@@ -240,7 +240,7 @@
                                 </div>
                                 <div class="success-meta">
                                     <i-lucide name="calendar" class="w-4 h-4"></i-lucide>
-                                    {{ selectedDate }} • {{ selectedSlot }}
+                                    {{ selectedDate }} • {{ selectedSlot }} • {{ selectedConsultationType }}
                                 </div>
                             </div>
 
@@ -275,7 +275,32 @@
                         </div>
 
                         <div class="booking-form">
-
+                            <!-- Consultation Type Selection -->
+                            <div class="type-section" *ngIf="doctor">
+                                <label>Choose Consultation Type</label>
+                                <div class="type-grid">
+                                    <ng-container *ngIf="(doctor.consultationType || '').toLowerCase() === 'both'; else singleType">
+                                        <button (click)="selectedConsultationType = 'In Person'" 
+                                            class="type-btn" [class.selected]="selectedConsultationType === 'In Person'">
+                                            <i-lucide name="user" class="w-5 h-5"></i-lucide>
+                                            In Person
+                                        </button>
+                                        <button (click)="selectedConsultationType = 'Online'" 
+                                            class="type-btn" [class.selected]="selectedConsultationType === 'Online'">
+                                            <i-lucide name="video" class="w-5 h-5"></i-lucide>
+                                            Online
+                                        </button>
+                                    </ng-container>
+                                    <ng-template #singleType>
+                                        <div class="type-btn single-option">
+                                            <span class="flex items-center gap-2">
+                                                <i-lucide [name]="(doctor.consultationType || '').toLowerCase().includes('online') ? 'video' : 'user'" class="w-5 h-5"></i-lucide>
+                                                {{ doctor.consultationType || 'In Person' }} Consultation (Recommended)
+                                            </span>
+                                        </div>
+                                    </ng-template>
+                                </div>
+                            </div>
 
                             <!-- Date picker -->
                             <div class="date-section">
@@ -319,9 +344,9 @@
                             </div>
 
                             <!-- Confirm button -->
-                            <button [disabled]="!selectedDate || !selectedSlot || isProcessing" (click)="confirmBooking()"
-                                class="confirm-btn flex items-center justify-center gap-2" [class.active-btn]="selectedDate && selectedSlot"
-                                [class.inactive-btn]="!selectedDate || !selectedSlot">
+                            <button [disabled]="!selectedDate || !selectedSlot || !selectedConsultationType || isProcessing" (click)="confirmBooking()"
+                                class="confirm-btn flex items-center justify-center gap-2" [class.active-btn]="selectedDate && selectedSlot && selectedConsultationType"
+                                [class.inactive-btn]="!selectedDate || !selectedSlot || !selectedConsultationType">
                                 <svg *ngIf="isProcessing" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>

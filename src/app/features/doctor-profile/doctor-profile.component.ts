@@ -43,6 +43,8 @@ export class DoctorProfileComponent implements OnInit {
     '04:15 PM', '05:00 PM'
     ];
 
+    selectedConsultationType = '';
+
     // Unsplash doctor profile image collection
     private doctorImages = [
       'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=600&auto=format&fit=crop',
@@ -58,11 +60,13 @@ export class DoctorProfileComponent implements OnInit {
         const state = nav?.extras?.state as { doctor: any };
         if (state?.doctor) {
             this.doctor = state.doctor;
+            this.setDefaultConsultationType();
         } else {
             // Fallback: load from service using route param
             const docId = this.route.snapshot.paramMap.get('id');
             this.api.getDoctors().subscribe(docs => {
                 this.doctor = docs.find(d => d.id === docId) || docs[0];
+                this.setDefaultConsultationType();
             });
         }
         
@@ -155,6 +159,11 @@ export class DoctorProfileComponent implements OnInit {
 
     async confirmBooking() {
         if (this.selectedDate && this.selectedSlot && this.doctor) {
+            if (!this.selectedConsultationType) {
+                this.bookingError = 'Please select a consultation type.';
+                return;
+            }
+
             if (!this.patientNotes || this.patientNotes.trim().length < 10) {
                 this.bookingError = 'Please describe your condition/complaint (min 10 characters).';
                 return;
@@ -170,7 +179,7 @@ export class DoctorProfileComponent implements OnInit {
                 doctorImage: this.doctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(this.doctor.fullName || 'Doctor')}&background=0D8ABC&color=fff`,
                 date: this.selectedDate,
                 time: this.selectedSlot,
-                type: 'Consultation',
+                type: this.selectedConsultationType || 'Consultation',
                 notes: this.patientNotes
             });
 
@@ -193,6 +202,7 @@ export class DoctorProfileComponent implements OnInit {
         this.bookingConfirmed = false;
         this.selectedSlot = '';
         this.bookingError = '';
+        this.setDefaultConsultationType();
         this.onDateChange();
     }
 
@@ -224,5 +234,21 @@ export class DoctorProfileComponent implements OnInit {
 
     encodeURIComponent(str: string): string {
         return encodeURIComponent(str);
+    }
+
+    private setDefaultConsultationType() {
+        if (!this.doctor) return;
+        
+        const type = (this.doctor.consultationType || '').toLowerCase();
+        if (type === 'online') {
+            this.selectedConsultationType = 'Online';
+        } else if (type === 'in person' || type === 'in-person') {
+            this.selectedConsultationType = 'In Person';
+        } else if (type === 'both') {
+            this.selectedConsultationType = 'In Person';
+        } else {
+            // Fallback for missing or other types
+            this.selectedConsultationType = 'In Person';
+        }
     }
 }
