@@ -183,11 +183,21 @@ export class AgendaComponent implements OnInit {
     }
   }
 
-  sendWhatsApp(apt: BookedAppointment) {
-    if (!apt) return;
+  sendWhatsApp(apt: BookedAppointment, type: 'reminder' | 'chat' = 'chat') {
+    if (!apt || !apt.patientPhone) {
+      console.error('Patient phone number not available');
+      return;
+    }
 
-    const message = `Hello ${apt.patientName}, I am your Physiotherapist. This is regarding your appointment on ${apt.date} at ${apt.time}.`;
-    const url = `https://wa.me/?text=${this.encodeURIComponent(message)}`;
+    let message = '';
+    if (type === 'reminder') {
+      message = `Hello ${apt.patientName}, this is a reminder for your Physiotherapy appointment today at ${apt.time}. Please be on time.`;
+    }
+    
+    // Clean phone number (remove any non-numeric characters except +)
+    const phone = apt.patientPhone.replace(/[^\d+]/g, '');
+    const baseUrl = `https://wa.me/${phone}`;
+    const url = message ? `${baseUrl}?text=${this.encodeURIComponent(message)}` : baseUrl;
     window.open(url, '_blank');
   }
 

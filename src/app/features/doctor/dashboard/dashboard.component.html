@@ -71,22 +71,29 @@
             <div
                 class="bg-surface dark:bg-slate-800 rounded-3xl shadow-glass border border-slate-100 dark:border-slate-700 overflow-hidden transition-colors">
                 <div
-                    class="px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50/50 dark:bg-slate-800/50 gap-3">
+                    class="px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-100 dark:border-slate-700 flex flex-col min-[500px]:flex-row justify-between items-start min-[500px]:items-center bg-slate-50/50 dark:bg-slate-800/50 gap-4">
                     <div class="flex items-center">
                         <div class="w-1.5 h-6 bg-primary-500 rounded-full mr-3"></div>
-                        <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white tracking-tight leading-tight">Recent Appointment Activity</h3>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white tracking-tight leading-tight">Appointment Activity</h3>
                     </div>
-                    <a routerLink="/doctor/agenda" class="text-[10px] sm:text-xs font-bold text-primary-500 hover:text-primary-600 uppercase tracking-widest whitespace-nowrap">View Full Agenda &rarr;</a>
+                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full min-[500px]:w-auto">
+                        <!-- Date Filter -->
+                        <div class="relative w-full sm:w-auto">
+                            <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" 
+                                class="w-full sm:w-40 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-primary-500/50 transition-all cursor-pointer">
+                        </div>
+                        <a routerLink="/doctor/agenda" class="text-[10px] sm:text-xs font-bold text-primary-500 hover:text-primary-600 uppercase tracking-widest whitespace-nowrap">Full Agenda &rarr;</a>
+                    </div>
                 </div>
 
                 <div class="divide-y divide-slate-100 dark:divide-slate-700 p-2">
-                    <ng-container *ngIf="appointments$ | async as appointments; else loadingApts">
-                        <div *ngIf="appointments.length === 0" class="p-10 text-center">
+                    <ng-container *ngIf="!isLoading; else loadingApts">
+                        <div *ngIf="filteredAppointments.length === 0" class="p-10 text-center">
                              <i-lucide name="calendar" class="w-12 h-12 mx-auto text-slate-200 dark:text-slate-700 mb-2"></i-lucide>
-                             <p class="text-slate-500 dark:text-slate-400">No appointments recorded in system.</p>
+                             <p class="text-slate-500 dark:text-slate-400">No appointments for this date.</p>
                         </div>
 
-                        <div *ngFor="let apt of appointments.slice(0, 10)"
+                        <div *ngFor="let apt of filteredAppointments"
                             class="p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-2xl transition-all group flex flex-col sm:flex-row justify-between sm:items-center gap-4 relative overflow-hidden">
 
                             <!-- Left Info -->

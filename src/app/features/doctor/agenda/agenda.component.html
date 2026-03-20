@@ -224,16 +224,41 @@
                     <div class="space-y-4 sm:space-y-6 pb-2">
                         <div class="bg-emerald-50 dark:bg-emerald-950/20 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-emerald-100 dark:border-emerald-900/30 shadow-glass">
                             <h4 class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-3 sm:mb-4">Outreach</h4>
-                            <button (click)="sendWhatsApp(selectedAppointment!)"
-                               class="w-full p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 border border-emerald-100 dark:border-emerald-800 text-[11px] sm:text-sm font-black text-slate-800 dark:text-white hover:border-emerald-500 transition-all flex items-center justify-between group shadow-sm">
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
-                                        <i-lucide name="message-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500"></i-lucide>
+                            
+                            <div class="space-y-3">
+                                <button (click)="sendWhatsApp(selectedAppointment!, 'reminder')"
+                                   class="w-full p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 border border-emerald-100 dark:border-emerald-800 text-[11px] sm:text-sm font-black text-slate-800 dark:text-white hover:border-emerald-500 transition-all flex items-center justify-between group shadow-sm">
+                                    <div class="flex items-center gap-2 sm:gap-3">
+                                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
+                                            <i-lucide name="bell" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500"></i-lucide>
+                                        </div>
+                                        <span>Send Reminder</span>
                                     </div>
-                                    <span>WhatsApp</span>
-                                </div>
-                                <i-lucide name="arrow-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-300 group-hover:translate-x-1 transition-transform"></i-lucide>
-                            </button>
+                                    <i-lucide name="arrow-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-300 group-hover:translate-x-1 transition-transform"></i-lucide>
+                                </button>
+
+                                <button (click)="sendWhatsApp(selectedAppointment!, 'chat')"
+                                   class="w-full p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 border border-emerald-100 dark:border-emerald-800 text-[11px] sm:text-sm font-black text-slate-800 dark:text-white hover:border-emerald-500 transition-all flex items-center justify-between group shadow-sm">
+                                    <div class="flex items-center gap-2 sm:gap-3">
+                                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
+                                            <i-lucide name="message-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500"></i-lucide>
+                                        </div>
+                                        <span>Open WhatsApp</span>
+                                    </div>
+                                    <i-lucide name="arrow-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-300 group-hover:translate-x-1 transition-transform"></i-lucide>
+                                </button>
+
+                                <a [href]="'tel:' + selectedAppointment.patientPhone"
+                                   class="w-full p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 border border-emerald-100 dark:border-emerald-800 text-[11px] sm:text-sm font-black text-slate-800 dark:text-white hover:border-emerald-500 transition-all flex items-center justify-between group shadow-sm">
+                                    <div class="flex items-center gap-2 sm:gap-3">
+                                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
+                                            <i-lucide name="phone" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500"></i-lucide>
+                                        </div>
+                                        <span>Voice Call</span>
+                                    </div>
+                                    <i-lucide name="arrow-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-300 group-hover:translate-x-1 transition-transform"></i-lucide>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

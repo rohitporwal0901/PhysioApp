@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { MockApiService } from '../../../core/services/mock-api.service';
 import { BookingService, BookedAppointment } from '../../../core/services/booking.service';
@@ -11,7 +12,7 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-doctor-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, LucideAngularModule],
+  imports: [CommonModule, RouterModule, LucideAngularModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -20,9 +21,12 @@ export class DashboardComponent implements OnInit {
   private bookingService = inject(BookingService);
   private authService = inject(AuthService);
 
-  appointments$: Observable<BookedAppointment[]> = of([]);
+  appointments: BookedAppointment[] = [];
+  filteredAppointments: BookedAppointment[] = [];
+  selectedDate: string = new Date().toISOString().split('T')[0];
   patientsCount$: Observable<number> = of(0);
   todayDate = new Date();
+  isLoading = true;
 
   stats = {
     todayPatients: 0,
@@ -34,21 +38,44 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     const user = this.authService.currentUser;
     if (user && user.role === 'doctor') {
-      this.appointments$ = this.bookingService.getDoctorAppointments(user.uid);
-      
-      this.appointments$.subscribe(apts => {
-        const todayStr = new Date().toISOString().split('T')[0];
-        
-        this.stats.todayPatients = apts.filter(a => a.date === todayStr && a.status === 'confirmed').length;
-        this.stats.pendingConfirmations = apts.filter(a => a.status === 'pending').length;
-        this.stats.activeSessions = apts.filter(a => a.status === 'confirmed').length;
+      this.bookingService.getDoctorAppointments(user.uid).subscribe(apts => {
+        this.appointments = apts;
+        this.updateStats(apts);
+        this.filterAppointments();
+        this.isLoading = false;
       });
-
-      // Simple total patients count for this doctor (unique patient IDs)
-      this.appointments$.pipe(
-        map(apts => new Set(apts.map(a => a.patientId)).size)
-      ).subscribe(count => this.stats.totalPatients = count);
     }
+  }
+
+  onDateChange() {
+    this.filterAppointments();
+  }
+
+  private filterAppointments() {
+    this.filteredAppointments = this.appointments
+      .filter(apt => apt.date === this.selectedDate)
+      .sort((a, b) => this.parseTime(a.time) - this.parseTime(b.time));
+  }
+
+  private parseTime(timeStr: string) {
+    const match = timeStr.match(/(\d+):(\d+)\s+(AM|PM)/i);
+    if (!match) return 0;
+    let hours = parseInt(match[1]);
+    const minutes = parseInt(match[2]);
+    if (match[3].toUpperCase() === 'PM' && hours < 12) hours += 12;
+    if (match[3].toUpperCase() === 'AM' && hours === 12) hours = 0;
+    return hours * 60 + minutes;
+  }
+
+  private updateStats(apts: BookedAppointment[]) {
+    const todayStr = new Date().toISOString().split('T')[0];
+    
+    this.stats.todayPatients = apts.filter(a => a.date === todayStr && a.status === 'confirmed').length;
+    this.stats.pendingConfirmations = apts.filter(a => a.status === 'pending').length;
+    this.stats.activeSessions = apts.filter(a => a.status === 'confirmed').length;
+    
+    // Total unique patients
+    this.stats.totalPatients = new Set(apts.map(a => a.patientId)).size;
   }
 
   getStatusClass(status: string): string {
