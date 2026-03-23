@@ -37,7 +37,8 @@
       <div class="hidden md:flex items-center gap-3">
         <ng-container *ngIf="isAuthChecking; else authContent">
           <!-- Loading state with animation -->
-          <div class="flex items-center gap-3 px-4 py-2 bg-slate-100/50 backdrop-blur-sm rounded-xl border border-slate-200/50 animate-pulse">
+          <div
+            class="flex items-center gap-3 px-4 py-2 bg-slate-100/50 backdrop-blur-sm rounded-xl border border-slate-200/50 animate-pulse">
             <div class="w-4 h-4 rounded-full border-2 border-primary-500 border-t-transparent animate-spin"></div>
             <span class="text-xs font-bold text-slate-500 tracking-tight">Checking...</span>
           </div>
@@ -81,10 +82,11 @@
         </button>
         <div class="flex flex-col gap-2 pt-3 border-t border-slate-100 mt-2">
           <ng-container *ngIf="isAuthChecking; else mobileAuthContent">
-             <div class="w-full py-3 px-4 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center gap-3">
-               <div class="w-4 h-4 rounded-full border-2 border-primary-500 border-t-transparent animate-spin"></div>
-               <span class="text-xs font-bold text-slate-500">Checking auth...</span>
-             </div>
+            <div
+              class="w-full py-3 px-4 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center gap-3">
+              <div class="w-4 h-4 rounded-full border-2 border-primary-500 border-t-transparent animate-spin"></div>
+              <span class="text-xs font-bold text-slate-500">Checking auth...</span>
+            </div>
           </ng-container>
           <ng-template #mobileAuthContent>
             <button *ngIf="!isLoggedIn" (click)="goToLogin(); closeMobileMenu()"
@@ -495,7 +497,7 @@
   </section>
 
   <!-- ══════════════════ DOCTORS ══════════════════ -->
-  <section id="doctors" class="py-12 sm:py-20 lg:py-24 bg-white">
+  <section id="doctors" class="py-12 sm:py-20 lg:py-12 bg-white">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 reveal">
         <div class="max-w-xl">
@@ -586,13 +588,13 @@
         </div>
 
         <!-- See all CTA -->
-        <div class="text-center mt-10 reveal">
+        <!-- <div class="text-center mt-10 reveal">
           <button (click)="isLoggedIn ? goToDashboard() : goToLogin()"
             class="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl border-2 border-primary-200 text-primary-600 font-bold text-sm hover:bg-primary-50 transition-all duration-200">
             {{ isLoggedIn ? 'View My Specialists' : 'View All Specialists' }}
             <i-lucide name="arrow-right" class="w-4 h-4"></i-lucide>
           </button>
-        </div>
+        </div> -->
       </ng-container>
 
       <ng-template #loadingDoctors>
@@ -614,7 +616,7 @@
   </section>
 
   <!-- ══════════════════ DIAGNOSTIC LABS (SLIDER) ══════════════════ -->
-  <section id="labs" class="py-12 sm:py-20 lg:py-24 bg-slate-50 border-t border-slate-100 overflow-hidden">
+  <section id="labs" class="py-12 sm:py-20 lg:py-12 bg-slate-50 border-t border-slate-100 overflow-hidden">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 reveal">
         <div class="max-w-xl">
