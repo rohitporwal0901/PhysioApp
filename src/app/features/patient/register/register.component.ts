@@ -59,8 +59,30 @@ export class PatientRegisterComponent implements OnInit {
     });
   }
 
+  get isEmailValid(): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(this.email);
+  }
+
+  get isPhoneValid(): boolean {
+    const phoneRegex = /^\+?[0-9]{10,14}$/;
+    return phoneRegex.test(this.phone.replace(/\s/g, ''));
+  }
+
+  get isEmergencyPhoneValid(): boolean {
+    if (!this.emergencyContact) return true;
+    const phoneRegex = /^\+?[0-9]{10,14}$/;
+    return phoneRegex.test(this.emergencyContact.replace(/\s/g, ''));
+  }
+
   get step1Valid(): boolean {
-    return !!(this.fullName && this.email && this.phone && this.dob && this.gender);
+    return !!(
+      this.fullName && 
+      this.isEmailValid && 
+      this.isPhoneValid && 
+      this.dob && 
+      this.gender
+    );
   }
 
   get step2Valid(): boolean {

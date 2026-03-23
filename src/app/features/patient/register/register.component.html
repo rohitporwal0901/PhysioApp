@@ -96,7 +96,11 @@
                             Email Address <span class="required">*</span>
                         </label>
                         <input type="email" [(ngModel)]="email" placeholder="you@example.com"
-                            class="field-input" />
+                            class="field-input" [class.input-error]="email && !isEmailValid" />
+                        <p *ngIf="email && !isEmailValid" class="error-msg">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide>
+                            Invalid email address
+                        </p>
                     </div>
 
                     <!-- Phone -->
@@ -106,7 +110,11 @@
                             Phone Number <span class="required">*</span>
                         </label>
                         <input type="tel" [(ngModel)]="phone" placeholder="+91 98765 43210"
-                            class="field-input" />
+                            class="field-input" [class.input-error]="phone && !isPhoneValid" />
+                        <p *ngIf="phone && !isPhoneValid" class="error-msg">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide>
+                            Invalid phone number
+                        </p>
                     </div>
 
                     <!-- Date of Birth -->
@@ -193,7 +201,12 @@
                             Emergency Contact <span class="optional">(optional)</span>
                         </label>
                         <input type="tel" [(ngModel)]="emergencyContact"
-                            placeholder="Emergency contact number" class="field-input" />
+                            placeholder="Emergency contact number" 
+                            class="field-input" [class.input-error]="emergencyContact && !isEmergencyPhoneValid" />
+                        <p *ngIf="emergencyContact && !isEmergencyPhoneValid" class="error-msg">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide>
+                            Invalid emergency contact number
+                        </p>
                     </div>
 
                     <!-- Password -->
