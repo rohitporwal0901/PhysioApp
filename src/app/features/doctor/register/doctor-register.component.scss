@@ -529,6 +529,11 @@
         border-color: #f87171;
         background: #fff5f5;
     }
+
+    /* For date type: hide native clear button */
+    &[type="date"]::-webkit-clear-button { display: none; -webkit-appearance: none; }
+    &[type="date"]::-webkit-inner-spin-button { display: none; }
+    &[type="date"] { cursor: pointer; }
 }
 
 .select {

@@ -30,6 +30,7 @@ export class BookAppointmentComponent implements OnInit {
   currentStep = 1;
   selectedDoctor: any = null;
   selectedDate: string = new Date().toISOString().split('T')[0];
+  private prevDate: string = this.selectedDate;
   selectedTimeSlot: string | null = null;
   bookedSlots: string[] = [];
   bookingError = '';
@@ -68,6 +69,12 @@ export class BookAppointmentComponent implements OnInit {
   }
 
   onDateChange() {
+    // Prevent clearing: if value is emptied (Clear button clicked), restore on next tick
+    if (!this.selectedDate) {
+      setTimeout(() => { this.selectedDate = this.prevDate; }, 0);
+      return;
+    }
+    this.prevDate = this.selectedDate;
     this.refreshBookedSlots();
     if (this.selectedTimeSlot && this.bookedSlots.includes(this.selectedTimeSlot)) {
       this.selectedTimeSlot = null;

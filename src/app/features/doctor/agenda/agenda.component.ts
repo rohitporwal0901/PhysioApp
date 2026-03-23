@@ -22,6 +22,7 @@ export class AgendaComponent implements OnInit {
   allAppointments: BookedAppointment[] = [];
   filteredAgenda: BookedAppointment[] = [];
   selectedDate: string = new Date().toISOString().split('T')[0];
+  private prevDate: string = this.selectedDate;
   selectedAppointment: BookedAppointment | null = null;
   isLoading = true;
   actionLoading = false;
@@ -59,6 +60,12 @@ export class AgendaComponent implements OnInit {
   }
 
   onDateChange() {
+    // Prevent clearing: if value is emptied (Clear button clicked), restore on next tick
+    if (!this.selectedDate) {
+      setTimeout(() => { this.selectedDate = this.prevDate; }, 0);
+      return;
+    }
+    this.prevDate = this.selectedDate;
     this.filterAgenda();
     this.selectedAppointment = null;
   }

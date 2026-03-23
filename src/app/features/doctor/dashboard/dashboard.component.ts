@@ -24,6 +24,7 @@ export class DashboardComponent implements OnInit {
   appointments: BookedAppointment[] = [];
   filteredAppointments: BookedAppointment[] = [];
   selectedDate: string = new Date().toISOString().split('T')[0];
+  private prevDate: string = this.selectedDate;
   patientsCount$: Observable<number> = of(0);
   todayDate = new Date();
   isLoading = true;
@@ -48,6 +49,12 @@ export class DashboardComponent implements OnInit {
   }
 
   onDateChange() {
+    // Prevent clearing: if value is emptied (Clear button clicked), restore on next tick
+    if (!this.selectedDate) {
+      setTimeout(() => { this.selectedDate = this.prevDate; }, 0);
+      return;
+    }
+    this.prevDate = this.selectedDate;
     this.filterAppointments();
   }
 

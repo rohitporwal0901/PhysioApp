@@ -66,3 +66,13 @@
         @apply bg-primary-400/30 text-primary-900;
     }
 }
+
+.date-input-styled {
+    &::-webkit-clear-button {
+        display: none;
+        -webkit-appearance: none;
+    }
+    &::-webkit-inner-spin-button {
+        display: none;
+    }
+}

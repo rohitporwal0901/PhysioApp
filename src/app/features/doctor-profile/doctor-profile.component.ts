@@ -31,6 +31,7 @@ export class DoctorProfileComponent implements OnInit {
 
     // Booking form
     selectedDate = new Date().toISOString().split('T')[0];
+    private prevDate: string = this.selectedDate;
     selectedSlot = '';
     bookingConfirmed = false;
     bookedSlots: string[] = [];
@@ -120,6 +121,12 @@ export class DoctorProfileComponent implements OnInit {
 
     /** When date changes, reload booked slots for that date */
     async onDateChange() {
+        // Prevent clearing: if value is emptied (Clear button clicked), restore on next tick
+        if (!this.selectedDate) {
+            setTimeout(() => { this.selectedDate = this.prevDate; }, 0);
+            return;
+        }
+        this.prevDate = this.selectedDate;
         if (this.doctor && this.selectedDate) {
             this.bookedSlots = await this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
             // If the selected slot is now booked, deselect it

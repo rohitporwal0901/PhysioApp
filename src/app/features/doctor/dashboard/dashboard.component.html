@@ -78,9 +78,10 @@
                     </div>
                     <div class="flex flex-col sm:flex-row items-center gap-3 w-full min-[500px]:w-auto">
                         <!-- Date Filter -->
-                        <div class="relative w-full sm:w-auto">
+                        <div class="date-input-wrap-dash">
+                            <i-lucide name="calendar" class="date-icon-dash"></i-lucide>
                             <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" 
-                                class="w-full sm:w-40 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-primary-500/50 transition-all cursor-pointer">
+                                class="date-input-dash">
                         </div>
                         <a routerLink="/doctor/agenda" class="text-[10px] sm:text-xs font-bold text-primary-500 hover:text-primary-600 uppercase tracking-widest whitespace-nowrap">Full Agenda &rarr;</a>
                     </div>
