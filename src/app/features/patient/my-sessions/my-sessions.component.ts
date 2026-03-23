@@ -325,11 +325,11 @@ export class MySessionsComponent implements OnInit {
     // CASE 1: SHARE (Mobile APK / Modern Mobile Browsers)
     if (action === 'share') {
       const isNative = Capacitor.isNativePlatform();
-      
+
       if (isNative) {
         // Native Capacitor Share (Best for APK)
         const pdfBase64 = doc.output('datauristring').split(',')[1];
-        
+
         Filesystem.writeFile({
           path: fileName,
           data: pdfBase64,
@@ -351,7 +351,7 @@ export class MySessionsComponent implements OnInit {
         try {
           const blob = doc.output('blob');
           const file = new File([blob], fileName, { type: 'application/pdf' });
-          
+
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
             navigator.share({
               files: [file],

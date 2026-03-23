@@ -75,3 +75,24 @@
     animation: pulseSlow 4s ease-in-out infinite;
 }
 
+/* Star Filling Fix */
+.star-filled {
+    color: #fbbf24 !important;
+    fill: #fbbf24 !important;
+    path {
+        fill: #fbbf24 !important;
+    }
+}
+
+.star-empty {
+    color: #cbd5e1 !important;
+    fill: none !important;
+    path {
+        fill: none !important;
+    }
+}
+
+.dark .star-empty {
+    color: #475569 !important;
+}
+
