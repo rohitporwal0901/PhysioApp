@@ -402,7 +402,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getWhatsAppUrl(lab: any): string | null {
-        const isAvailable = lab.isAvailable || lab.available;
+        const isAvailable = lab.available;
         if (!isAvailable) return null;
         const phone = lab.phone ? lab.phone.replace('+', '').replace(/\s/g, '') : '';
         const name = lab.fullName || lab.name || '';

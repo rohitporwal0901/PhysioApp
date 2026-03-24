@@ -665,7 +665,7 @@
             [style.transition-delay]="(i * 100) + 'ms'">
             <div
               class="lab-card bg-white rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm overflow-hidden group hover:shadow-xl transition-all duration-500 h-full"
-              [class.lab-card--unavailable]="!(lab.isAvailable || lab.available)">
+              [class.lab-card--unavailable]="!(lab.available)">
               <!-- Lab Image -->
               <div class="relative h-40 sm:h-44 overflow-hidden">
                 <img [src]="getLabImage(lab, i)" alt="{{ lab.fullName || lab.name }}"
@@ -680,8 +680,8 @@
                     PARTNER LAB
                   </span>
                   <span class="px-2 py-1 rounded-lg text-[9px] sm:text-[10px] font-bold shadow-sm backdrop-blur-sm"
-                    [ngClass]="(lab.isAvailable || lab.available) ? 'bg-emerald-500/90 text-white' : 'bg-slate-200/90 text-slate-600'">
-                    {{ (lab.isAvailable || lab.available) ? '● Open' : '○ Closed' }}
+                    [ngClass]="(lab.available) ? 'bg-emerald-500/90 text-white' : 'bg-slate-200/90 text-slate-600'">
+                    {{ (lab.available) ? '● Open' : '○ Closed' }}
                   </span>
                 </div>
 
@@ -704,8 +704,8 @@
                     <span class="text-slate-400 text-xs">· Partner</span>
                   </div>
                   <span class="text-[10px] font-medium px-2 py-0.5 rounded-full"
-                    [ngClass]="(lab.isAvailable || lab.available) ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-500'">
-                    {{ (lab.isAvailable || lab.available) ? 'Reports in 24h' : 'Unavailable' }}
+                    [ngClass]="(lab.available) ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-500'">
+                    {{ (lab.available) ? 'Reports in 24h' : 'Unavailable' }}
                   </span>
                 </div>
 
@@ -717,7 +717,7 @@
                   </div>
                   <div class="flex items-center gap-2 text-slate-500 text-xs">
                     <i-lucide name="clock" class="w-3.5 h-3.5 text-primary-500 flex-shrink-0"></i-lucide>
-                    <span>{{ (lab.isAvailable || lab.available) ? 'Mon–Sat: 8 AM – 8 PM' : 'Next Opening: Tomorrow'
+                    <span>{{ (lab.available) ? 'Mon–Sat: 8 AM – 8 PM' : 'Next Opening: Tomorrow'
                       }}</span>
                   </div>
                 </div>
@@ -726,16 +726,16 @@
                 <div class="grid grid-cols-5 gap-2.5">
                   <button (click)="callLab(lab.phone); $event.stopPropagation()"
                     class="col-span-2 py-2.5 sm:py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5"
-                    [ngClass]="(lab.isAvailable || lab.available)
+                    [ngClass]="(lab.available)
                       ? 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300'
                       : 'bg-slate-100 border border-slate-100 text-slate-300 cursor-not-allowed'"
-                    [disabled]="!(lab.isAvailable || lab.available)">
+                    [disabled]="!(lab.available)">
                     <i-lucide name="phone" class="w-3.5 h-3.5"></i-lucide>
                     Call
                   </button>
-                  <a [href]="getWhatsAppUrl(lab)" [attr.target]="(lab.isAvailable || lab.available) ? '_blank' : null"
+                  <a [href]="getWhatsAppUrl(lab)" [attr.target]="(lab.available) ? '_blank' : null"
                     class="col-span-3 py-2.5 sm:py-3 rounded-xl font-bold text-xs transition-all duration-300 flex items-center justify-center gap-1.5"
-                    [ngClass]="(lab.isAvailable || lab.available)
+                    [ngClass]="(lab.available)
                       ? 'bg-green-500 text-white hover:bg-green-600 shadow-sm hover:shadow-green-500/30 cursor-pointer'
                       : 'bg-slate-100 text-slate-300 cursor-not-allowed pointer-events-none'">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">

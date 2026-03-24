@@ -141,7 +141,7 @@ export class MockApiService {
   addLabTechnician(tech: any): Promise<any> {
     return addDoc(collection(this.firestore, 'users'), {
       ...tech,
-      role: 'lab_technician',
+      role: 'lab',
       createdAt: Timestamp.now(),
       isAvailable: true,
       isActive: true
@@ -155,7 +155,7 @@ export class MockApiService {
     if (docSnap.exists()) {
       const data = docSnap.data();
       await updateDoc(docRef, {
-        isAvailable: !data['isAvailable']
+        available: !data['available']
       });
     }
   }
@@ -167,7 +167,7 @@ export class MockApiService {
     if (docSnap.exists()) {
       const data = docSnap.data();
       await updateDoc(docRef, {
-        isActive: data['isActive'] === undefined ? false : !data['isActive']
+        active: data['active'] === undefined ? false : !data['active']
       });
     }
   }

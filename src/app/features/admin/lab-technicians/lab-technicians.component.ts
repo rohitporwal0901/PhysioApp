@@ -59,7 +59,10 @@ export class LabTechniciansComponent implements OnInit {
         } else {
             const query = this.searchQuery.toLowerCase();
             this.filteredLabs = this.allLabs.filter(lab => 
-                lab.name.toLowerCase().includes(query)
+                (lab.labName && lab.labName.toLowerCase().includes(query)) ||
+                (lab.fullName && lab.fullName.toLowerCase().includes(query)) ||
+                (lab.name && lab.name.toLowerCase().includes(query)) ||
+                (lab.email && lab.email.toLowerCase().includes(query))
             );
         }
         this.totalPages = Math.ceil(this.filteredLabs.length / this.pageSize);

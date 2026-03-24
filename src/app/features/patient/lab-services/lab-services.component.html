@@ -86,25 +86,25 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" *ngIf="labs$ | async as labs">
         <div *ngFor="let lab of labs"
             class="group bg-white dark:bg-slate-800 rounded-xl sm:rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col relative"
-            [ngClass]="{'opacity-80 saturate-50 hover:-translate-y-0 hover:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border-slate-200/50 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/30': !lab.isAvailable}">
+            [ngClass]="{'opacity-80 saturate-50 hover:-translate-y-0 hover:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border-slate-200/50 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/30': !lab.available}">
 
             <!-- Card Header Image/Banner -->
             <div class="h-16 sm:h-24 bg-gradient-to-r relative overflow-hidden shrink-0"
-                [ngClass]="lab.isAvailable ? 'from-primary-50 to-secondary-50 dark:from-slate-700/50 dark:to-slate-800' : 'from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900'">
+                [ngClass]="lab.available ? 'from-primary-50 to-secondary-50 dark:from-slate-700/50 dark:to-slate-800' : 'from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900'">
                 <!-- Abstract Pattern -->
                 <div class="absolute inset-0 opacity-10"
                     style="background-image: radial-gradient(var(--tw-gradient-stops)); background-size: 20px 20px;"
-                    [ngClass]="lab.isAvailable ? 'from-primary-500' : 'from-slate-500'"></div>
+                    [ngClass]="lab.available ? 'from-primary-500' : 'from-slate-500'"></div>
 
                 <!-- Availability Badge -->
                 <div class="absolute top-3 right-3 z-10">
                     <span
                         class="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full backdrop-blur-md border shadow-sm text-[9px] sm:text-[10px] font-black uppercase tracking-wider"
-                        [ngClass]="lab.isAvailable ? 'bg-white/90 dark:bg-slate-900/90 border-green-500/20 text-green-600 dark:text-green-400' : 'bg-slate-100/90 dark:bg-slate-950/90 border-red-500/20 text-red-500 dark:text-red-400'">
+                        [ngClass]="lab.available ? 'bg-white/90 dark:bg-slate-900/90 border-green-500/20 text-green-600 dark:text-green-400' : 'bg-slate-100/90 dark:bg-slate-950/90 border-red-500/20 text-red-500 dark:text-red-400'">
                         <!-- Indicator Dot -->
                         <span class="w-1.5 h-1.5 rounded-full mr-1 animate-pulse"
-                            [ngClass]="lab.isAvailable ? 'bg-green-500' : 'bg-red-500 hidden sm:block'"></span>
-                        {{ lab.isAvailable ? 'Open Now' : 'Closed' }}
+                            [ngClass]="lab.available ? 'bg-green-500' : 'bg-red-500 hidden sm:block'"></span>
+                        {{ lab.available ? 'Open Now' : 'Closed' }}
                     </span>
                 </div>
             </div>
@@ -114,7 +114,7 @@
                 <!-- Avatar row -->
                 <div class="flex items-end gap-3 sm:gap-4 mb-3 sm:mb-5">
                     <div class="w-14 h-14 sm:w-20 sm:h-20 rounded-[1rem] sm:rounded-2xl overflow-hidden ring-[3px] sm:ring-4 ring-white dark:ring-slate-800 shadow-lg bg-white dark:bg-slate-900 shrink-0 transform transition-transform group-hover:scale-105"
-                        [ngClass]="!lab.isAvailable ? 'grayscale' : ''">
+                        [ngClass]="!lab.available ? 'grayscale' : ''">
                         <img [src]="lab.image"
                             onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Lab&background=0F172A&color=fff&size=200&bold=true'"
                             class="w-full h-full object-cover">
@@ -124,7 +124,7 @@
                 <!-- Info -->
                 <div class="mb-4 sm:mb-6">
                     <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white font-heading truncate tracking-tight"
-                        [ngClass]="!lab.isAvailable ? 'text-slate-600 dark:text-slate-400' : ''">{{ lab.name }}</h3>
+                        [ngClass]="!lab.available ? 'text-slate-600 dark:text-slate-400' : ''">{{ lab.name }}</h3>
                     <div class="flex items-center gap-1.5 mt-0.5 sm:mt-1.5">
                         <i-lucide name="shield-check"
                             class="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 fill-blue-500/20"></i-lucide>
@@ -141,11 +141,11 @@
                         <p
                             class="text-[8px] sm:text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black mb-0.5 sm:mb-1.5 tracking-widest flex items-center gap-1.5">
                             <i-lucide name="clock" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-primary-500/70"
-                                [ngClass]="!lab.isAvailable ? 'grayscale opacity-50' : ''"></i-lucide>
+                                [ngClass]="!lab.available ? 'grayscale opacity-50' : ''"></i-lucide>
                             Hours
                         </p>
                         <p class="text-[12px] sm:text-sm font-bold text-slate-800 dark:text-slate-200 tracking-tight"
-                            [ngClass]="!lab.isAvailable ? 'text-slate-500' : ''">
+                            [ngClass]="!lab.available ? 'text-slate-500' : ''">
                             {{ lab.experience || '24/7' }}
                         </p>
                     </div>
@@ -154,37 +154,37 @@
                         <p
                             class="text-[8px] sm:text-[10px] text-slate-400 dark:text-slate-500 uppercase font-black mb-0.5 sm:mb-1.5 tracking-widest flex items-center gap-1.5">
                             <i-lucide name="map-pin" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-secondary-500/70"
-                                [ngClass]="!lab.isAvailable ? 'grayscale opacity-50' : ''"></i-lucide>
+                                [ngClass]="!lab.available ? 'grayscale opacity-50' : ''"></i-lucide>
                             Distance
                         </p>
                         <p class="text-[12px] sm:text-sm font-bold text-slate-800 dark:text-slate-200 tracking-tight"
-                            [ngClass]="!lab.isAvailable ? 'text-slate-500' : ''">
+                            [ngClass]="!lab.available ? 'text-slate-500' : ''">
                             {{ (lab.id % 5) + 2 }} km
                         </p>
                     </div>
                 </div>
 
                 <!-- CTA Buttons -->
-                <button (click)="openPdfModal(lab.testPdfUrl)" [disabled]="!lab.isAvailable" 
+                <button (click)="openPdfModal(lab.testPdfUrl)" [disabled]="!lab.available" 
                     class="w-full mb-3 flex items-center justify-center gap-2 py-2.5 sm:py-3.5 rounded-lg sm:rounded-2xl text-primary-600 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/40 transition-colors border border-primary-200 dark:border-primary-800 font-bold text-[10px] sm:text-[12px] uppercase tracking-wider relative z-20">
                     <i-lucide name="file-text" class="w-4 h-4"></i-lucide> Verify Tests & Pricing
                 </button>
                 <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
-                    <button (click)="callLab(lab.phone)" [disabled]="!lab.isAvailable"
+                    <button (click)="callLab(lab.phone)" [disabled]="!lab.available"
                         class="flex relative items-center justify-center gap-1.5 sm:gap-2 py-2.5 sm:py-3.5 rounded-lg sm:rounded-2xl text-slate-700 dark:text-slate-200 transition-all font-black text-[9px] sm:text-[11px] uppercase tracking-[0.15em] border-2 disabled:opacity-50 disabled:cursor-not-allowed group/btn hover:border-slate-300 dark:hover:border-slate-600 active:scale-95"
-                        [ngClass]="lab.isAvailable ? 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700' : 'bg-slate-100 dark:bg-slate-800/50 border-transparent text-slate-400 dark:text-slate-500'">
+                        [ngClass]="lab.available ? 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700' : 'bg-slate-100 dark:bg-slate-800/50 border-transparent text-slate-400 dark:text-slate-500'">
                         <i-lucide name="phone"
                             class="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover/btn:-rotate-12 group-hover/btn:scale-110"></i-lucide>
                         Call
                     </button>
-                    <button (click)="chatOnWhatsapp(lab.whatsapp)" [disabled]="!lab.isAvailable"
+                    <button (click)="chatOnWhatsapp(lab.whatsapp)" [disabled]="!lab.available"
                         class="flex items-center justify-center gap-1.5 sm:gap-2 py-2.5 sm:py-3.5 rounded-lg sm:rounded-2xl text-white transition-all font-black text-[9px] sm:text-[11px] uppercase tracking-[0.15em] disabled:opacity-60 disabled:cursor-not-allowed group/btn shadow-[0_4px_15px_rgba(16,185,129,0.2)] active:scale-95 border-2 border-transparent"
-                        [ngClass]="lab.isAvailable ? 'bg-emerald-500 hover:bg-emerald-600 hover:shadow-[0_8px_25px_rgba(16,185,129,0.3)]' : 'bg-slate-300 dark:bg-slate-700 text-slate-500 dark:text-slate-400 shadow-none border-transparent'">
+                        [ngClass]="lab.available ? 'bg-emerald-500 hover:bg-emerald-600 hover:shadow-[0_8px_25px_rgba(16,185,129,0.3)]' : 'bg-slate-300 dark:bg-slate-700 text-slate-500 dark:text-slate-400 shadow-none border-transparent'">
                         <i-lucide name="message-circle" class="w-3 h-3 sm:w-4 sm:h-4"></i-lucide>
                         Chat
                     </button>
                     <!-- Cover overlay if disabled to ensure clear "CLOSED" state on the buttons -->
-                    <div *ngIf="!lab.isAvailable"
+                    <div *ngIf="!lab.available"
                         class="absolute inset-0 z-10 flex items-center justify-center mt-[-10px] pointer-events-none">
                         <!-- Empty, just ensures disabled state is prominent -->
                     </div>
