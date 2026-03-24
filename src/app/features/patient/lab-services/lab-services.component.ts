@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { Observable, map } from 'rxjs';
 import { MockApiService } from '../../../core/services/mock-api.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-lab-services',
@@ -14,7 +15,11 @@ import { MockApiService } from '../../../core/services/mock-api.service';
 })
 export class LabServicesComponent implements OnInit {
     private api = inject(MockApiService);
+    private sanitizer = inject(DomSanitizer);
     labs$: Observable<any[]> | undefined;
+    
+    isPdfModalOpen = false;
+    selectedPdfUrl: SafeResourceUrl | null = null;
 
     ngOnInit() {
         this.labs$ = this.api.getLabTechnicians().pipe(
@@ -34,5 +39,20 @@ export class LabServicesComponent implements OnInit {
         } else {
             alert('WhatsApp number not available');
         }
+    }
+
+    openPdfModal(url: string | undefined) {
+        if (!url) {
+            // fallback dummy pdf
+            this.selectedPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+        } else {
+            this.selectedPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        }
+        this.isPdfModalOpen = true;
+    }
+
+    closePdfModal() {
+        this.isPdfModalOpen = false;
+        this.selectedPdfUrl = null;
     }
 }

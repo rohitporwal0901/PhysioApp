@@ -15,7 +15,8 @@ import {
   LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut, Sparkles, MessageSquare, Loader,
   Accessibility, Footprints, Brain, Cpu, Map, Microscope, Info, AlertTriangle,
   SearchX, Briefcase, ExternalLink, IndianRupee, Share, Share2, Download, FileDown, IdCard,
-  CalendarOff, Home, Building, Landmark, Save, TestTube, Slash, Bell, XCircle, Video, Loader2
+  CalendarOff, Home, Building, Landmark, Save, TestTube, Slash, Bell, XCircle, Video, Loader2,
+  CreditCard, UploadCloud, FlaskConical, FileWarning, FileBox
 } from 'lucide-angular';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -53,7 +54,8 @@ export const appConfig: ApplicationConfig = {
       LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut, Sparkles, MessageSquare, Loader,
       Accessibility, Footprints, Brain, Cpu, Map, Microscope, Info, AlertTriangle,
       SearchX, Briefcase, ExternalLink, IndianRupee, Share, Share2, Download, FileDown, IdCard,
-      CalendarOff, Home, Building, Landmark, Save, TestTube, Slash, Bell, XCircle, Video, Loader2
+      CalendarOff, Home, Building, Landmark, Save, TestTube, Slash, Bell, XCircle, Video, Loader2,
+      CreditCard, UploadCloud, FlaskConical, FileWarning, FileBox
     }))
   ]
 };

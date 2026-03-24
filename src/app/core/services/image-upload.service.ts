@@ -30,4 +30,28 @@ export class ImageUploadService {
     }
     return { valid: true };
   }
+
+  /**
+   * Uploads a document (PDF) to Firebase Storage and returns the download URL.
+   * @param file The file to upload
+   * @param path The path in storage (e.g., 'documents/labs/uid.pdf')
+   */
+  async uploadDocument(file: File, path: string): Promise<string> {
+    const storageRef = ref(this.storage, path);
+    await uploadBytes(storageRef, file);
+    return getDownloadURL(storageRef);
+  }
+
+  validateDocument(file: File): { valid: boolean; error?: string } {
+    const allowedTypes = ['application/pdf'];
+    const maxSize = 5 * 1024 * 1024; // 5MB for PDF documents
+
+    if (!allowedTypes.includes(file.type)) {
+      return { valid: false, error: 'Only PDF documents are allowed.' };
+    }
+    if (file.size > maxSize) {
+      return { valid: false, error: 'File size must be less than 5MB.' };
+    }
+    return { valid: true };
+  }
 }

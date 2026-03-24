@@ -165,6 +165,10 @@
                 </div>
 
                 <!-- CTA Buttons -->
+                <button (click)="openPdfModal(lab.testPdfUrl)" [disabled]="!lab.isAvailable" 
+                    class="w-full mb-3 flex items-center justify-center gap-2 py-2.5 sm:py-3.5 rounded-lg sm:rounded-2xl text-primary-600 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/40 transition-colors border border-primary-200 dark:border-primary-800 font-bold text-[10px] sm:text-[12px] uppercase tracking-wider relative z-20">
+                    <i-lucide name="file-text" class="w-4 h-4"></i-lucide> Verify Tests & Pricing
+                </button>
                 <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
                     <button (click)="callLab(lab.phone)" [disabled]="!lab.isAvailable"
                         class="flex relative items-center justify-center gap-1.5 sm:gap-2 py-2.5 sm:py-3.5 rounded-lg sm:rounded-2xl text-slate-700 dark:text-slate-200 transition-all font-black text-[9px] sm:text-[11px] uppercase tracking-[0.15em] border-2 disabled:opacity-50 disabled:cursor-not-allowed group/btn hover:border-slate-300 dark:hover:border-slate-600 active:scale-95"
@@ -205,5 +209,38 @@
         <p
             class="text-[13px] sm:text-[15px] font-medium text-slate-500 dark:text-slate-400 max-w-sm mt-2 leading-relaxed">
             No diagnostic labs are currently listed. Please check back later or contact support.</p>
+    </div>
+</div>
+
+<!-- PDF Modal -->
+<div *ngIf="isPdfModalOpen" class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4 sm:p-6 lg:p-8" (click)="closePdfModal()">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-5xl h-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden relative" (click)="$event.stopPropagation()">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800 shrink-0 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center">
+                    <i-lucide name="file-text" class="w-5 h-5"></i-lucide>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Tests & Pricing</h3>
+                    <p class="text-xs text-slate-500 font-medium">Official Laboratory Document</p>
+                </div>
+            </div>
+            
+            <button (click)="closePdfModal()" class="w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <i-lucide name="x" class="w-5 h-5"></i-lucide>
+            </button>
+        </div>
+        
+        <!-- Modal Body (PDF Viewer) -->
+        <div class="flex-1 w-full bg-slate-100 dark:bg-slate-950 p-2 sm:p-4 overflow-hidden rounded-b-3xl">
+            <iframe *ngIf="selectedPdfUrl" [src]="selectedPdfUrl" class="w-full h-full rounded-2xl border border-slate-200 shadow-sm" frameborder="0"></iframe>
+            <div *ngIf="!selectedPdfUrl" class="w-full h-full flex flex-col items-center justify-center text-slate-400">
+                <i-lucide name="file-warning" class="w-12 h-12 mb-4 opacity-50"></i-lucide>
+                <p>Document not available.</p>
+            </div>
+        </div>
+        
     </div>
 </div>

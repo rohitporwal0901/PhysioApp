@@ -23,7 +23,6 @@ export class LabTechniciansComponent implements OnInit {
     private imageUpload = inject(ImageUploadService);
     
     isProcessing = false;
-    isUploadingPhoto = false;
     
     // Confirmation dialog state
     confirmConfig = {
@@ -45,19 +44,7 @@ export class LabTechniciansComponent implements OnInit {
     pageSize = 4;
     totalPages = 1;
 
-    showAddModal = false;
     searchQuery = '';
-
-    newLab = {
-        fullName: '',
-        phone: '',
-        whatsapp: '',
-        image: '',
-        address: '',
-        experience: '',
-        qualification: '',
-        specialty: ''
-    };
 
     ngOnInit() {
         this.api.getLabTechnicians().subscribe(labs => {
@@ -99,57 +86,6 @@ export class LabTechniciansComponent implements OnInit {
 
     onSearchChange() {
         this.applyFilters();
-    }
-
-    openAddModal() {
-        this.newLab = { 
-            fullName: '', 
-            phone: '', 
-            whatsapp: '', 
-            image: '',
-            address: '',
-            experience: '',
-            qualification: '',
-            specialty: ''
-        };
-        this.showAddModal = true;
-    }
-
-    async onFileSelected(event: any) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const validation = this.imageUpload.validateFile(file);
-        if (!validation.valid) {
-            this.toast.error(validation.error || 'Invalid file', 'Upload Error');
-            return;
-        }
-
-        this.isUploadingPhoto = true;
-        try {
-            const path = `labs/${Date.now()}_${file.name}`;
-            this.newLab.image = await this.imageUpload.uploadImage(file, path);
-            this.toast.info('Lab photo uploaded successfully.');
-        } catch (error: any) {
-            this.toast.error('Failed to upload photo: ' + error.message, 'Upload Error');
-        } finally {
-            this.isUploadingPhoto = false;
-        }
-    }
-
-    async addLab() {
-        if (this.newLab.fullName) {
-            this.isProcessing = true;
-            try {
-                await this.api.addLabTechnician(this.newLab);
-                this.toast.success('Diagnostic lab has been registered.', 'Lab Added');
-                this.showAddModal = false;
-            } catch (error) {
-                this.toast.error('Failed to add laboratory.', 'Error');
-            } finally {
-                this.isProcessing = false;
-            }
-        }
     }
 
     removeLab(id: string) {

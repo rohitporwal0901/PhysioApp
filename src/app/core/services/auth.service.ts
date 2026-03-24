@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export interface AppUser {
   uid: string;
   email: string;
-  role: 'admin' | 'doctor' | 'patient';
+  role: 'admin' | 'doctor' | 'patient' | 'lab';
   fullName: string;
   phone?: string;
   dob?: string;
@@ -19,7 +19,12 @@ export interface AppUser {
   assignedDoctors?: string[];
   createdAt?: any;
   available?: boolean;
-  active?: boolean
+  active?: boolean;
+  testPdfUrl?: string;
+  labName?: string;
+  licenseNumber?: string;
+  subscriptionPlan?: string;
+  paymentStatus?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -218,6 +223,50 @@ export class AuthService {
     }
   }
 
+  async registerLab(data: {
+    email: string;
+    password: string;
+    fullName: string;
+    labName: string;
+    phone: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    testPdfUrl: string;
+    licenseNumber: string;
+    subscriptionPlan: string;
+    paymentStatus?: string;
+  }): Promise<{ success: boolean; error?: string }> {
+    try {
+      const cred = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
+      
+      const { password, ...cleanData } = data;
+      const profile: AppUser = {
+        uid: cred.user.uid,
+        email: data.email,
+        role: 'lab',
+        available: true,
+        active: true,
+        fullName: data.fullName,
+        createdAt: new Date()
+      };
+
+      const dummyImage = this.getRandomProfileImage('patient');
+
+      await setDoc(doc(this.firestore, 'users', cred.user.uid), {
+        ...cleanData,
+        ...profile,
+        image: dummyImage,
+        createdAt: new Date().toISOString()
+      });
+      this.currentUserSubject.next(profile);
+      return { success: true };
+    } catch (err: any) {
+      console.error('Lab registration error details:', err);
+      return { success: false, error: this.mapFirebaseError(err.code) };
+    }
+  }
+
   async updateProfile(uid: string, data: any): Promise<{ success: boolean; error?: string }> {
     try {
       const ref = doc(this.firestore, 'users', uid);
@@ -246,6 +295,7 @@ export class AuthService {
       case 'admin': this.router.navigate(['/admin/dashboard']); break;
       case 'doctor': this.router.navigate(['/doctor/dashboard']); break;
       case 'patient': this.router.navigate(['/patient/dashboard']); break;
+      case 'lab': this.router.navigate(['/lab/dashboard']); break;
       default: this.router.navigate(['/login']);
     }
   }

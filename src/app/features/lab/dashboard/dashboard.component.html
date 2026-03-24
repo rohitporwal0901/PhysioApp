@@ -1,0 +1,121 @@
+<div class="px-6 py-8 pb-32 max-w-7xl mx-auto space-y-6">
+
+    <!-- Greeting Section -->
+    <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-900/10 dark:to-purple-900/10"></div>
+        <div class="relative z-10">
+            <h1 class="text-3xl font-bold text-slate-800 dark:text-white mb-2">
+                Welcome back, {{ currentUser?.labName || currentUser?.fullName || 'Lab Owner' }}! 👋
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400">
+                Here's a quick overview of your lab's performance today.
+            </p>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div *ngFor="let stat of stats" class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow">
+            <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 {{ stat.color }}">
+                <lucide-icon [name]="stat.icon" class="w-6 h-6"></lucide-icon>
+            </div>
+            <p class="text-3xl font-bold text-slate-800 dark:text-white mb-1">{{ stat.value }}</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">{{ stat.label }}</p>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Lab Documents & Profile Info -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-100 dark:border-slate-700">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-3">
+                        <lucide-icon name="file-text" class="w-6 h-6 text-primary-500"></lucide-icon>
+                        Your Uploaded Documents
+                    </h2>
+                </div>
+
+                <div class="space-y-4">
+                    <div *ngIf="currentUser?.testPdfUrl" class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 flex items-center justify-between group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 bg-red-100 text-red-500 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <lucide-icon name="file-text" class="w-7 h-7"></lucide-icon>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 dark:text-white text-lg">Lab Tests List</h4>
+                                <p class="text-sm text-slate-500 font-medium">Pricing & Parameters</p>
+                            </div>
+                        </div>
+                        <a [href]="currentUser?.testPdfUrl" target="_blank" class="px-5 py-2.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-semibold shadow-sm border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors inline-flex flex-shrink-0 items-center gap-2">
+                           <lucide-icon name="download" class="w-4 h-4"></lucide-icon> View
+                        </a>
+                    </div>
+                    <div *ngIf="!currentUser?.testPdfUrl" class="text-center py-6 text-slate-500">
+                        No documents uploaded.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Overview Details -->
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-100 dark:border-slate-700">
+               <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-6">Profile Information</h2>
+               <div class="grid grid-cols-2 gap-y-4">
+                  <div>
+                      <span class="text-sm text-slate-500">Owner Name</span>
+                      <p class="font-medium text-slate-800 dark:text-slate-200">{{ currentUser?.fullName }}</p>
+                  </div>
+                  <div>
+                      <span class="text-sm text-slate-500">License Number</span>
+                      <p class="font-medium text-slate-800 dark:text-slate-200">{{ currentUser?.licenseNumber || 'N/A' }}</p>
+                  </div>
+                  <div>
+                      <span class="text-sm text-slate-500">Email Address</span>
+                      <p class="font-medium text-slate-800 dark:text-slate-200">{{ currentUser?.email }}</p>
+                  </div>
+                  <div>
+                      <span class="text-sm text-slate-500">Phone Number</span>
+                      <p class="font-medium text-slate-800 dark:text-slate-200">{{ currentUser?.phone || 'N/A' }}</p>
+                  </div>
+               </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity & Subscription Status -->
+        <div class="space-y-6">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-100 dark:border-slate-700">
+                <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-6">Subscription Status</h2>
+                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 text-white relative overflow-hidden">
+                    <lucide-icon name="star" class="absolute -bottom-6 -right-6 w-32 h-32 opacity-10 text-white"></lucide-icon>
+                    <div class="relative z-10">
+                        <span class="px-2 py-1 bg-white/20 rounded-md text-xs font-bold uppercase tracking-wider backdrop-blur-md inline-block mb-3">Active Plan</span>
+                        <h3 class="text-2xl font-bold mb-1 capitalize">{{ currentUser?.subscriptionPlan || 'Monthly' }}</h3>
+                        <p class="text-indigo-100 text-sm mb-4">Renews automatically</p>
+                        <button class="w-full bg-white text-indigo-600 font-bold rounded-xl py-3 shadow border-0 hover:bg-slate-50 transition-colors">Manage Plan</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-100 dark:border-slate-700">
+                <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-6">Recent Activity</h2>
+                <div class="space-y-6">
+                    <div *ngFor="let activity of recentActivities; let last = last" class="relative group">
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center flex-shrink-0 z-10 border border-slate-100 text-slate-500">
+                                <lucide-icon [name]="activity.icon" class="w-4 h-4"></lucide-icon>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ activity.title }}</p>
+                                <p class="text-xs text-slate-500">{{ activity.time }}</p>
+                            </div>
+                        </div>
+                        <div *ngIf="!last" class="absolute left-5 top-10 bottom-[-24px] w-px bg-slate-200"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

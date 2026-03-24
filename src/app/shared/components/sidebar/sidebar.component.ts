@@ -49,6 +49,7 @@ export class SidebarComponent {
     switch (this.effectiveRole.toLowerCase()) {
       case 'doctor': return 'Doctor';
       case 'patient': return 'Patient';
+      case 'lab': return 'Lab Manager';
       default: return 'Admin';
     }
   }
@@ -57,6 +58,7 @@ export class SidebarComponent {
     switch (this.effectiveRole.toLowerCase()) {
       case 'doctor': return 'activity';
       case 'patient': return 'heart';
+      case 'lab': return 'microscope';
       default: return 'settings';
     }
   }
@@ -65,6 +67,7 @@ export class SidebarComponent {
     switch (this.effectiveRole.toLowerCase()) {
       case 'doctor': return 'from-secondary-500 to-secondary-600';
       case 'patient': return 'from-accent-500 to-accent-600';
+      case 'lab': return 'from-indigo-500 to-indigo-600';
       default: return 'from-primary-500 to-primary-600';
     }
   }
@@ -85,6 +88,10 @@ export class SidebarComponent {
           { label: 'My Sessions', icon: 'activity', path: '/patient/sessions' },
           { label: 'Diagnostic Labs', icon: 'microscope', path: '/patient/lab-services' },
           { label: 'My Profile', icon: 'user', path: '/patient/profile' },
+        ];
+      case 'lab':
+        return [
+          { label: 'Dashboard', icon: 'layout-dashboard', path: '/lab/dashboard' },
         ];
       case 'admin':
       default:

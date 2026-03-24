@@ -24,6 +24,11 @@ export const routes: Routes = [
         path: 'doctor/register',
         loadComponent: () => import('./features/doctor/register/doctor-register.component').then(m => m.DoctorRegisterComponent)
     },
+    // Lab Registration (public)
+    {
+        path: 'lab/register',
+        loadComponent: () => import('./features/lab/register/register.component').then(m => m.LabRegisterComponent)
+    },
     // Login
     {
         path: 'login',
@@ -107,6 +112,12 @@ export const routes: Routes = [
                 path: 'patient/profile',
                 canActivate: [roleGuard(['patient'])],
                 loadComponent: () => import('./features/patient/profile/profile.component').then(m => m.ProfileComponent)
+            },
+            // Lab routes
+            {
+                path: 'lab/dashboard',
+                canActivate: [roleGuard(['lab'])],
+                loadComponent: () => import('./features/lab/dashboard/dashboard.component').then(m => m.DashboardComponent)
             }
         ]
     },
