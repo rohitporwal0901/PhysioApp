@@ -21,13 +21,15 @@ export class LabRegisterComponent {
     isLoading = false;
     showPassword = false;
     currentStep = 1;
-    totalSteps = 5;
+    totalSteps = 4;
     errorMessage = '';
     submitAttempted = false;
 
     // Step 1 - Basic Info
     fullName = '';
     labName = '';
+    profilePhotoUrl = '';
+    isUploadingPhoto = false;
 
     // Step 2 - Contact 
     email = '';
@@ -47,11 +49,6 @@ export class LabRegisterComponent {
     confirmPassword = '';
     agreeTerms = false;
 
-    // Step 5 - Subscription
-    subscriptionPlan = 'monthly';
-    paymentStatus = 'pending';
-    showRazorpayModal = false;
-
     states = [
         'Andhra Pradesh', 'Bihar', 'Delhi', 'Goa', 'Gujarat', 'Karnataka',
         'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Punjab', 'Rajasthan',
@@ -62,18 +59,8 @@ export class LabRegisterComponent {
         { num: 1, label: 'Basic Info', icon: 'building' },
         { num: 2, label: 'Contact', icon: 'map-pin' },
         { num: 3, label: 'Documents', icon: 'file-text' },
-        { num: 4, label: 'Account', icon: 'lock' },
-        { num: 5, label: 'Subscription', icon: 'credit-card' }
+        { num: 4, label: 'Account', icon: 'lock' }
     ];
-
-    get subscriptionAmount(): number {
-        switch (this.subscriptionPlan) {
-            case 'monthly': return 1999;
-            case 'half-yearly': return 9999;
-            case 'yearly': return 17999;
-            default: return 1999;
-        }
-    }
 
     get passwordsMatch(): boolean {
         return this.password === this.confirmPassword;
@@ -100,17 +87,12 @@ export class LabRegisterComponent {
     get step4Valid(): boolean {
         return !!(this.password && this.password.length >= 6 && this.passwordsMatch && this.agreeTerms);
     }
-    get step5Valid(): boolean {
-        return !!this.subscriptionPlan;
-    }
-
     get currentStepValid(): boolean {
         switch (this.currentStep) {
             case 1: return this.step1Valid;
             case 2: return this.step2Valid;
             case 3: return this.step3Valid;
             case 4: return this.step4Valid;
-            case 5: return this.step5Valid;
             default: return false;
         }
     }
@@ -147,6 +129,27 @@ export class LabRegisterComponent {
         }
     }
 
+    async onPhotoSelected(event: any) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const validation = this.fileUploadService.validateFile(file);
+        if (!validation.valid) {
+            alert(validation.error);
+            return;
+        }
+
+        this.isUploadingPhoto = true;
+        try {
+            const path = `profiles/labs/temp_${Date.now()}`;
+            this.profilePhotoUrl = await this.fileUploadService.uploadImage(file, path);
+        } catch (err: any) {
+            alert('Photo upload failed: ' + err.message);
+        } finally {
+            this.isUploadingPhoto = false;
+        }
+    }
+
     async onPdfSelected(event: any) {
         const file = event.target.files[0];
         if (!file) return;
@@ -171,18 +174,8 @@ export class LabRegisterComponent {
 
     async register() {
         this.submitAttempted = true;
-        if (!this.step5Valid) return;
-        this.showRazorpayModal = true;
-    }
+        if (!this.step4Valid) return;
 
-    onPaymentClosed() {
-        this.showRazorpayModal = false;
-        this.isLoading = false;
-    }
-
-    async onPaymentSuccess(txnId: string) {
-        this.showRazorpayModal = false;
-        this.paymentStatus = 'completed';
         this.isLoading = true;
         this.errorMessage = '';
 
@@ -197,8 +190,9 @@ export class LabRegisterComponent {
             state: this.state,
             testsPdfUrl: this.testsPdfUrl,
             licenseNumber: this.licenseNumber,
-            subscriptionPlan: this.subscriptionPlan,
-            paymentStatus: this.paymentStatus
+            image: this.profilePhotoUrl,
+            subscriptionPlan: 'free', // Or whatever default
+            paymentStatus: 'completed'
         } as any);
 
         this.isLoading = false;

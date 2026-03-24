@@ -41,7 +41,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('doctorsSlider') doctorsSlider: ElementRef | undefined;
     @ViewChild('labsSlider') labsSlider: ElementRef | undefined;
     openFaqIndex: number | null = null;
-    
+
     // Dynamic Hero Video
     heroVideoSettings: AppSettings['heroVideo'] | null = null;
     isAuthChecking = true;
@@ -77,19 +77,19 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     ];
 
     private labImages = [
-      'https://images.unsplash.com/photo-1579152276503-0852bc239270?q=80&w=400&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=400&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1582719471384-894fbb16e074?q=80&w=400&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=400&auto=format&fit=crop'
+        'https://images.unsplash.com/photo-1579152276503-0852bc239270?q=80&w=400&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=400&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1582719471384-894fbb16e074?q=80&w=400&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=400&auto=format&fit=crop'
     ];
 
     // Unsplash doctor profile image collection
     private doctorImages = [
-      'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=400&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1559839734-2b71f1536783?q=80&w=400&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=400&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400&auto=format&fit=crop'
+        'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=400&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1559839734-2b71f1536783?q=80&w=400&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=400&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400&auto=format&fit=crop'
     ];
 
     // Animated counters
@@ -203,7 +203,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             map(docs => docs.filter(doc => doc.active))
         );
         this.labs$ = this.api.getLabTechnicians().pipe(
-            map(labs => labs.filter(lab => lab.isActive))
+            map(labs => labs.filter(lab => lab.active))
         );
         // Re-trigger observer whenever doctors load
         this.doctors$.subscribe(() => {
@@ -320,27 +320,27 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     scrollDoctors(direction: 'next' | 'prev') {
-      if (this.doctorsSlider && this.doctorsSlider.nativeElement) {
-        const el = this.doctorsSlider.nativeElement;
-        const scrollAmount = el.clientWidth * 0.8;
-        if (direction === 'next') {
-          el.scrollTo({ left: el.scrollLeft + scrollAmount, behavior: 'smooth' });
-        } else {
-          el.scrollTo({ left: el.scrollLeft - scrollAmount, behavior: 'smooth' });
+        if (this.doctorsSlider && this.doctorsSlider.nativeElement) {
+            const el = this.doctorsSlider.nativeElement;
+            const scrollAmount = el.clientWidth * 0.8;
+            if (direction === 'next') {
+                el.scrollTo({ left: el.scrollLeft + scrollAmount, behavior: 'smooth' });
+            } else {
+                el.scrollTo({ left: el.scrollLeft - scrollAmount, behavior: 'smooth' });
+            }
         }
-      }
     }
 
     scrollLabs(direction: 'next' | 'prev') {
-      if (this.labsSlider && this.labsSlider.nativeElement) {
-        const el = this.labsSlider.nativeElement;
-        const scrollAmount = el.clientWidth * 0.8;
-        if (direction === 'next') {
-          el.scrollTo({ left: el.scrollLeft + scrollAmount, behavior: 'smooth' });
-        } else {
-          el.scrollTo({ left: el.scrollLeft - scrollAmount, behavior: 'smooth' });
+        if (this.labsSlider && this.labsSlider.nativeElement) {
+            const el = this.labsSlider.nativeElement;
+            const scrollAmount = el.clientWidth * 0.8;
+            if (direction === 'next') {
+                el.scrollTo({ left: el.scrollLeft + scrollAmount, behavior: 'smooth' });
+            } else {
+                el.scrollTo({ left: el.scrollLeft - scrollAmount, behavior: 'smooth' });
+            }
         }
-      }
     }
 
     bookCondition(condition: string) {

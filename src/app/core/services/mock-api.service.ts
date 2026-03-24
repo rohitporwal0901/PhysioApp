@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { 
-  Firestore, 
-  collection, 
-  query, 
-  where, 
+import {
+  Firestore,
+  collection,
+  query,
+  where,
   onSnapshot,
   doc,
   deleteDoc,
@@ -92,7 +92,7 @@ export class MockApiService {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
-        const currentActive =  data['active'] ?? false;
+        const currentActive = data['active'] ?? false;
         await updateDoc(docRef, {
           isActive: !currentActive,
           active: !currentActive // Map to both for compatibility
@@ -115,7 +115,7 @@ export class MockApiService {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
-        const currentAvailable =  data['available'] ?? false;
+        const currentAvailable = data['available'] ?? false;
         await updateDoc(docRef, {
           isAvailable: !currentAvailable,
           available: !currentAvailable // Map both
@@ -132,7 +132,7 @@ export class MockApiService {
   getLabTechnicians(): Observable<any[]> {
     const q = query(
       collection(this.firestore, 'users'),
-      where('role', '==', 'lab_technician')
+      where('role', '==', 'lab')
     );
     return this.collectionToObservable(q);
   }
