@@ -31,6 +31,11 @@
           <i-lucide name="stethoscope" class="w-3.5 h-3.5"></i-lucide>
           For Physiotherapists
         </button>
+        <button (click)="goToLabRegister()"
+          class="nav-link text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors flex items-center gap-1">
+          <i-lucide name="microscope" class="w-3.5 h-3.5"></i-lucide>
+          For Labs
+        </button>
       </div>
 
       <!-- Desktop CTA -->
@@ -79,6 +84,9 @@
         </a>
         <button (click)="goToDoctorRegister(); closeMobileMenu()" class="mobile-nav-item">
           <i-lucide name="stethoscope" class="w-4 h-4 text-secondary-400"></i-lucide> For Physiotherapists
+        </button>
+        <button (click)="goToLabRegister(); closeMobileMenu()" class="mobile-nav-item">
+          <i-lucide name="microscope" class="w-4 h-4 text-primary-400"></i-lucide> For Labs
         </button>
         <div class="flex flex-col gap-2 pt-3 border-t border-slate-100 mt-2">
           <ng-container *ngIf="isAuthChecking; else mobileAuthContent">
@@ -624,10 +632,14 @@
           <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-3 sm:mb-4">
             Our Partner <span class="text-gradient">Diagnostic Labs</span>
           </h2>
-          <p class="text-slate-600 text-sm sm:text-base">
+          <p class="text-slate-600 text-sm sm:text-base mb-4">
             Quick diagnostics are key to effective recovery. Access world-class laboratory services through our verified
             partners.
           </p>
+          <button (click)="goToLabRegister()" class="inline-flex items-center gap-2 text-primary-600 font-bold text-sm hover:text-primary-700 transition-colors group">
+            Own a Lab? Register as a Partner
+            <i-lucide name="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i-lucide>
+          </button>
         </div>
         <div class="hidden sm:flex gap-2 mt-6 md:mt-0">
           <button (click)="scrollLabs('prev')"
@@ -1184,8 +1196,9 @@
             <li><a href="#services" class="hover:text-primary-400 transition-colors">Services</a></li>
             <li><a href="#doctors" class="hover:text-primary-400 transition-colors">Find a Specialist</a></li>
             <li><a href="#faq" class="hover:text-primary-400 transition-colors">FAQ</a></li>
-            <li><button (click)="goToLogin()" class="hover:text-primary-400 transition-colors">Patient Portal</button>
-            </li>
+            <li><button (click)="goToLogin()" class="hover:text-primary-400 transition-colors">Patient Portal</button></li>
+            <li><button (click)="goToDoctorRegister()" class="hover:text-primary-400 transition-colors">For Physiotherapists</button></li>
+            <li><button (click)="goToLabRegister()" class="hover:text-primary-400 transition-colors">For Labs</button></li>
           </ul>
         </div>
 

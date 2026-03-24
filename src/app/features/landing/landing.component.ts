@@ -365,6 +365,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     goToLogin() { this.router.navigate(['/login']); }
     goToRegister() { this.router.navigate(['/patient/register']); }
     goToDoctorRegister() { this.router.navigate(['/doctor/register']); }
+    goToLabRegister() { this.router.navigate(['/lab/register']); }
 
     goToDashboard() {
         if (this.userRole === 'admin') this.router.navigate(['/admin/dashboard']);
