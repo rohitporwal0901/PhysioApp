@@ -63,7 +63,8 @@
                                 }}%</span>
                         </div>
                         <div class="progress-bar">
-                            <div class="progress-fill" [style.width.%]="(currentStep - 1) / (totalSteps - 1) * 100"></div>
+                            <div class="progress-fill" [style.width.%]="(currentStep - 1) / (totalSteps - 1) * 100">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -80,48 +81,54 @@
                         </div>
                         <div>
                             <h2 class="card-title text-indigo-500">Choose your Plan</h2>
-                            <p class="card-subtitle">Select a plan to start your registration and unlock all features.</p>
+                            <p class="card-subtitle">Select a plan to start your registration and unlock all features.
+                            </p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                        <div *ngFor="let plan of plans" 
-                             class="relative p-6 rounded-3xl border-2 transition-all cursor-pointer group flex flex-col h-full bg-white dark:bg-slate-800/50"
-                             [class.border-primary-500]="selectedPlan?.id === plan.id"
-                             [class.border-slate-100]="selectedPlan?.id !== plan.id"
-                             [class.dark:border-slate-700]="selectedPlan?.id !== plan.id"
-                             [class.shadow-2xl]="selectedPlan?.id === plan.id"
-                             [class.scale-[1.02]]="selectedPlan?.id === plan.id"
-                             (click)="selectPlan(plan)">
-                            
+                        <div *ngFor="let plan of plans"
+                            class="relative p-8 rounded-[2.5rem] border-2 transition-all cursor-pointer group flex flex-col h-full bg-white shadow-lg hover:shadow-2xl hover:-translate-y-1"
+                            [class.border-primary-500]="selectedPlan?.id === plan.id"
+                            [class.border-slate-100]="selectedPlan?.id !== plan.id"
+                            [class.ring-4]="selectedPlan?.id === plan.id"
+                            [class.ring-primary-500]="selectedPlan?.id === plan.id" (click)="selectPlan(plan)">
+
                             <!-- Most Popular Badge -->
-                            <div *ngIf="plan.duration === 'yearly'" 
-                                 class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg z-10">
+                            <div *ngIf="plan.duration === 'yearly'"
+                                class="absolute -top-4 left-1/2 -translate-x-1/2 px-5 py-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-xl z-10 border-2 border-white">
                                 Best Value
                             </div>
 
-                            <div class="mb-4">
-                                <h3 class="text-lg font-black text-slate-800 dark:text-white">{{ plan.name }}</h3>
-                                <div class="mt-2 flex items-baseline">
-                                    <span class="text-3xl font-black text-slate-900 dark:text-white">₹{{ plan.price }}</span>
-                                    <span class="text-slate-400 text-xs font-bold ml-1 uppercase tracking-tight">/ {{ plan.duration === 'monthly' ? 'mo' : plan.duration === 'yearly' ? 'yr' : '6mo' }}</span>
+                            <div class="mb-6">
+                                <h3 class="text-xl font-black text-slate-900">{{ plan.name }}</h3>
+                                <div class="mt-4 flex items-baseline gap-1">
+                                    <span class="text-4xl font-black text-slate-900">₹{{ plan.price }}</span>
+                                    <span class="text-slate-400 text-xs font-bold uppercase tracking-widest">/ {{
+                                        plan.duration === 'monthly' ? 'mo' : plan.duration === 'yearly' ? 'yr' : '6mo'
+                                        }}</span>
                                 </div>
                             </div>
 
-                            <div class="space-y-3 mb-8 flex-1">
-                                <div *ngFor="let feat of plan.features" class="flex items-start gap-2.5">
-                                    <i-lucide name="check-circle" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i-lucide>
-                                    <span class="text-xs text-slate-600 dark:text-slate-400 font-medium leading-relaxed">{{ feat }}</span>
+                            <div class="space-y-4 mb-10 flex-1">
+                                <div *ngFor="let feat of plan.features" class="flex items-start gap-3">
+                                    <div
+                                        class="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i-lucide name="check" class="w-3 h-3 text-emerald-500 stroke-[3]"></i-lucide>
+                                    </div>
+                                    <span class="text-sm text-slate-600 font-semibold leading-relaxed">{{ feat }}</span>
                                 </div>
                             </div>
 
-                            <button class="w-full py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all"
-                                    [class.bg-primary-500]="selectedPlan?.id === plan.id"
-                                    [class.text-white]="selectedPlan?.id === plan.id"
-                                    [class.bg-slate-100]="selectedPlan?.id !== plan.id"
-                                    [class.text-slate-600]="selectedPlan?.id !== plan.id"
-                                    [class.dark:bg-slate-800]="selectedPlan?.id !== plan.id">
-                                {{ selectedPlan?.id === plan.id ? 'Selected' : 'Select Plan' }}
+                            <button type="button"
+                                class="w-full py-4 rounded-2xl font-black text-xs uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2"
+                                [class.bg-primary-500]="selectedPlan?.id === plan.id"
+                                [class.text-white]="selectedPlan?.id === plan.id"
+                                [class.bg-slate-50]="selectedPlan?.id !== plan.id"
+                                [class.text-slate-400]="selectedPlan?.id !== plan.id">
+                                <i-lucide *ngIf="selectedPlan?.id === plan.id" name="check-circle"
+                                    class="w-4 h-4"></i-lucide>
+                                {{ selectedPlan?.id === plan.id ? 'Plan Selected' : 'Select Plan' }}
                             </button>
                         </div>
                     </div>
@@ -142,32 +149,42 @@
                     <!-- Profile Photo Selection -->
                     <div class="flex flex-col items-center mb-10 pt-4">
                         <div class="relative group cursor-pointer" (click)="photoInput.click()">
-                            <div class="w-32 h-32 rounded-[2rem] overflow-hidden bg-slate-50 dark:bg-slate-800 border-4 border-white dark:border-slate-800 shadow-2xl relative ring-8 ring-slate-100/50 dark:ring-slate-900/50 transition-all group-hover:ring-primary-500/10">
+                            <div
+                                class="w-32 h-32 rounded-[2rem] overflow-hidden bg-slate-50 dark:bg-slate-800 border-4 border-white dark:border-slate-800 shadow-2xl relative ring-8 ring-slate-100/50 dark:ring-slate-900/50 transition-all group-hover:ring-primary-500/10">
                                 <img *ngIf="profilePhotoUrl" [src]="profilePhotoUrl" class="w-full h-full object-cover">
-                                <div *ngIf="!profilePhotoUrl" class="w-full h-full flex flex-col items-center justify-center text-slate-300">
+                                <div *ngIf="!profilePhotoUrl"
+                                    class="w-full h-full flex flex-col items-center justify-center text-slate-300">
                                     <i-lucide name="camera" class="w-10 h-10 mb-2"></i-lucide>
-                                    <span class="text-[8px] font-black uppercase tracking-widest text-center px-4">Upload Photo</span>
+                                    <span
+                                        class="text-[8px] font-black uppercase tracking-widest text-center px-4">Upload
+                                        Photo</span>
                                 </div>
-                                
+
                                 <!-- Uploading Overlay -->
-                                <div *ngIf="isUploadingPhoto" class="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+                                <div *ngIf="isUploadingPhoto"
+                                    class="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
                                     <i-lucide name="loader" class="w-8 h-8 text-white animate-spin"></i-lucide>
                                 </div>
                             </div>
                             <!-- Small plus badge -->
-                            <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-primary-500 rounded-2xl flex items-center justify-center text-white border-4 border-white dark:border-slate-800 shadow-xl group-hover:scale-110 transition-transform">
+                            <div
+                                class="absolute -bottom-2 -right-2 w-10 h-10 bg-primary-500 rounded-2xl flex items-center justify-center text-white border-4 border-white dark:border-slate-800 shadow-xl group-hover:scale-110 transition-transform">
                                 <i-lucide name="plus" class="w-5 h-5"></i-lucide>
                             </div>
                         </div>
-                        <input #photoInput type="file" (change)="onPhotoSelected($event)" accept="image/*" class="hidden">
-                        <p class="text-[10px] font-bold text-slate-400 mt-6 uppercase tracking-[0.2em]">Profile Picture</p>
+                        <input #photoInput type="file" (change)="onPhotoSelected($event)" accept="image/*"
+                            class="hidden">
+                        <p class="text-[10px] font-bold text-slate-400 mt-6 uppercase tracking-[0.2em]">Profile Picture
+                        </p>
                     </div>
 
                     <div class="form-grid">
                         <div class="field full">
                             <label class="label">Full Name <span class="req">*</span></label>
-                            <input type="text" [(ngModel)]="fullName" placeholder="Dr. Full Name" class="input" [class.border-red-500]="submitAttempted && !fullName" />
-                            <p *ngIf="submitAttempted && !fullName" class="text-xs text-red-500 mt-1">Full Name is required.</p>
+                            <input type="text" [(ngModel)]="fullName" placeholder="Dr. Full Name" class="input"
+                                [class.border-red-500]="submitAttempted && !fullName" />
+                            <p *ngIf="submitAttempted && !fullName" class="text-xs text-red-500 mt-1">Full Name is
+                                required.</p>
                         </div>
 
                         <div class="field full">
@@ -179,13 +196,16 @@
                                     {{ g }}
                                 </label>
                             </div>
-                            <p *ngIf="submitAttempted && !gender" class="text-xs text-red-500 mt-1">Gender is required.</p>
+                            <p *ngIf="submitAttempted && !gender" class="text-xs text-red-500 mt-1">Gender is required.
+                            </p>
                         </div>
 
                         <div class="field">
                             <label class="label">Date of Birth <span class="req">*</span></label>
-                            <input type="date" [(ngModel)]="dob" class="input" [class.border-red-500]="submitAttempted && !dob" />
-                            <p *ngIf="submitAttempted && !dob" class="text-xs text-red-500 mt-1">Date of Birth is required.</p>
+                            <input type="date" [(ngModel)]="dob" class="input"
+                                [class.border-red-500]="submitAttempted && !dob" />
+                            <p *ngIf="submitAttempted && !dob" class="text-xs text-red-500 mt-1">Date of Birth is
+                                required.</p>
                         </div>
 
                         <div class="field">
@@ -218,9 +238,12 @@
                     <div class="form-grid">
                         <div class="field">
                             <label class="label">Phone Number <span class="req">*</span></label>
-                            <input type="tel" [(ngModel)]="phone" placeholder="+91 98765 43210" class="input" [class.border-red-500]="submitAttempted && (!phone || !isPhoneValid)" />
-                            <p *ngIf="submitAttempted && !phone" class="text-xs text-red-500 mt-1">Phone Number is required.</p>
-                            <p *ngIf="submitAttempted && phone && !isPhoneValid" class="text-xs text-red-500 mt-1">Invalid phone format.</p>
+                            <input type="tel" [(ngModel)]="phone" placeholder="+91 98765 43210" class="input"
+                                [class.border-red-500]="submitAttempted && (!phone || !isPhoneValid)" />
+                            <p *ngIf="submitAttempted && !phone" class="text-xs text-red-500 mt-1">Phone Number is
+                                required.</p>
+                            <p *ngIf="submitAttempted && phone && !isPhoneValid" class="text-xs text-red-500 mt-1">
+                                Invalid phone format.</p>
                         </div>
                         <div class="field">
                             <label class="label">Alternate Phone</label>
@@ -228,9 +251,12 @@
                         </div>
                         <div class="field full">
                             <label class="label">Email Address <span class="req">*</span></label>
-                            <input type="email" [(ngModel)]="email" placeholder="doctor@example.com" class="input" [class.border-red-500]="submitAttempted && (!email || !isEmailValid)" />
-                            <p *ngIf="submitAttempted && !email" class="text-xs text-red-500 mt-1">Email is required.</p>
-                            <p *ngIf="submitAttempted && email && !isEmailValid" class="text-xs text-red-500 mt-1">Invalid email format.</p>
+                            <input type="email" [(ngModel)]="email" placeholder="doctor@example.com" class="input"
+                                [class.border-red-500]="submitAttempted && (!email || !isEmailValid)" />
+                            <p *ngIf="submitAttempted && !email" class="text-xs text-red-500 mt-1">Email is required.
+                            </p>
+                            <p *ngIf="submitAttempted && email && !isEmailValid" class="text-xs text-red-500 mt-1">
+                                Invalid email format.</p>
                         </div>
                         <div class="field full">
                             <label class="label">Clinic / Hospital Address</label>
@@ -263,22 +289,27 @@
                     <div class="form-grid">
                         <div class="field full">
                             <label class="label">Highest Qualification <span class="req">*</span></label>
-                            <select [(ngModel)]="qualification" class="input select" [class.border-red-500]="submitAttempted && !qualification">
+                            <select [(ngModel)]="qualification" class="input select"
+                                [class.border-red-500]="submitAttempted && !qualification">
                                 <option value="">Select qualification</option>
                                 <option *ngFor="let q of qualifications" [value]="q">{{ q }}</option>
                             </select>
-                            <p *ngIf="submitAttempted && !qualification" class="text-xs text-red-500 mt-1">Qualification is required.</p>
+                            <p *ngIf="submitAttempted && !qualification" class="text-xs text-red-500 mt-1">Qualification
+                                is required.</p>
                         </div>
                         <div class="field">
                             <label class="label">Specialization <span class="req">*</span></label>
                             <input type="text" [(ngModel)]="specialization" placeholder="e.g. Sports Rehab"
                                 class="input" [class.border-red-500]="submitAttempted && !specialization" />
-                            <p *ngIf="submitAttempted && !specialization" class="text-xs text-red-500 mt-1">Specialization is required.</p>
+                            <p *ngIf="submitAttempted && !specialization" class="text-xs text-red-500 mt-1">
+                                Specialization is required.</p>
                         </div>
                         <div class="field">
                             <label class="label">Years of Experience <span class="req">*</span></label>
-                            <input type="number" [(ngModel)]="experience" placeholder="e.g. 8" class="input" [class.border-red-500]="submitAttempted && !experience" />
-                            <p *ngIf="submitAttempted && !experience" class="text-xs text-red-500 mt-1">Experience is required.</p>
+                            <input type="number" [(ngModel)]="experience" placeholder="e.g. 8" class="input"
+                                [class.border-red-500]="submitAttempted && !experience" />
+                            <p *ngIf="submitAttempted && !experience" class="text-xs text-red-500 mt-1">Experience is
+                                required.</p>
                         </div>
                         <div class="field">
                             <label class="label">Registration Number</label>
@@ -305,7 +336,8 @@
                     </div>
 
                     <p class="helper-text">Select all areas that apply to your practice <span class="req">*</span></p>
-                    <p *ngIf="submitAttempted && selectedAreas.length === 0" class="text-xs text-red-500 mb-2">Please select at least one area of interest.</p>
+                    <p *ngIf="submitAttempted && selectedAreas.length === 0" class="text-xs text-red-500 mb-2">Please
+                        select at least one area of interest.</p>
 
                     <div class="checkbox-grid">
                         <label *ngFor="let area of areasOfInterest" class="checkbox-card"
@@ -335,8 +367,10 @@
                     <div class="form-grid">
                         <div class="field">
                             <label class="label">Consultation Fee (₹) <span class="req">*</span></label>
-                            <input type="number" [(ngModel)]="consultationFee" placeholder="e.g. 500" class="input" [class.border-red-500]="submitAttempted && !consultationFee" />
-                            <p *ngIf="submitAttempted && !consultationFee" class="text-xs text-red-500 mt-1">Consultation Fee is required.</p>
+                            <input type="number" [(ngModel)]="consultationFee" placeholder="e.g. 500" class="input"
+                                [class.border-red-500]="submitAttempted && !consultationFee" />
+                            <p *ngIf="submitAttempted && !consultationFee" class="text-xs text-red-500 mt-1">
+                                Consultation Fee is required.</p>
                         </div>
                         <div class="field">
                             <label class="label">Follow-up Fee (₹)</label>
@@ -411,13 +445,16 @@
                             <label class="label">Password <span class="req">*</span></label>
                             <div class="pw-wrap">
                                 <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password"
-                                    placeholder="Min. 6 characters" class="input" [class.border-red-500]="submitAttempted && (!password || password.length < 6)" />
+                                    placeholder="Min. 6 characters" class="input"
+                                    [class.border-red-500]="submitAttempted && (!password || password.length < 6)" />
                                 <button type="button" (click)="togglePassword()" class="pw-toggle">
                                     <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" class="w-4 h-4"></i-lucide>
                                 </button>
                             </div>
-                            <p *ngIf="submitAttempted && !password" class="text-xs text-red-500 mt-1">Password is required.</p>
-                            <p *ngIf="submitAttempted && password && password.length < 6" class="text-xs text-red-500 mt-1">Password must be at least 6 characters.</p>
+                            <p *ngIf="submitAttempted && !password" class="text-xs text-red-500 mt-1">Password is
+                                required.</p>
+                            <p *ngIf="submitAttempted && password && password.length < 6"
+                                class="text-xs text-red-500 mt-1">Password must be at least 6 characters.</p>
                         </div>
                         <div class="field">
                             <label class="label">Confirm Password <span class="req">*</span></label>
@@ -426,7 +463,8 @@
                                     placeholder="Re-enter password" class="input"
                                     [class.border-red-500]="(confirmPassword && !passwordsMatch) || (submitAttempted && !confirmPassword)" />
                             </div>
-                            <p *ngIf="submitAttempted && !confirmPassword" class="text-xs text-red-500 mt-1">Confirm Password is required.</p>
+                            <p *ngIf="submitAttempted && !confirmPassword" class="text-xs text-red-500 mt-1">Confirm
+                                Password is required.</p>
                             <p *ngIf="confirmPassword && !passwordsMatch" class="text-xs text-red-500 mt-1">
                                 Passwords do not match
                             </p>
@@ -442,7 +480,8 @@
                             accurate.
                         </span>
                     </label>
-                    <p *ngIf="submitAttempted && !agreeTerms" class="text-xs text-red-500 mt-1">You must agree to the terms.</p>
+                    <p *ngIf="submitAttempted && !agreeTerms" class="text-xs text-red-500 mt-1">You must agree to the
+                        terms.</p>
                 </div>
 
                 <!-- ── BOTTOM ACTIONS ── -->
@@ -465,7 +504,8 @@
                     </button>
 
                     <button *ngIf="currentStep === totalSteps" (click)="register()" class="btn-submit"
-                        [class.disabled]="isLoading || isProcessingPayment" [disabled]="isLoading || isProcessingPayment">
+                        [class.disabled]="isLoading || isProcessingPayment"
+                        [disabled]="isLoading || isProcessingPayment">
                         <svg *ngIf="isLoading || isProcessingPayment" class="spinner" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
                             </circle>
@@ -473,8 +513,10 @@
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                             </path>
                         </svg>
-                        <i-lucide *ngIf="!isLoading && !isProcessingPayment" name="check-circle" class="w-4 h-4"></i-lucide>
-                        {{ isProcessingPayment ? 'Processing Payment...' : (isLoading ? 'Creating Account...' : 'Pay & Complete Registration') }}
+                        <i-lucide *ngIf="!isLoading && !isProcessingPayment" name="check-circle"
+                            class="w-4 h-4"></i-lucide>
+                        {{ isProcessingPayment ? 'Processing Payment...' : (isLoading ? 'Creating Account...' : 'Pay &
+                        Complete Registration') }}
                     </button>
                 </div>
 
