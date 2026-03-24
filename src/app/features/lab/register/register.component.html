@@ -87,11 +87,13 @@
                     <div class="form-grid">
                         <div class="field full">
                             <label class="label">Lab Name <span class="req">*</span></label>
-                            <input type="text" [(ngModel)]="labName" placeholder="E.g. Apex Diagnostics" class="input" />
+                            <input type="text" [(ngModel)]="labName" placeholder="E.g. Apex Diagnostics" class="input" [class.border-red-500]="submitAttempted && !labName" />
+                            <p *ngIf="submitAttempted && !labName" class="text-xs text-red-500 mt-1">Lab Name is required.</p>
                         </div>
                         <div class="field full">
                             <label class="label">Owner / Representative Name <span class="req">*</span></label>
-                            <input type="text" [(ngModel)]="fullName" placeholder="Full Name" class="input" />
+                            <input type="text" [(ngModel)]="fullName" placeholder="Full Name" class="input" [class.border-red-500]="submitAttempted && !fullName" />
+                            <p *ngIf="submitAttempted && !fullName" class="text-xs text-red-500 mt-1">Name is required.</p>
                         </div>
                     </div>
                 </div>
@@ -111,20 +113,26 @@
                     <div class="form-grid">
                         <div class="field">
                             <label class="label">Phone Number <span class="req">*</span></label>
-                            <input type="tel" [(ngModel)]="phone" placeholder="+91 98765 43210" class="input" />
+                            <input type="tel" [(ngModel)]="phone" placeholder="+91 98765 43210" class="input" [class.border-red-500]="submitAttempted && (!phone || !isPhoneValid)" />
+                            <p *ngIf="submitAttempted && !phone" class="text-xs text-red-500 mt-1">Phone Number is required.</p>
+                            <p *ngIf="submitAttempted && phone && !isPhoneValid" class="text-xs text-red-500 mt-1">Invalid phone format.</p>
                         </div>
                         <div class="field full">
                             <label class="label">Email Address <span class="req">*</span></label>
-                            <input type="email" [(ngModel)]="email" placeholder="lab@example.com" class="input" />
+                            <input type="email" [(ngModel)]="email" placeholder="lab@example.com" class="input" [class.border-red-500]="submitAttempted && (!email || !isEmailValid)" />
+                            <p *ngIf="submitAttempted && !email" class="text-xs text-red-500 mt-1">Email is required.</p>
+                            <p *ngIf="submitAttempted && email && !isEmailValid" class="text-xs text-red-500 mt-1">Invalid email format.</p>
                         </div>
                         <div class="field full">
                             <label class="label">Address <span class="req">*</span></label>
                             <textarea [(ngModel)]="address" placeholder="Full address..." class="input textarea"
-                                rows="2"></textarea>
+                                rows="2" [class.border-red-500]="submitAttempted && !address"></textarea>
+                            <p *ngIf="submitAttempted && !address" class="text-xs text-red-500 mt-1">Address is required.</p>
                         </div>
                         <div class="field">
                             <label class="label">City <span class="req">*</span></label>
-                            <input type="text" [(ngModel)]="city" placeholder="Mumbai" class="input" />
+                            <input type="text" [(ngModel)]="city" placeholder="Mumbai" class="input" [class.border-red-500]="submitAttempted && !city" />
+                            <p *ngIf="submitAttempted && !city" class="text-xs text-red-500 mt-1">City is required.</p>
                         </div>
                         <div class="field full">
                             <label class="label">State</label>
@@ -151,7 +159,8 @@
                     <div class="form-grid">
                         <div class="field">
                             <label class="label">License / Registration Number <span class="req">*</span></label>
-                            <input type="text" [(ngModel)]="licenseNumber" placeholder="Reg. No." class="input" />
+                            <input type="text" [(ngModel)]="licenseNumber" placeholder="Reg. No." class="input" [class.border-red-500]="submitAttempted && !licenseNumber" />
+                            <p *ngIf="submitAttempted && !licenseNumber" class="text-xs text-red-500 mt-1">Registration number is required.</p>
                         </div>
                         <div class="field full">
                             <label class="label">Upload List of Tests & Prices (PDF) <span class="req">*</span></label>
@@ -184,20 +193,23 @@
                             <label class="label">Password <span class="req">*</span></label>
                             <div class="pw-wrap">
                                 <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password"
-                                    placeholder="Min. 6 characters" class="input" />
+                                    placeholder="Min. 6 characters" class="input" [class.border-red-500]="submitAttempted && (!password || password.length < 6)" />
                                 <button type="button" (click)="togglePassword()" class="pw-toggle">
                                     <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" class="w-4 h-4"></i-lucide>
                                 </button>
                             </div>
+                            <p *ngIf="submitAttempted && !password" class="text-xs text-red-500 mt-1">Password is required.</p>
+                            <p *ngIf="submitAttempted && password && password.length < 6" class="text-xs text-red-500 mt-1">Password must be at least 6 characters.</p>
                         </div>
                         <div class="field">
                             <label class="label">Confirm Password <span class="req">*</span></label>
                             <div class="pw-wrap">
                                 <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword"
                                     placeholder="Re-enter password" class="input"
-                                    [class.error]="confirmPassword && !passwordsMatch" />
+                                    [class.border-red-500]="(confirmPassword && !passwordsMatch) || (submitAttempted && !confirmPassword)" />
                             </div>
-                            <p *ngIf="confirmPassword && !passwordsMatch" class="error-text">
+                            <p *ngIf="submitAttempted && !confirmPassword" class="text-xs text-red-500 mt-1">Confirm Password is required.</p>
+                            <p *ngIf="confirmPassword && !passwordsMatch" class="text-xs text-red-500 mt-1">
                                 Passwords do not match
                             </p>
                         </div>
@@ -206,11 +218,12 @@
                     <!-- Terms -->
                     <label class="terms-check mt-6">
                         <input type="checkbox" [(ngModel)]="agreeTerms" class="terms-input" />
-                        <span class="terms-label">
+                        <span class="terms-label" [class.text-red-500]="submitAttempted && !agreeTerms">
                             I agree to the <a href="#" class="link">Terms of Service</a> and
                             <a href="#" class="link">Privacy Policy</a>, and confirm that all information is accurate.
                         </span>
                     </label>
+                    <p *ngIf="submitAttempted && !agreeTerms" class="text-xs text-red-500 mt-1">You must agree to the terms.</p>
                 </div>
 
                 <!-- ═══ STEP 5: SUBSCRIPTION ═══ -->
@@ -274,14 +287,13 @@
                     </button>
                     <div class="spacer" *ngIf="currentStep === 1"></div>
 
-                    <button *ngIf="currentStep < totalSteps" (click)="nextStep()" class="btn-primary"
-                        [class.disabled]="!currentStepValid" [disabled]="!currentStepValid">
+                    <button *ngIf="currentStep < totalSteps" (click)="nextStep()" class="btn-primary">
                         Continue
                         <i-lucide name="arrow-right" class="w-4 h-4"></i-lucide>
                     </button>
 
                     <button *ngIf="currentStep === totalSteps" (click)="register()" class="btn-submit"
-                        [class.disabled]="!step5Valid || isLoading" [disabled]="!step5Valid || isLoading">
+                        [class.disabled]="isLoading" [disabled]="isLoading">
                         <svg *ngIf="isLoading" class="spinner" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
                             </circle>

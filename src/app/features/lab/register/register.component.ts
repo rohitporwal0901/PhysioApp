@@ -23,6 +23,7 @@ export class LabRegisterComponent {
     currentStep = 1;
     totalSteps = 5;
     errorMessage = '';
+    submitAttempted = false;
 
     // Step 1 - Basic Info
     fullName = '';
@@ -78,11 +79,20 @@ export class LabRegisterComponent {
         return this.password === this.confirmPassword;
     }
 
+    get isEmailValid(): boolean {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(this.email);
+    }
+    get isPhoneValid(): boolean {
+        const phoneRegex = /^\+?[0-9]{10,14}$/;
+        return phoneRegex.test(this.phone.replace(/\s/g, ''));
+    }
+
     get step1Valid(): boolean {
         return !!(this.fullName && this.labName);
     }
     get step2Valid(): boolean {
-        return !!(this.email && this.phone && this.address && this.city);
+        return !!(this.email && this.isEmailValid && this.phone && this.isPhoneValid && this.address && this.city);
     }
     get step3Valid(): boolean {
         return !!(this.licenseNumber);
@@ -113,13 +123,16 @@ export class LabRegisterComponent {
         if (step < this.currentStep) {
             this.currentStep = step;
             this.errorMessage = '';
+            this.submitAttempted = false;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
 
     nextStep() {
+        this.submitAttempted = true;
         if (this.currentStep < this.totalSteps && this.currentStepValid) {
             this.currentStep++;
+            this.submitAttempted = false;
             this.errorMessage = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -128,6 +141,7 @@ export class LabRegisterComponent {
     prevStep() {
         if (this.currentStep > 1) {
             this.currentStep--;
+            this.submitAttempted = false;
             this.errorMessage = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -156,6 +170,7 @@ export class LabRegisterComponent {
     }
 
     async register() {
+        this.submitAttempted = true;
         if (!this.step5Valid) return;
         this.showRazorpayModal = true;
     }

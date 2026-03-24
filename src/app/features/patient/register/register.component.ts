@@ -41,6 +41,7 @@ export class PatientRegisterComponent implements OnInit {
   isLoading = false;
   showPassword = false;
   errorMessage = '';
+  submitAttempted = false;
 
   // Options
   genders = ['Male', 'Female', 'Other'];
@@ -115,11 +116,18 @@ export class PatientRegisterComponent implements OnInit {
   }
 
   nextStep() {
-    if (this.step1Valid) this.currentStep = 2;
+    this.submitAttempted = true;
+    if (this.step1Valid) {
+        this.currentStep = 2;
+        this.submitAttempted = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   prevStep() {
     this.currentStep = 1;
+    this.submitAttempted = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   togglePassword() {
@@ -127,6 +135,7 @@ export class PatientRegisterComponent implements OnInit {
   }
 
   async register() {
+    this.submitAttempted = true;
     if (!this.step2Valid) return;
 
     this.isLoading = true;

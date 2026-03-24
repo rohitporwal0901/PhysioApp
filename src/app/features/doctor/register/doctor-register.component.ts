@@ -23,6 +23,7 @@ export class DoctorRegisterComponent {
     currentStep = 1;
     totalSteps = 6;
     errorMessage = '';
+    submitAttempted = false;
 
     // Step 1 — Basic Info
     fullName = '';
@@ -99,11 +100,20 @@ export class DoctorRegisterComponent {
         return this.password === this.confirmPassword;
     }
 
+    get isEmailValid(): boolean {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(this.email);
+    }
+    get isPhoneValid(): boolean {
+        const phoneRegex = /^\+?[0-9]{10,14}$/;
+        return phoneRegex.test(this.phone.replace(/\s/g, ''));
+    }
+
     get step1Valid(): boolean {
         return !!(this.fullName && this.gender && this.dob);
     }
     get step2Valid(): boolean {
-        return !!(this.email && this.phone);
+        return !!(this.email && this.isEmailValid && this.phone && this.isPhoneValid);
     }
     get step3Valid(): boolean {
         return !!(this.qualification && this.specialization && this.experience);
@@ -150,13 +160,16 @@ export class DoctorRegisterComponent {
         if (step < this.currentStep) {
             this.currentStep = step;
             this.errorMessage = '';
+            this.submitAttempted = false;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
 
     nextStep() {
+        this.submitAttempted = true;
         if (this.currentStep < this.totalSteps && this.currentStepValid) {
             this.currentStep++;
+            this.submitAttempted = false;
             this.errorMessage = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -165,6 +178,7 @@ export class DoctorRegisterComponent {
     prevStep() {
         if (this.currentStep > 1) {
             this.currentStep--;
+            this.submitAttempted = false;
             this.errorMessage = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -201,6 +215,7 @@ export class DoctorRegisterComponent {
     }
 
     async register() {
+        this.submitAttempted = true;
         if (!this.step6Valid) return;
         this.isLoading = true;
         this.errorMessage = '';

@@ -86,7 +86,10 @@
                             Full Name <span class="required">*</span>
                         </label>
                         <input type="text" [(ngModel)]="fullName" placeholder="e.g. Rohit Porwal"
-                            class="field-input" />
+                            class="field-input" [class.input-error]="submitAttempted && !fullName" />
+                        <p *ngIf="submitAttempted && !fullName" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Full name is required
+                        </p>
                     </div>
 
                     <!-- Email -->
@@ -96,8 +99,11 @@
                             Email Address <span class="required">*</span>
                         </label>
                         <input type="email" [(ngModel)]="email" placeholder="you@example.com"
-                            class="field-input" [class.input-error]="email && !isEmailValid" />
-                        <p *ngIf="email && !isEmailValid" class="error-msg">
+                            class="field-input" [class.input-error]="(email && !isEmailValid) || (submitAttempted && !email)" />
+                        <p *ngIf="submitAttempted && !email" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Email is required
+                        </p>
+                        <p *ngIf="email && !isEmailValid" class="error-msg mt-1">
                             <i-lucide name="alert-circle" class="icon-xs"></i-lucide>
                             Invalid email address
                         </p>
@@ -110,8 +116,11 @@
                             Phone Number <span class="required">*</span>
                         </label>
                         <input type="tel" [(ngModel)]="phone" placeholder="+91 98765 43210"
-                            class="field-input" [class.input-error]="phone && !isPhoneValid" />
-                        <p *ngIf="phone && !isPhoneValid" class="error-msg">
+                            class="field-input" [class.input-error]="(phone && !isPhoneValid) || (submitAttempted && !phone)" />
+                        <p *ngIf="submitAttempted && !phone" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Phone number is required
+                        </p>
+                        <p *ngIf="phone && !isPhoneValid" class="error-msg mt-1">
                             <i-lucide name="alert-circle" class="icon-xs"></i-lucide>
                             Invalid phone number
                         </p>
@@ -124,7 +133,10 @@
                             Date of Birth <span class="required">*</span>
                         </label>
                         <input type="date" [(ngModel)]="dob"
-                            class="field-input" />
+                            class="field-input" [class.input-error]="submitAttempted && !dob" />
+                        <p *ngIf="submitAttempted && !dob" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Date of birth is required
+                        </p>
                     </div>
 
                     <!-- Gender -->
@@ -133,10 +145,13 @@
                             <i-lucide name="users" class="icon-xs text-slate-400"></i-lucide>
                             Gender <span class="required">*</span>
                         </label>
-                        <select [(ngModel)]="gender" class="field-input field-select">
+                        <select [(ngModel)]="gender" class="field-input field-select" [class.input-error]="submitAttempted && !gender">
                             <option value="" disabled>Select gender</option>
                             <option *ngFor="let g of genders" [value]="g">{{ g }}</option>
                         </select>
+                        <p *ngIf="submitAttempted && !gender" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Gender is required
+                        </p>
                     </div>
 
                     <!-- Address -->
@@ -150,8 +165,7 @@
                     </div>
                 </div>
 
-                <button (click)="nextStep()" [disabled]="!step1Valid"
-                    class="btn-primary-full" [class.disabled]="!step1Valid">
+                <button (click)="nextStep()" class="btn-primary-full">
                     <span>Continue</span>
                     <i-lucide name="arrow-right" class="icon-xs"></i-lucide>
                 </button>
@@ -217,11 +231,14 @@
                         </label>
                         <div class="password-wrapper">
                             <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password"
-                                placeholder="Min. 8 characters" class="field-input" />
+                                placeholder="Min. 8 characters" class="field-input" [class.input-error]="submitAttempted && !password" />
                             <button type="button" (click)="togglePassword()" class="password-toggle">
                                 <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" class="icon-xs"></i-lucide>
                             </button>
                         </div>
+                        <p *ngIf="submitAttempted && !password" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Password is required
+                        </p>
                     </div>
 
                     <!-- Confirm Password -->
@@ -233,10 +250,13 @@
                         <div class="password-wrapper">
                             <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword"
                                 placeholder="Re-enter password" class="field-input"
-                                [class.input-error]="confirmPassword && !passwordsMatch" />
+                                [class.input-error]="(confirmPassword && !passwordsMatch) || (submitAttempted && !confirmPassword)" />
                         </div>
-                        <p *ngIf="confirmPassword && !passwordsMatch" class="error-msg">
+                        <p *ngIf="confirmPassword && !passwordsMatch" class="error-msg mt-1">
                             <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Passwords do not match
+                        </p>
+                        <p *ngIf="submitAttempted && !confirmPassword" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Confirm Password is required
                         </p>
                     </div>
                 </div>
@@ -244,20 +264,23 @@
                 <!-- Terms -->
                 <label class="terms-row">
                     <input type="checkbox" [(ngModel)]="agreeTerms" class="terms-checkbox" />
-                    <span class="terms-text">
+                    <span class="terms-text" [class.text-red-500]="submitAttempted && !agreeTerms">
                         I agree to the
                         <a href="#" class="link">Terms of Service</a> and
                         <a href="#" class="link">Privacy Policy</a>
                     </span>
                 </label>
+                <p *ngIf="submitAttempted && !agreeTerms" class="error-msg mt-1 text-center">
+                    <i-lucide name="alert-circle" class="icon-xs"></i-lucide> You must agree to the terms
+                </p>
 
                 <div class="btn-row">
                     <button (click)="prevStep()" class="btn-outline">
                         <i-lucide name="arrow-left" class="icon-xs"></i-lucide>
                         Back
                     </button>
-                    <button (click)="register()" [disabled]="!step2Valid || isLoading"
-                        class="btn-primary" [class.disabled]="!step2Valid || isLoading">
+                    <button (click)="register()" [disabled]="isLoading"
+                        class="btn-primary" [class.disabled]="isLoading">
                         <svg *ngIf="isLoading" class="spin-icon" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor"
