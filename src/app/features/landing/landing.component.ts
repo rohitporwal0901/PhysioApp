@@ -362,6 +362,13 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    scrollToDoctorSection() {
+        const element = document.getElementById('doctors');
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
     goToLogin() { this.router.navigate(['/login']); }
     goToRegister() { this.router.navigate(['/patient/register']); }
     goToDoctorRegister() { this.router.navigate(['/doctor/register']); }
