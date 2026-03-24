@@ -28,7 +28,7 @@
                 <span class="mobile-step-count">{{ currentStep }} / {{ totalSteps }}</span>
             </div>
             <div class="mobile-progress-bar">
-                <div class="mobile-progress-fill" [style.width.%]="(currentStep - 1) / totalSteps * 100"></div>
+                <div class="mobile-progress-fill" [style.width.%]="(currentStep - 1) / (totalSteps - 1) * 100"></div>
             </div>
             <div class="mobile-step-dots">
                 <span *ngFor="let s of sidebarSteps" class="mobile-step-dot" [class.active]="currentStep === s.num"
@@ -59,11 +59,11 @@
                     <div class="sidebar-progress">
                         <div class="progress-text">
                             <span>Progress</span>
-                            <span class="progress-pct">{{ ((currentStep - 1) / totalSteps * 100) | number:'1.0-0'
+                            <span class="progress-pct">{{ ((currentStep - 1) / (totalSteps - 1) * 100) | number:'1.0-0'
                                 }}%</span>
                         </div>
                         <div class="progress-bar">
-                            <div class="progress-fill" [style.width.%]="(currentStep - 1) / totalSteps * 100"></div>
+                            <div class="progress-fill" [style.width.%]="(currentStep - 1) / (totalSteps - 1) * 100"></div>
                         </div>
                     </div>
                 </div>
@@ -72,15 +72,70 @@
             <!-- ── FORM AREA ── -->
             <main class="form-area">
 
-                <!-- ═══ STEP 1: BASIC INFO ═══ -->
+                <!-- ═══ STEP 1: SUBSCRIPTION PLAN ═══ -->
                 <div *ngIf="currentStep === 1" class="form-card fade-in">
+                    <div class="card-header">
+                        <div class="card-icon indigo">
+                            <i-lucide name="credit-card" class="w-5 h-5 text-white"></i-lucide>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-indigo-500">Choose your Plan</h2>
+                            <p class="card-subtitle">Select a plan to start your registration and unlock all features.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                        <div *ngFor="let plan of plans" 
+                             class="relative p-6 rounded-3xl border-2 transition-all cursor-pointer group flex flex-col h-full bg-white dark:bg-slate-800/50"
+                             [class.border-primary-500]="selectedPlan?.id === plan.id"
+                             [class.border-slate-100]="selectedPlan?.id !== plan.id"
+                             [class.dark:border-slate-700]="selectedPlan?.id !== plan.id"
+                             [class.shadow-2xl]="selectedPlan?.id === plan.id"
+                             [class.scale-[1.02]]="selectedPlan?.id === plan.id"
+                             (click)="selectPlan(plan)">
+                            
+                            <!-- Most Popular Badge -->
+                            <div *ngIf="plan.duration === 'yearly'" 
+                                 class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg z-10">
+                                Best Value
+                            </div>
+
+                            <div class="mb-4">
+                                <h3 class="text-lg font-black text-slate-800 dark:text-white">{{ plan.name }}</h3>
+                                <div class="mt-2 flex items-baseline">
+                                    <span class="text-3xl font-black text-slate-900 dark:text-white">₹{{ plan.price }}</span>
+                                    <span class="text-slate-400 text-xs font-bold ml-1 uppercase tracking-tight">/ {{ plan.duration === 'monthly' ? 'mo' : plan.duration === 'yearly' ? 'yr' : '6mo' }}</span>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3 mb-8 flex-1">
+                                <div *ngFor="let feat of plan.features" class="flex items-start gap-2.5">
+                                    <i-lucide name="check-circle" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i-lucide>
+                                    <span class="text-xs text-slate-600 dark:text-slate-400 font-medium leading-relaxed">{{ feat }}</span>
+                                </div>
+                            </div>
+
+                            <button class="w-full py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all"
+                                    [class.bg-primary-500]="selectedPlan?.id === plan.id"
+                                    [class.text-white]="selectedPlan?.id === plan.id"
+                                    [class.bg-slate-100]="selectedPlan?.id !== plan.id"
+                                    [class.text-slate-600]="selectedPlan?.id !== plan.id"
+                                    [class.dark:bg-slate-800]="selectedPlan?.id !== plan.id">
+                                {{ selectedPlan?.id === plan.id ? 'Selected' : 'Select Plan' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ STEP 2: BASIC INFO ═══ -->
+                <div *ngIf="currentStep === 2" class="form-card fade-in">
                     <div class="card-header">
                         <div class="card-icon blue">
                             <i-lucide name="user" class="w-5 h-5 text-white"></i-lucide>
                         </div>
                         <div>
                             <h2 class="card-title">Basic Information</h2>
-                            <p class="card-subtitle">Step 1 of {{ totalSteps }} — Personal details</p>
+                            <p class="card-subtitle">Step 2 of {{ totalSteps }} — Personal details</p>
                         </div>
                     </div>
 
@@ -148,15 +203,15 @@
                     </div>
                 </div>
 
-                <!-- ═══ STEP 2: CONTACT DETAILS ═══ -->
-                <div *ngIf="currentStep === 2" class="form-card fade-in">
+                <!-- ═══ STEP 3: CONTACT DETAILS ═══ -->
+                <div *ngIf="currentStep === 3" class="form-card fade-in">
                     <div class="card-header">
                         <div class="card-icon teal">
                             <i-lucide name="phone" class="w-5 h-5 text-white"></i-lucide>
                         </div>
                         <div>
                             <h2 class="card-title">Contact Information</h2>
-                            <p class="card-subtitle">Step 2 of {{ totalSteps }} — How we reach you</p>
+                            <p class="card-subtitle">Step 3 of {{ totalSteps }} — How we reach you</p>
                         </div>
                     </div>
 
@@ -193,15 +248,15 @@
                     </div>
                 </div>
 
-                <!-- ═══ STEP 3: QUALIFICATIONS ═══ -->
-                <div *ngIf="currentStep === 3" class="form-card fade-in">
+                <!-- ═══ STEP 4: QUALIFICATIONS ═══ -->
+                <div *ngIf="currentStep === 4" class="form-card fade-in">
                     <div class="card-header">
                         <div class="card-icon purple">
                             <i-lucide name="graduation-cap" class="w-5 h-5 text-white"></i-lucide>
                         </div>
                         <div>
                             <h2 class="card-title">Qualifications</h2>
-                            <p class="card-subtitle">Step 3 of {{ totalSteps }} — Your credentials</p>
+                            <p class="card-subtitle">Step 4 of {{ totalSteps }} — Your credentials</p>
                         </div>
                     </div>
 
@@ -237,15 +292,15 @@
                     </div>
                 </div>
 
-                <!-- ═══ STEP 4: AREAS OF INTEREST ═══ -->
-                <div *ngIf="currentStep === 4" class="form-card fade-in">
+                <!-- ═══ STEP 5: AREAS OF INTEREST ═══ -->
+                <div *ngIf="currentStep === 5" class="form-card fade-in">
                     <div class="card-header">
                         <div class="card-icon rose">
                             <i-lucide name="heart-pulse" class="w-5 h-5 text-white"></i-lucide>
                         </div>
                         <div>
                             <h2 class="card-title">Areas of Interest</h2>
-                            <p class="card-subtitle">Step 4 of {{ totalSteps }} — Select your practice areas</p>
+                            <p class="card-subtitle">Step 5 of {{ totalSteps }} — Select your practice areas</p>
                         </div>
                     </div>
 
@@ -265,15 +320,15 @@
                     <p class="selected-count">{{ selectedAreas.length }} selected</p>
                 </div>
 
-                <!-- ═══ STEP 5: FEES & AVAILABILITY ═══ -->
-                <div *ngIf="currentStep === 5" class="form-card fade-in">
+                <!-- ═══ STEP 6: FEES & AVAILABILITY ═══ -->
+                <div *ngIf="currentStep === 6" class="form-card fade-in">
                     <div class="card-header">
                         <div class="card-icon amber">
                             <i-lucide name="calendar" class="w-5 h-5 text-white"></i-lucide>
                         </div>
                         <div>
                             <h2 class="card-title">Fees & Availability</h2>
-                            <p class="card-subtitle">Step 5 of {{ totalSteps }} — Pricing & schedule</p>
+                            <p class="card-subtitle">Step 6 of {{ totalSteps }} — Pricing & schedule</p>
                         </div>
                     </div>
 
@@ -316,21 +371,19 @@
                     </div>
                 </div>
 
-                <!-- ═══ STEP 6: DOCUMENTS & ACCOUNT ═══ -->
-                <div *ngIf="currentStep === 6" class="form-card fade-in">
+                <!-- ═══ STEP 7: ACCOUNT & DOCUMENTS ═══ -->
+                <div *ngIf="currentStep === 7" class="form-card fade-in">
                     <div class="card-header">
                         <div class="card-icon green">
                             <i-lucide name="shield-check" class="w-5 h-5 text-white"></i-lucide>
                         </div>
                         <div>
                             <h2 class="card-title">Account & Documents</h2>
-                            <p class="card-subtitle">Step 6 of {{ totalSteps }} — Almost done!</p>
+                            <p class="card-subtitle">Step 7 of {{ totalSteps }} — Almost done!</p>
                         </div>
                     </div>
 
                     <div class="form-grid">
-                        <!-- Certificate -->
-
                         <!-- Certificate -->
                         <div class="field">
                             <label class="label">Degree Certificate</label>
@@ -412,16 +465,16 @@
                     </button>
 
                     <button *ngIf="currentStep === totalSteps" (click)="register()" class="btn-submit"
-                        [class.disabled]="isLoading" [disabled]="isLoading">
-                        <svg *ngIf="isLoading" class="spinner" fill="none" viewBox="0 0 24 24">
+                        [class.disabled]="isLoading || isProcessingPayment" [disabled]="isLoading || isProcessingPayment">
+                        <svg *ngIf="isLoading || isProcessingPayment" class="spinner" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
                             </circle>
                             <path class="opacity-75" fill="currentColor"
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                             </path>
                         </svg>
-                        <i-lucide *ngIf="!isLoading" name="check-circle" class="w-4 h-4"></i-lucide>
-                        {{ isLoading ? 'Submitting...' : 'Submit Registration' }}
+                        <i-lucide *ngIf="!isLoading && !isProcessingPayment" name="check-circle" class="w-4 h-4"></i-lucide>
+                        {{ isProcessingPayment ? 'Processing Payment...' : (isLoading ? 'Creating Account...' : 'Pay & Complete Registration') }}
                     </button>
                 </div>
 

@@ -1,0 +1,108 @@
+<div class="space-y-6 animate-in fade-in duration-700">
+    <!-- Header Section -->
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-black text-slate-800 dark:text-white tracking-tight">Transaction <span class="text-primary-500">History</span></h1>
+            <p class="text-slate-500 dark:text-slate-400 font-medium text-sm mt-1">Monitor all subscription payments across the platform.</p>
+        </div>
+        
+        <div class="flex items-center gap-3">
+             <div class="bg-primary-500/10 text-primary-600 px-4 py-2 rounded-2xl flex items-center gap-2 border border-primary-100 dark:border-primary-900/30">
+                 <i-lucide name="credit-card" class="w-4 h-4"></i-lucide>
+                 <span class="text-xs font-black uppercase tracking-widest">{{ transactions.length }} Total Txns</span>
+             </div>
+        </div>
+    </header>
+
+    <!-- Filter Bar -->
+    <div class="bg-white dark:bg-slate-800/50 backdrop-blur-xl border border-slate-100 dark:border-slate-700/50 rounded-[2.5rem] p-6 shadow-sm flex flex-col md:flex-row gap-4 items-center">
+        <div class="relative flex-1 group">
+            <i-lucide name="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-primary-500 transition-colors"></i-lucide>
+            <input type="text" 
+                   [(ngModel)]="searchTerm" 
+                   (input)="onFilter()"
+                   placeholder="Search by ID, User or Plan..." 
+                   class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-2xl py-3 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-primary-500/20 transition-all outline-none">
+        </div>
+
+        <div class="flex items-center gap-2 min-w-[150px]">
+            <i-lucide name="filter" class="w-4 h-4 text-slate-400"></i-lucide>
+            <select [(ngModel)]="filterStatus" (change)="onFilter()" class="bg-transparent border-none text-sm font-bold text-slate-600 dark:text-slate-300 outline-none cursor-pointer hover:text-primary-500 transition-colors">
+                <option value="all">All Status</option>
+                <option value="success">Successful</option>
+                <option value="failed">Failed</option>
+                <option value="pending">Pending</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="bg-white dark:bg-slate-800/50 backdrop-blur-xl border border-slate-100 dark:border-slate-700/50 rounded-[2.5rem] overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50/50 dark:bg-slate-900/30">
+                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">User / Entity</th>
+                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Plan Details</th>
+                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Transaction ID</th>
+                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Amount</th>
+                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Date</th>
+                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50 dark:divide-slate-700/50">
+                    <tr *ngFor="let txn of filteredTransactions" class="group hover:bg-slate-50/50 dark:hover:bg-slate-900/20 transition-all">
+                        <td class="px-6 py-5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-2xl bg-primary-100 dark:bg-primary-900/30 text-primary-600 flex items-center justify-center font-black text-xs">
+                                    {{ txn.userName.substring(0, 2).toUpperCase() }}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-800 dark:text-white">{{ txn.userName }}</p>
+                                    <p class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">{{ txn.userEmail }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-5">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ txn.planName }}</span>
+                                <span class="text-[10px] text-slate-400 font-medium uppercase tracking-tight">{{ txn.duration }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-5">
+                            <code class="text-[10px] bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded-md text-slate-500 font-mono tracking-tighter">{{ txn.razorpayPaymentId }}</code>
+                        </td>
+                        <td class="px-6 py-5">
+                            <span class="text-sm font-black text-slate-900 dark:text-white">₹{{ txn.amount }}</span>
+                        </td>
+                        <td class="px-6 py-5 text-xs text-slate-500 font-medium">
+                            {{ txn.paymentDate.toDate() | date:'mediumDate' }}
+                        </td>
+                        <td class="px-6 py-5 text-right">
+                            <span [class]="getStatusClass(txn.status)" class="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest">
+                                {{ txn.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr *ngIf="filteredTransactions.length === 0 && !isLoading">
+                        <td colspan="6" class="px-6 py-20 text-center">
+                            <div class="flex flex-col items-center gap-3">
+                                <div class="w-16 h-16 rounded-[2rem] bg-slate-50 dark:bg-slate-900 flex items-center justify-center text-slate-300">
+                                    <i-lucide name="search-x" class="w-8 h-8"></i-lucide>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-800 dark:text-white">No transactions found</h3>
+                                <p class="text-sm text-slate-500 font-medium max-w-xs">We couldn't find any transaction matching your criteria. Try adjusting your filters.</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="p-20 flex flex-col items-center gap-4">
+             <div class="w-12 h-12 border-4 border-primary-500/20 border-t-primary-500 rounded-full animate-spin"></div>
+             <p class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Loading History...</p>
+        </div>
+    </div>
+</div>

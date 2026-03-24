@@ -100,6 +100,7 @@ export class SidebarComponent {
           { label: 'Doctors', icon: 'activity', path: '/admin/doctors' },
           { label: 'Patients', icon: 'users', path: '/admin/patients' },
           { label: 'Diagnostic Labs', icon: 'microscope', path: '/admin/lab-technicians' },
+          { label: 'Transaction History', icon: 'credit-card', path: '/admin/transactions' },
           { label: 'Video Management', icon: 'youtube', path: '/admin/video-settings' },
         ];
     }

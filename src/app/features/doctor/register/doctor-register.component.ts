@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
 import { ImageUploadService } from '../../../core/services/image-upload.service';
+import { PaymentService, SubscriptionPlan } from '../../../core/services/payment.service';
 
 @Component({
     selector: 'app-doctor-register',
@@ -17,13 +18,19 @@ export class DoctorRegisterComponent {
     private router = inject(Router);
     private authService = inject(AuthService);
     private imageUpload = inject(ImageUploadService);
+    private paymentService = inject(PaymentService);
 
     isLoading = false;
+    isProcessingPayment = false;
     showPassword = false;
     currentStep = 1;
-    totalSteps = 6;
+    totalSteps = 7;
     errorMessage = '';
     submitAttempted = false;
+
+    // Step 1 - Subscription Plan
+    selectedPlan: SubscriptionPlan | null = null;
+    plans = this.paymentService.plans;
 
     // Step 1 — Basic Info
     fullName = '';
@@ -88,12 +95,13 @@ export class DoctorRegisterComponent {
     ];
 
     sidebarSteps = [
-        { num: 1, label: 'Basic Information', icon: 'user' },
-        { num: 2, label: 'Contact Details', icon: 'phone' },
-        { num: 3, label: 'Qualifications', icon: 'graduation-cap' },
-        { num: 4, label: 'Areas of Interest', icon: 'heart-pulse' },
-        { num: 5, label: 'Fees & Availability', icon: 'calendar' },
-        { num: 6, label: 'Account & Documents', icon: 'shield-check' },
+        { num: 1, label: 'Subscription Plan', icon: 'credit-card' },
+        { num: 2, label: 'Basic Information', icon: 'user' },
+        { num: 3, label: 'Contact Details', icon: 'phone' },
+        { num: 4, label: 'Qualifications', icon: 'graduation-cap' },
+        { num: 5, label: 'Areas of Interest', icon: 'heart-pulse' },
+        { num: 6, label: 'Fees & Availability', icon: 'calendar' },
+        { num: 7, label: 'Account & Documents', icon: 'shield-check' },
     ];
 
     get passwordsMatch(): boolean {
@@ -110,21 +118,24 @@ export class DoctorRegisterComponent {
     }
 
     get step1Valid(): boolean {
-        return !!(this.fullName && this.gender && this.dob);
+        return !!this.selectedPlan;
     }
     get step2Valid(): boolean {
-        return !!(this.email && this.isEmailValid && this.phone && this.isPhoneValid);
+        return !!(this.fullName && this.gender && this.dob);
     }
     get step3Valid(): boolean {
-        return !!(this.qualification && this.specialization && this.experience);
+        return !!(this.email && this.isEmailValid && this.phone && this.isPhoneValid);
     }
     get step4Valid(): boolean {
-        return this.selectedAreas.length > 0;
+        return !!(this.qualification && this.specialization && this.experience);
     }
     get step5Valid(): boolean {
-        return !!(this.consultationFee);
+        return this.selectedAreas.length > 0;
     }
     get step6Valid(): boolean {
+        return !!(this.consultationFee);
+    }
+    get step7Valid(): boolean {
         return !!(this.password && this.password.length >= 6 && this.passwordsMatch && this.agreeTerms);
     }
 
@@ -136,8 +147,14 @@ export class DoctorRegisterComponent {
             case 4: return this.step4Valid;
             case 5: return this.step5Valid;
             case 6: return this.step6Valid;
+            case 7: return this.step7Valid;
             default: return false;
         }
+    }
+
+    selectPlan(plan: SubscriptionPlan) {
+        this.selectedPlan = plan;
+        this.nextStep();
     }
 
     toggleArea(area: string) {
@@ -216,39 +233,69 @@ export class DoctorRegisterComponent {
 
     async register() {
         this.submitAttempted = true;
-        if (!this.step6Valid) return;
-        this.isLoading = true;
+        if (!this.step7Valid || !this.selectedPlan) return;
+        
+        this.isProcessingPayment = true;
         this.errorMessage = '';
 
-        const result = await this.authService.registerDoctor({
-            email: this.email,
-            password: this.password,
-            fullName: this.fullName,
-            gender: this.gender,
-            dob: this.dob,
-            phone: this.phone,
-            address: this.address,
-            city: this.city,
-            state: this.state,
-            qualification: this.qualification,
-            specialization: this.specialization,
-            experience: this.experience,
-            registrationNumber: this.registrationNumber,
-            council: this.council,
-            areasOfInterest: this.selectedAreas,
-            consultationFee: this.consultationFee,
-            followUpFee: this.followUpFee,
-            consultationType: this.consultationType,
-            availableDays: this.availableDays,
-            image: this.profilePhotoUrl
-        });
+        try {
+            // STEP 1: Process Payment
+            const paymentResult = await this.paymentService.processPayment(this.selectedPlan, {
+                fullName: this.fullName,
+                email: this.email,
+                phone: this.phone
+            });
 
-        this.isLoading = false;
+            if (paymentResult.status !== 'success') {
+                throw new Error('Payment was not completed.');
+            }
 
-        if (result.success) {
-            this.router.navigate(['/doctor/dashboard']);
-        } else {
-            this.errorMessage = result.error ?? 'Registration failed. Please try again.';
+            // STEP 2: Finalize Registration
+            this.isLoading = true;
+            const result = await this.authService.registerDoctor({
+                email: this.email,
+                password: this.password,
+                fullName: this.fullName,
+                gender: this.gender,
+                dob: this.dob,
+                phone: this.phone,
+                address: this.address,
+                city: this.city,
+                state: this.state,
+                qualification: this.qualification,
+                specialization: this.specialization,
+                experience: this.experience,
+                registrationNumber: this.registrationNumber,
+                council: this.council,
+                areasOfInterest: this.selectedAreas,
+                consultationFee: this.consultationFee,
+                followUpFee: this.followUpFee,
+                consultationType: this.consultationType,
+                availableDays: this.availableDays,
+                image: this.profilePhotoUrl,
+                subscriptionPlan: this.selectedPlan.id,
+                paymentStatus: 'completed'
+            } as any);
+
+            if (result.success && this.authService.currentUser?.uid) {
+                // STEP 3: Save Transaction History
+                await this.paymentService.saveTransaction(
+                    paymentResult, 
+                    this.authService.currentUser.uid, 
+                    this.selectedPlan,
+                    { fullName: this.fullName, email: this.email },
+                    'doctor'
+                );
+                this.router.navigate(['/doctor/dashboard']);
+            } else {
+                throw new Error(result.error ?? 'Registration failed.');
+            }
+
+        } catch (err: any) {
+            this.errorMessage = err.message || 'An error occurred during payment/registration.';
+        } finally {
+            this.isLoading = false;
+            this.isProcessingPayment = false;
         }
     }
 }
