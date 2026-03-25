@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
   LucideAngularModule,
-  Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
+  Activity, Mail, Lock, LayoutDashboard, LayoutGrid, Users, UserPlus, Calendar,
   ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
   PlaySquare, PlayCircle, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
   FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2,
@@ -42,7 +42,7 @@ export const appConfig: ApplicationConfig = {
     ScreenTrackingService,
     UserTrackingService,
     importProvidersFrom(LucideAngularModule.pick({
-      Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
+      Activity, Mail, Lock, LayoutDashboard, LayoutGrid, Users, UserPlus, Calendar,
       ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
       PlaySquare, PlayCircle, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
       FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2,
