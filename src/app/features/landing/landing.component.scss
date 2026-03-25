@@ -861,6 +861,8 @@ button {
 .card-shine {
   position: relative;
   overflow: hidden;
+  mask-image: -webkit-radial-gradient(white, black); // Fixes overflow:hidden on some browsers with border-radius
+  
   &::before {
     content: '';
     position: absolute;
@@ -876,7 +878,7 @@ button {
       transparent 60%, 
       transparent 100%
     );
-    transition: all 0.75s ease;
+    transition: left 0.75s ease;
     pointer-events: none;
     z-index: 20;
   }
