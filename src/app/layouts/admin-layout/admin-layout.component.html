@@ -45,26 +45,35 @@
                         <span class="duration">/ {{ plan.durationMonths === 1 ? 'mo' : plan.durationMonths + ' mos' }}</span>
                     </div>
 
+                    <div *ngIf="selectedPlan?.type === plan.type" class="selection-indicator">
+                        <i-lucide name="check" class="w-5 h-5 text-white"></i-lucide>
+                    </div>
+
                     <ul class="plan-features">
                         <li *ngFor="let feature of plan.features" class="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400 mb-3">
-                            <i-lucide name="check-circle-2" class="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0"></i-lucide>
+                            <i-lucide name="check-circle-2" class="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0 animate-pulse"></i-lucide>
                             {{ feature }}
                         </li>
                     </ul>
 
                     <button class="plan-btn" [class.active]="selectedPlan?.type === plan.type">
-                        {{ selectedPlan?.type === plan.type ? 'Selected' : 'Select Plan' }}
+                        {{ selectedPlan?.type === plan.type ? 'Active Selection' : 'Select Plan' }}
                     </button>
                 </div>
             </div>
 
             <button (click)="processRenewal()" 
                 [disabled]="!selectedPlan || isLoading"
-                class="w-full py-5 rounded-3xl bg-primary-500 hover:bg-primary-600 text-white font-black uppercase tracking-widest text-lg shadow-2xl shadow-primary-500/30 transition-all active:scale-[0.98] disabled:opacity-50 disabled:grayscale flex items-center justify-center gap-3">
-                <i-lucide *ngIf="!isLoading" name="credit-card" class="w-6 h-6"></i-lucide>
-                <div *ngIf="isLoading" class="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                {{ isLoading ? 'Processing Payment...' : 'Pay & Renew Access' }}
+                class="renewal-main-btn group">
+                <i-lucide *ngIf="!isLoading" name="zap" class="btn-icon"></i-lucide>
+                <div *ngIf="isLoading" class="btn-spinner"></div>
+                <span class="btn-text">{{ isLoading ? 'Processing Secure Payment...' : 'Re-Activate My Account' }}</span>
             </button>
+            <p class="mt-8 text-center text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+                <i-lucide name="shield-check" class="w-4 h-4 text-emerald-500"></i-lucide>
+                Secure 256-bit SSL Encrypted Payment
+            </p>
+
         </div>
     </div>
 
