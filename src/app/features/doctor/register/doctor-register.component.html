@@ -324,7 +324,7 @@
                         </div>
                         <div>
                             <h2 class="card-title">Account & Documents</h2>
-                            <p class="card-subtitle">Step 6 of {{ totalSteps }} — Almost done!</p>
+                            <p class="card-subtitle">Step 6 of {{ totalSteps }} — Account credentials</p>
                         </div>
                     </div>
 
@@ -381,15 +381,72 @@
                     </div>
 
                     <!-- Terms -->
-                    <label class="terms-check">
-                        <input type="checkbox" [(ngModel)]="agreeTerms" class="terms-input" />
-                        <span class="terms-label" [class.text-red-500]="submitAttempted && !agreeTerms">
-                            I agree to the <a href="#" class="link">Terms of Service</a> and
-                            <a href="#" class="link">Privacy Policy</a>, and confirm that all information provided is
+                    <!-- Terms -->
+                    <label class="terms-check flex items-start gap-3 mt-6 cursor-pointer group">
+                        <div class="relative flex items-center h-5">
+                            <input type="checkbox" [(ngModel)]="agreeTerms" class="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500 transition-all cursor-pointer" />
+                        </div>
+                        <span class="text-sm leading-5 font-medium text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors" [class.text-red-500]="submitAttempted && !agreeTerms">
+                            I agree to the <a href="#" class="text-primary-600 hover:underline">Terms of Service</a> and
+                            <a href="#" class="text-primary-600 hover:underline">Privacy Policy</a>, and confirm that all information provided is
                             accurate.
                         </span>
                     </label>
-                    <p *ngIf="submitAttempted && !agreeTerms" class="text-xs text-red-500 mt-1">You must agree to the terms.</p>
+                    <p *ngIf="submitAttempted && !agreeTerms" class="text-xs text-red-500 mt-2 ml-7">You must agree to the terms.</p>
+                </div>
+
+                <!-- ═══ STEP 7: SUBSCRIPTION PLAN ═══ -->
+                <div *ngIf="currentStep === 7" class="form-card fade-in">
+                    <div class="card-header">
+                        <div class="card-icon indigo">
+                            <i-lucide name="credit-card" class="w-5 h-5 text-white"></i-lucide>
+                        </div>
+                        <div>
+                            <h2 class="card-title">Subscription Plan</h2>
+                            <p class="card-subtitle">Step 7 of {{ totalSteps }} — Choose your plan</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                        <div *ngFor="let plan of plans" 
+                             class="plan-card" 
+                             [class.recommended]="plan.recommended"
+                             [class.selected]="selectedPlan?.type === plan.type"
+                             (click)="selectPlan(plan)">
+                            
+                            <div *ngIf="plan.recommended" class="recommended-badge">Recommended</div>
+                            
+                            <h3 class="plan-name">{{ plan.name }}</h3>
+                            <div class="plan-price">
+                                <span class="currency">₹</span>
+                                <span class="amount">{{ plan.price }}</span>
+                                <span class="duration">/ {{ plan.durationMonths === 1 ? 'mo' : plan.durationMonths + ' mos' }}</span>
+                            </div>
+
+                            <ul class="plan-features">
+                                <li *ngFor="let feature of plan.features" class="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400 mb-3">
+                                    <i-lucide name="check-circle-2" class="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0"></i-lucide>
+                                    {{ feature }}
+                                </li>
+                            </ul>
+
+                            <button class="plan-btn" [class.active]="selectedPlan?.type === plan.type">
+                                {{ selectedPlan?.type === plan.type ? 'Selected' : 'Select Plan' }}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p *ngIf="submitAttempted && !selectedPlan" class="text-xs text-red-500 mt-6 text-center font-medium">Please select a subscription plan to proceed with payment.</p>
+                    
+                    <div class="mt-8 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                            <i-lucide name="shield-check" class="w-6 h-6 text-emerald-600"></i-lucide>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-800 dark:text-slate-200">Secure Payment</p>
+                            <p class="text-xs text-slate-500">Encrypted transaction handled by leading payment gateways.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- ── BOTTOM ACTIONS ── -->
@@ -420,8 +477,8 @@
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                             </path>
                         </svg>
-                        <i-lucide *ngIf="!isLoading" name="check-circle" class="w-4 h-4"></i-lucide>
-                        {{ isLoading ? 'Submitting...' : 'Submit Registration' }}
+                        <i-lucide *ngIf="!isLoading" name="credit-card" class="w-4 h-4"></i-lucide>
+                        {{ isLoading ? 'Processing Payment...' : 'Pay & Register' }}
                     </button>
                 </div>
 

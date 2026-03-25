@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
 import { ImageUploadService } from '../../../core/services/image-upload.service';
+import { PaymentService } from '../../../core/services/payment.service';
 
 @Component({
     selector: 'app-doctor-register',
@@ -17,11 +18,12 @@ export class DoctorRegisterComponent {
     private router = inject(Router);
     private authService = inject(AuthService);
     private imageUpload = inject(ImageUploadService);
+    private paymentService = inject(PaymentService);
 
     isLoading = false;
     showPassword = false;
     currentStep = 1;
-    totalSteps = 6;
+    totalSteps = 7;
     errorMessage = '';
     submitAttempted = false;
 
@@ -73,6 +75,53 @@ export class DoctorRegisterComponent {
     certificateName = '';
     idProofName = '';
 
+    // Step 7 - Subscription
+    selectedPlan: any = null;
+    plans = [
+      {
+        type: 'monthly',
+        name: 'Monthly Plan',
+        price: 499,
+        durationMonths: 1,
+        features: [
+          'Digital Patient Records',
+          'Appointment Scheduling',
+          'Revenue Tracking',
+          'Email/SMS Notifications',
+          'Standard Support'
+        ],
+        recommended: false
+      },
+      {
+        type: 'halfYearly',
+        name: 'Half-Yearly Plan',
+        price: 2499,
+        durationMonths: 6,
+        features: [
+          'All Monthly Features',
+          'Priority Support',
+          'Detailed Analytics',
+          'Customized Clinic Reports',
+          '15% Discount on Yearly'
+        ],
+        recommended: true
+      },
+      {
+        type: 'yearly',
+        name: 'Yearly Plan',
+        price: 4499,
+        durationMonths: 12,
+        features: [
+          'All Half-Yearly Features',
+          'Dedicated Account Manager',
+          'Advanced Marketing Tools',
+          'Custom Branding',
+          '2 Months FREE'
+        ],
+        recommended: false
+      }
+    ];
+
     genders = ['Male', 'Female', 'Other'];
     states = [
         'Andhra Pradesh', 'Bihar', 'Delhi', 'Goa', 'Gujarat', 'Karnataka',
@@ -94,6 +143,7 @@ export class DoctorRegisterComponent {
         { num: 4, label: 'Areas of Interest', icon: 'heart-pulse' },
         { num: 5, label: 'Fees & Availability', icon: 'calendar' },
         { num: 6, label: 'Account & Documents', icon: 'shield-check' },
+        { num: 7, label: 'Subscription Plan', icon: 'credit-card' },
     ];
 
     get passwordsMatch(): boolean {
@@ -128,6 +178,10 @@ export class DoctorRegisterComponent {
         return !!(this.password && this.password.length >= 6 && this.passwordsMatch && this.agreeTerms);
     }
 
+    get step7Valid(): boolean {
+        return !!this.selectedPlan;
+    }
+
     get currentStepValid(): boolean {
         switch (this.currentStep) {
             case 1: return this.step1Valid;
@@ -136,6 +190,7 @@ export class DoctorRegisterComponent {
             case 4: return this.step4Valid;
             case 5: return this.step5Valid;
             case 6: return this.step6Valid;
+            case 7: return this.step7Valid;
             default: return false;
         }
     }
@@ -214,41 +269,89 @@ export class DoctorRegisterComponent {
         }
     }
 
+    selectPlan(plan: any) {
+        this.selectedPlan = plan;
+    }
+
     async register() {
         this.submitAttempted = true;
-        if (!this.step6Valid) return;
+        if (!this.step7Valid || !this.step6Valid) return;
         this.isLoading = true;
         this.errorMessage = '';
 
-        const result = await this.authService.registerDoctor({
-            email: this.email,
-            password: this.password,
-            fullName: this.fullName,
-            gender: this.gender,
-            dob: this.dob,
-            phone: this.phone,
-            address: this.address,
-            city: this.city,
-            state: this.state,
-            qualification: this.qualification,
-            specialization: this.specialization,
-            experience: this.experience,
-            registrationNumber: this.registrationNumber,
-            council: this.council,
-            areasOfInterest: this.selectedAreas,
-            consultationFee: this.consultationFee,
-            followUpFee: this.followUpFee,
-            consultationType: this.consultationType,
-            availableDays: this.availableDays,
-            image: this.profilePhotoUrl
-        });
+        try {
+            // 1. Create Order (Mock)
+            const order = await this.paymentService.createOrder(this.selectedPlan.type, this.selectedPlan.price);
+            
+            // 2. Mock Payment Processing
+            const paymentSuccess = await this.paymentService.verifyPayment(order.orderId, { status: 'success' });
+            
+            if (!paymentSuccess) {
+                this.errorMessage = 'Payment failed. Please try again.';
+                this.isLoading = false;
+                return;
+            }
 
-        this.isLoading = false;
+            // 3. Register User only after payment success
+            const result = await this.authService.registerDoctor({
+                email: this.email,
+                password: this.password,
+                fullName: this.fullName,
+                gender: this.gender,
+                dob: this.dob,
+                phone: this.phone,
+                address: this.address,
+                city: this.city,
+                state: this.state,
+                qualification: this.qualification,
+                specialization: this.specialization,
+                experience: this.experience,
+                registrationNumber: this.registrationNumber,
+                council: this.council,
+                areasOfInterest: this.selectedAreas,
+                consultationFee: this.consultationFee,
+                followUpFee: this.followUpFee,
+                consultationType: this.consultationType,
+                availableDays: this.availableDays,
+                image: this.profilePhotoUrl
+            });
 
-        if (result.success) {
-            this.router.navigate(['/doctor/dashboard']);
-        } else {
-            this.errorMessage = result.error ?? 'Registration failed. Please try again.';
+            if (result.success) {
+                // 4. Save Transaction & Update Subscription in profile
+                const currentUser = this.authService.currentUser;
+                if (currentUser) {
+                    const expiryDate = this.paymentService.calculateExpiryDate(this.selectedPlan.type);
+                    
+                    // Save to transactions collection
+                    await this.paymentService.saveTransaction({
+                        userId: currentUser.uid,
+                        userType: 'doctor',
+                        planType: this.selectedPlan.type,
+                        amount: this.selectedPlan.price,
+                        paymentStatus: 'success',
+                        txnId: `txn_mock_${Date.now()}`,
+                        expiryDate: expiryDate
+                    });
+
+                    // Update User Profile with subscription info
+                    await this.authService.updateProfile(currentUser.uid, {
+                        subscription: {
+                            plan: this.selectedPlan.type,
+                            startDate: new Date(),
+                            expiryDate: expiryDate,
+                            status: 'active'
+                        }
+                    });
+
+                    this.router.navigate(['/doctor/dashboard']);
+                }
+            } else {
+                this.errorMessage = result.error ?? 'Registration failed. Please try again.';
+            }
+        } catch (err: any) {
+            this.errorMessage = 'An unexpected error occurred: ' + err.message;
+        } finally {
+            this.isLoading = false;
         }
     }
 }

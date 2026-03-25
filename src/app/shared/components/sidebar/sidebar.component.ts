@@ -105,6 +105,41 @@ export class SidebarComponent {
     }
   }
 
+  get subscription() {
+    return (this.currentUser as any)?.subscription;
+  }
+
+  get planName(): string {
+    const plan = this.subscription?.plan;
+    if (plan === 'monthly') return 'Monthly Plan';
+    if (plan === 'halfYearly') return 'Half-Yearly Plan';
+    if (plan === 'yearly') return 'Yearly Plan';
+    return (this.effectiveRole === 'doctor' || this.effectiveRole === 'lab') ? 'No Active Plan' : '';
+  }
+
+  get expiryDateDisplay(): string {
+    if (!this.subscription?.expiryDate) return '';
+    const expiry = this.subscription.expiryDate;
+    const date = (expiry as any).toDate ? (expiry as any).toDate() : new Date(expiry);
+    return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  get daysRemaining(): number {
+    if (!this.subscription?.expiryDate) return 0;
+    const expiry = this.subscription.expiryDate;
+    const date = (expiry as any).toDate ? (expiry as any).toDate() : new Date(expiry);
+    const today = new Date();
+    const diffTime = date.getTime() - today.getTime();
+    return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+  }
+
+  get isExpiredState(): boolean {
+    if (!this.subscription) return false;
+    const status = this.subscription.status === 'expired';
+    const dateExpired = this.subscription.expiryDate ? this.daysRemaining <= 0 : false;
+    return status || dateExpired;
+  }
+
   async onLogout() {
     this.showLogoutConfirm = true;
   }

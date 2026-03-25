@@ -965,3 +965,111 @@
         transform: translateY(0);
     }
 }
+/* ── PLAN CARDS ── */
+.plan-card {
+    position: relative;
+    padding: 2rem 1.5rem;
+    background: white;
+    border: 2.5px solid #f1f5f9;
+    border-radius: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &:hover {
+        transform: translateY(-5px);
+        border-color: #e2e8f0;
+        box-shadow: 0 12px 30px rgba(14, 165, 233, 0.08);
+    }
+
+    &.recommended {
+        border-color: #bae6fd;
+        background: linear-gradient(to bottom, #f0f9ff, #ffffff);
+    }
+
+    &.selected {
+        border-color: #0ea5e9;
+        background: #f0f9ff;
+        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+    }
+}
+
+.recommended-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #0ea5e9, #10b981);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+}
+
+.plan-name {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.plan-price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.2rem;
+    margin-bottom: 2rem;
+    color: #0f172a;
+
+    .currency {
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+    .amount {
+        font-size: 2.25rem;
+        font-weight: 900;
+    }
+    .duration {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #64748b;
+    }
+}
+
+.plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    flex-grow: 1;
+}
+
+.plan-btn {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 12px;
+    border: 1.5px solid #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
+    font-weight: 700;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+
+    &:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+    }
+
+    &.active {
+        background: #0ea5e9;
+        border-color: #0ea5e9;
+        color: white;
+        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    }
+}
