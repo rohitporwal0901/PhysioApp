@@ -62,7 +62,7 @@ export class AgendaComponent implements OnInit {
   onDateChange() {
     // Prevent clearing: if value is emptied (Clear button clicked), restore on next tick
     if (!this.selectedDate) {
-      setTimeout(() => { this.selectedDate = this.prevDate; }, 0);
+      setTimeout(() => { this.selectedDate = this.prevDate; }, 10);
       return;
     }
     this.prevDate = this.selectedDate;
