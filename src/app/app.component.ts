@@ -15,7 +15,7 @@ import { ToastComponent } from './shared/components/toast/toast.component';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  title = 'physio-app';
+  title = 'healthhub-app';
 
   constructor(private location: Location) {}
 

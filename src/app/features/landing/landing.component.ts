@@ -156,7 +156,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     ];
 
     testimonials = [
-        { name: 'Priya Sharma', role: 'Marathon Runner', rating: 5, text: 'After my ACL tear I thought I\'d never run again. Six weeks of targeted physio at PhysioPro and I was back on track. Truly world-class care.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop' },
+        { name: 'Priya Sharma', role: 'Marathon Runner', rating: 5, text: 'After my ACL tear I thought I\'d never run again. Six weeks of targeted physio at HealthHub and I was back on track. Truly world-class care.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop' },
         { name: 'Ramesh Gupta', role: 'IT Professional', rating: 5, text: 'Booking took 2 minutes, the therapist was on time and my chronic back pain improved after three sessions. Highly recommend.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop' },
         { name: 'Neha Verma', role: 'School Teacher', rating: 5, text: 'Five years of debilitating back pain — gone in 8 weeks. The personalised exercise plan changed my life. I wish I had come sooner!', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop' },
         { name: 'Arjun Mehta', role: 'Cricket Player', rating: 5, text: 'Shoulder surgery rehab was seamless. The team monitored progress weekly and adjusted the plan. I\'m now bowling at full pace again.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop' },
@@ -187,10 +187,10 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     ];
 
     socialLinks = [
-        { icon: 'instagram', label: 'Instagram', url: 'https://instagram.com/physiopro' },
-        { icon: 'twitter', label: 'Twitter', url: 'https://twitter.com/physiopro' },
-        { icon: 'linkedin', label: 'LinkedIn', url: 'https://linkedin.com/company/physiopro' },
-        { icon: 'youtube', label: 'YouTube', url: 'https://youtube.com/physiopro' },
+        { icon: 'instagram', label: 'Instagram', url: 'https://instagram.com/healthhub' },
+        { icon: 'twitter', label: 'Twitter', url: 'https://twitter.com/healthhub' },
+        { icon: 'linkedin', label: 'LinkedIn', url: 'https://linkedin.com/company/healthhub' },
+        { icon: 'youtube', label: 'YouTube', url: 'https://youtube.com/healthhub' },
     ];
 
     @HostListener('window:scroll')

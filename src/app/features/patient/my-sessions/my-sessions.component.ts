@@ -169,7 +169,7 @@ export class MySessionsComponent implements OnInit {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(28);
     doc.setFont('times', 'bold');
-    doc.text('PhysioPro', 15, 25);
+    doc.text('HealthHub', 15, 25);
 
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
@@ -336,7 +336,7 @@ export class MySessionsComponent implements OnInit {
           directory: Directory.Cache
         }).then(({ uri }) => {
           return CapShare.share({
-            title: 'PhysioPro Clinical Report',
+            title: 'HealthHub Clinical Report',
             text: `Clinical Report for ${session.patientName}`,
             files: [uri], // Use files array for native sharing
             dialogTitle: 'Share Report'
@@ -355,7 +355,7 @@ export class MySessionsComponent implements OnInit {
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
             navigator.share({
               files: [file],
-              title: 'PhysioPro Report',
+              title: 'HealthHub Report',
               text: `Clinical Report for ${session.patientName}`
             }).then(() => {
               this.toast.success('Report shared successfully.', 'Shared');

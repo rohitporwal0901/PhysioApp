@@ -82,7 +82,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getWhatsAppMessage(apt: any): string {
-    const message = `Hi ${apt.patientName}, this is a reminder for your physiotherapy appointment with ${apt.doctorName} today at ${apt.time}. See you there!`;
+    const message = `Hi ${apt.patientName}, this is a reminder for your HealthHub appointment with ${apt.doctorName} today at ${apt.time}. See you there!`;
     return encodeURIComponent(message);
   }
 

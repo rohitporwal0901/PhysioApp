@@ -198,7 +198,7 @@ export class AgendaComponent implements OnInit {
 
     let message = '';
     if (type === 'reminder') {
-      message = `Hello ${apt.patientName}, this is a reminder for your Physiotherapy appointment today at ${apt.time}. Please be on time.`;
+      message = `Hello ${apt.patientName}, this is a reminder for your HealthHub appointment today at ${apt.time}. Please be on time.`;
     }
     
     // Clean phone number (remove any non-numeric characters except +)
