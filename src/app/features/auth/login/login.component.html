@@ -27,10 +27,17 @@
         <!-- Content over image -->
         <div class="relative z-10 flex flex-col h-full p-10 xl:p-14">
             <!-- Logo -->
-            <div class="flex items-center gap-3 mb-auto animate-fade-in-right">
-                <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center shadow-2xl">
-                    <i-lucide name="activity" class="w-7 h-7 text-white"></i-lucide>
-                </div>
+            <div class="flex items-center gap-3 mb-auto group">
+                <svg class="w-12 h-12 drop-shadow-2xl group-hover:scale-110 transition-all duration-300 animate-heartbeat" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGradLoginWeb" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8" />
+                            <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.4" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="url(#logoGradLoginWeb)" />
+                    <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
                 <span class="text-2xl font-black text-white font-heading tracking-tight">
                     Health<span class="text-white/70">Hub</span>
                 </span>
@@ -93,10 +100,17 @@
         <div class="flex-1 flex flex-col items-center justify-center w-full">
             <div class="w-full max-w-md">
                 <!-- Mobile logo -->
-                <div class="flex flex-col items-center justify-center gap-4 mb-12 lg:hidden animate-fade-in-up">
-                    <div class="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-2xl shadow-primary-500/40 border-2 border-white/20">
-                        <i-lucide name="activity" class="w-10 h-10 text-white"></i-lucide>
-                    </div>
+                <div class="flex flex-col items-center justify-center gap-4 mb-12 lg:hidden animate-fade-in-up group">
+                    <svg class="w-16 h-16 drop-shadow-2xl group-hover:scale-110 transition-all duration-300 animate-heartbeat" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGradLoginMobile" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#0F9B8E" />
+                                <stop offset="100%" stop-color="#10B981" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="url(#logoGradLoginMobile)" />
+                        <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                     <div class="text-center">
                         <h2 class="text-3xl font-black text-white font-heading tracking-tight">Health<span class="text-primary-400">Hub</span></h2>
                         <p class="text-white/50 text-[10px] font-bold tracking-[0.3em] uppercase">Premium Care Excellence</p>

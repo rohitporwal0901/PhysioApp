@@ -8,10 +8,17 @@
 
         <!-- ── TOP BAR ── -->
         <div class="top-bar">
-            <a routerLink="/" class="logo-link">
-                <div class="logo-icon">
-                    <i-lucide name="activity" class="w-[18px] h-[18px] text-white"></i-lucide>
-                </div>
+            <a routerLink="/" class="logo-link group">
+                <svg class="w-9 h-9 mr-2 drop-shadow-md group-hover:scale-110 transition-all duration-300 animate-heartbeat" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGradDocReg" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#0F9B8E" />
+                            <stop offset="100%" stop-color="#10B981" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="url(#logoGradDocReg)" />
+                    <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
                 <span class="logo-text">Health<span class="accent">Hub</span></span>
             </a>
             <span class="top-bar-title">Physiotherapist Registration</span>

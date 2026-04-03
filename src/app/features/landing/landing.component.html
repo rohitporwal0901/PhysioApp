@@ -10,9 +10,16 @@
 
       <!-- Logo -->
       <a href="#" class="flex items-center gap-2.5 group" aria-label="HealthHub Home">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-md shadow-primary-500/20 group-hover:scale-105 transition-transform">
-          <i-lucide name="activity" class="w-6 h-6 text-white"></i-lucide>
-        </div>
+        <svg class="w-10 h-10 drop-shadow-lg group-hover:scale-110 transition-all duration-300 animate-heartbeat" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGradLanding" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#0F9B8E" />
+              <stop offset="100%" stop-color="#10B981" />
+            </linearGradient>
+          </defs>
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="url(#logoGradLanding)" />
+          <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
         <span class="text-xl font-bold text-slate-800 font-heading tracking-tight">
           Health<span class="text-primary-500">Hub</span>
         </span>
@@ -1154,11 +1161,17 @@
 
         <!-- Brand -->
         <div class="sm:col-span-2 lg:col-span-2 space-y-4">
-          <div class="flex items-center gap-2.5">
-            <div
-              class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
-              <i-lucide name="activity" class="w-5 h-5 text-white"></i-lucide>
-            </div>
+          <div class="flex items-center gap-2.5 group">
+            <svg class="w-9 h-9 drop-shadow-md group-hover:scale-110 transition-all duration-300 animate-heartbeat" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="logoGradFooter" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#0F9B8E" />
+                  <stop offset="100%" stop-color="#10B981" />
+                </linearGradient>
+              </defs>
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="url(#logoGradFooter)" />
+              <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
             <span class="text-xl font-bold text-white font-heading">Health<span
                 class="text-primary-400">Hub</span></span>
           </div>

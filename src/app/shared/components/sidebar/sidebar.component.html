@@ -8,11 +8,17 @@
     class="fixed inset-y-0 left-0 z-[60] w-64 h-full lg:h-screen bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 transition-all duration-300 ease-in-out lg:translate-x-0 lg:sticky lg:top-0 lg:block shadow-2xl lg:shadow-none flex flex-col mobile-sidebar overflow-hidden">
 
     <!-- Logo + Close -->
-    <div class="flex items-center px-5 h-16 border-b border-slate-100 dark:border-slate-800 flex-shrink-0 logo-container">
-        <div
-            class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center mr-3 shadow-md shadow-primary-500/20 flex-shrink-0">
-            <i-lucide name="activity" class="text-white w-5 h-5"></i-lucide>
-        </div>
+    <div class="flex items-center px-5 h-16 border-b border-slate-100 dark:border-slate-800 flex-shrink-0 logo-container group">
+        <svg class="w-9 h-9 mr-3 drop-shadow-md group-hover:scale-110 transition-all duration-300 animate-heartbeat" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="logoGradSidebar" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#0F9B8E" />
+                    <stop offset="100%" stop-color="#10B981" />
+                </linearGradient>
+            </defs>
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="url(#logoGradSidebar)" />
+            <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
         <span class="text-lg font-black text-slate-800 dark:text-white tracking-tight font-heading">
             Health<span class="text-primary-500">Hub</span>
         </span>
