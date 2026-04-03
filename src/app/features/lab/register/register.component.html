@@ -9,15 +9,20 @@
         <!-- ── TOP BAR ── -->
         <div class="top-bar">
             <a routerLink="/" class="logo-link group">
-                <svg class="w-9 h-9 mr-2 drop-shadow-md group-hover:scale-110 transition-all duration-300 animate-heartbeat" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-9 h-9 mr-2 drop-shadow-md group-hover:scale-110 transition-all duration-300 animate-heartbeat"
+                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                        <linearGradient id="logoGradLabReg" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+                        <linearGradient id="logoGradLabReg" x1="2" y1="3" x2="22" y2="21"
+                            gradientUnits="userSpaceOnUse">
                             <stop offset="0%" stop-color="#0F9B8E" />
                             <stop offset="100%" stop-color="#10B981" />
                         </linearGradient>
                     </defs>
-                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="url(#logoGradLabReg)" />
-                    <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path
+                        d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                        fill="url(#logoGradLabReg)" />
+                    <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
                 <span class="logo-text">Health<span class="accent">Hub</span></span>
             </a>
@@ -94,14 +99,15 @@
                     <!-- Profile Photo Selection -->
                     <div class="flex flex-col items-center mb-10 pt-4">
                         <div class="relative group cursor-pointer" (click)="photoInput.click()">
-                            <div
-                                class="w-32 h-32 rounded-[2rem] overflow-hidden bg-slate-50 dark:bg-slate-800 border-4 border-white dark:border-slate-800 shadow-2xl relative ring-8 ring-slate-100/50 dark:ring-slate-900/50 transition-all group-hover:ring-primary-500/10"
+                            <div class="w-32 h-32 rounded-[2rem] overflow-hidden bg-slate-50 dark:bg-slate-800 border-4 border-white dark:border-slate-800 shadow-2xl relative ring-8 ring-slate-100/50 dark:ring-slate-900/50 transition-all group-hover:ring-primary-500/10"
                                 [class.ring-red-500]="submitAttempted && !profilePhotoUrl">
                                 <img *ngIf="profilePhotoUrl" [src]="profilePhotoUrl" class="w-full h-full object-cover">
                                 <div *ngIf="!profilePhotoUrl"
                                     class="w-full h-full flex flex-col items-center justify-center text-slate-300">
                                     <i-lucide name="camera" class="w-10 h-10 mb-2"></i-lucide>
-                                    <span class="text-[8px] font-black uppercase tracking-widest text-center px-4">Upload Logo / Photo</span>
+                                    <span
+                                        class="text-[8px] font-black uppercase tracking-widest text-center px-4">Upload
+                                        Logo / Photo</span>
                                 </div>
 
                                 <!-- Uploading Overlay -->
@@ -116,23 +122,29 @@
                                 <i-lucide name="plus" class="w-5 h-5"></i-lucide>
                             </div>
                         </div>
-                        <input #photoInput type="file" (change)="onPhotoSelected($event)" accept="image/*" class="hidden">
+                        <input #photoInput type="file" (change)="onPhotoSelected($event)" accept="image/*"
+                            class="hidden">
                         <p class="text-[10px] font-bold text-slate-400 mt-6 uppercase tracking-[0.2em]"
                             [class.text-red-500]="submitAttempted && !profilePhotoUrl">
-                            {{ submitAttempted && !profilePhotoUrl ? 'Photo is required' : 'Lab Logo / Profile Picture' }}
+                            {{ submitAttempted && !profilePhotoUrl ? 'Photo is required' : 'Lab Logo / Profile Picture'
+                            }}
                         </p>
                     </div>
 
                     <div class="form-grid">
                         <div class="field full">
                             <label class="label">Lab Name <span class="req">*</span></label>
-                            <input type="text" [(ngModel)]="labName" placeholder="E.g. Apex Diagnostics" class="input" [class.border-red-500]="submitAttempted && !labName" />
-                            <p *ngIf="submitAttempted && !labName" class="text-xs text-red-500 mt-1">Lab Name is required.</p>
+                            <input type="text" [(ngModel)]="labName" placeholder="E.g. Apex Diagnostics" class="input"
+                                [class.border-red-500]="submitAttempted && !labName" />
+                            <p *ngIf="submitAttempted && !labName" class="text-xs text-red-500 mt-1">Lab Name is
+                                required.</p>
                         </div>
                         <div class="field full">
                             <label class="label">Owner / Representative Name <span class="req">*</span></label>
-                            <input type="text" [(ngModel)]="fullName" placeholder="Full Name" class="input" [class.border-red-500]="submitAttempted && !fullName" />
-                            <p *ngIf="submitAttempted && !fullName" class="text-xs text-red-500 mt-1">Name is required.</p>
+                            <input type="text" [(ngModel)]="fullName" placeholder="Full Name" class="input"
+                                [class.border-red-500]="submitAttempted && !fullName" />
+                            <p *ngIf="submitAttempted && !fullName" class="text-xs text-red-500 mt-1">Name is required.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -152,25 +164,33 @@
                     <div class="form-grid">
                         <div class="field">
                             <label class="label">Phone Number <span class="req">*</span></label>
-                            <input type="tel" [(ngModel)]="phone" placeholder="+91 98765 43210" class="input" [class.border-red-500]="submitAttempted && (!phone || !isPhoneValid)" />
-                            <p *ngIf="submitAttempted && !phone" class="text-xs text-red-500 mt-1">Phone Number is required.</p>
-                            <p *ngIf="submitAttempted && phone && !isPhoneValid" class="text-xs text-red-500 mt-1">Invalid phone format.</p>
+                            <input type="tel" [(ngModel)]="phone" placeholder="+91 98765 43210" class="input"
+                                [class.border-red-500]="submitAttempted && (!phone || !isPhoneValid)" />
+                            <p *ngIf="submitAttempted && !phone" class="text-xs text-red-500 mt-1">Phone Number is
+                                required.</p>
+                            <p *ngIf="submitAttempted && phone && !isPhoneValid" class="text-xs text-red-500 mt-1">
+                                Invalid phone format.</p>
                         </div>
                         <div class="field full">
                             <label class="label">Email Address <span class="req">*</span></label>
-                            <input type="email" [(ngModel)]="email" placeholder="lab@example.com" class="input" [class.border-red-500]="submitAttempted && (!email || !isEmailValid)" />
-                            <p *ngIf="submitAttempted && !email" class="text-xs text-red-500 mt-1">Email is required.</p>
-                            <p *ngIf="submitAttempted && email && !isEmailValid" class="text-xs text-red-500 mt-1">Invalid email format.</p>
+                            <input type="email" [(ngModel)]="email" placeholder="lab@example.com" class="input"
+                                [class.border-red-500]="submitAttempted && (!email || !isEmailValid)" />
+                            <p *ngIf="submitAttempted && !email" class="text-xs text-red-500 mt-1">Email is required.
+                            </p>
+                            <p *ngIf="submitAttempted && email && !isEmailValid" class="text-xs text-red-500 mt-1">
+                                Invalid email format.</p>
                         </div>
                         <div class="field full">
                             <label class="label">Address <span class="req">*</span></label>
                             <textarea [(ngModel)]="address" placeholder="Full address..." class="input textarea"
                                 rows="2" [class.border-red-500]="submitAttempted && !address"></textarea>
-                            <p *ngIf="submitAttempted && !address" class="text-xs text-red-500 mt-1">Address is required.</p>
+                            <p *ngIf="submitAttempted && !address" class="text-xs text-red-500 mt-1">Address is
+                                required.</p>
                         </div>
                         <div class="field">
                             <label class="label">City <span class="req">*</span></label>
-                            <input type="text" [(ngModel)]="city" placeholder="Mumbai" class="input" [class.border-red-500]="submitAttempted && !city" />
+                            <input type="text" [(ngModel)]="city" placeholder="Mumbai" class="input"
+                                [class.border-red-500]="submitAttempted && !city" />
                             <p *ngIf="submitAttempted && !city" class="text-xs text-red-500 mt-1">City is required.</p>
                         </div>
                         <div class="field full">
@@ -198,19 +218,25 @@
                     <div class="form-grid">
                         <div class="field">
                             <label class="label">License / Registration Number <span class="req">*</span></label>
-                            <input type="text" [(ngModel)]="licenseNumber" placeholder="Reg. No." class="input" [class.border-red-500]="submitAttempted && !licenseNumber" />
-                            <p *ngIf="submitAttempted && !licenseNumber" class="text-xs text-red-500 mt-1">Registration number is required.</p>
+                            <input type="text" [(ngModel)]="licenseNumber" placeholder="Reg. No." class="input"
+                                [class.border-red-500]="submitAttempted && !licenseNumber" />
+                            <p *ngIf="submitAttempted && !licenseNumber" class="text-xs text-red-500 mt-1">Registration
+                                number is required.</p>
                         </div>
                         <div class="field full">
                             <label class="label">Upload List of Tests & Prices (PDF) <span class="req">*</span></label>
-                            <div class="upload-box small" (click)="pdfInput.click()" [class.opacity-50]="isUploadingDoc">
+                            <div class="upload-box small" (click)="pdfInput.click()"
+                                [class.opacity-50]="isUploadingDoc">
                                 <input #pdfInput type="file" accept="application/pdf" hidden
                                     (change)="onPdfSelected($event)" />
-                                <i-lucide *ngIf="!isUploadingDoc" name="upload-cloud" class="w-5 h-5 text-slate-400"></i-lucide>
-                                <i-lucide *ngIf="isUploadingDoc" name="loader" class="w-5 h-5 text-slate-400 animate-spin"></i-lucide>
+                                <i-lucide *ngIf="!isUploadingDoc" name="upload-cloud"
+                                    class="w-5 h-5 text-slate-400"></i-lucide>
+                                <i-lucide *ngIf="isUploadingDoc" name="loader"
+                                    class="w-5 h-5 text-slate-400 animate-spin"></i-lucide>
                                 <p class="upload-text-sm">{{ testsPdfName || 'Upload PDF Document' }}</p>
                             </div>
-                            <p class="text-xs text-slate-400 mt-2">Only .pdf format, max 5MB. Must include all tests and pricing.</p>
+                            <p class="text-xs text-slate-400 mt-2">Only .pdf format, max 5MB. Must include all tests and
+                                pricing.</p>
                         </div>
                     </div>
                 </div>
@@ -231,13 +257,16 @@
                             <label class="label">Password <span class="req">*</span></label>
                             <div class="pw-wrap">
                                 <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password"
-                                    placeholder="Min. 6 characters" class="input" [class.border-red-500]="submitAttempted && (!password || password.length < 6)" />
+                                    placeholder="Min. 6 characters" class="input"
+                                    [class.border-red-500]="submitAttempted && (!password || password.length < 6)" />
                                 <button type="button" (click)="togglePassword()" class="pw-toggle">
                                     <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" class="w-4 h-4"></i-lucide>
                                 </button>
                             </div>
-                            <p *ngIf="submitAttempted && !password" class="text-xs text-red-500 mt-1">Password is required.</p>
-                            <p *ngIf="submitAttempted && password && password.length < 6" class="text-xs text-red-500 mt-1">Password must be at least 6 characters.</p>
+                            <p *ngIf="submitAttempted && !password" class="text-xs text-red-500 mt-1">Password is
+                                required.</p>
+                            <p *ngIf="submitAttempted && password && password.length < 6"
+                                class="text-xs text-red-500 mt-1">Password must be at least 6 characters.</p>
                         </div>
                         <div class="field">
                             <label class="label">Confirm Password <span class="req">*</span></label>
@@ -246,7 +275,8 @@
                                     placeholder="Re-enter password" class="input"
                                     [class.border-red-500]="(confirmPassword && !passwordsMatch) || (submitAttempted && !confirmPassword)" />
                             </div>
-                            <p *ngIf="submitAttempted && !confirmPassword" class="text-xs text-red-500 mt-1">Confirm Password is required.</p>
+                            <p *ngIf="submitAttempted && !confirmPassword" class="text-xs text-red-500 mt-1">Confirm
+                                Password is required.</p>
                             <p *ngIf="confirmPassword && !passwordsMatch" class="text-xs text-red-500 mt-1">
                                 Passwords do not match
                             </p>
@@ -256,45 +286,50 @@
                     <!-- Terms -->
                     <label class="terms-check flex items-start gap-3 mt-6 cursor-pointer group">
                         <div class="relative flex items-center h-5">
-                            <input type="checkbox" [(ngModel)]="agreeTerms" class="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500 transition-all cursor-pointer" />
+                            <input type="checkbox" [(ngModel)]="agreeTerms"
+                                class="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500 transition-all cursor-pointer" />
                         </div>
-                        <span class="text-sm leading-5 font-medium text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors" [class.text-red-500]="submitAttempted && !agreeTerms">
+                        <span
+                            class="text-sm leading-5 font-medium text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors"
+                            [class.text-red-500]="submitAttempted && !agreeTerms">
                             I agree to the <a href="#" class="text-primary-600 hover:underline">Terms of Service</a> and
-                            <a href="#" class="text-primary-600 hover:underline">Privacy Policy</a>, and confirm that all information provided is
+                            <a href="#" class="text-primary-600 hover:underline">Privacy Policy</a>, and confirm that
+                            all information provided is
                             accurate.
                         </span>
                     </label>
-                    <p *ngIf="submitAttempted && !agreeTerms" class="text-xs text-red-500 mt-2 ml-7">You must agree to the terms.</p>
+                    <p *ngIf="submitAttempted && !agreeTerms" class="text-xs text-red-500 mt-2 ml-7">You must agree to
+                        the terms.</p>
                 </div>
 
                 <!-- ═══ STEP 5: SUBSCRIPTION PLAN ═══ -->
                 <div *ngIf="currentStep === 5" class="form-card fade-in">
                     <div class="card-header">
                         <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center flex-shrink-0 animate-pulse">
+                            <div
+                                class="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center flex-shrink-0 animate-pulse">
                                 <i-lucide name="layout-grid" class="w-8 h-8 text-indigo-500"></i-lucide>
                             </div>
                             <div>
                                 <h2 class="card-title">Choose Your Plan</h2>
-                                <p class="card-subtitle">Step 5 of {{ totalSteps }} — Select the plan that fits your lab</p>
+                                <p class="card-subtitle">Step 5 of {{ totalSteps }} — Select the plan that fits your lab
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-                        <div *ngFor="let plan of plans" 
-                             class="plan-card" 
-                             [class.recommended]="plan.recommended"
-                             [class.selected]="selectedPlan?.type === plan.type"
-                             (click)="selectPlan(plan)">
-                            
+                        <div *ngFor="let plan of plans" class="plan-card" [class.recommended]="plan.recommended"
+                            [class.selected]="selectedPlan?.type === plan.type" (click)="selectPlan(plan)">
+
                             <div *ngIf="plan.recommended" class="recommended-badge">Recommended</div>
-                            
+
                             <h3 class="plan-name">{{ plan.name }}</h3>
                             <div class="plan-price">
                                 <span class="currency">₹</span>
                                 <span class="amount">{{ plan.price | number }}</span>
-                                <span class="duration">/ {{ plan.durationMonths === 1 ? 'mo' : plan.durationMonths + ' mos' }}</span>
+                                <span class="duration">/ {{ plan.durationMonths === 1 ? 'mo' : plan.durationMonths + '
+                                    mos' }}</span>
                             </div>
 
                             <ul class="plan-features">
@@ -311,16 +346,21 @@
                             </button>
                         </div>
                     </div>
-                    
-                    <p *ngIf="submitAttempted && !selectedPlan" class="text-xs text-red-500 mt-6 text-center font-medium">Please select a subscription plan to proceed with payment.</p>
-                    
-                    <div class="mt-8 p-6 rounded-[2rem] bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 flex items-center gap-5">
-                        <div class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/10">
+
+                    <p *ngIf="submitAttempted && !selectedPlan"
+                        class="text-xs text-red-500 mt-6 text-center font-medium">Please select a subscription plan to
+                        proceed with payment.</p>
+
+                    <div
+                        class="mt-8 p-6 backgroud rounded-[2rem] bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800 flex items-center gap-5">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/10">
                             <i-lucide name="shield-check" class="w-8 h-8 text-emerald-600"></i-lucide>
                         </div>
                         <div>
                             <h4 class="text-base font-black text-slate-800 dark:text-slate-200 mb-1">Secure Payment</h4>
-                            <p class="text-xs text-slate-500 font-medium leading-relaxed">Your transaction is protected with industry-standard 256-bit SSL encryption.</p>
+                            <p class="text-xs text-slate-500 font-medium leading-relaxed">Your transaction is protected
+                                with industry-standard 256-bit SSL encryption.</p>
                         </div>
                     </div>
                 </div>

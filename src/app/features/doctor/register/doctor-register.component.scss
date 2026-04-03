@@ -532,9 +532,18 @@
     }
 
     /* For date type: hide native clear button */
-    &[type="date"]::-webkit-clear-button { display: none; -webkit-appearance: none; }
-    &[type="date"]::-webkit-inner-spin-button { display: none; }
-    &[type="date"] { cursor: pointer; }
+    &[type="date"]::-webkit-clear-button {
+        display: none;
+        -webkit-appearance: none;
+    }
+
+    &[type="date"]::-webkit-inner-spin-button {
+        display: none;
+    }
+
+    &[type="date"] {
+        cursor: pointer;
+    }
 }
 
 .select {
@@ -966,6 +975,7 @@
         transform: translateY(0);
     }
 }
+
 /* ── PLAN CARDS ── */
 /* ── PREMIUM PLAN CARDS ── */
 /* ── PREMIUM DARK PLAN CARDS ── */
@@ -998,6 +1008,7 @@
 
     &.recommended {
         border-color: #10b981;
+
         &::after {
             content: '';
             position: absolute;
@@ -1132,8 +1143,15 @@
         opacity: 0;
         transform: translateY(24px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.backgroud {
+    background-color: #1e293b !important;
+    padding: 12px !important;
+    border-radius: 16px !important;
 }

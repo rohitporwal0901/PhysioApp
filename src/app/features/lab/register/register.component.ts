@@ -54,48 +54,48 @@ export class LabRegisterComponent {
     // Step 5 - Subscription
     selectedPlan: any = null;
     plans = [
-      {
-        type: 'monthly',
-        name: 'Monthly Plan',
-        price: 999, // Labs might have different pricing or same
-        durationMonths: 1,
-        features: [
-          'Digital Lab Records',
-          'Test Report Management',
-          'Automated Email Delivery',
-          'Revenue Tracking',
-          'Standard Support'
-        ],
-        recommended: false
-      },
-      {
-        type: 'halfYearly',
-        name: 'Half-Yearly Plan',
-        price: 4999,
-        durationMonths: 6,
-        features: [
-          'All Monthly Features',
-          'Priority Support',
-          'Bulk Result Upload',
-          'Detailed Analytics',
-          '15% Savings'
-        ],
-        recommended: true
-      },
-      {
-        type: 'yearly',
-        name: 'Yearly Plan',
-        price: 8999,
-        durationMonths: 12,
-        features: [
-          'All Half-Yearly Features',
-          'Dedicated Account Manager',
-          'API Access',
-          'Custom Branding',
-          '2 Months FREE'
-        ],
-        recommended: false
-      }
+        {
+            type: 'monthly',
+            name: 'Monthly Plan',
+            price: 999, // Labs might have different pricing or same
+            durationMonths: 1,
+            features: [
+                'Digital Lab Records',
+                'Test Report Management',
+                'Automated Email Delivery',
+                'Revenue Tracking',
+                'Standard Support'
+            ],
+            recommended: false
+        },
+        {
+            type: 'halfYearly',
+            name: 'Half-Yearly Plan',
+            price: 4999,
+            durationMonths: 6,
+            features: [
+                'All Monthly Features',
+                'Priority Support',
+                'Bulk Result Upload',
+                'Detailed Analytics',
+                '15% Savings'
+            ],
+            recommended: true
+        },
+        {
+            type: 'yearly',
+            name: 'Yearly Plan',
+            price: 8999,
+            durationMonths: 12,
+            features: [
+                'All Half-Yearly Features',
+                'Dedicated Account Manager',
+                'API Access',
+                'Custom Branding',
+                '2 Months FREE'
+            ],
+            recommended: false
+        }
     ];
 
     states = [
@@ -240,10 +240,10 @@ export class LabRegisterComponent {
         try {
             // 1. Create Order (Mock)
             const order = await this.paymentService.createOrder(this.selectedPlan.type, this.selectedPlan.price);
-            
+
             // 2. Mock Payment Processing
             const paymentSuccess = await this.paymentService.verifyPayment(order.orderId, { status: 'success' });
-            
+
             if (!paymentSuccess) {
                 this.errorMessage = 'Payment failed. Please try again.';
                 this.isLoading = false;
@@ -270,7 +270,7 @@ export class LabRegisterComponent {
                 const currentUser = this.authService.currentUser;
                 if (currentUser) {
                     const expiryDate = this.paymentService.calculateExpiryDate(this.selectedPlan.type);
-                    
+
                     // Save transaction
                     await this.paymentService.saveTransaction({
                         userId: currentUser.uid,
