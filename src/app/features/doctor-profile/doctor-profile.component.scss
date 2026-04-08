@@ -208,9 +208,9 @@
     margin: 0 0 0.2rem;
     letter-spacing: -0.3px;
 
-    :host-context(.dark) & {
-        color: white;
-    }
+    // :host-context(.dark) & {
+    //     color: white;
+    // }
 
     @media (max-width: 480px) {
         font-size: 1.2rem;
@@ -624,8 +624,14 @@
     position: relative;
 
     /* Hide native clear button */
-    &::-webkit-clear-button { display: none; -webkit-appearance: none; }
-    &::-webkit-inner-spin-button { display: none; }
+    &::-webkit-clear-button {
+        display: none;
+        -webkit-appearance: none;
+    }
+
+    &::-webkit-inner-spin-button {
+        display: none;
+    }
 
     /* Hide native calendar picker indicator (square on the right) */
     &::-webkit-calendar-picker-indicator {
@@ -1055,7 +1061,7 @@
     font-family: inherit;
 
     &:hover {
-    transform: translateY(-2px);
+        transform: translateY(-2px);
         background: #e0f2fe;
         border-color: #0ea5e9;
         box-shadow: 0 6px 18px rgba(14, 165, 233, 0.2);
@@ -1065,7 +1071,7 @@
 /* ── CONSULTATION TYPE SELECTION ── */
 .type-section {
     margin-bottom: 1.5rem;
-    
+
     label {
         display: block;
         font-size: 0.78rem;
@@ -1131,7 +1137,7 @@
         background: #f0f9ff;
         border-color: #0ea5e9;
         color: #0ea5e9;
-        
+
         i-lucide {
             color: #0ea5e9;
         }
