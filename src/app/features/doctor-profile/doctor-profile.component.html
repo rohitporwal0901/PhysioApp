@@ -79,8 +79,8 @@
 
                     <!-- Action Buttons -->
                     <div class="action-btns">
-                        <button *ngIf="doctor.available && activeTab === 'profile' && !isPatientRegistered" (click)="goToPatientRegister()"
-                            class="btn-book">
+                        <button *ngIf="doctor.available && activeTab === 'profile' && !isPatientRegistered"
+                            (click)="goToPatientRegister()" class="btn-book">
                             <i-lucide name="calendar-plus" class="w-5 h-5"></i-lucide>
                             Register & Book Appointment
                         </button>
@@ -98,7 +98,8 @@
                     <div *ngIf="bookingError" class="booking-error">
                         <i-lucide name="alert-circle" class="w-4 h-4"></i-lucide>
                         {{ bookingError }}
-                        <button *ngIf="!isPatientRegistered" (click)="goToPatientRegister()" class="error-register-link">
+                        <button *ngIf="!isPatientRegistered" (click)="goToPatientRegister()"
+                            class="error-register-link">
                             Register Now →
                         </button>
                     </div>
@@ -152,7 +153,8 @@
                                 </div>
                                 <div>
                                     <p class="info-label">Consultation Type</p>
-                                    <p class="info-value" style="text-transform: capitalize;">{{ doctor.consultationType || 'In-person & Online' }}</p>
+                                    <p class="info-value" style="text-transform: capitalize;">{{ doctor.consultationType
+                                        || 'In-person & Online' }}</p>
                                 </div>
                             </div>
                             <div class="info-item">
@@ -161,7 +163,8 @@
                                 </div>
                                 <div class="flex-1">
                                     <p class="info-label">Clinic Location</p>
-                                    <p class="info-value">{{ doctor.address }}{{ doctor.city ? ', ' + doctor.city : '' }}{{ doctor.state ? ', ' + doctor.state : '' }}</p>
+                                    <p class="info-value">{{ doctor.address }}{{ doctor.city ? ', ' + doctor.city : ''
+                                        }}{{ doctor.state ? ', ' + doctor.state : '' }}</p>
                                 </div>
                             </div>
                             <div class="info-item">
@@ -171,8 +174,11 @@
                                 <div class="flex-1">
                                     <p class="info-label">Working Days</p>
                                     <div class="flex flex-wrap gap-1 mt-1">
-                                        @for (day of (doctor.availableDays || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']); track day) {
-                                            <span class="text-[9px] font-bold bg-primary-50 text-primary-600 px-1.5 py-0.5 rounded uppercase">{{ day.substring(0,3) }}</span>
+                                        @for (day of (doctor.availableDays || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']);
+                                        track day) {
+                                        <span
+                                            class="text-[9px] font-bold bg-primary-50 text-primary-600 px-1.5 py-0.5 rounded uppercase">{{
+                                            day.substring(0,3) }}</span>
                                         }
                                     </div>
                                 </div>
@@ -181,7 +187,7 @@
                     </div>
 
                     <!-- Specializations -->
-                    <div class="content-card">
+                    <!-- <div class="content-card">
                         <h3 class="content-card-title">Areas of Interest & Specializations</h3>
                         <div class="spec-tags">
                             <ng-container *ngIf="doctor.areasOfInterest && doctor.areasOfInterest.length > 0; else defaultSpecs">
@@ -196,13 +202,14 @@
                                 </span>
                             </ng-template>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- CTA -->
                     <div *ngIf="!isPatientRegistered" class="cta-card">
                         <div class="cta-text">
                             <h3>Ready to start your recovery?</h3>
-                            <p>Register and book your first session with {{ doctor.fullName || doctor.name }} in under 2 minutes.</p>
+                            <p>Register and book your first session with {{ doctor.fullName || doctor.name }} in under 2
+                                minutes.</p>
                         </div>
                         <button (click)="goToPatientRegister()" class="cta-btn">
                             Register & Book Now
@@ -279,14 +286,15 @@
                             <div class="type-section" *ngIf="doctor">
                                 <label>Choose Consultation Type</label>
                                 <div class="type-grid">
-                                    <ng-container *ngIf="(doctor.consultationType || '').toLowerCase() === 'both'; else singleType">
-                                        <button (click)="selectedConsultationType = 'In Person'" 
-                                            class="type-btn" [class.selected]="selectedConsultationType === 'In Person'">
+                                    <ng-container
+                                        *ngIf="(doctor.consultationType || '').toLowerCase() === 'both'; else singleType">
+                                        <button (click)="selectedConsultationType = 'In Person'" class="type-btn"
+                                            [class.selected]="selectedConsultationType === 'In Person'">
                                             <i-lucide name="user" class="w-5 h-5"></i-lucide>
                                             In Person
                                         </button>
-                                        <button (click)="selectedConsultationType = 'Online'" 
-                                            class="type-btn" [class.selected]="selectedConsultationType === 'Online'">
+                                        <button (click)="selectedConsultationType = 'Online'" class="type-btn"
+                                            [class.selected]="selectedConsultationType === 'Online'">
                                             <i-lucide name="video" class="w-5 h-5"></i-lucide>
                                             Online
                                         </button>
@@ -294,7 +302,9 @@
                                     <ng-template #singleType>
                                         <div class="type-btn single-option">
                                             <span class="flex items-center gap-2">
-                                                <i-lucide [name]="(doctor.consultationType || '').toLowerCase().includes('online') ? 'video' : 'user'" class="w-5 h-5"></i-lucide>
+                                                <i-lucide
+                                                    [name]="(doctor.consultationType || '').toLowerCase().includes('online') ? 'video' : 'user'"
+                                                    class="w-5 h-5"></i-lucide>
                                                 {{ doctor.consultationType || 'In Person' }} Consultation (Recommended)
                                             </span>
                                         </div>
@@ -313,12 +323,9 @@
                             <div class="slots-section">
                                 <label>Available Time Slots</label>
                                 <div class="slots-grid">
-                                    <button *ngFor="let slot of availableSlots"
-                                        (click)="selectSlot(slot)"
-                                        class="slot-btn"
-                                        [class.selected]="selectedSlot === slot"
-                                        [class.booked]="isSlotBooked(slot)"
-                                        [disabled]="isSlotBooked(slot)">
+                                    <button *ngFor="let slot of availableSlots" (click)="selectSlot(slot)"
+                                        class="slot-btn" [class.selected]="selectedSlot === slot"
+                                        [class.booked]="isSlotBooked(slot)" [disabled]="isSlotBooked(slot)">
                                         {{ slot }}
                                         <span *ngIf="isSlotBooked(slot)" class="booked-badge">Unavailable</span>
                                     </button>
@@ -327,32 +334,41 @@
 
                             <!-- Patient Notes -->
                             <div class="notes-section mt-4">
-                                <label class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 block">Personal Note / Complaint (Optional)</label>
-                                <textarea [(ngModel)]="patientNotes" placeholder="Describe your symptoms or condition..." 
+                                <label class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 block">Personal
+                                    Note / Complaint (Optional)</label>
+                                <textarea [(ngModel)]="patientNotes"
+                                    placeholder="Describe your symptoms or condition..."
                                     class="w-full h-24 p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary-500/50 outline-none resize-none transition-all"></textarea>
                             </div>
 
                             <!-- Doctor mini summary -->
                             <div class="doc-mini-summary">
-                                <img [src]="getDoctorImage()"
-                                    alt="" class="doc-mini-img">
+                                <img [src]="getDoctorImage()" alt="" class="doc-mini-img">
                                 <div>
                                     <p class="doc-mini-name">{{ doctor.fullName || doctor.name }}</p>
                                     <p class="doc-mini-spec">{{ doctor.specialization || doctor.specialty }}</p>
-                                    <p class="doc-mini-meta">45 min • {{ selectedConsultationType || 'Consultation' }}</p>
+                                    <p class="doc-mini-meta">45 min • {{ selectedConsultationType || 'Consultation' }}
+                                    </p>
                                 </div>
                             </div>
 
                             <!-- Confirm button -->
-                            <button [disabled]="!selectedDate || !selectedSlot || !selectedConsultationType || isProcessing" (click)="confirmBooking()"
-                                class="confirm-btn flex items-center justify-center gap-2" [class.active-btn]="selectedDate && selectedSlot && selectedConsultationType"
+                            <button
+                                [disabled]="!selectedDate || !selectedSlot || !selectedConsultationType || isProcessing"
+                                (click)="confirmBooking()" class="confirm-btn flex items-center justify-center gap-2"
+                                [class.active-btn]="selectedDate && selectedSlot && selectedConsultationType"
                                 [class.inactive-btn]="!selectedDate || !selectedSlot || !selectedConsultationType">
-                                <svg *ngIf="isProcessing" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                <svg *ngIf="isProcessing" class="animate-spin h-5 w-5 text-white"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
                                 </svg>
                                 <i-lucide *ngIf="!isProcessing" name="calendar-check" class="w-5 h-5"></i-lucide>
-                                {{ isProcessing ? 'Processing...' : (selectedDate && selectedSlot ? 'Confirm Appointment' : 'Select Date & Time to Continue') }}
+                                {{ isProcessing ? 'Processing...' : (selectedDate && selectedSlot ? 'Confirm
+                                Appointment' : 'Select Date & Time to Continue') }}
                             </button>
                         </div>
                     </div>

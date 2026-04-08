@@ -26,7 +26,7 @@
                 </svg>
                 <span class="logo-text">Health<span class="accent">Hub</span></span>
             </a>
-            <span class="top-bar-title">Physiotherapist Registration</span>
+            <span class="top-bar-title">Doctor Registration</span>
             <a routerLink="/" class="back-link">
                 <i-lucide name="arrow-left" class="w-3.5 h-3.5"></i-lucide>
                 Back to Home
@@ -249,8 +249,12 @@
                         </div>
                         <div class="field">
                             <label class="label">Specialization <span class="req">*</span></label>
-                            <input type="text" [(ngModel)]="specialization" placeholder="e.g. Sports Rehab"
-                                class="input" [class.border-red-500]="submitAttempted && !specialization" />
+                            <select [(ngModel)]="specialization" class="input select"
+                                [class.border-red-500]="submitAttempted && !specialization">
+                                <option value="">Select specialization</option>
+                                <option *ngFor="let s of dynamicSpecialties" [value]="s.name">{{ s.name }}</option>
+                                <option value="Other">Other</option>
+                            </select>
                             <p *ngIf="submitAttempted && !specialization" class="text-xs text-red-500 mt-1">
                                 Specialization is required.</p>
                         </div>
@@ -273,44 +277,15 @@
                     </div>
                 </div>
 
-                <!-- ═══ STEP 4: AREAS OF INTEREST ═══ -->
+                <!-- ═══ STEP 4: FEES & AVAILABILITY ═══ -->
                 <div *ngIf="currentStep === 4" class="form-card fade-in">
-                    <div class="card-header">
-                        <div class="card-icon rose">
-                            <i-lucide name="heart-pulse" class="w-5 h-5 text-white"></i-lucide>
-                        </div>
-                        <div>
-                            <h2 class="card-title">Areas of Interest</h2>
-                            <p class="card-subtitle">Step 4 of {{ totalSteps }} — Select your practice areas</p>
-                        </div>
-                    </div>
-
-                    <p class="helper-text">Select all areas that apply to your practice <span class="req">*</span></p>
-                    <p *ngIf="submitAttempted && selectedAreas.length === 0" class="text-xs text-red-500 mb-2">Please
-                        select at least one area of interest.</p>
-
-                    <div class="checkbox-grid">
-                        <label *ngFor="let area of areasOfInterest" class="checkbox-card"
-                            [class.checked]="selectedAreas.includes(area)" (click)="toggleArea(area)">
-                            <div class="cb-box">
-                                <i-lucide *ngIf="selectedAreas.includes(area)" name="check"
-                                    class="w-3 h-3 text-white"></i-lucide>
-                            </div>
-                            <span class="cb-label">{{ area }}</span>
-                        </label>
-                    </div>
-                    <p class="selected-count">{{ selectedAreas.length }} selected</p>
-                </div>
-
-                <!-- ═══ STEP 5: FEES & AVAILABILITY ═══ -->
-                <div *ngIf="currentStep === 5" class="form-card fade-in">
                     <div class="card-header">
                         <div class="card-icon amber">
                             <i-lucide name="calendar" class="w-5 h-5 text-white"></i-lucide>
                         </div>
                         <div>
                             <h2 class="card-title">Fees & Availability</h2>
-                            <p class="card-subtitle">Step 5 of {{ totalSteps }} — Pricing & schedule</p>
+                            <p class="card-subtitle">Step 4 of {{ totalSteps }} — Pricing & schedule</p>
                         </div>
                     </div>
 
@@ -355,15 +330,15 @@
                     </div>
                 </div>
 
-                <!-- ═══ STEP 6: DOCUMENTS & ACCOUNT ═══ -->
-                <div *ngIf="currentStep === 6" class="form-card fade-in">
+                <!-- ═══ STEP 5: DOCUMENTS & ACCOUNT ═══ -->
+                <div *ngIf="currentStep === 5" class="form-card fade-in">
                     <div class="card-header">
                         <div class="card-icon green">
                             <i-lucide name="shield-check" class="w-5 h-5 text-white"></i-lucide>
                         </div>
                         <div>
                             <h2 class="card-title">Account & Documents</h2>
-                            <p class="card-subtitle">Step 6 of {{ totalSteps }} — Account credentials</p>
+                            <p class="card-subtitle">Step 5 of {{ totalSteps }} — Account credentials</p>
                         </div>
                     </div>
 
@@ -443,8 +418,8 @@
                         the terms.</p>
                 </div>
 
-                <!-- ═══ STEP 7: SUBSCRIPTION PLAN ═══ -->
-                <div *ngIf="currentStep === 7" class="form-card fade-in">
+                <!-- ═══ STEP 6: SUBSCRIPTION PLAN ═══ -->
+                <div *ngIf="currentStep === 6" class="form-card fade-in">
                     <div class="card-header">
                         <div class="flex items-center gap-4">
                             <div
@@ -453,8 +428,7 @@
                             </div>
                             <div>
                                 <h2 class="card-title">Choose Your Plan</h2>
-                                <p class="card-subtitle">Step 7 of {{ totalSteps }} — Select the plan that fits your lab
-                                </p>
+                                <p class="card-subtitle">Step 6 of {{ totalSteps }} — Select your preference</p>
                             </div>
                         </div>
                     </div>

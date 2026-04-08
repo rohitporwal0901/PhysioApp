@@ -221,6 +221,30 @@ nav {
     radial-gradient(circle at 10% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
 }
 
+// Specialty Cards
+.specialty-card {
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+// Quick Cards
+.quick-card {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #0F9B8E 0%, #10B981 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 /* Animated orbs */
 .orb {
   border-radius: 50%;

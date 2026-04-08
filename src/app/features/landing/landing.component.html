@@ -10,15 +10,19 @@
 
       <!-- Logo -->
       <a href="#" class="flex items-center gap-2.5 group" aria-label="HealthHub Home">
-        <svg class="w-10 h-10 drop-shadow-lg group-hover:scale-110 transition-all duration-300 animate-heartbeat" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="w-10 h-10 drop-shadow-lg group-hover:scale-110 transition-all duration-300 animate-heartbeat"
+          viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="logoGradLanding" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stop-color="#0F9B8E" />
               <stop offset="100%" stop-color="#10B981" />
             </linearGradient>
           </defs>
-          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="url(#logoGradLanding)" />
-          <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path
+            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+            fill="url(#logoGradLanding)" />
+          <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round" />
         </svg>
         <span class="text-xl font-bold text-slate-800 font-heading tracking-tight">
           Health<span class="text-primary-500">Hub</span>
@@ -35,7 +39,7 @@
         <button (click)="goToDoctorRegister()"
           class="nav-link text-sm font-semibold text-secondary-600 hover:text-secondary-700 transition-colors flex items-center gap-1">
           <i-lucide name="stethoscope" class="w-3.5 h-3.5"></i-lucide>
-          For Physiotherapists
+          For Doctors
         </button>
         <button (click)="goToLabRegister()"
           class="nav-link text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors flex items-center gap-1">
@@ -89,7 +93,7 @@
           <i-lucide name="help-circle" class="w-4 h-4 text-primary-400"></i-lucide> FAQ
         </a>
         <button (click)="goToDoctorRegister(); closeMobileMenu()" class="mobile-nav-item">
-          <i-lucide name="stethoscope" class="w-4 h-4 text-secondary-400"></i-lucide> For Physiotherapists
+          <i-lucide name="stethoscope" class="w-4 h-4 text-secondary-400"></i-lucide> For Doctors
         </button>
         <button (click)="goToLabRegister(); closeMobileMenu()" class="mobile-nav-item">
           <i-lucide name="microscope" class="w-4 h-4 text-primary-400"></i-lucide> For Labs
@@ -131,20 +135,12 @@
         <!-- ── LEFT CONTENT ── -->
         <div style="margin-top: 70px;" class="hero-content flex flex-col justify-center">
 
-          <!-- Platform trust badge -->
-          <!-- <div
-            class="hero-badge inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-primary-200 text-primary-700 text-xs font-bold px-4 py-2.5 rounded-xl mb-6 shadow-sm w-fit">
-            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            India's #1 Physiotherapy Platform
-            <span
-              class="ml-1 bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full text-[10px] font-bold">VERIFIED</span>
-          </div> -->
 
           <!-- Headline -->
           <h1
             class="text-[2.6rem] sm:text-5xl lg:text-[3.2rem] xl:text-[3.8rem] font-black font-heading text-slate-900 leading-[1.08] mb-5">
             Your Path to
-            <span class="hero-highlight block">Pain-Free Living</span>
+            <span class="hero-highlight block text-gradient">Better Health</span>
             <span class="text-slate-600 text-3xl sm:text-4xl lg:text-[2.4rem] font-bold">starts here.</span>
           </h1>
 
@@ -382,6 +378,56 @@
     </div>
   </section>
 
+  <!-- ══════════════════ QUICK NAV CARDS ══════════════════ -->
+  <section style="background: white !important;" class="relative -mt-10 sm:-mt-12 z-30 pb-8 sm:pb-12 px-4">
+    <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+      <!-- Doctor Card -->
+      <button (click)="goToSpecialties()"
+        class="quick-mini-card group flex items-center gap-4 bg-[#FFF9ED] p-4 rounded-2xl border border-amber-100/50 hover:bg-[#FFF3D6] transition-all duration-300 text-left shadow-sm hover:shadow-md">
+        <div
+          class="w-14 h-14 rounded-xl bg-white flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+          <i-lucide name="stethoscope" class="w-8 h-8 text-[#D97706]"></i-lucide>
+        </div>
+        <div class="flex-1">
+          <p class="text-slate-900 font-black text-sm uppercase tracking-tight leading-tight">Doctor Appointment</p>
+          <p class="text-[#D97706] text-[10px] font-bold mt-0.5">BOOK NOW</p>
+        </div>
+        <i-lucide name="chevron-right"
+          class="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform"></i-lucide>
+      </button>
+
+      <!-- Lab Card -->
+      <button (click)="scrollToSection('labs')"
+        class="quick-mini-card group flex items-center gap-4 bg-[#F5F2FF] p-4 rounded-2xl border border-indigo-100/50 hover:bg-[#EEE9FF] transition-all duration-300 text-left shadow-sm hover:shadow-md">
+        <div
+          class="w-14 h-14 rounded-xl bg-white flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+          <i-lucide name="microscope" class="w-8 h-8 text-[#4F46E5]"></i-lucide>
+        </div>
+        <div class="flex-1">
+          <p class="text-slate-900 font-black text-sm uppercase tracking-tight leading-tight">Lab Tests</p>
+          <p class="text-[#4F46E5] text-[10px] font-bold mt-0.5">AT HOME</p>
+        </div>
+        <i-lucide name="chevron-right"
+          class="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform"></i-lucide>
+      </button>
+
+      <!-- Medicines Card (Optional but added for layout fullness like reference) -->
+      <!-- <button (click)="scrollToSection('services')" 
+        class="quick-mini-card group flex items-center gap-4 bg-[#E6F9F3] p-4 rounded-2xl border border-emerald-100/50 hover:bg-[#D4F5EC] transition-all duration-300 text-left shadow-sm hover:shadow-md hidden lg:flex">
+        <div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+          <i-lucide name="pill" class="w-8 h-8 text-[#059669]"></i-lucide>
+        </div>
+        <div class="flex-1">
+          <p class="text-slate-900 font-black text-sm uppercase tracking-tight leading-tight">Medicines</p>
+          <p class="text-[#059669] text-[10px] font-bold mt-0.5">2HR DELIVERY</p>
+        </div>
+        <i-lucide name="chevron-right" class="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform"></i-lucide>
+      </button> -->
+
+    </div>
+  </section>
+
   <!-- ══════════════════ STAT COUNTERS ══════════════════ -->
   <section class="py-8 sm:py-12 bg-white relative">
     <div class="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8">
@@ -443,31 +489,8 @@
     </div>
   </section>
 
-  <!-- ══════════════════ CONDITIONS / TREATMENTS ══════════════════ -->
-  <section class="py-12 sm:py-20 lg:py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-      <div class="text-center mb-8 sm:mb-12 reveal">
-        <span class="section-chip">Conditions We Treat</span>
-        <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-3">
-          Find Care For <span class="text-gradient">Your Condition</span>
-        </h2>
-        <p class="text-slate-600 max-w-xl mx-auto text-sm sm:text-base">
-          Click any condition to find specialist physios and book instantly.
-        </p>
-      </div>
-      <div class="reveal flex flex-wrap justify-center gap-2 sm:gap-3">
-        @for (c of conditions; track c.label; let i = $index) {
-        <button (click)="bookCondition(c.label)"
-          class="condition-tag flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-medium text-xs sm:text-sm hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 hover:shadow-sm transition-all duration-250 group"
-          [style.animation-delay]="(i * 60) + 'ms'">
-          <i-lucide [name]="c.icon"
-            class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 group-hover:text-primary-500 transition-colors"></i-lucide>
-          {{ c.label }}
-        </button>
-        }
-      </div>
-    </div>
-  </section>
+  <!-- ══════════════════ DOCTOR SPECIALTIES ══════════════════ -->
+  
 
   <!-- ══════════════════ SERVICES ══════════════════ -->
   <section id="services" class="py-12 sm:py-20 lg:py-24 bg-slate-50 border-t border-slate-100">
@@ -484,8 +507,8 @@
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
         @for (service of services; track service.title; let i = $index) {
-        <div
-          class="service-card reveal group relative bg-white border border-slate-100 hover:border-primary-100 rounded-2xl p-5 sm:p-6 lg:p-7 shadow-sm hover:shadow-card transition-all duration-350 hover:-translate-y-1.5 cursor-default overflow-hidden"
+        <div (click)="filterDoctorsBySpecialty(service.specialty)"
+          class="service-card reveal group relative bg-white border border-slate-100 hover:border-primary-100 rounded-2xl p-5 sm:p-6 lg:p-7 shadow-sm hover:shadow-card transition-all duration-350 hover:-translate-y-1.5 cursor-pointer overflow-hidden"
           [style.transition-delay]="(i * 80) + 'ms'">
           <div
             class="absolute -top-8 -right-8 w-24 h-24 bg-primary-50/50 rounded-full group-hover:scale-[2.5] transition-transform duration-500 z-0 pointer-events-none">
@@ -500,8 +523,8 @@
               {{ service.title }}</h3>
             <p class="text-slate-500 text-sm leading-relaxed">{{ service.desc }}</p>
             <div
-              class="flex items-center gap-1 mt-4 text-primary-500 text-sm font-semibold opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-              View specialists <i-lucide name="arrow-right" class="w-3.5 h-3.5"></i-lucide>
+              class="flex items-center gap-1 mt-4 text-primary-500 text-sm font-bold opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+              View specialists <i-lucide name="arrow-right" class="w-4 h-4"></i-lucide>
             </div>
           </div>
         </div>
@@ -520,7 +543,7 @@
             Meet Our <span class="text-gradient">Clinical Team</span>
           </h2>
           <p class="text-slate-600 text-sm sm:text-base">
-            All physiotherapists are background-verified, certified and reviewed by real patients.
+            All doctors are background-verified, certified and reviewed by real patients.
           </p>
         </div>
         <div class="hidden sm:flex gap-2 mt-6 md:mt-0">
@@ -542,7 +565,12 @@
         <div #doctorsSlider class="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth no-scrollbar">
           @for (doc of doctors; track doc.id; let i = $index) {
           <div (click)="openDoctorProfile(doc)"
-            class="doctor-card reveal flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[350px] snap-start group bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-400 overflow-hidden cursor-pointer hover:-translate-y-2"
+            class="doctor-card reveal flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[350px] snap-start group bg-white rounded-2xl border border-slate-100 shadow-sm transition-all duration-400 overflow-hidden"
+            [class.cursor-pointer]="doc.available"
+            [class.cursor-not-allowed]="!doc.available"
+            [class.hover:shadow-xl]="doc.available"
+            [class.hover:-translate-y-2]="doc.available"
+            [class.opacity-80]="!doc.available"
             [style.transition-delay]="(i * 80) + 'ms'">
 
             <!-- Doctor image -->
@@ -584,7 +612,7 @@
                   <span class="text-sm font-bold text-slate-700 ml-1">{{ doc.rating }}</span>
                   <span class="text-xs text-slate-400">({{ (doc.rating * 20 | number:'1.0-0') }})</span>
                 </div>
-                <span class="text-xs font-medium text-slate-500 bg-slate-50 px-2 py-1 rounded-lg">8+ yrs exp.</span>
+                <span class="text-xs font-medium text-slate-500 bg-slate-50 px-2 py-1 rounded-lg">{{ doc.experience ?? '5+' }} Yrs Exp.</span>
               </div>
 
               <!-- CTA -->
@@ -642,7 +670,8 @@
             Quick diagnostics are key to effective recovery. Access world-class laboratory services through our verified
             partners.
           </p>
-          <button (click)="goToLabRegister()" class="inline-flex items-center gap-2 text-primary-600 font-bold text-sm hover:text-primary-700 transition-colors group">
+          <button (click)="goToLabRegister()"
+            class="inline-flex items-center gap-2 text-primary-600 font-bold text-sm hover:text-primary-700 transition-colors group">
             Own a Lab? Register as a Partner
             <i-lucide name="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i-lucide>
           </button>
@@ -1162,15 +1191,19 @@
         <!-- Brand -->
         <div class="sm:col-span-2 lg:col-span-2 space-y-4">
           <div class="flex items-center gap-2.5 group">
-            <svg class="w-9 h-9 drop-shadow-md group-hover:scale-110 transition-all duration-300 animate-heartbeat" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-9 h-9 drop-shadow-md group-hover:scale-110 transition-all duration-300 animate-heartbeat"
+              viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="logoGradFooter" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
                   <stop offset="0%" stop-color="#0F9B8E" />
                   <stop offset="100%" stop-color="#10B981" />
                 </linearGradient>
               </defs>
-              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="url(#logoGradFooter)" />
-              <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path
+                d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                fill="url(#logoGradFooter)" />
+              <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <span class="text-xl font-bold text-white font-heading">Health<span
                 class="text-primary-400">Hub</span></span>
@@ -1208,9 +1241,12 @@
             <li><a href="#services" class="hover:text-primary-400 transition-colors">Services</a></li>
             <li><a href="#doctors" class="hover:text-primary-400 transition-colors">Find a Specialist</a></li>
             <li><a href="#faq" class="hover:text-primary-400 transition-colors">FAQ</a></li>
-            <li><button (click)="goToLogin()" class="hover:text-primary-400 transition-colors">Patient Portal</button></li>
-            <li><button (click)="goToDoctorRegister()" class="hover:text-primary-400 transition-colors">For Physiotherapists</button></li>
-            <li><button (click)="goToLabRegister()" class="hover:text-primary-400 transition-colors">For Labs</button></li>
+            <li><button (click)="goToLogin()" class="hover:text-primary-400 transition-colors">Patient Portal</button>
+            </li>
+            <li><button (click)="goToDoctorRegister()" class="hover:text-primary-400 transition-colors">For
+                Physiotherapists</button></li>
+            <li><button (click)="goToLabRegister()" class="hover:text-primary-400 transition-colors">For Labs</button>
+            </li>
           </ul>
         </div>
 
@@ -1275,16 +1311,17 @@
   </div>
 
   <!-- Floating Specialty Card / Scroll to Top -->
-  <div *ngIf="navScrolled" 
+  <div *ngIf="navScrolled"
     class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 flex flex-col items-end gap-3 reveal-side">
-    
+
     <!-- The Card (Desktop/Tablet: Goes to Doctors) -->
     <!-- We wrap it in a card-container that maintains the hit-area to prevent jitter during scaling -->
-    <div (click)="scrollToDoctorSection()" 
-         class="hidden sm:flex items-center cursor-pointer group active:scale-95 transition-transform duration-200">
-      
-      <div class="flex items-center bg-gradient-to-r from-[#064e40] to-[#0d8679] rounded-[1.5rem] shadow-2xl shadow-emerald-900/40 overflow-hidden hover:scale-[1.03] transition-transform duration-300 border border-white/10 w-[360px] h-[155px] card-shine relative will-change-transform">
-        
+    <div (click)="scrollToDoctorSection()"
+      class="hidden sm:flex items-center cursor-pointer group active:scale-95 transition-transform duration-200">
+
+      <div
+        class="flex items-center bg-gradient-to-r from-[#064e40] to-[#0d8679] rounded-[1.5rem] shadow-2xl shadow-emerald-900/40 overflow-hidden hover:scale-[1.03] transition-transform duration-300 border border-white/10 w-[360px] h-[155px] card-shine relative will-change-transform">
+
         <!-- Content Area (Left) -->
         <div class="flex-1 flex flex-col gap-2 p-5 pr-2 relative z-10">
           <!-- Branding -->
@@ -1294,12 +1331,12 @@
             </div>
             <span class="text-[9px] font-black text-emerald-400/80 tracking-[0.2em] uppercase">Specialist Care</span>
           </div>
-          
+
           <!-- Heading -->
           <h3 class="text-white font-bold text-[16px] leading-[1.2] max-w-[180px]">
             Book appointment with an expert therapist
           </h3>
-          
+
           <!-- Meta text -->
           <p class="text-emerald-100/40 text-[10px] font-medium -mt-1">
             Certified specialists available now
@@ -1307,38 +1344,44 @@
 
           <!-- Button -->
           <div class="mt-2 flex">
-              <button (click)="scrollToDoctorSection(); $event.stopPropagation()" 
-                      class="bg-emerald-500 hover:bg-emerald-400 text-white text-[10px] font-black px-4 py-2 rounded-lg uppercase tracking-wider transition-all duration-300 shadow-md shadow-emerald-900/40 flex items-center gap-2 group/btn">
-                  Know More
-                  <i-lucide name="arrow-right" class="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform duration-300"></i-lucide>
-              </button>
+            <button (click)="scrollToDoctorSection(); $event.stopPropagation()"
+              class="bg-emerald-500 hover:bg-emerald-400 text-white text-[10px] font-black px-4 py-2 rounded-lg uppercase tracking-wider transition-all duration-300 shadow-md shadow-emerald-900/40 flex items-center gap-2 group/btn">
+              Know More
+              <i-lucide name="arrow-right"
+                class="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform duration-300"></i-lucide>
+            </button>
           </div>
         </div>
 
         <!-- Doctor Image Area (Right) -->
         <div class="relative w-40 h-full overflow-hidden bg-emerald-900/20 text-right">
-          <img src="assets/doctor/doctor-card.png" class="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700" alt="Specialist">
-          
+          <img src="assets/doctor/doctor-card.png"
+            class="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700"
+            alt="Specialist">
+
           <!-- Edge Glow -->
           <div class="absolute inset-y-0 left-0 w-[40px] bg-gradient-to-r from-[#0d8679] to-transparent z-10"></div>
-          
+
           <!-- Status Badge -->
-          <div class="absolute bottom-3 right-3 bg-white/10 backdrop-blur-md rounded-lg px-2 py-1 border border-white/20 z-20">
+          <div
+            class="absolute bottom-3 right-3 bg-white/10 backdrop-blur-md rounded-lg px-2 py-1 border border-white/20 z-20">
             <div class="flex items-center gap-1">
-              <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+              <span
+                class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
               <span class="text-[8px] text-white font-bold uppercase tracking-tighter">Live</span>
             </div>
           </div>
         </div>
 
         <!-- Corner Abstract Detail -->
-        <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none">
+        </div>
       </div>
     </div>
 
     <!-- Mobile Button (Back to Top - Original Behavior) -->
-    <button (click)="scrollToTop()" 
-            class="sm:hidden w-11 h-11 rounded-xl bg-primary-500 hover:bg-primary-600 text-white shadow-lg shadow-primary-500/30 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95">
+    <button (click)="scrollToTop()"
+      class="sm:hidden w-11 h-11 rounded-xl bg-primary-500 hover:bg-primary-600 text-white shadow-lg shadow-primary-500/30 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95">
       <i-lucide name="arrow-up" class="w-5 h-5"></i-lucide>
     </button>
   </div>

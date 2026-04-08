@@ -11,12 +11,15 @@ import {
   ClipboardList, HeartPulse, CalendarCheck, CalendarPlus,
   ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff,
   ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
-  TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone, Circle,
+  TrendingUp, HelpCircle, ListOrdered, List, Stethoscope, Bone, Circle,
   LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut, Sparkles, MessageSquare, Loader,
   Accessibility, Footprints, Brain, Cpu, Map, Microscope, Info, AlertTriangle,
   SearchX, Briefcase, ExternalLink, IndianRupee, Share, Share2, Download, FileDown, IdCard,
   CalendarOff, Home, Building, Landmark, Save, TestTube, Slash, Bell, XCircle, Video, Loader2,
-  CreditCard, UploadCloud, FlaskConical, FileWarning, FileBox, Timer
+  CalendarX, UserSearch,
+  CreditCard, UploadCloud, FlaskConical, FileWarning, FileBox, Timer,
+  Baby, Dna, Thermometer, Pill, Syringe, TestTube2, ShieldPlus, Database, BrainCircuit, Smile,
+  Ambulance, Hospital, Bandage, BriefcaseMedical,
 } from 'lucide-angular';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -50,12 +53,15 @@ export const appConfig: ApplicationConfig = {
       ClipboardList, HeartPulse, CalendarCheck, CalendarPlus,
       ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff,
       ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
-      TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone, Circle,
+      TrendingUp, HelpCircle, ListOrdered, List, Stethoscope, Bone, Circle,
       LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut, Sparkles, MessageSquare, Loader,
       Accessibility, Footprints, Brain, Cpu, Map, Microscope, Info, AlertTriangle,
       SearchX, Briefcase, ExternalLink, IndianRupee, Share, Share2, Download, FileDown, IdCard,
       CalendarOff, Home, Building, Landmark, Save, TestTube, Slash, Bell, XCircle, Video, Loader2,
-      CreditCard, UploadCloud, FlaskConical, FileWarning, FileBox, Timer
+      CalendarX, UserSearch,
+      CreditCard, UploadCloud, FlaskConical, FileWarning, FileBox, Timer,
+      Baby, Dna, Thermometer, Pill, Syringe, TestTube2, ShieldPlus, Database, BrainCircuit, Smile,
+      Ambulance, Hospital, Bandage, BriefcaseMedical,
     }))
   ]
 };

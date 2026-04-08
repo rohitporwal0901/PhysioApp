@@ -14,6 +14,14 @@ export const routes: Routes = [
         path: 'doctor-profile/:id',
         loadComponent: () => import('./features/doctor-profile/doctor-profile.component').then(m => m.DoctorProfileComponent)
     },
+    {
+        path: 'specialties',
+        loadComponent: () => import('./features/specialties-browser/specialty-list/specialty-list.component').then(m => m.SpecialtyListComponent)
+    },
+    {
+        path: 'doctors',
+        loadComponent: () => import('./features/specialties-browser/doctor-list/doctor-list.component').then(m => m.DoctorListComponent)
+    },
     // Patient Registration (public)
     {
         path: 'patient/register',
@@ -65,6 +73,11 @@ export const routes: Routes = [
                 path: 'admin/video-settings',
                 canActivate: [roleGuard(['admin'])],
                 loadComponent: () => import('./features/admin/video-settings/video-settings.component').then(m => m.VideoSettingsComponent)
+            },
+            {
+                path: 'admin/specialties',
+                canActivate: [roleGuard(['admin'])],
+                loadComponent: () => import('./features/admin/specialties/specialties.component').then(m => m.AdminSpecialtiesComponent)
             },
             // Doctor routes
             {

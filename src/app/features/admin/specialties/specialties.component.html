@@ -1,0 +1,163 @@
+<div class="p-6">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-2xl font-black text-slate-900 dark:text-white">Specializations</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Manage doctor categories and their icons</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <!-- <button (click)="seedDefaultSpecialties()"
+        class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-emerald-500 hover:text-white dark:hover:bg-emerald-600 px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm">
+        <i-lucide name="database" class="w-3.5 h-3.5"></i-lucide>
+        Bulk Seed
+      </button> -->
+      <button (click)="openAddForm()"
+        class="bg-primary-500 hover:bg-primary-600 active:scale-95 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white font-bold text-xs transition-all shadow-md shadow-primary-500/20">
+        <i-lucide name="plus" class="w-3.5 h-3.5"></i-lucide>
+        Add Specialty
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div
+      class="bg-white dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700/50 shadow-sm hover:shadow-md transition-all">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center">
+          <i-lucide name="list" class="w-5 h-5 text-primary-600 dark:text-primary-400"></i-lucide>
+        </div>
+        <div>
+          <p class="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">Total
+            Categories</p>
+          <p class="text-xl font-black text-slate-900 dark:text-white leading-none">{{ specialties.length }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Specialties List -->
+  <div
+    class="bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700/50 shadow-sm overflow-hidden">
+    @if (isLoading) {
+    <div class="p-20 flex flex-col items-center justify-center gap-4">
+      <div class="w-10 h-10 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-slate-500 font-medium italic">Loading categories...</p>
+    </div>
+    } @else {
+    @if (specialties.length === 0) {
+    <div class="p-20 text-center">
+      <div
+        class="w-24 h-24 bg-slate-50 dark:bg-slate-700/30 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner">
+        <i-lucide name="search-x" class="w-12 h-12 text-slate-300 dark:text-slate-600"></i-lucide>
+      </div>
+      <p class="text-slate-500 dark:text-slate-400 font-black text-lg mb-2">No specializations found</p>
+      <button (click)="openAddForm()"
+        class="text-primary-600 dark:text-primary-400 font-bold text-sm hover:underline">Add your first one</button>
+    </div>
+    } @else {
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead>
+          <tr
+            class="bg-slate-50/50 dark:bg-slate-900/30 border-b border-slate-100 dark:border-slate-700/50 font-black text-slate-400 dark:text-slate-500 text-[9px] uppercase tracking-widest">
+            <th class="px-6 py-3">Specialization</th>
+            <th class="px-6 py-3">Icon</th>
+            <th class="px-6 py-3 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100/50 dark:divide-slate-700/50">
+          @for (s of specialties; track s.id) {
+          <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/20 transition-colors group">
+            <td class="px-6 py-3">
+              <span class="font-bold text-sm text-slate-700 dark:text-slate-300">{{ s.name }}</span>
+            </td>
+            <td class="px-6 py-3">
+              <div
+                class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 group-hover:scale-105 transition-transform">
+                <i-lucide [name]="s.icon" class="w-5 h-5"></i-lucide>
+              </div>
+            </td>
+            <td class="px-6 py-3 text-right">
+              <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                <button (click)="editSpecialty(s)"
+                  class="p-2 text-slate-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-500/10 rounded-lg transition-all">
+                  <i-lucide name="edit-2" class="w-3.5 h-3.5"></i-lucide>
+                </button>
+                <button (click)="deleteSpecialty(s.id!)"
+                  class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-all">
+                  <i-lucide name="trash-2" class="w-3.5 h-3.5"></i-lucide>
+                </button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+    }
+  </div>
+</div>
+
+<!-- Form Modal -->
+@if (showForm) {
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4">
+  <div
+    class="bg-white dark:bg-slate-800 w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in border border-slate-100 dark:border-slate-700/50">
+    <div class="p-8 border-b border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
+      <h3 class="text-xl font-black text-slate-900 dark:text-white">{{ isEditing ? 'Edit' : 'Add' }} Specialty</h3>
+      <button (click)="showForm = false"
+        class="p-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-xl transition-colors">
+        <i-lucide name="x" class="w-5 h-5"></i-lucide>
+      </button>
+    </div>
+
+    <div class="p-8 space-y-8">
+      <!-- Name Field -->
+      <div>
+        <label
+          class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Category
+          Name</label>
+        <input [(ngModel)]="formName" type="text" placeholder="e.g. Cardiologist"
+          class="w-full px-5 py-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all font-bold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600">
+      </div>
+
+      <!-- Icon Selector -->
+      <div>
+        <label
+          class="block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Choose
+          Brand Icon</label>
+        <div
+          class="grid grid-cols-5 gap-3 p-5 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-700 max-h-56 overflow-y-auto custom-scrollbar">
+          @for (icon of availableIcons; track icon) {
+          <button (click)="formIcon = icon"
+            class="w-12 h-12 flex items-center justify-center rounded-xl transition-all border-2"
+            [class.bg-white]="formIcon === icon" [class.dark:bg-slate-800]="formIcon === icon"
+            [class.border-primary-500]="formIcon === icon" [class.shadow-lg]="formIcon === icon"
+            [class.shadow-primary-500]="formIcon === icon" [class.border-transparent]="formIcon !== icon"
+            [class.text-primary-600]="formIcon === icon" [class.text-slate-300]="formIcon !== icon"
+            [class.dark:text-slate-600]="formIcon !== icon" [class.hover:border-slate-200]="formIcon !== icon"
+            [class.dark:hover:border-slate-700]="formIcon !== icon">
+            <i-lucide [name]="icon" class="w-6 h-6"></i-lucide>
+          </button>
+          }
+        </div>
+        <p class="mt-4 text-[10px] text-slate-400 dark:text-slate-500 font-bold italic">Active icon: <span
+            class="text-primary-600 dark:text-primary-400 font-black uppercase text-xs">{{ formIcon }}</span></p>
+      </div>
+    </div>
+
+    <div class="p-8 bg-slate-50/50 dark:bg-slate-900/30 border-t border-slate-100 dark:border-slate-700/50 flex gap-4">
+      <button (click)="showForm = false"
+        class="flex-1 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-black text-sm hover:bg-white dark:hover:bg-slate-800 transition-colors uppercase tracking-widest">
+        Cancel
+      </button>
+      <button (click)="saveSpecialty()" [disabled]="isSaving"
+        class="flex-1 py-4 rounded-2xl bg-gradient-to-r from-primary-600 to-primary-500 text-white font-black text-sm shadow-xl shadow-primary-600/20 hover:shadow-primary-600/40 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 flex items-center justify-center gap-2 uppercase tracking-widest">
+        <i-lucide *ngIf="isSaving" name="loader-2" class="w-4 h-4 animate-spin"></i-lucide>
+        {{ isEditing ? 'Update' : 'Create' }}
+      </button>
+    </div>
+  </div>
+</div>
+}

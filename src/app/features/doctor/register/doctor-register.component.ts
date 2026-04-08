@@ -6,6 +6,8 @@ import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
 import { ImageUploadService } from '../../../core/services/image-upload.service';
 import { PaymentService } from '../../../core/services/payment.service';
+import { SpecializationService } from '../../../core/services/specialization.service';
+import { OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-doctor-register',
@@ -14,16 +16,23 @@ import { PaymentService } from '../../../core/services/payment.service';
     templateUrl: './doctor-register.component.html',
     styleUrl: './doctor-register.component.scss'
 })
-export class DoctorRegisterComponent {
+export class DoctorRegisterComponent implements OnInit {
     private router = inject(Router);
     private authService = inject(AuthService);
     private imageUpload = inject(ImageUploadService);
     private paymentService = inject(PaymentService);
+    private specializationService = inject(SpecializationService);
+
+    ngOnInit() {
+        this.specializationService.getSpecialties().subscribe(data => {
+            this.dynamicSpecialties = data;
+        });
+    }
 
     isLoading = false;
     showPassword = false;
     currentStep = 1;
-    totalSteps = 7;
+    totalSteps = 6;
     errorMessage = '';
     submitAttempted = false;
 
@@ -49,23 +58,14 @@ export class DoctorRegisterComponent {
     registrationNumber = '';
     council = '';
 
-    // Step 4 — Areas of Interest
-    selectedAreas: string[] = [];
-    areasOfInterest = [
-        'Sports Rehabilitation', 'Orthopaedic Physiotherapy', 'Neurological Rehab',
-        'Cardiopulmonary Therapy', 'Paediatric Physiotherapy', 'Geriatric Care',
-        'Manual Therapy', 'Post-Surgical Recovery', 'Women\'s Health',
-        'Pain Management', 'Exercise Therapy', 'Electrotherapy'
-    ];
-
-    // Step 5 — Fees & Availability
+    // Step 4 — Fees & Availability
     consultationFee = '';
     followUpFee = '';
     consultationType = 'in-person';
     availableDays: string[] = [];
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-    // Step 6 — Documents & Account
+    // Step 5 — Documents & Account
     password = '';
     confirmPassword = '';
     agreeTerms = false;
@@ -75,7 +75,7 @@ export class DoctorRegisterComponent {
     certificateName = '';
     idProofName = '';
 
-    // Step 7 - Subscription
+    // Step 6 - Subscription
     selectedPlan: any = null;
     plans = [
       {
@@ -129,21 +129,18 @@ export class DoctorRegisterComponent {
         'Tamil Nadu', 'Telangana', 'Uttar Pradesh', 'West Bengal'
     ];
     qualifications = [
-        'BPT (Bachelor of Physiotherapy)',
-        'MPT (Master of Physiotherapy)',
-        'DPT (Doctor of Physiotherapy)',
-        'PhD in Physiotherapy',
-        'Diploma in Physiotherapy'
+        'MBBS', 'MD', 'MS', 'BDS', 'MDS', 'BAMS', 'BHMS', 'BPT', 'MPT', 'DNB', 'DM', 'MCh', 'PhD', 'DCH', 'DGO'
     ];
+
+    dynamicSpecialties: any[] = [];
 
     sidebarSteps = [
         { num: 1, label: 'Basic Information', icon: 'user' },
         { num: 2, label: 'Contact Details', icon: 'phone' },
         { num: 3, label: 'Qualifications', icon: 'graduation-cap' },
-        { num: 4, label: 'Areas of Interest', icon: 'heart-pulse' },
-        { num: 5, label: 'Fees & Availability', icon: 'calendar' },
-        { num: 6, label: 'Account & Documents', icon: 'shield-check' },
-        { num: 7, label: 'Subscription Plan', icon: 'credit-card' },
+        { num: 4, label: 'Fees & Availability', icon: 'calendar' },
+        { num: 5, label: 'Account & Documents', icon: 'shield-check' },
+        { num: 6, label: 'Subscription Plan', icon: 'credit-card' },
     ];
 
     get passwordsMatch(): boolean {
@@ -169,16 +166,12 @@ export class DoctorRegisterComponent {
         return !!(this.qualification && this.specialization && this.experience);
     }
     get step4Valid(): boolean {
-        return this.selectedAreas.length > 0;
-    }
-    get step5Valid(): boolean {
         return !!(this.consultationFee);
     }
-    get step6Valid(): boolean {
+    get step5Valid(): boolean {
         return !!(this.password && this.password.length >= 6 && this.passwordsMatch && this.agreeTerms);
     }
-
-    get step7Valid(): boolean {
+    get step6Valid(): boolean {
         return !!this.selectedPlan;
     }
 
@@ -190,15 +183,8 @@ export class DoctorRegisterComponent {
             case 4: return this.step4Valid;
             case 5: return this.step5Valid;
             case 6: return this.step6Valid;
-            case 7: return this.step7Valid;
             default: return false;
         }
-    }
-
-    toggleArea(area: string) {
-        const idx = this.selectedAreas.indexOf(area);
-        if (idx > -1) this.selectedAreas.splice(idx, 1);
-        else this.selectedAreas.push(area);
     }
 
     toggleDay(day: string) {
@@ -275,7 +261,7 @@ export class DoctorRegisterComponent {
 
     async register() {
         this.submitAttempted = true;
-        if (!this.step7Valid || !this.step6Valid) return;
+        if (!this.step6Valid || !this.step5Valid) return;
         this.isLoading = true;
         this.errorMessage = '';
 
@@ -308,7 +294,6 @@ export class DoctorRegisterComponent {
                 experience: this.experience,
                 registrationNumber: this.registrationNumber,
                 council: this.council,
-                areasOfInterest: this.selectedAreas,
                 consultationFee: this.consultationFee,
                 followUpFee: this.followUpFee,
                 consultationType: this.consultationType,

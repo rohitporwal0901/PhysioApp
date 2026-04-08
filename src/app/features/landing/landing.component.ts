@@ -12,6 +12,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { BookingService, BookedAppointment } from '../../core/services/booking.service';
 import { SettingsService, AppSettings } from '../../core/services/settings.service';
 import { SafePipe } from '../../shared/pipes/safe.pipe';
+import { SpecializationService, Specialty } from '../../core/services/specialization.service';
 
 @Component({
     selector: 'app-landing',
@@ -27,9 +28,11 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     private authService = inject(AuthService);
     private bookingService = inject(BookingService);
     private settingsService = inject(SettingsService);
+    private specializationService = inject(SpecializationService);
 
     doctors$: Observable<any[]> | undefined;
     labs$: Observable<any[]> | undefined;
+    specialties$: Observable<Specialty[]> | undefined;
     feedbacks$: Observable<BookedAppointment[]> | undefined;
     mobileMenuOpen = false;
     navScrolled = false;
@@ -147,12 +150,12 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     ];
 
     services = [
-        { icon: 'activity', title: 'Sports Rehabilitation', desc: 'Advanced care for sports injuries — muscle tears, ligament sprains, fractures & more.', color: 'from-primary-400 to-primary-600' },
-        { icon: 'heart', title: 'Cardiopulmonary Therapy', desc: 'Breathing & cardiovascular rehabilitation for heart and lung conditions.', color: 'from-rose-400 to-rose-600' },
-        { icon: 'zap', title: 'Neurological Rehab', desc: 'Expert care for stroke, Parkinson\'s, MS, and peripheral nerve injuries.', color: 'from-amber-400 to-amber-600' },
-        { icon: 'users', title: 'Paediatric Physiotherapy', desc: 'Gentle, child-friendly therapy for developmental delays and physical conditions.', color: 'from-secondary-400 to-secondary-600' },
-        { icon: 'shield-check', title: 'Post-Surgical Recovery', desc: 'Structured rehabilitation plans following orthopaedic or spinal surgeries.', color: 'from-accent-400 to-accent-600' },
-        { icon: 'star', title: 'Geriatric Care', desc: 'Mobility, balance and pain-management programmes for elderly patients.', color: 'from-violet-400 to-violet-600' },
+        { icon: 'activity', title: 'Sports Rehabilitation', desc: 'Advanced care for sports injuries — muscle tears, ligament sprains, fractures & more.', color: 'from-primary-400 to-primary-600', specialty: 'Physiotherapy' },
+        { icon: 'heart', title: 'Cardiology', desc: 'Breathing & cardiovascular rehabilitation for heart and lung conditions.', color: 'from-rose-400 to-rose-600', specialty: 'Cardiology' },
+        { icon: 'zap', title: 'Neurological Care', desc: 'Expert care for stroke, Parkinson\'s, MS, and peripheral nerve injuries.', color: 'from-amber-400 to-amber-600', specialty: 'Neurology' },
+        { icon: 'users', title: 'Paediatric Care', desc: 'Gentle, child-friendly therapy for developmental delays and physical conditions.', color: 'from-secondary-400 to-secondary-600', specialty: 'Pediatrics' },
+        { icon: 'shield-check', title: 'Orthopaedic Recovery', desc: 'Structured rehabilitation plans following orthopaedic or spinal surgeries.', color: 'from-accent-400 to-accent-600', specialty: 'Orthopedics' },
+        { icon: 'stethoscope', title: 'General Consult', desc: 'Comprehensive health check-ups and treatments for all ages.', color: 'from-violet-400 to-violet-600', specialty: 'General Physician' },
     ];
 
     testimonials = [
@@ -205,6 +208,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
         this.labs$ = this.api.getLabTechnicians().pipe(
             map(labs => labs.filter(lab => lab.active))
         );
+        this.specialties$ = this.specializationService.getSpecialties();
         // Re-trigger observer whenever doctors load
         this.doctors$.subscribe(() => {
             setTimeout(() => this.setupScrollAnimations(), 200);
@@ -354,7 +358,19 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     toggleMobileMenu() { this.mobileMenuOpen = !this.mobileMenuOpen; }
     closeMobileMenu() { this.mobileMenuOpen = false; }
 
+    filterDoctorsBySpecialty(specialty: string) {
+        this.router.navigate(['/doctors'], { queryParams: { specialty: specialty } });
+    }
+
+    scrollToSection(sectionId: string) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
     openDoctorProfile(doc: any) {
+        if (!doc.available) return;
         this.router.navigate(['/doctor-profile', doc.id], { state: { doctor: doc } });
     }
 
@@ -373,6 +389,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     goToRegister() { this.router.navigate(['/patient/register']); }
     goToDoctorRegister() { this.router.navigate(['/doctor/register']); }
     goToLabRegister() { this.router.navigate(['/lab/register']); }
+    goToSpecialties() { this.router.navigate(['/specialties']); }
 
     goToDashboard() {
         if (this.userRole === 'admin') this.router.navigate(['/admin/dashboard']);
