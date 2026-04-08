@@ -347,7 +347,8 @@
                 <i-lucide name="star" class="w-3 h-3 text-amber-400" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
                 }
               </div>
-              <p class="text-sm font-black text-slate-800">4.9 <span class="text-xs font-normal text-slate-400">/ 5.0</span></p>
+              <p class="text-sm font-black text-slate-800">4.9 <span class="text-xs font-normal text-slate-400">/
+                  5.0</span></p>
             </div>
 
             <!-- ── Floating card 3: Sessions stat (bottom-right) ── -->
@@ -377,37 +378,38 @@
   </section>
 
   <!-- ══════════════════ QUICK NAV CARDS ══════════════════ -->
-  <section style="background: white !important;" class="relative -mt-10 sm:-mt-12 z-30 pb-8 sm:pb-12 px-4">
+  <section style="background: white !important;"
+    class="relative -mt-10 sm:-mt-12 z-30 pb-8 sm:pb-12 px-4 transition-colors duration-300">
     <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
 
       <!-- Doctor Card -->
       <button (click)="goToSpecialties()"
-        class="quick-mini-card group flex items-center gap-4 bg-[#FFF9ED] p-4 rounded-2xl border border-amber-100/50 hover:bg-[#FFF3D6] transition-all duration-300 text-left shadow-sm hover:shadow-md">
+        class="quick-mini-card group flex items-center gap-4 bg-gradient-to-br from-[#064e40] to-[#0d8679] p-4 rounded-[1.5rem] border border-white/10 hover:scale-[1.02] transition-all duration-300 text-left shadow-xl shadow-emerald-950/20 card-shine relative overflow-hidden">
         <div
-          class="w-14 h-14 rounded-xl bg-white flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
-          <i-lucide name="stethoscope" class="w-8 h-8 text-[#D97706]"></i-lucide>
+          class="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform backdrop-blur-md border border-white/5">
+          <i-lucide name="stethoscope" class="w-8 h-8 text-emerald-400"></i-lucide>
         </div>
-        <div class="flex-1">
-          <p class="text-slate-900 font-black text-sm uppercase tracking-tight leading-tight">Doctor Appointment</p>
-          <p class="text-[#D97706] text-[10px] font-bold mt-0.5">BOOK NOW</p>
+        <div class="flex-1 relative z-10">
+          <p class="text-white font-black text-sm uppercase tracking-tight leading-tight">Doctor Appointment</p>
+          <p class="text-emerald-300/80 text-[10px] font-bold mt-0.5 tracking-wider">BOOK NOW</p>
         </div>
         <i-lucide name="chevron-right"
-          class="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform"></i-lucide>
+          class="w-4 h-4 text-white/40 group-hover:translate-x-1 group-hover:text-white transition-all"></i-lucide>
       </button>
 
       <!-- Lab Card -->
       <button (click)="scrollToSection('labs')"
-        class="quick-mini-card group flex items-center gap-4 bg-[#F5F2FF] p-4 rounded-2xl border border-indigo-100/50 hover:bg-[#EEE9FF] transition-all duration-300 text-left shadow-sm hover:shadow-md">
+        class="quick-mini-card group flex items-center gap-4 bg-gradient-to-br from-[#1e293b] to-[#2d3748] p-4 rounded-[1.5rem] border border-white/10 hover:scale-[1.02] transition-all duration-300 text-left shadow-xl shadow-slate-950/20 card-shine relative overflow-hidden">
         <div
-          class="w-14 h-14 rounded-xl bg-white flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
-          <i-lucide name="microscope" class="w-8 h-8 text-[#4F46E5]"></i-lucide>
+          class="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform backdrop-blur-md border border-white/5">
+          <i-lucide name="microscope" class="w-8 h-8 text-indigo-300"></i-lucide>
         </div>
-        <div class="flex-1">
-          <p class="text-slate-900 font-black text-sm uppercase tracking-tight leading-tight">Lab Tests</p>
-          <p class="text-[#4F46E5] text-[10px] font-bold mt-0.5">AT HOME</p>
+        <div class="flex-1 relative z-10">
+          <p class="text-white font-black text-sm uppercase tracking-tight leading-tight">Lab Tests</p>
+          <p class="text-indigo-300/80 text-[10px] font-bold mt-0.5 tracking-wider">AT HOME</p>
         </div>
         <i-lucide name="chevron-right"
-          class="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform"></i-lucide>
+          class="w-4 h-4 text-white/40 group-hover:translate-x-1 group-hover:text-white transition-all"></i-lucide>
       </button>
 
       <!-- Medicines Card (Optional but added for layout fullness like reference) -->
@@ -488,7 +490,7 @@
   </section>
 
   <!-- ══════════════════ DOCTOR SPECIALTIES ══════════════════ -->
-  
+
 
   <!-- ══════════════════ SERVICES ══════════════════ -->
   <section id="services" class="py-12 sm:py-20 lg:py-24 bg-slate-50 border-t border-slate-100">
@@ -564,12 +566,9 @@
           @for (doc of doctors; track doc.id; let i = $index) {
           <div (click)="openDoctorProfile(doc)"
             class="doctor-card reveal flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[350px] snap-start group bg-white rounded-2xl border border-slate-100 shadow-sm transition-all duration-400 overflow-hidden"
-            [class.cursor-pointer]="doc.available"
-            [class.cursor-not-allowed]="!doc.available"
-            [class.hover:shadow-xl]="doc.available"
-            [class.hover:-translate-y-2]="doc.available"
-            [class.opacity-80]="!doc.available"
-            [style.transition-delay]="(i * 80) + 'ms'">
+            [class.cursor-pointer]="doc.available" [class.cursor-not-allowed]="!doc.available"
+            [class.hover:shadow-xl]="doc.available" [class.hover:-translate-y-2]="doc.available"
+            [class.opacity-80]="!doc.available" [style.transition-delay]="(i * 80) + 'ms'">
 
             <!-- Doctor image -->
             <div class="relative h-52 bg-gradient-to-br from-primary-400 to-primary-700 overflow-hidden">
@@ -609,7 +608,8 @@
                   }
                   <span class="text-xs text-slate-400">Trusted Specialist</span>
                 </div>
-                <span class="text-xs font-medium text-slate-500 bg-slate-50 px-2 py-1 rounded-lg">{{ doc.experience ?? '5+' }} Yrs Exp.</span>
+                <span class="text-xs font-medium text-slate-500 bg-slate-50 px-2 py-1 rounded-lg">{{ doc.experience ??
+                  '5+' }} Yrs Exp.</span>
               </div>
 
               <!-- CTA -->
