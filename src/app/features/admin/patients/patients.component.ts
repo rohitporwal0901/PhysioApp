@@ -22,7 +22,7 @@ export class PatientsComponent implements OnInit {
 
     // Pagination
     currentPage = 1;
-    pageSize = 2;
+    pageSize = 4;
     totalPages = 1;
 
     showAddModal = false;

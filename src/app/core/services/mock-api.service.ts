@@ -186,8 +186,9 @@ export class MockApiService {
             available: docData.available ?? docData.isAvailable ?? false,
             // Fallback for active field
             active: docData.active ?? docData.isActive ?? false,
-            // Ensure rating exists for UI
-            rating: docData.rating ?? 4.5
+            // Calculate stars (1-5) based on ratingScore: score / 20 gives stars. e.g. 100 = 5 stars, 5 = 1 star.
+            ratingScore: docData.ratingScore ?? 0,
+            rating: docData.ratingScore ? Math.min(5, Math.ceil(docData.ratingScore / 20)) : (docData.rating ?? 4.5)
           };
         });
         console.log(`Firestore snapshot received: ${data.length} items found.`, data);

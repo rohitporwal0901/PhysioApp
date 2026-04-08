@@ -25,6 +25,7 @@ export interface AppUser {
   licenseNumber?: string;
   subscriptionPlan?: string;
   paymentStatus?: string;
+  ratingScore?: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -32,7 +33,7 @@ export class AuthService {
   private auth = inject(Auth);
   private firestore = inject(Firestore);
   private router = inject(Router);
-  
+
   // Unsplash profile image collections
   private doctorImages = [
     'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400&auto=format&fit=crop',
@@ -142,7 +143,7 @@ export class AuthService {
   }): Promise<{ success: boolean; error?: string }> {
     try {
       const cred = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
-      
+
       const { password, ...cleanData } = data;
       const profile: AppUser = {
         uid: cred.user.uid,
@@ -161,7 +162,7 @@ export class AuthService {
         address: data.address ?? '',
         condition: data.condition ?? '',
         emergencyContact: data.emergencyContact ?? '',
-        createdAt: new Date().toISOString()
+        createdAt: new Date()
       });
       this.currentUserSubject.next(profile);
       return { success: true };
@@ -195,14 +196,14 @@ export class AuthService {
   }): Promise<{ success: boolean; error?: string }> {
     try {
       const cred = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
-      
+
       const { password, ...cleanData } = data;
       const profile: AppUser = {
         uid: cred.user.uid,
         email: data.email,
         role: 'doctor',
         available: true,
-        active:true,
+        active: true,
         fullName: data.fullName,
         createdAt: new Date()
       };
@@ -213,7 +214,7 @@ export class AuthService {
         ...cleanData,
         ...profile,
         image: data.image || dummyImage,
-        createdAt: new Date().toISOString()
+        createdAt: new Date()
       });
       this.currentUserSubject.next(profile);
       return { success: true };
@@ -239,7 +240,7 @@ export class AuthService {
   }): Promise<{ success: boolean; error?: string }> {
     try {
       const cred = await createUserWithEmailAndPassword(this.auth, data.email, data.password);
-      
+
       const { password, ...cleanData } = data;
       const profile: AppUser = {
         uid: cred.user.uid,
@@ -257,7 +258,7 @@ export class AuthService {
         ...cleanData,
         ...profile,
         image: dummyImage,
-        createdAt: new Date().toISOString()
+        createdAt: new Date()
       });
       this.currentUserSubject.next(profile);
       return { success: true };
@@ -271,7 +272,7 @@ export class AuthService {
     try {
       const ref = doc(this.firestore, 'users', uid);
       await setDoc(ref, data, { merge: true });
-      
+
       // Update local state if it's the current user
       const current = this.currentUserSubject.getValue();
       if (current && current.uid === uid) {

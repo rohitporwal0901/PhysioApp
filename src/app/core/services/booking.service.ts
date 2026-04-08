@@ -13,7 +13,8 @@ import {
   Timestamp,
   orderBy,
   arrayUnion,
-  limit
+  limit,
+  increment
 } from '@angular/fire/firestore';
 import { Observable, BehaviorSubject, map } from 'rxjs';
 import { AuthService, AppUser } from './auth.service';
@@ -190,12 +191,29 @@ export class BookingService {
 
   async updateFeedback(appointmentId: string, feedback: { rating: number; comment: string }): Promise<void> {
     const docRef = doc(this.firestore, 'appointments', appointmentId);
-    await updateDoc(docRef, { 
-      feedback: {
-        ...feedback,
-        createdAt: Timestamp.now()
+    
+    // Get the appointment to find the doctorId
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+      const aptData = snap.data() as BookedAppointment;
+      const doctorId = aptData.doctorId;
+
+      // 1. Update appointment feedback
+      await updateDoc(docRef, { 
+        feedback: {
+          ...feedback,
+          createdAt: Timestamp.now()
+        }
+      });
+
+      // 2. Increment doctor's rating score by 5 points
+      if (doctorId) {
+        const doctorRef = doc(this.firestore, 'users', doctorId);
+        await updateDoc(doctorRef, {
+          ratingScore: increment(5)
+        });
       }
-    });
+    }
   }
 
   async updateAiReport(appointmentId: string, aiReport: any): Promise<void> {

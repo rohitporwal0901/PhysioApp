@@ -203,7 +203,11 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit() {
         this.doctors$ = this.api.getDoctors().pipe(
-            map(docs => docs.filter(doc => doc.active))
+            map(docs => docs
+                .filter(doc => doc.active)
+                .sort((a, b) => (b.ratingScore || 0) - (a.ratingScore || 0))
+                .slice(0, 10)
+            )
         );
         this.labs$ = this.api.getLabTechnicians().pipe(
             map(labs => labs.filter(lab => lab.active))
