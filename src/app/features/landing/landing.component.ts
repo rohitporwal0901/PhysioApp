@@ -13,11 +13,12 @@ import { BookingService, BookedAppointment } from '../../core/services/booking.s
 import { SettingsService, AppSettings } from '../../core/services/settings.service';
 import { SafePipe } from '../../shared/pipes/safe.pipe';
 import { SpecializationService, Specialty } from '../../core/services/specialization.service';
+import { LegalModalComponent } from '../../shared/components/legal-modal/legal-modal.component';
 
 @Component({
     selector: 'app-landing',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule, SafePipe],
+    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule, SafePipe, LegalModalComponent],
     templateUrl: './landing.component.html',
     styleUrl: './landing.component.scss'
 })
@@ -48,6 +49,15 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     // Dynamic Hero Video
     heroVideoSettings: AppSettings['heroVideo'] | null = null;
     isAuthChecking = true;
+
+    // Legal Modal
+    isLegalModalOpen = false;
+    legalModalTab: 'terms' | 'privacy' = 'terms';
+
+    openLegalModal(tab: 'terms' | 'privacy') {
+        this.legalModalTab = tab;
+        this.isLegalModalOpen = true;
+    }
 
     get isLoggedIn() { return this.authService.isLoggedIn; }
     get userRole() { return this.authService.userRole; }

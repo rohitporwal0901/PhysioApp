@@ -6,11 +6,12 @@ import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
 import { ImageUploadService } from '../../../core/services/image-upload.service';
 import { PaymentService } from '../../../core/services/payment.service';
+import { LegalModalComponent } from '../../../shared/components/legal-modal/legal-modal.component';
 
 @Component({
     selector: 'app-lab-register',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule],
+    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule, LegalModalComponent],
     templateUrl: './register.component.html',
     styleUrl: './register.component.scss'
 })
@@ -51,23 +52,32 @@ export class LabRegisterComponent {
     confirmPassword = '';
     agreeTerms = false;
 
+    // Legal Modal
+    isLegalModalOpen = false;
+    legalModalTab: 'terms' | 'privacy' = 'terms';
+
+    openLegalModal(tab: 'terms' | 'privacy') {
+        this.legalModalTab = tab;
+        this.isLegalModalOpen = true;
+    }
+
     // Step 5 - Subscription
     selectedPlan: any = null;
     plans = [
-        {
-            type: 'monthly',
-            name: 'Monthly Plan',
-            price: 999, // Labs might have different pricing or same
-            durationMonths: 1,
-            features: [
-                'Digital Lab Records',
-                'Test Report Management',
-                'Automated Email Delivery',
-                'Revenue Tracking',
-                'Standard Support'
-            ],
-            recommended: false
-        },
+        // {
+        //     type: 'monthly',
+        //     name: 'Monthly Plan',
+        //     price: 999, // Labs might have different pricing or same
+        //     durationMonths: 1,
+        //     features: [
+        //         'Digital Lab Records',
+        //         'Test Report Management',
+        //         'Automated Email Delivery',
+        //         'Revenue Tracking',
+        //         'Standard Support'
+        //     ],
+        //     recommended: false
+        // },
         {
             type: 'halfYearly',
             name: 'Half-Yearly Plan',

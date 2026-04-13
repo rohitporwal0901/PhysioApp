@@ -273,8 +273,8 @@
                     <input type="checkbox" [(ngModel)]="agreeTerms" class="terms-checkbox" />
                     <span class="terms-text" [class.text-red-500]="submitAttempted && !agreeTerms">
                         I agree to the
-                        <a href="#" class="link">Terms of Service</a> and
-                        <a href="#" class="link">Privacy Policy</a>
+                        <a (click)="openLegalModal('terms')" class="link cursor-pointer">Terms of Service</a> and
+                        <a (click)="openLegalModal('privacy')" class="link cursor-pointer">Privacy Policy</a>
                     </span>
                 </label>
                 <p *ngIf="submitAttempted && !agreeTerms" class="error-msg mt-1 text-center">
@@ -320,3 +320,10 @@
 
     </div>
 </div>
+
+<app-legal-modal 
+    [isOpen]="isLegalModalOpen" 
+    [initialTab]="legalModalTab" 
+    [userType]="'patient'"
+    (close)="isLegalModalOpen = false">
+</app-legal-modal>

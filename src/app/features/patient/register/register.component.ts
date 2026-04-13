@@ -5,11 +5,12 @@ import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
 import { ImageUploadService } from '../../../core/services/image-upload.service';
+import { LegalModalComponent } from '../../../shared/components/legal-modal/legal-modal.component';
 
 @Component({
   selector: 'app-patient-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, RouterModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule, RouterModule, LegalModalComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -31,6 +32,15 @@ export class PatientRegisterComponent implements OnInit {
   password = '';
   confirmPassword = '';
   agreeTerms = false;
+  
+  // Legal Modal
+  isLegalModalOpen = false;
+  legalModalTab: 'terms' | 'privacy' = 'terms';
+
+  openLegalModal(tab: 'terms' | 'privacy') {
+      this.legalModalTab = tab;
+      this.isLegalModalOpen = true;
+  }
   
   // Profile Photo
   profilePhotoUrl: string = '';

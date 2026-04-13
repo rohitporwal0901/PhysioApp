@@ -1287,8 +1287,8 @@
         class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
         <p>© 2025 HealthHub · All rights reserved.</p>
         <div class="hidden sm:flex gap-5">
-          <a href="#" class="hover:text-primary-400 transition-colors">Privacy Policy</a>
-          <a href="#" class="hover:text-primary-400 transition-colors">Terms of Service</a>
+          <a (click)="openLegalModal('privacy')" class="hover:text-primary-400 transition-colors cursor-pointer">Privacy Policy</a>
+          <a (click)="openLegalModal('terms')" class="hover:text-primary-400 transition-colors cursor-pointer">Terms of Service</a>
           <a href="#" class="hover:text-primary-400 transition-colors">Impressum</a>
         </div>
       </div>
@@ -1383,3 +1383,10 @@
   </div>
 
 </div>
+
+<app-legal-modal 
+    [isOpen]="isLegalModalOpen" 
+    [initialTab]="legalModalTab" 
+    [userType]="'patient'"
+    (close)="isLegalModalOpen = false">
+</app-legal-modal>

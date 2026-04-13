@@ -292,8 +292,8 @@
                         <span
                             class="text-sm leading-5 font-medium text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors"
                             [class.text-red-500]="submitAttempted && !agreeTerms">
-                            I agree to the <a href="#" class="text-primary-600 hover:underline">Terms of Service</a> and
-                            <a href="#" class="text-primary-600 hover:underline">Privacy Policy</a>, and confirm that
+                            I agree to the <a (click)="openLegalModal('terms')" class="text-primary-600 hover:underline cursor-pointer">Terms of Service</a> and
+                            <a (click)="openLegalModal('privacy')" class="text-primary-600 hover:underline cursor-pointer">Privacy Policy</a>, and confirm that
                             all information provided is
                             accurate.
                         </span>
@@ -318,7 +318,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
                         <div *ngFor="let plan of plans" class="plan-card" [class.recommended]="plan.recommended"
                             [class.selected]="selectedPlan?.type === plan.type" (click)="selectPlan(plan)">
 
@@ -409,3 +409,10 @@
     </div>
 </div>
 <!-- Subscripiton section removed -->
+
+<app-legal-modal 
+    [isOpen]="isLegalModalOpen" 
+    [initialTab]="legalModalTab" 
+    [userType]="'lab'"
+    (close)="isLegalModalOpen = false">
+</app-legal-modal>

@@ -8,11 +8,12 @@ import { ImageUploadService } from '../../../core/services/image-upload.service'
 import { PaymentService } from '../../../core/services/payment.service';
 import { SpecializationService } from '../../../core/services/specialization.service';
 import { OnInit } from '@angular/core';
+import { LegalModalComponent } from '../../../shared/components/legal-modal/legal-modal.component';
 
 @Component({
     selector: 'app-doctor-register',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule],
+    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule, LegalModalComponent],
     templateUrl: './doctor-register.component.html',
     styleUrl: './doctor-register.component.scss'
 })
@@ -75,51 +76,60 @@ export class DoctorRegisterComponent implements OnInit {
     certificateName = '';
     idProofName = '';
 
+    // Legal Modal
+    isLegalModalOpen = false;
+    legalModalTab: 'terms' | 'privacy' = 'terms';
+
+    openLegalModal(tab: 'terms' | 'privacy') {
+        this.legalModalTab = tab;
+        this.isLegalModalOpen = true;
+    }
+
     // Step 6 - Subscription
     selectedPlan: any = null;
     plans = [
-      {
-        type: 'monthly',
-        name: 'Monthly Plan',
-        price: 499,
-        durationMonths: 1,
-        features: [
-          'Digital Patient Records',
-          'Appointment Scheduling',
-          'Revenue Tracking',
-          'Email/SMS Notifications',
-          'Standard Support'
-        ],
-        recommended: false
-      },
-      {
-        type: 'halfYearly',
-        name: 'Half-Yearly Plan',
-        price: 2499,
-        durationMonths: 6,
-        features: [
-          'All Monthly Features',
-          'Priority Support',
-          'Detailed Analytics',
-          'Customized Clinic Reports',
-          '15% Discount on Yearly'
-        ],
-        recommended: true
-      },
-      {
-        type: 'yearly',
-        name: 'Yearly Plan',
-        price: 4499,
-        durationMonths: 12,
-        features: [
-          'All Half-Yearly Features',
-          'Dedicated Account Manager',
-          'Advanced Marketing Tools',
-          'Custom Branding',
-          '2 Months FREE'
-        ],
-        recommended: false
-      }
+        //   {
+        //     type: 'monthly',
+        //     name: 'Monthly Plan',
+        //     price: 499,
+        //     durationMonths: 1,
+        //     features: [
+        //       'Digital Patient Records',
+        //       'Appointment Scheduling',
+        //       'Revenue Tracking',
+        //       'Email/SMS Notifications',
+        //       'Standard Support'
+        //     ],
+        //     recommended: false
+        //   },
+        {
+            type: 'halfYearly',
+            name: 'Half-Yearly Plan',
+            price: 2499,
+            durationMonths: 6,
+            features: [
+                'All Monthly Features',
+                'Priority Support',
+                'Detailed Analytics',
+                'Customized Clinic Reports',
+                '15% Discount on Yearly'
+            ],
+            recommended: true
+        },
+        {
+            type: 'yearly',
+            name: 'Yearly Plan',
+            price: 4499,
+            durationMonths: 12,
+            features: [
+                'All Half-Yearly Features',
+                'Dedicated Account Manager',
+                'Advanced Marketing Tools',
+                'Custom Branding',
+                '2 Months FREE'
+            ],
+            recommended: false
+        }
     ];
 
     genders = ['Male', 'Female', 'Other'];
@@ -268,10 +278,10 @@ export class DoctorRegisterComponent implements OnInit {
         try {
             // 1. Create Order (Mock)
             const order = await this.paymentService.createOrder(this.selectedPlan.type, this.selectedPlan.price);
-            
+
             // 2. Mock Payment Processing
             const paymentSuccess = await this.paymentService.verifyPayment(order.orderId, { status: 'success' });
-            
+
             if (!paymentSuccess) {
                 this.errorMessage = 'Payment failed. Please try again.';
                 this.isLoading = false;
@@ -306,7 +316,7 @@ export class DoctorRegisterComponent implements OnInit {
                 const currentUser = this.authService.currentUser;
                 if (currentUser) {
                     const expiryDate = this.paymentService.calculateExpiryDate(this.selectedPlan.type);
-                    
+
                     // Save to transactions collection
                     await this.paymentService.saveTransaction({
                         userId: currentUser.uid,

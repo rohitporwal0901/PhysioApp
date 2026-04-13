@@ -1,0 +1,83 @@
+:host {
+    display: contents;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes dialogIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(100px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-dialog-in {
+    animation: dialogIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+}
+
+@media (min-width: 640px) {
+    @keyframes dialogIn {
+        from { 
+            opacity: 0; 
+            transform: scale(0.9) translateY(20px); 
+        }
+        to { 
+            opacity: 1; 
+            transform: scale(1) translateY(0); 
+        }
+    }
+}
+
+.active-tab {
+    @apply flex-1 py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider 
+           bg-white dark:bg-slate-800 text-primary-600 shadow-sm border border-slate-200/50 dark:border-slate-700/50
+           transition-all duration-300 scale-100;
+}
+
+.inactive-tab {
+    @apply flex-1 py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider
+           text-slate-400 hover:text-slate-600 dark:hover:text-slate-200
+           transition-all duration-300 hover:bg-slate-100/50 dark:hover:bg-slate-800/50;
+}
+
+.custom-scrollbar {
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        @apply bg-slate-200 dark:bg-slate-800 rounded-full;
+        &:hover {
+            @apply bg-slate-300 dark:bg-slate-700;
+        }
+    }
+}
+
+// Typography spacing
+section {
+    p {
+        @apply text-slate-600 dark:text-slate-400 leading-relaxed antialiased;
+    }
+    
+    h3 {
+        @apply tracking-tight;
+    }
+}
+
+// Safe area for iPhone home bar
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}

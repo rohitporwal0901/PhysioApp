@@ -26,20 +26,20 @@ export interface Transaction {
 }
 
 export const SUBSCRIPTION_PLANS = [
-  {
-    type: 'monthly' as PlanType,
-    name: 'Monthly Plan',
-    price: 499,
-    durationMonths: 1,
-    features: [
-      'Digital Patient Records',
-      'Appointment Scheduling',
-      'Revenue Tracking',
-      'Email/SMS Notifications',
-      'Standard Support'
-    ],
-    recommended: false
-  },
+  // {
+  //   type: 'monthly' as PlanType,
+  //   name: 'Monthly Plan',
+  //   price: 499,
+  //   durationMonths: 1,
+  //   features: [
+  //     'Digital Patient Records',
+  //     'Appointment Scheduling',
+  //     'Revenue Tracking',
+  //     'Email/SMS Notifications',
+  //     'Standard Support'
+  //   ],
+  //   recommended: false
+  // },
   {
     type: 'halfYearly' as PlanType,
     name: 'Half-Yearly Plan',
