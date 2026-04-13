@@ -231,7 +231,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             setTimeout(() => this.setupScrollAnimations(), 200);
         });
 
-        this.feedbacks$ = this.bookingService.getLatestFeedbacks(5);
+        this.feedbacks$ = this.bookingService.getLatestFeedbacks(6);
         this.feedbacks$.subscribe(feedbacks => {
             if (feedbacks && feedbacks.length > 0) {
                 this.feedbackCount = feedbacks.length;

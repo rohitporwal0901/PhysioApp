@@ -1,14 +1,14 @@
 import { Injectable, inject } from '@angular/core';
-import { 
-  Firestore, 
-  collection, 
-  addDoc, 
-  query, 
-  where, 
-  getDocs, 
-  getDoc, 
-  onSnapshot, 
-  doc, 
+import {
+  Firestore,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  onSnapshot,
+  doc,
   updateDoc,
   Timestamp,
   orderBy,
@@ -120,7 +120,7 @@ export class BookingService {
       };
 
       await addDoc(this.appointmentsCollection, appointment);
-      
+
       const userRef = doc(this.firestore, 'users', user.uid);
       await updateDoc(userRef, {
         assignedDoctors: arrayUnion(data.doctorId)
@@ -191,7 +191,7 @@ export class BookingService {
 
   async updateFeedback(appointmentId: string, feedback: { rating: number; comment: string }): Promise<void> {
     const docRef = doc(this.firestore, 'appointments', appointmentId);
-    
+
     // Get the appointment to find the doctorId
     const snap = await getDoc(docRef);
     if (snap.exists()) {
@@ -199,7 +199,7 @@ export class BookingService {
       const doctorId = aptData.doctorId;
 
       // 1. Update appointment feedback
-      await updateDoc(docRef, { 
+      await updateDoc(docRef, {
         feedback: {
           ...feedback,
           createdAt: Timestamp.now()
@@ -218,7 +218,7 @@ export class BookingService {
 
   async updateAiReport(appointmentId: string, aiReport: any): Promise<void> {
     const docRef = doc(this.firestore, 'appointments', appointmentId);
-    await updateDoc(docRef, { 
+    await updateDoc(docRef, {
       aiReport: {
         ...aiReport,
         generatedAt: Timestamp.now()
@@ -226,7 +226,7 @@ export class BookingService {
     });
   }
 
-  getLatestFeedbacks(limitCount: number = 5): Observable<BookedAppointment[]> {
+  getLatestFeedbacks(limitCount: number = 6): Observable<BookedAppointment[]> {
     const q = query(
       this.appointmentsCollection,
       where('feedback', '!=', null),
