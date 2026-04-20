@@ -471,18 +471,27 @@
 
         @for (step of howItWorks; track step.title; let i = $index) {
         <div
-          class="how-step reveal relative z-10 bg-white rounded-2xl p-5 sm:p-7 border border-slate-100 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300"
+          class="how-step reveal relative z-10 bg-white rounded-2xl p-5 sm:p-7 border border-slate-100 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300 overflow-hidden"
           [style.transition-delay]="(i * 100) + 'ms'">
-          <!-- Step number -->
-          <div class="flex items-center justify-between mb-5">
-            <div
-              class="step-icon step-icon--{{ step.color }} w-12 h-12 rounded-xl flex items-center justify-center shadow-sm">
-              <i-lucide [name]="step.icon" class="w-5 h-5"></i-lucide>
-            </div>
-            <span class="text-4xl font-black text-slate-100 font-heading select-none">{{ step.step }}</span>
+          
+          <!-- Background Image -->
+          <div class="step-bg absolute inset-0 z-0 opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity duration-500">
+            <img [src]="step.bgImage" class="w-full h-full object-cover" alt="">
+            <div class="absolute inset-0 bg-white/20"></div>
           </div>
-          <h3 class="text-base font-bold text-slate-800 mb-2 font-heading">{{ step.title }}</h3>
-          <p class="text-slate-500 text-sm leading-relaxed">{{ step.desc }}</p>
+
+          <div class="relative z-10">
+            <!-- Step number -->
+            <div class="flex items-center justify-between mb-5">
+              <div
+                class="step-icon step-icon--{{ step.color }} w-12 h-12 rounded-xl flex items-center justify-center shadow-sm">
+                <i-lucide [name]="step.icon" class="w-5 h-5"></i-lucide>
+              </div>
+              <span class="text-4xl font-black text-slate-100 font-heading select-none">{{ step.step }}</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-800 mb-2 font-heading">{{ step.title }}</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">{{ step.desc }}</p>
+          </div>
         </div>
         }
       </div>

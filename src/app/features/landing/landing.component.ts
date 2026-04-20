@@ -134,28 +134,32 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             icon: 'search',
             title: 'Find Your Specialist',
             desc: 'Browse verified physiotherapists by condition, location or availability.',
-            color: 'teal'
+            color: 'teal',
+            bgImage: 'assets/how-it-works/step1.png'
         },
         {
             step: '02',
             icon: 'calendar-check',
             title: 'Book an Appointment',
             desc: 'Pick a date and time that suits you — online, in-clinic or home visit.',
-            color: 'emerald'
+            color: 'emerald',
+            bgImage: 'assets/how-it-works/step2.png'
         },
         {
             step: '03',
             icon: 'clipboard-list',
             title: 'Get Your Treatment Plan',
-            desc: 'Your therapist builds a personalised plan tailored to your exact needs.',
-            color: 'sky'
+            desc: 'Your specialist builds a personalised plan tailored to your exact needs.',
+            color: 'sky',
+            bgImage: 'assets/how-it-works/step3.png'
         },
         {
             step: '04',
             icon: 'trending-up',
             title: 'Track Your Recovery',
             desc: 'Monitor progress, receive reminders and celebrate every milestone.',
-            color: 'violet'
+            color: 'violet',
+            bgImage: 'assets/how-it-works/step4.png'
         },
     ];
 
