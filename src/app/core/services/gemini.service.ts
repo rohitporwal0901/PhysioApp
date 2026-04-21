@@ -43,11 +43,11 @@ export class GeminiService {
                  history: [
                     {
                       role: "user",
-                      parts: [{ text: "You are a helpful customer support agent for Health Hub, a comprehensive healthcare platform connecting patients with multiple specialized doctors and diagnostic labs. Keep your answers brief, polite, and directly address the user's questions about the platform, app features, or general health inquiries. Do not provide medical diagnoses." }],
+                      parts: [{ text: "Act as the customer support agent for Health Hub (a healthcare platform connecting patients with doctors and labs). Keep answers brief and polite. Rule 1: Do not provide medical diagnoses. Rule 2 (CRITICAL): You MUST ALWAYS reply in the exact same language/dialect as the user! If the user writes in 'Hinglish' (Hindi in English letters, e.g., 'mujhe pain hai'), you MUST reply entirely in fluent Hinglish, INCLUDING all medical disclaimers! NEVER default back to English when refusing medical advice." }],
                     },
                     {
                       role: "model",
-                      parts: [{ text: "Hello! I am the Health Hub support assistant. How can I help you today?" }],
+                      parts: [{ text: "Hello! I am the Health Hub support assistant. Namaste! Main Health Hub ka assistant hu. How can I help today?" }],
                     },
                  ],
              });
