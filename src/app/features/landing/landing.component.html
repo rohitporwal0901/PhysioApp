@@ -1064,7 +1064,7 @@
         <div
           class="flex sm:grid sm:grid-cols-3 gap-4 overflow-x-auto sm:overflow-x-visible pb-6 sm:pb-0 snap-x snap-mandatory no-scrollbar"
           *ngIf="realFeedbacks.length > 0">
-          @for (fb of realFeedbacks.slice(0, 5); track fb.id; let i = $index) {
+          @for (fb of realFeedbacks.slice(0, 6); track fb.id; let i = $index) {
           <div (click)="setTestimonial(i)"
             class="mini-testimonial-card flex-shrink-0 w-[260px] sm:w-auto snap-start reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
             [class.active-card]="i === (activeTestimonial % realFeedbacks.length)">
