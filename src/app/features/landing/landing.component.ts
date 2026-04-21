@@ -14,11 +14,12 @@ import { SettingsService, AppSettings } from '../../core/services/settings.servi
 import { SafePipe } from '../../shared/pipes/safe.pipe';
 import { SpecializationService, Specialty } from '../../core/services/specialization.service';
 import { LegalModalComponent } from '../../shared/components/legal-modal/legal-modal.component';
+import { ChatbotComponent } from '../../shared/components/chatbot/chatbot.component';
 
 @Component({
     selector: 'app-landing',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule, SafePipe, LegalModalComponent],
+    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule, SafePipe, LegalModalComponent, ChatbotComponent],
     templateUrl: './landing.component.html',
     styleUrl: './landing.component.scss'
 })
@@ -45,6 +46,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('doctorsSlider') doctorsSlider: ElementRef | undefined;
     @ViewChild('labsSlider') labsSlider: ElementRef | undefined;
     openFaqIndex: number | null = null;
+    isFabMenuOpen = false;
 
     // Dynamic Hero Video
     heroVideoSettings: AppSettings['heroVideo'] | null = null;
@@ -375,6 +377,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
     toggleMobileMenu() { this.mobileMenuOpen = !this.mobileMenuOpen; }
     closeMobileMenu() { this.mobileMenuOpen = false; }
+    toggleFabMenu() { this.isFabMenuOpen = !this.isFabMenuOpen; }
 
     filterDoctorsBySpecialty(specialty: string) {
         this.router.navigate(['/doctors'], { queryParams: { specialty: specialty } });
