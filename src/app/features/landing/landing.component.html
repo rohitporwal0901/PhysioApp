@@ -280,10 +280,10 @@
               <!-- Slideshow container / Now Youtube Video -->
               <div *ngIf="heroVideoSettings?.isActive"
                 class="hero-slideshow relative w-full h-[400px] xl:h-[460px] rounded-[2.8rem] overflow-hidden shadow-2xl z-10 bg-slate-900">
-                <iframe class="absolute inset-0 w-full h-full scale-[1.35] lg:scale-[1.2]"
-                  [src]="'https://www.youtube.com/embed/' + heroVideoSettings?.videoId + '?autoplay=1&mute=1&loop=1&playlist=' + heroVideoSettings?.videoId + '&controls=0&showinfo=0&rel=0' | safe:'resourceUrl'"
-                  title="Physiotherapy Dummy Video" frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                <iframe class="absolute inset-0 w-full h-full scale-[1.35] lg:scale-[1.2] pointer-events-none" [src]="'https://www.youtube.com/embed/' + heroVideoSettings?.videoId + 
+  '?autoplay=1&mute=1&loop=1&playlist=' + heroVideoSettings?.videoId + 
+  '&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1' 
+  | safe:'resourceUrl'" title="Physiotherapy Dummy Video" frameborder="0" allow="autoplay; encrypted-media"
                   allowfullscreen>
                 </iframe>
                 <div
@@ -473,9 +473,10 @@
         <div
           class="how-step reveal relative z-10 bg-white rounded-2xl p-5 sm:p-7 border border-slate-100 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300 overflow-hidden"
           [style.transition-delay]="(i * 100) + 'ms'">
-          
+
           <!-- Background Image -->
-          <div class="step-bg absolute inset-0 z-0 opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity duration-500">
+          <div
+            class="step-bg absolute inset-0 z-0 opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity duration-500">
             <img [src]="step.bgImage" class="w-full h-full object-cover" alt="">
             <div class="absolute inset-0 bg-white/20"></div>
           </div>
@@ -1296,8 +1297,10 @@
         class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
         <p>© 2025 HealthHub · All rights reserved.</p>
         <div class="hidden sm:flex gap-5">
-          <a (click)="openLegalModal('privacy')" class="hover:text-primary-400 transition-colors cursor-pointer">Privacy Policy</a>
-          <a (click)="openLegalModal('terms')" class="hover:text-primary-400 transition-colors cursor-pointer">Terms of Service</a>
+          <a (click)="openLegalModal('privacy')" class="hover:text-primary-400 transition-colors cursor-pointer">Privacy
+            Policy</a>
+          <a (click)="openLegalModal('terms')" class="hover:text-primary-400 transition-colors cursor-pointer">Terms of
+            Service</a>
           <a href="#" class="hover:text-primary-400 transition-colors">Impressum</a>
         </div>
       </div>
@@ -1393,9 +1396,6 @@
 
 </div>
 
-<app-legal-modal 
-    [isOpen]="isLegalModalOpen" 
-    [initialTab]="legalModalTab" 
-    [userType]="'patient'"
-    (close)="isLegalModalOpen = false">
+<app-legal-modal [isOpen]="isLegalModalOpen" [initialTab]="legalModalTab" [userType]="'patient'"
+  (close)="isLegalModalOpen = false">
 </app-legal-modal>
