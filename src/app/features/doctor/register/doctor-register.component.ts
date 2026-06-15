@@ -276,19 +276,27 @@ export class DoctorRegisterComponent implements OnInit {
         this.errorMessage = '';
 
         try {
-            // 1. Create Order (Mock)
-            const order = await this.paymentService.createOrder(this.selectedPlan.type, this.selectedPlan.price);
-
-            // 2. Mock Payment Processing
-            const paymentSuccess = await this.paymentService.verifyPayment(order.orderId, { status: 'success' });
-
-            if (!paymentSuccess) {
-                this.errorMessage = 'Payment failed. Please try again.';
+            // 1. Open Razorpay checkout popup
+            let paymentResponse: any;
+            try {
+                paymentResponse = await this.paymentService.openRazorpay({
+                    amount: this.selectedPlan.price,
+                    name: 'HealthHub',
+                    description: `${this.selectedPlan.name} — Doctor Subscription`,
+                    prefill: {
+                        name: this.fullName,
+                        email: this.email,
+                        contact: this.phone
+                    }
+                });
+            } catch (payErr: any) {
+                // User cancelled or payment failed — stop here
+                this.errorMessage = payErr.message ?? 'Payment was cancelled. Please try again.';
                 this.isLoading = false;
                 return;
             }
 
-            // 3. Register User only after payment success
+            // 2. Register Doctor only after payment success
             const result = await this.authService.registerDoctor({
                 email: this.email,
                 password: this.password,
@@ -312,19 +320,19 @@ export class DoctorRegisterComponent implements OnInit {
             });
 
             if (result.success) {
-                // 4. Save Transaction & Update Subscription in profile
+                // 3. Save Transaction & Update Subscription in profile
                 const currentUser = this.authService.currentUser;
                 if (currentUser) {
                     const expiryDate = this.paymentService.calculateExpiryDate(this.selectedPlan.type);
 
-                    // Save to transactions collection
-                    await this.paymentService.saveTransaction({
+                    // Save to transactions collection with real Razorpay IDs
+                    await this.paymentService.saveSubscriptionTransaction({
                         userId: currentUser.uid,
                         userType: 'doctor',
+                        userName: this.fullName,
                         planType: this.selectedPlan.type,
                         amount: this.selectedPlan.price,
-                        paymentStatus: 'success',
-                        txnId: `txn_mock_${Date.now()}`,
+                        paymentResponse: paymentResponse,
                         expiryDate: expiryDate
                     });
 

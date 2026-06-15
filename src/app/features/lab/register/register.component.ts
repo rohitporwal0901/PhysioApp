@@ -248,19 +248,27 @@ export class LabRegisterComponent {
         this.errorMessage = '';
 
         try {
-            // 1. Create Order (Mock)
-            const order = await this.paymentService.createOrder(this.selectedPlan.type, this.selectedPlan.price);
-
-            // 2. Mock Payment Processing
-            const paymentSuccess = await this.paymentService.verifyPayment(order.orderId, { status: 'success' });
-
-            if (!paymentSuccess) {
-                this.errorMessage = 'Payment failed. Please try again.';
+            // 1. Open Razorpay checkout popup
+            let paymentResponse: any;
+            try {
+                paymentResponse = await this.paymentService.openRazorpay({
+                    amount: this.selectedPlan.price,
+                    name: 'HealthHub',
+                    description: `${this.selectedPlan.name} — Lab Subscription`,
+                    prefill: {
+                        name: this.fullName,
+                        email: this.email,
+                        contact: this.phone
+                    }
+                });
+            } catch (payErr: any) {
+                // User cancelled or payment failed — stop here
+                this.errorMessage = payErr.message ?? 'Payment was cancelled. Please try again.';
                 this.isLoading = false;
                 return;
             }
 
-            // 3. Register user after payment success
+            // 2. Register Lab user after payment success
             const result = await this.authService.registerLab({
                 email: this.email,
                 password: this.password,
@@ -281,14 +289,14 @@ export class LabRegisterComponent {
                 if (currentUser) {
                     const expiryDate = this.paymentService.calculateExpiryDate(this.selectedPlan.type);
 
-                    // Save transaction
-                    await this.paymentService.saveTransaction({
+                    // Save transaction with real Razorpay IDs
+                    await this.paymentService.saveSubscriptionTransaction({
                         userId: currentUser.uid,
                         userType: 'lab',
+                        userName: this.fullName,
                         planType: this.selectedPlan.type,
                         amount: this.selectedPlan.price,
-                        paymentStatus: 'success',
-                        txnId: `txn_mock_${Date.now()}`,
+                        paymentResponse: paymentResponse,
                         expiryDate: expiryDate
                     });
 

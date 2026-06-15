@@ -235,13 +235,37 @@
                             class="w-full h-20 sm:h-24 p-2.5 sm:p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-primary-500/50 outline-none resize-none transition-all"></textarea>
                     </div>
 
+                    <!-- ── Payment Fee Info ── -->
+                    <div *ngIf="selectedDoctor && appointmentFee > 0"
+                        class="mt-3 sm:mt-4 flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-primary-200 dark:border-primary-800/40 bg-primary-50 dark:bg-primary-900/20">
+                        <div class="flex items-center gap-2">
+                            <i-lucide name="credit-card" class="w-4 h-4 text-primary-500"></i-lucide>
+                            <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Consultation Fee</span>
+                        </div>
+                        <span class="text-sm sm:text-base font-black text-primary-600 dark:text-primary-400">₹{{ appointmentFee }}</span>
+                    </div>
+                    <div *ngIf="selectedDoctor && appointmentFee === 0"
+                        class="mt-3 sm:mt-4 flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-emerald-200 dark:border-emerald-800/40 bg-emerald-50 dark:bg-emerald-900/20">
+                        <i-lucide name="badge-check" class="w-4 h-4 text-emerald-500"></i-lucide>
+                        <span class="text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-400">Free Consultation</span>
+                    </div>
+
                     <button [disabled]="!selectedTimeSlot || !selectedConsultationType || isProcessing" (click)="confirmBooking()"
                         class="confirm-btn mt-3 sm:mt-4" [class.active]="selectedTimeSlot && selectedConsultationType" [class.inactive]="!selectedTimeSlot || !selectedConsultationType">
                         <i-lucide name="loader" class="w-4 h-4 sm:w-5 sm:h-5 animate-spin" *ngIf="isProcessing"></i-lucide>
+                        <i-lucide name="credit-card" class="w-4 h-4 sm:w-5 sm:h-5"
+                            *ngIf="selectedTimeSlot && selectedConsultationType && !isProcessing && appointmentFee > 0"></i-lucide>
                         <i-lucide name="calendar-check" class="w-4 h-4 sm:w-5 sm:h-5"
-                            *ngIf="selectedTimeSlot && selectedConsultationType && !isProcessing"></i-lucide>
-                        {{ isProcessing ? 'Processing...' : (selectedTimeSlot && selectedConsultationType ? 'Confirm Appointment' : 'Complete Details to Continue')
-                        }}
+                            *ngIf="selectedTimeSlot && selectedConsultationType && !isProcessing && appointmentFee === 0"></i-lucide>
+                        <ng-container *ngIf="!isProcessing">
+                            <ng-container *ngIf="selectedTimeSlot && selectedConsultationType">
+                                {{ appointmentFee > 0 ? 'Confirm & Pay ₹' + appointmentFee : 'Confirm Appointment (Free)' }}
+                            </ng-container>
+                            <ng-container *ngIf="!selectedTimeSlot || !selectedConsultationType">
+                                Complete Details to Continue
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="isProcessing">Processing Payment...</ng-container>
                     </button>
                 </div>
 

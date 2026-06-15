@@ -2,7 +2,8 @@
 export type PlanType = 'monthly' | 'halfYearly' | 'yearly';
 export type PaymentStatus = 'success' | 'failed' | 'pending';
 export type PaymentGateway = 'razorpay' | 'mock';
-export type UserType = 'doctor' | 'lab';
+export type UserType = 'doctor' | 'lab' | 'patient';
+export type BookingType = 'subscription' | 'appointment';
 
 export interface Subscription {
   plan: PlanType;
@@ -13,16 +14,41 @@ export interface Subscription {
 
 export interface Transaction {
   id: string;
+  bookingType: BookingType;
+
+  // User Info
   userId: string;
   userType: UserType;
-  planType: PlanType;
+  userName?: string;
+
+  // Plan (for subscriptions)
+  planType?: PlanType;
+  expiryDate?: any; // Timestamp — only for subscriptions
+
+  // Appointment (for booking payments)
+  appointmentId?: string;
+  doctorId?: string;
+  doctorName?: string;
+  patientId?: string;
+  patientName?: string;
+  appointmentDate?: string;
+  appointmentTime?: string;
+  consultationType?: string;
+
+  // Payment Info
   amount: number;
   currency: 'INR';
   paymentStatus: PaymentStatus;
   paymentGateway: PaymentGateway;
   txnId: string;
-  createdAt: any; // Timestamp
-  expiryDate: any; // Timestamp
+
+  // Razorpay-specific fields
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  razorpaySignature?: string;
+
+  // Timestamps
+  createdAt: any; // Firestore serverTimestamp
 }
 
 export const SUBSCRIPTION_PLANS = [

@@ -5,9 +5,9 @@ import { Router, RouterModule } from '@angular/router';
 import { MockApiService } from '../../../core/services/mock-api.service';
 import { BookingService } from '../../../core/services/booking.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { PaymentService } from '../../../core/services/payment.service';
 import { Observable, map } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
-
 import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class BookAppointmentComponent implements OnInit {
   private api = inject(MockApiService);
   private bookingService = inject(BookingService);
   private authService = inject(AuthService);
+  private paymentService = inject(PaymentService);
   private router = inject(Router);
   private toast = inject(ToastService);
 
@@ -58,6 +59,13 @@ export class BookAppointmentComponent implements OnInit {
 
   get patientName(): string {
     return this.authService.currentUser?.fullName || '';
+  }
+
+  /** Consultation fee from selected doctor profile (fallback: 0) */
+  get appointmentFee(): number {
+    if (!this.selectedDoctor) return 0;
+    const fee = parseFloat(this.selectedDoctor.consultationFee ?? '0');
+    return isNaN(fee) ? 0 : fee;
   }
 
   selectDoctor(doc: any) {
@@ -116,7 +124,7 @@ export class BookAppointmentComponent implements OnInit {
 
   async confirmBooking() {
     if (!this.selectedTimeSlot || !this.selectedDoctor) return;
-    
+
     this.isProcessing = true;
     this.bookingError = '';
 
@@ -132,26 +140,76 @@ export class BookAppointmentComponent implements OnInit {
       return;
     }
 
+    // ── Step 1: Open Razorpay Payment (skip for free consultations) ──
+    let paymentResponse: any = null;
+    if (this.appointmentFee > 0) {
+      try {
+        const currentUser = this.authService.currentUser;
+        paymentResponse = await this.paymentService.openRazorpay({
+          amount: this.appointmentFee,
+          name: 'HealthHub',
+          description: `Appointment with ${this.selectedDoctor.fullName || this.selectedDoctor.name}`,
+          prefill: {
+            name: currentUser?.fullName ?? '',
+            email: currentUser?.email ?? '',
+            contact: (currentUser as any)?.phone ?? ''
+          }
+        });
+      } catch (payErr: any) {
+        this.bookingError = payErr.message ?? 'Payment was cancelled. Please try again.';
+        this.toast.error(this.bookingError, 'Payment Failed');
+        this.isProcessing = false;
+        return;
+      }
+    }
+
+    await this.finishBooking(paymentResponse);
+  }
+
+  /** Books the appointment and saves transaction after payment is confirmed. */
+  private async finishBooking(paymentResponse: any) {
     const result = await this.bookingService.bookAppointment({
       doctorId: this.selectedDoctor.id,
       doctorName: this.selectedDoctor.fullName || this.selectedDoctor.name,
       doctorSpecialty: this.selectedDoctor.specialization || 'Physiotherapist',
       doctorImage: this.selectedDoctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(this.selectedDoctor.fullName || 'Doctor')}&background=0D8ABC&color=fff`,
       date: this.selectedDate,
-      time: this.selectedTimeSlot,
+      time: this.selectedTimeSlot!,
       type: this.selectedConsultationType || 'Consultation',
       notes: this.patientNotes
     });
 
-    this.isProcessing = false;
-
     if (result.success) {
-      this.toast.success('Your appointment has been requested!', 'Booking Successful');
+      // Save Transaction to Firestore
+      try {
+        const currentUser = this.authService.currentUser;
+        if (currentUser) {
+          await this.paymentService.saveAppointmentTransaction({
+            patientId: currentUser.uid,
+            patientName: currentUser.fullName,
+            doctorId: this.selectedDoctor.id,
+            doctorName: this.selectedDoctor.fullName || this.selectedDoctor.name,
+            appointmentId: `appt_${Date.now()}`,
+            appointmentDate: this.selectedDate,
+            appointmentTime: this.selectedTimeSlot!,
+            consultationType: this.selectedConsultationType,
+            amount: this.appointmentFee,
+            paymentResponse: paymentResponse
+          });
+        }
+      } catch (txnErr) {
+        // Non-blocking: don't fail the booking if txn save fails
+        console.error('Transaction save error:', txnErr);
+      }
+
+      this.toast.success('Appointment booked & payment confirmed!', 'Booking Successful');
+      this.isProcessing = false;
       this.currentStep = 3;
     } else {
       this.bookingError = result.error || 'Booking failed.';
       this.toast.error(this.bookingError, 'Booking Failed');
-      this.refreshBookedSlots(); // Refresh in case it was just booked
+      this.isProcessing = false;
+      this.refreshBookedSlots();
     }
   }
 
@@ -164,6 +222,7 @@ export class BookAppointmentComponent implements OnInit {
       this.currentStep--;
     }
   }
+
 
   bookAnotherSlot() {
     this.currentStep = 1;
@@ -197,17 +256,17 @@ export class BookAppointmentComponent implements OnInit {
 
   private setDefaultConsultationType() {
     if (!this.selectedDoctor) return;
-    
+
     const type = (this.selectedDoctor.consultationType || '').toLowerCase();
     if (type === 'online') {
-        this.selectedConsultationType = 'Online';
+      this.selectedConsultationType = 'Online';
     } else if (type === 'in person' || type === 'in-person') {
-        this.selectedConsultationType = 'In Person';
+      this.selectedConsultationType = 'In Person';
     } else if (type === 'both') {
-        this.selectedConsultationType = 'In Person'; // Default to In Person but allows choice
+      this.selectedConsultationType = 'In Person'; // Default to In Person but allows choice
     } else {
-        // Fallback for missing or other types
-        this.selectedConsultationType = 'In Person';
+      // Fallback for missing or other types
+      this.selectedConsultationType = 'In Person';
     }
   }
 }

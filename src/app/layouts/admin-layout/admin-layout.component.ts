@@ -104,37 +104,51 @@ export class AdminLayoutComponent implements OnInit {
     this.isLoading = true;
 
     try {
-        const order = await this.paymentService.createOrder(this.selectedPlan.type, this.selectedPlan.price);
-        const paymentSuccess = await this.paymentService.verifyPayment(order.orderId, { status: 'success' });
-        
-        if (paymentSuccess) {
-            const currentUser = this.authService.currentUser;
-            if (currentUser) {
-                const expiryDate = this.paymentService.calculateExpiryDate(this.selectedPlan.type);
-                
-                await this.paymentService.saveTransaction({
-                    userId: currentUser.uid,
-                    userType: currentUser.role as any,
-                    planType: this.selectedPlan.type,
-                    amount: this.selectedPlan.price,
-                    paymentStatus: 'success',
-                    txnId: `txn_renew_${Date.now()}`,
-                    expiryDate: expiryDate
-                });
+        const currentUser = this.authService.currentUser;
+        if (!currentUser) return;
 
-                await this.authService.updateProfile(currentUser.uid, {
-                    subscription: {
-                        plan: this.selectedPlan.type,
-                        startDate: new Date(),
-                        expiryDate: expiryDate,
-                        status: 'active'
-                    }
-                });
-
-                this.isRenewing = false;
-                this.selectedPlan = null;
-            }
+        // 1. Open Razorpay popup
+        let paymentResponse: any;
+        try {
+            paymentResponse = await this.paymentService.openRazorpay({
+                amount: this.selectedPlan.price,
+                name: 'HealthHub',
+                description: `${this.selectedPlan.name} — Subscription Renewal`,
+                prefill: {
+                    name: currentUser.fullName,
+                    email: currentUser.email
+                }
+            });
+        } catch (payErr: any) {
+            // User cancelled — exit silently
+            this.isLoading = false;
+            return;
         }
+
+        // 2. Payment succeeded — save transaction + update profile
+        const expiryDate = this.paymentService.calculateExpiryDate(this.selectedPlan.type);
+
+        await this.paymentService.saveSubscriptionTransaction({
+            userId: currentUser.uid,
+            userType: currentUser.role as any,
+            userName: currentUser.fullName,
+            planType: this.selectedPlan.type,
+            amount: this.selectedPlan.price,
+            paymentResponse: paymentResponse,
+            expiryDate: expiryDate
+        });
+
+        await this.authService.updateProfile(currentUser.uid, {
+            subscription: {
+                plan: this.selectedPlan.type,
+                startDate: new Date(),
+                expiryDate: expiryDate,
+                status: 'active'
+            }
+        });
+
+        this.isRenewing = false;
+        this.selectedPlan = null;
     } catch (err) {
         console.error('Renewal failed', err);
     } finally {
