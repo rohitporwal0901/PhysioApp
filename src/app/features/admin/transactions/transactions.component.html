@@ -1,0 +1,277 @@
+<div class="space-y-6">
+
+  <!-- ══ FILTER BAR ══ -->
+  <div class="bg-surface dark:bg-slate-800 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 p-4 sm:p-5 transition-colors">
+
+    <!-- Row 1: Date Period Pills (Available to all roles) -->
+    <div class="flex flex-wrap items-center gap-2 mb-4">
+      <button *ngFor="let p of [
+        {key:'today', label:'Today'},
+        {key:'yesterday', label:'Yesterday'},
+        {key:'week', label:'This Week'},
+        {key:'month', label:'This Month'},
+        {key:'last_month', label:'Last Month'}
+      ]"
+        (click)="setPeriod($any(p.key))"
+        [class.period-pill-active]="transactionPeriod() === p.key && !showCustomDateRange()"
+        [class.period-pill-inactive]="transactionPeriod() !== p.key || showCustomDateRange()"
+        class="period-pill">
+        {{ p.label }}
+      </button>
+
+      <!-- Custom button -->
+      <button (click)="setPeriod('custom')"
+        [class.period-pill-active]="transactionPeriod() === 'custom' || showCustomDateRange()"
+        [class.period-pill-inactive]="transactionPeriod() !== 'custom' && !showCustomDateRange()"
+        class="period-pill flex items-center gap-1">
+        <i-lucide name="calendar-range" class="w-3.5 h-3.5"></i-lucide>
+        Custom
+        <i-lucide [name]="showCustomDateRange() ? 'chevron-up' : 'chevron-down'" class="w-3 h-3"></i-lucide>
+      </button>
+    </div>
+
+    <!-- Custom Date Range Picker -->
+    <div *ngIf="showCustomDateRange()"
+      class="mb-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600 flex flex-wrap items-end gap-3 transition-all">
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">From</label>
+        <input type="date" [ngModel]="customStartDate()" (ngModelChange)="customStartDate.set($event); onCustomDateChange()"
+          class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-primary-500/30 outline-none transition-all">
+      </div>
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">To</label>
+        <input type="date" [ngModel]="customEndDate()" (ngModelChange)="customEndDate.set($event); onCustomDateChange()"
+          class="px-3 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-primary-500/30 outline-none transition-all">
+      </div>
+      <div *ngIf="customDateError()" class="text-xs text-red-500 font-medium">{{ customDateError() }}</div>
+      <button (click)="applyCustomRange()" [disabled]="!!customDateError() || !customStartDate() || !customEndDate()"
+        class="px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        Apply
+      </button>
+      <button (click)="clearCustomRange()"
+        class="px-4 py-2 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+        Clear
+      </button>
+    </div>
+
+    <!-- Row 2: Entity Filters (Admin only) -->
+    <div *ngIf="isAdmin" class="flex flex-wrap items-center gap-3">
+      <!-- bookingType pills -->
+      <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-700/50 rounded-xl p-1">
+        <button *ngFor="let f of [
+          {key:'all', label:'All'},
+          {key:'appointment', label:'Appointments'},
+          {key:'subscription', label:'Subscriptions'}
+        ]"
+          (click)="bookingTypeFilter.set($any(f.key))"
+          [class.entity-pill-active]="bookingTypeFilter() === f.key"
+          [class.entity-pill-inactive]="bookingTypeFilter() !== f.key"
+          class="entity-pill">
+          {{ f.label }}
+        </button>
+      </div>
+
+      <!-- Doctor dropdown -->
+      <div class="relative">
+        <i-lucide name="chevron-down" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i-lucide>
+        <select [ngModel]="selectedDoctorId()" (ngModelChange)="selectedDoctorId.set($event)"
+          class="pl-3 pr-8 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-white appearance-none focus:ring-2 focus:ring-primary-500/30 outline-none min-w-[180px] transition-all">
+          <option value="">All Doctors</option>
+          <option *ngFor="let doc of doctors()" [value]="doc.uid || doc.id">{{ doc.fullName }}</option>
+        </select>
+      </div>
+
+      <!-- Clear all filters -->
+      <button *ngIf="selectedDoctorId() || bookingTypeFilter() !== 'all'"
+        (click)="selectedDoctorId.set(''); bookingTypeFilter.set('all')"
+        class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors">
+        <i-lucide name="x-circle" class="w-3.5 h-3.5"></i-lucide>
+        Clear
+      </button>
+    </div>
+
+    <!-- Filter Applied Label -->
+    <div class="flex items-center gap-1.5 mt-3">
+      <i-lucide name="filter" class="w-3.5 h-3.5 text-primary-500"></i-lucide>
+      <span class="text-xs font-medium text-slate-500 dark:text-slate-400">
+        Filter Applied: <strong class="text-slate-700 dark:text-slate-200">{{ filterAppliedLabel() }}</strong>
+      </span>
+    </div>
+  </div>
+
+  <!-- ══ STAT CARDS ══ -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+    <app-stat-card
+      title="Total Revenue"
+      [value]="formatCurrency(totalRevenue())"
+      icon="indian-rupee"
+      bgClass="bg-gradient-to-br from-primary-400 to-primary-600 shadow-primary-500/30"
+      textClass="text-white"
+      iconClass="text-white bg-white/20 border border-white/30 backdrop-blur-md">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Appointments"
+      [value]="appointmentCount()"
+      icon="calendar-check"
+      bgClass="bg-gradient-to-br from-secondary-400 to-secondary-600 shadow-secondary-500/30"
+      textClass="text-white"
+      iconClass="text-white bg-white/20 border border-white/30 backdrop-blur-md">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Subscriptions"
+      [value]="subscriptionCount()"
+      icon="badge-check"
+      bgClass="bg-gradient-to-br from-indigo-400 to-indigo-600 shadow-indigo-500/30"
+      textClass="text-white"
+      iconClass="text-white bg-white/20 border border-white/30 backdrop-blur-md">
+    </app-stat-card>
+
+    <app-stat-card
+      title="Total Transactions"
+      [value]="totalCount()"
+      icon="receipt"
+      bgClass="bg-gradient-to-br from-accent-400 to-accent-600 shadow-accent-500/30"
+      textClass="text-white"
+      iconClass="text-white bg-white/20 border border-white/30 backdrop-blur-md">
+    </app-stat-card>
+  </div>
+
+  <!-- ══ TRANSACTION TABLE ══ -->
+  <div class="bg-surface dark:bg-slate-800 rounded-2xl shadow-glass border border-slate-100 dark:border-slate-700 overflow-hidden transition-colors">
+
+    <!-- Table Header -->
+    <div class="px-6 py-5 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between transition-colors">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-primary-50 dark:bg-primary-900/30 rounded-xl flex items-center justify-center">
+          <i-lucide name="receipt" class="w-4.5 h-4.5 text-primary-600 dark:text-primary-400"></i-lucide>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-slate-800 dark:text-white tracking-tight">Transactions & Revenue</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{{ filterAppliedLabel() }}</p>
+        </div>
+      </div>
+      <button (click)="exportCSV()" [disabled]="!filteredTransactions().length"
+        class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-slate-700 dark:text-slate-200 hover:text-primary-700 dark:hover:text-primary-400 text-sm font-semibold rounded-xl border border-slate-200 dark:border-slate-600 hover:border-primary-200 dark:hover:border-primary-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+        <i-lucide name="download" class="w-4 h-4"></i-lucide>
+        Export CSV
+      </button>
+    </div>
+
+    <!-- Loading skeleton -->
+    <div *ngIf="isLoading()" class="p-6 space-y-4">
+      <div class="animate-pulse flex space-x-4" *ngFor="let i of [1,2,3,4,5]">
+        <div class="rounded-full bg-slate-200 dark:bg-slate-700 h-10 w-10 flex-shrink-0"></div>
+        <div class="flex-1 space-y-3 py-1">
+          <div class="h-2.5 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
+          <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+        </div>
+        <div class="h-2.5 bg-slate-200 dark:bg-slate-700 rounded w-20 self-center"></div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div *ngIf="!isLoading()" class="overflow-x-auto">
+      <table class="min-w-full text-left" *ngIf="filteredTransactions().length > 0; else emptyState">
+        <thead class="bg-slate-50 dark:bg-slate-700/40 border-b border-slate-100 dark:border-slate-700">
+          <tr>
+            <th class="txn-th">#</th>
+            <th class="txn-th">Type</th>
+            <th class="txn-th">Patient / User</th>
+            <th class="txn-th" *ngIf="isAdmin">Doctor</th>
+            <th class="txn-th">Amount</th>
+            <th class="txn-th">Payment ID</th>
+            <th class="txn-th">Date</th>
+            <th class="txn-th">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+          <tr *ngFor="let txn of filteredTransactions(); let i = index; trackBy: trackByTxn"
+            class="hover:bg-slate-50/80 dark:hover:bg-slate-700/40 transition-colors group">
+
+            <!-- # -->
+            <td class="txn-td text-slate-400 dark:text-slate-500 font-mono text-xs">{{ i + 1 }}</td>
+
+            <!-- Type badge -->
+            <td class="txn-td">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
+                [ngClass]="{
+                  'bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300': txn.bookingType === 'appointment',
+                  'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300': txn.bookingType === 'subscription'
+                }">
+                <i-lucide [name]="txn.bookingType === 'appointment' ? 'calendar' : 'badge-check'" class="w-3 h-3"></i-lucide>
+                {{ txn.bookingType === 'appointment' ? 'Appointment' : 'Subscription' }}
+              </span>
+            </td>
+
+            <!-- Patient / User -->
+            <td class="txn-td">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-600 dark:to-slate-700 flex items-center justify-center flex-shrink-0 text-xs font-bold text-slate-600 dark:text-slate-300">
+                  {{ (txn.patientName || txn.userName || '?').charAt(0).toUpperCase() }}
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-slate-800 dark:text-white leading-tight">{{ txn.patientName || txn.userName || '—' }}</p>
+                  <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5 capitalize">{{ txn.userType }}</p>
+                </div>
+              </div>
+            </td>
+
+            <!-- Doctor (admin only) -->
+            <td class="txn-td" *ngIf="isAdmin">
+              <span class="text-sm text-slate-700 dark:text-slate-300 font-medium">
+                {{ txn.doctorName || '—' }}
+              </span>
+            </td>
+
+            <!-- Amount -->
+            <td class="txn-td">
+              <span class="text-sm font-bold text-slate-900 dark:text-white">{{ formatCurrency(txn.amount ?? 0) }}</span>
+            </td>
+
+            <!-- Payment ID -->
+            <td class="txn-td">
+              <span class="font-mono text-xs text-slate-500 dark:text-slate-400 truncate max-w-[120px] block"
+                [title]="txn.razorpayPaymentId || txn.txnId || '—'">
+                {{ txn.razorpayPaymentId || txn.txnId || '—' }}
+              </span>
+            </td>
+
+            <!-- Date -->
+            <td class="txn-td text-sm text-slate-600 dark:text-slate-300">{{ formatDate(txn.createdAt) }}</td>
+
+            <!-- Status -->
+            <td class="txn-td">
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold"
+                [ngClass]="{
+                  'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400': txn.paymentStatus === 'success',
+                  'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': txn.paymentStatus === 'failed',
+                  'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400': txn.paymentStatus === 'pending'
+                }">
+                <span class="w-1.5 h-1.5 rounded-full inline-block"
+                  [ngClass]="{
+                    'bg-emerald-500': txn.paymentStatus === 'success',
+                    'bg-red-500': txn.paymentStatus === 'failed',
+                    'bg-amber-500': txn.paymentStatus === 'pending'
+                  }"></span>
+                {{ txn.paymentStatus | titlecase }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty State -->
+      <ng-template #emptyState>
+        <div class="py-20 flex flex-col items-center justify-center text-center">
+          <div class="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-4">
+            <i-lucide name="receipt" class="w-8 h-8 text-slate-300 dark:text-slate-600"></i-lucide>
+          </div>
+          <p class="text-base font-semibold text-slate-500 dark:text-slate-400">No transactions found</p>
+          <p class="text-sm text-slate-400 dark:text-slate-500 mt-1">Try adjusting your filters or date range.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

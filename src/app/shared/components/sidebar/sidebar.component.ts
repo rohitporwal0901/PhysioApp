@@ -79,6 +79,7 @@ export class SidebarComponent {
           { label: 'Dashboard', icon: 'layout-dashboard', path: '/doctor/dashboard' },
           { label: 'My Agenda', icon: 'calendar', path: '/doctor/agenda', badge: 'Today', badgeColor: 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400' },
           { label: 'My Patients', icon: 'users', path: '/doctor/patients' },
+          { label: 'Transactions', icon: 'receipt', path: '/doctor/transactions' },
           { label: 'My Profile', icon: 'user', path: '/doctor/profile' },
         ];
       case 'patient':
@@ -92,11 +93,13 @@ export class SidebarComponent {
       case 'lab':
         return [
           { label: 'Dashboard', icon: 'layout-dashboard', path: '/lab/dashboard' },
+          { label: 'Transactions', icon: 'receipt', path: '/lab/transactions' },
         ];
       case 'admin':
       default:
         return [
           { label: 'Dashboard', icon: 'layout-dashboard', path: '/admin/dashboard' },
+          { label: 'Transactions', icon: 'receipt', path: '/admin/transactions' },
           { label: 'Doctors', icon: 'activity', path: '/admin/doctors' },
           { label: 'Patients', icon: 'users', path: '/admin/patients' },
           { label: 'Diagnostic Labs', icon: 'microscope', path: '/admin/lab-technicians' },

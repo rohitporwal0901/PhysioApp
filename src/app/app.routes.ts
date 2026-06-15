@@ -60,6 +60,11 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/admin/doctors/doctors.component').then(m => m.DoctorsComponent)
             },
             {
+                path: 'admin/transactions',
+                canActivate: [roleGuard(['admin'])],
+                loadComponent: () => import('./features/admin/transactions/transactions.component').then(m => m.TransactionsComponent)
+            },
+            {
                 path: 'admin/patients',
                 canActivate: [roleGuard(['admin'])],
                 loadComponent: () => import('./features/admin/patients/patients.component').then(m => m.PatientsComponent)
@@ -94,6 +99,11 @@ export const routes: Routes = [
                 path: 'doctor/patients',
                 canActivate: [roleGuard(['doctor'])],
                 loadComponent: () => import('./features/doctor/patients/patients.component').then(m => m.PatientsComponent)
+            },
+            {
+                path: 'doctor/transactions',
+                canActivate: [roleGuard(['doctor'])],
+                loadComponent: () => import('./features/admin/transactions/transactions.component').then(m => m.TransactionsComponent)
             },
             {
                 path: 'doctor/profile',
@@ -131,6 +141,11 @@ export const routes: Routes = [
                 path: 'lab/dashboard',
                 canActivate: [roleGuard(['lab'])],
                 loadComponent: () => import('./features/lab/dashboard/dashboard.component').then(m => m.DashboardComponent)
+            },
+            {
+                path: 'lab/transactions',
+                canActivate: [roleGuard(['lab'])],
+                loadComponent: () => import('./features/admin/transactions/transactions.component').then(m => m.TransactionsComponent)
             }
         ]
     },
