@@ -4,7 +4,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import {
   LucideAngularModule,
   Activity, Mail, Lock, LayoutDashboard, LayoutGrid, Users, UserPlus, Calendar,
-  ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
+  ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, ChevronUp, Menu, X, Filter, Search, Plus, Moon, Sun,
   PlaySquare, PlayCircle, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
   FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2,
   Heart, Zap, Shield, MapPin, Phone, PhoneCall, GraduationCap, Award,
@@ -19,7 +19,7 @@ import {
   CalendarX, UserSearch,
   CreditCard, UploadCloud, FlaskConical, FileWarning, FileBox, Timer,
   Baby, Dna, Thermometer, Pill, Syringe, TestTube2, ShieldPlus, Database, BrainCircuit, Smile,
-  Ambulance, Hospital, Bandage, BriefcaseMedical,
+  Ambulance, Hospital, Bandage, BriefcaseMedical, CalendarRange, Receipt, BadgeCheck
 } from 'lucide-angular';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -49,7 +49,7 @@ export const appConfig: ApplicationConfig = {
     UserTrackingService,
     importProvidersFrom(LucideAngularModule.pick({
       Activity, Mail, Lock, LayoutDashboard, LayoutGrid, Users, UserPlus, Calendar,
-      ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
+      ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, ChevronUp, Menu, X, Filter, Search, Plus, Moon, Sun,
       PlaySquare, PlayCircle, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
       FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2,
       Heart, Zap, Shield, MapPin, Phone, PhoneCall, GraduationCap, Award,
@@ -64,7 +64,7 @@ export const appConfig: ApplicationConfig = {
       CalendarX, UserSearch,
       CreditCard, UploadCloud, FlaskConical, FileWarning, FileBox, Timer,
       Baby, Dna, Thermometer, Pill, Syringe, TestTube2, ShieldPlus, Database, BrainCircuit, Smile,
-      Ambulance, Hospital, Bandage, BriefcaseMedical,
+      Ambulance, Hospital, Bandage, BriefcaseMedical, CalendarRange, Receipt, BadgeCheck
     }))
   ]
 };

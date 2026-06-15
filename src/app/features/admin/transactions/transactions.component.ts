@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Firestore, collection, onSnapshot, query, orderBy } from '@angular/fire/firestore';
+import { Firestore, collection, onSnapshot, query, orderBy, getDocs, where } from '@angular/fire/firestore';
 import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../../core/services/auth.service';
 import { MockApiService } from '../../../core/services/mock-api.service';
@@ -21,6 +21,7 @@ export class TransactionsComponent implements OnInit {
   private firestore = inject(Firestore);
   private authService = inject(AuthService);
   private api = inject(MockApiService);
+  Math = Math;
 
   // ── State ──────────────────────────────────────────────
   isLoading = signal(true);
@@ -35,6 +36,10 @@ export class TransactionsComponent implements OnInit {
   customDateError = signal('');
   bookingTypeFilter = signal<BookingFilter>('all');
   selectedDoctorId = signal('');
+
+  // ── Pagination ─────────────────────────────────────────
+  currentPage = signal(1);
+  pageSize = 10;
 
   // ── Computed: date range ────────────────────────────────
   currentDateRange = computed(() => this.getDateRangeForPeriod(this.transactionPeriod()));
@@ -74,7 +79,7 @@ export class TransactionsComponent implements OnInit {
 
     // Doctor dropdown filter (admin only)
     if (role === 'admin' && this.selectedDoctorId()) {
-      list = list.filter(t => t.doctorId === this.selectedDoctorId());
+      list = list.filter(t => t.doctorId === this.selectedDoctorId() || t.userId === this.selectedDoctorId());
     }
 
     // Sort: newest first
@@ -84,6 +89,22 @@ export class TransactionsComponent implements OnInit {
       return db.getTime() - da.getTime();
     });
   });
+
+  paginatedTransactions = computed(() => {
+    const list = this.filteredTransactions();
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return list.slice(start, start + this.pageSize);
+  });
+
+  totalPages = computed(() => Math.max(1, Math.ceil(this.filteredTransactions().length / this.pageSize)));
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) this.currentPage.update(p => p + 1);
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) this.currentPage.update(p => p - 1);
+  }
 
   // ── Stats ──────────────────────────────────────────────
   totalRevenue = computed(() => this.filteredTransactions().reduce((s, t) => s + (t.amount ?? 0), 0));
@@ -101,14 +122,25 @@ export class TransactionsComponent implements OnInit {
     }
   }
 
-  private loadTransactions() {
+  async loadTransactions() {
     this.isLoading.set(true);
-    const q = query(collection(this.firestore, 'transactions'), orderBy('createdAt', 'desc'));
-    onSnapshot(q, snapshot => {
+    try {
+      const { startDate, endDate } = this.currentDateRange();
+      const q = query(
+        collection(this.firestore, 'transactions'),
+        where('createdAt', '>=', startDate),
+        where('createdAt', '<=', endDate),
+        orderBy('createdAt', 'desc')
+      );
+      const snapshot = await getDocs(q);
       const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       this.allTransactions.set(data);
+      this.currentPage.set(1);
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+    } finally {
       this.isLoading.set(false);
-    }, () => this.isLoading.set(false));
+    }
   }
 
   // ── Period filter ──────────────────────────────────────
@@ -119,6 +151,7 @@ export class TransactionsComponent implements OnInit {
     }
     this.showCustomDateRange.set(false);
     this.transactionPeriod.set(period);
+    this.loadTransactions();
   }
 
   applyCustomRange() {
@@ -128,6 +161,7 @@ export class TransactionsComponent implements OnInit {
     if (s && e) {
       this.transactionPeriod.set('custom');
       this.showCustomDateRange.set(false);
+      this.loadTransactions();
     }
   }
 
@@ -137,6 +171,7 @@ export class TransactionsComponent implements OnInit {
     this.customDateError.set('');
     this.showCustomDateRange.set(false);
     this.transactionPeriod.set('today');
+    this.loadTransactions();
   }
 
   onCustomDateChange() {

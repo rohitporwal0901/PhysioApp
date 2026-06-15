@@ -63,7 +63,7 @@
           {key:'appointment', label:'Appointments'},
           {key:'subscription', label:'Subscriptions'}
         ]"
-          (click)="bookingTypeFilter.set($any(f.key))"
+          (click)="bookingTypeFilter.set($any(f.key)); loadTransactions()"
           [class.entity-pill-active]="bookingTypeFilter() === f.key"
           [class.entity-pill-inactive]="bookingTypeFilter() !== f.key"
           class="entity-pill">
@@ -74,7 +74,7 @@
       <!-- Doctor dropdown -->
       <div class="relative">
         <i-lucide name="chevron-down" class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i-lucide>
-        <select [ngModel]="selectedDoctorId()" (ngModelChange)="selectedDoctorId.set($event)"
+        <select [ngModel]="selectedDoctorId()" (ngModelChange)="selectedDoctorId.set($event); loadTransactions()"
           class="pl-3 pr-8 py-2 text-sm border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-white appearance-none focus:ring-2 focus:ring-primary-500/30 outline-none min-w-[180px] transition-all">
           <option value="">All Doctors</option>
           <option *ngFor="let doc of doctors()" [value]="doc.uid || doc.id">{{ doc.fullName }}</option>
@@ -83,7 +83,7 @@
 
       <!-- Clear all filters -->
       <button *ngIf="selectedDoctorId() || bookingTypeFilter() !== 'all'"
-        (click)="selectedDoctorId.set(''); bookingTypeFilter.set('all')"
+        (click)="selectedDoctorId.set(''); bookingTypeFilter.set('all'); loadTransactions()"
         class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors">
         <i-lucide name="x-circle" class="w-3.5 h-3.5"></i-lucide>
         Clear
@@ -159,16 +159,17 @@
       </button>
     </div>
 
-    <!-- Loading skeleton -->
-    <div *ngIf="isLoading()" class="p-6 space-y-4">
-      <div class="animate-pulse flex space-x-4" *ngFor="let i of [1,2,3,4,5]">
-        <div class="rounded-full bg-slate-200 dark:bg-slate-700 h-10 w-10 flex-shrink-0"></div>
-        <div class="flex-1 space-y-3 py-1">
-          <div class="h-2.5 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
-          <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+    <!-- Loading spinner -->
+    <div *ngIf="isLoading()" class="py-24 flex flex-col items-center justify-center text-center">
+      <div class="relative w-16 h-16 mb-4">
+        <div class="absolute inset-0 rounded-full border-4 border-slate-100 dark:border-slate-700"></div>
+        <div class="absolute inset-0 rounded-full border-4 border-primary-500 border-t-transparent animate-spin"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <i-lucide name="receipt" class="w-6 h-6 text-primary-500/50"></i-lucide>
         </div>
-        <div class="h-2.5 bg-slate-200 dark:bg-slate-700 rounded w-20 self-center"></div>
       </div>
+      <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">Fetching Transactions...</p>
+      <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Please wait while we load the latest data.</p>
     </div>
 
     <!-- Table -->
@@ -187,11 +188,11 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
-          <tr *ngFor="let txn of filteredTransactions(); let i = index; trackBy: trackByTxn"
+          <tr *ngFor="let txn of paginatedTransactions(); let i = index; trackBy: trackByTxn"
             class="hover:bg-slate-50/80 dark:hover:bg-slate-700/40 transition-colors group">
 
             <!-- # -->
-            <td class="txn-td text-slate-400 dark:text-slate-500 font-mono text-xs">{{ i + 1 }}</td>
+            <td class="txn-td text-slate-400 dark:text-slate-500 font-mono text-xs">{{ (currentPage() - 1) * pageSize + i + 1 }}</td>
 
             <!-- Type badge -->
             <td class="txn-td">
@@ -272,6 +273,29 @@
           <p class="text-sm text-slate-400 dark:text-slate-500 mt-1">Try adjusting your filters or date range.</p>
         </div>
       </ng-template>
+
+      <!-- Pagination -->
+      <div *ngIf="filteredTransactions().length > 10" class="px-6 py-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between">
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          Showing <span class="font-semibold text-slate-800 dark:text-slate-200">{{ ((currentPage() - 1) * pageSize) + 1 }}</span> to 
+          <span class="font-semibold text-slate-800 dark:text-slate-200">{{ Math.min(currentPage() * pageSize, filteredTransactions().length) }}</span> of 
+          <span class="font-semibold text-slate-800 dark:text-slate-200">{{ filteredTransactions().length }}</span> entries
+        </p>
+        <div class="flex items-center gap-2">
+          <button (click)="prevPage()" [disabled]="currentPage() === 1"
+            class="p-2 rounded-lg border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            <i-lucide name="chevron-left" class="w-4 h-4"></i-lucide>
+          </button>
+          <div class="px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-600">
+            Page {{ currentPage() }} of {{ totalPages() }}
+          </div>
+          <button (click)="nextPage()" [disabled]="currentPage() === totalPages()"
+            class="p-2 rounded-lg border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+            <i-lucide name="chevron-right" class="w-4 h-4"></i-lucide>
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
