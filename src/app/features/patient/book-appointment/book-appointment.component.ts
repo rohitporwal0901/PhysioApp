@@ -36,6 +36,8 @@ export class BookAppointmentComponent implements OnInit {
   bookedSlots: string[] = [];
   bookingError = '';
   isProcessing = false;
+  isPaymentProcessing = false;
+  isPaymentSuccess = false;
   patientNotes = '';
 
   // All available slots (Standardized with DoctorProfile)
@@ -163,6 +165,7 @@ export class BookAppointmentComponent implements OnInit {
       }
     }
 
+    this.isPaymentProcessing = true;
     await this.finishBooking(paymentResponse);
   }
 
@@ -203,11 +206,19 @@ export class BookAppointmentComponent implements OnInit {
       }
 
       this.toast.success('Appointment booked & payment confirmed!', 'Booking Successful');
-      this.isProcessing = false;
-      this.currentStep = 3;
+      
+      this.isPaymentProcessing = false;
+      this.isPaymentSuccess = true;
+
+      setTimeout(() => {
+          this.isPaymentSuccess = false;
+          this.isProcessing = false;
+          this.currentStep = 3;
+      }, 2500);
     } else {
       this.bookingError = result.error || 'Booking failed.';
       this.toast.error(this.bookingError, 'Booking Failed');
+      this.isPaymentProcessing = false;
       this.isProcessing = false;
       this.refreshBookedSlots();
     }

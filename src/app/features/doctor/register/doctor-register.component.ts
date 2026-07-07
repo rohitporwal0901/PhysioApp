@@ -31,6 +31,8 @@ export class DoctorRegisterComponent implements OnInit {
     }
 
     isLoading = false;
+    isPaymentProcessing = false;
+    isPaymentSuccess = false;
     showPassword = false;
     currentStep = 1;
     totalSteps = 6;
@@ -296,6 +298,10 @@ export class DoctorRegisterComponent implements OnInit {
                 return;
             }
 
+            // --- PAYMENT SUCCESSFUL, SHOW PROCESSING OVERLAY ---
+            this.isLoading = false;
+            this.isPaymentProcessing = true;
+
             // 2. Register Doctor only after payment success
             const result = await this.authService.registerDoctor({
                 email: this.email,
@@ -346,15 +352,26 @@ export class DoctorRegisterComponent implements OnInit {
                         }
                     });
 
-                    this.router.navigate(['/doctor/dashboard']);
+                    // --- SHOW SUCCESS ANIMATION ---
+                    this.isPaymentProcessing = false;
+                    this.isPaymentSuccess = true;
+                    
+                    // Wait for 2.5 seconds to show the animation, then navigate
+                    setTimeout(() => {
+                        this.router.navigate(['/doctor/dashboard']);
+                    }, 2500);
                 }
             } else {
+                this.isPaymentProcessing = false;
                 this.errorMessage = result.error ?? 'Registration failed. Please try again.';
             }
         } catch (err: any) {
+            this.isPaymentProcessing = false;
             this.errorMessage = 'An unexpected error occurred: ' + err.message;
         } finally {
-            this.isLoading = false;
+            if (this.isLoading) {
+                this.isLoading = false;
+            }
         }
     }
 }

@@ -24,6 +24,8 @@ export class AdminLayoutComponent implements OnInit {
 
   isRenewing = false;
   isLoading = false;
+  isPaymentProcessing = false;
+  isPaymentSuccess = false;
   selectedPlan: any = null;
   plans = SUBSCRIPTION_PLANS;
 
@@ -126,7 +128,10 @@ export class AdminLayoutComponent implements OnInit {
             return;
         }
 
-        // 2. Payment succeeded — save transaction + update profile
+        // --- PAYMENT SUCCESSFUL, SHOW PROCESSING OVERLAY ---
+        this.isLoading = false;
+        this.isPaymentProcessing = true;
+
         const expiryDate = this.paymentService.calculateExpiryDate(this.selectedPlan.type);
 
         await this.paymentService.saveSubscriptionTransaction({
@@ -148,12 +153,23 @@ export class AdminLayoutComponent implements OnInit {
             }
         });
 
-        this.isRenewing = false;
-        this.selectedPlan = null;
+        // --- SHOW SUCCESS ANIMATION ---
+        this.isPaymentProcessing = false;
+        this.isPaymentSuccess = true;
+        
+        setTimeout(() => {
+            this.isRenewing = false;
+            this.isPaymentSuccess = false;
+            this.selectedPlan = null;
+        }, 2500);
+
     } catch (err) {
         console.error('Renewal failed', err);
+        this.isPaymentProcessing = false;
     } finally {
-        this.isLoading = false;
+        if (this.isLoading) {
+            this.isLoading = false;
+        }
     }
   }
 }
