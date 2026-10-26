@@ -69,7 +69,7 @@ export const SUBSCRIPTION_PLANS = [
   {
     type: 'halfYearly' as PlanType,
     name: 'Half-Yearly Plan',
-    price: 2499,
+    price: 10499,
     durationMonths: 6,
     features: [
       'All Monthly Features',
@@ -83,7 +83,7 @@ export const SUBSCRIPTION_PLANS = [
   {
     type: 'yearly' as PlanType,
     name: 'Yearly Plan',
-    price: 4499,
+    price: 21999,
     durationMonths: 12,
     features: [
       'All Half-Yearly Features',
