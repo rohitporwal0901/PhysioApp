@@ -79,7 +79,7 @@ export class PatientsComponent implements OnInit {
         
         // Clean the phone number (remove spaces, etc.)
         const cleanedPhone = phone.replace(/\D/g, '');
-        const message = `Hello ${patient.fullName || patient.name}, this is your Physiotherapist. I hope you are doing well!`;
+        const message = `Hello ${patient.fullName || patient.name}, this is your Doctor. I hope you are doing well!`;
         const url = `https://wa.me/${cleanedPhone}?text=${encodeURIComponent(message)}`;
         window.open(url, '_blank');
     }

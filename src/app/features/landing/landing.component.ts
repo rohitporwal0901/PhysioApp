@@ -69,24 +69,24 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     private heroImageInterval: any;
     heroImages = [
         {
-            url: 'https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=1200&auto=format&fit=crop',
-            label: 'Expert Physiotherapy',
-            caption: 'Personalised hands-on treatment by certified specialists'
+            url: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1200&auto=format&fit=crop',
+            label: 'Expert Doctor Consultation',
+            caption: 'Personalised care by board-certified specialists'
         },
         {
-            url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1200&auto=format&fit=crop',
-            label: 'Fitness Rehabilitation',
-            caption: 'Guided strength training & active recovery'
+            url: 'https://images.unsplash.com/photo-1551190822-a9333d879b1f?q=80&w=1200&auto=format&fit=crop',
+            label: 'Advanced Diagnostics',
+            caption: 'Cutting-edge diagnostic tools for accurate results'
         },
         {
-            url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1200&auto=format&fit=crop',
-            label: 'Yoga & Flexibility',
-            caption: 'Improve mobility with therapeutic yoga sessions'
+            url: 'https://images.unsplash.com/photo-1530026405186-ed1f139313f3?q=80&w=1200&auto=format&fit=crop',
+            label: 'Preventive Healthcare',
+            caption: 'Regular health check-ups for a healthier tomorrow'
         },
         {
-            url: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?q=80&w=1200&auto=format&fit=crop',
-            label: 'Sports Recovery',
-            caption: 'Get back to peak performance after injury'
+            url: 'https://images.unsplash.com/photo-1666214280429-8d828f79eed6?q=80&w=1200&auto=format&fit=crop',
+            label: 'Specialist Care',
+            caption: 'Access top specialists across every medical field'
         },
 
     ];
@@ -109,33 +109,33 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Animated counters
     statCounters = [
-        { label: 'Patients Treated', numericValue: 5000, current: 0, suffix: '+', animated: false },
-        { label: 'Expert Therapists', numericValue: 30, current: 0, suffix: '+', animated: false },
+        { label: 'Patients Served', numericValue: 50000, current: 0, suffix: '+', animated: false },
+        { label: 'Verified Doctors', numericValue: 500, current: 0, suffix: '+', animated: false },
         { label: 'Satisfaction Rate', numericValue: 98, current: 0, suffix: '%', animated: false },
-        { label: 'Years of Excellence', numericValue: 12, current: 0, suffix: '+', animated: false },
+        { label: 'Medical Specialties', numericValue: 30, current: 0, suffix: '+', animated: false },
     ];
 
     statIcons = ['users', 'stethoscope', 'heart-pulse', 'award'];
 
     conditions = [
-        { label: 'Back Pain', icon: 'accessibility' },
-        { label: 'Knee Injury', icon: 'footprints' },
-        { label: 'Shoulder Pain', icon: 'activity' },
-        { label: 'Neck Pain', icon: 'brain' },
-        { label: 'Sports Injury', icon: 'zap' },
-        { label: 'Post Surgery', icon: 'stethoscope' },
-        { label: 'Frozen Shoulder', icon: 'shield-check' },
-        { label: 'Arthritis', icon: 'bone' },
-        { label: 'Sciatica', icon: 'activity' },
-        { label: 'Stroke Rehab', icon: 'heart-pulse' },
+        { label: 'Fever & Cold', icon: 'thermometer' },
+        { label: 'Diabetes', icon: 'activity' },
+        { label: 'Heart Disease', icon: 'heart-pulse' },
+        { label: 'Skin Issues', icon: 'shield-check' },
+        { label: 'Mental Health', icon: 'brain' },
+        { label: 'Bone & Joint', icon: 'stethoscope' },
+        { label: 'Eye Care', icon: 'eye' },
+        { label: 'Child Health', icon: 'users' },
+        { label: 'Women Health', icon: 'heart' },
+        { label: 'Cancer Care', icon: 'zap' },
     ];
 
     howItWorks = [
         {
             step: '01',
             icon: 'search',
-            title: 'Find Your Specialist',
-            desc: 'Browse verified physiotherapists by condition, location or availability.',
+            title: 'Find Your Doctor',
+            desc: 'Browse verified doctors by specialty, location or availability across 30+ disciplines.',
             color: 'teal',
             bgImage: 'assets/how-it-works/step1.png'
         },
@@ -143,65 +143,65 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             step: '02',
             icon: 'calendar-check',
             title: 'Book an Appointment',
-            desc: 'Pick a date and time that suits you — online, in-clinic or home visit.',
+            desc: 'Pick a date and time that suits you — in-clinic, online video or home visit.',
             color: 'emerald',
             bgImage: 'assets/how-it-works/step2.png'
         },
         {
             step: '03',
-            icon: 'clipboard-list',
-            title: 'Get Your Treatment Plan',
-            desc: 'Your specialist builds a personalised plan tailored to your exact needs.',
+            icon: 'stethoscope',
+            title: 'Consult & Get Diagnosed',
+            desc: 'Meet your doctor, get a thorough diagnosis and a personalised treatment plan.',
             color: 'sky',
             bgImage: 'assets/how-it-works/step3.png'
         },
         {
             step: '04',
             icon: 'trending-up',
-            title: 'Track Your Recovery',
-            desc: 'Monitor progress, receive reminders and celebrate every milestone.',
+            title: 'Follow-Up & Stay Healthy',
+            desc: 'Track medications, receive follow-up reminders and monitor your health journey.',
             color: 'violet',
             bgImage: 'assets/how-it-works/step4.png'
         },
     ];
 
     services = [
-        { icon: 'activity', title: 'Sports Rehabilitation', desc: 'Advanced care for sports injuries — muscle tears, ligament sprains, fractures & more.', color: 'from-primary-400 to-primary-600', specialty: 'Physiotherapy' },
-        { icon: 'heart', title: 'Cardiology', desc: 'Breathing & cardiovascular rehabilitation for heart and lung conditions.', color: 'from-rose-400 to-rose-600', specialty: 'Cardiology' },
-        { icon: 'zap', title: 'Neurological Care', desc: 'Expert care for stroke, Parkinson\'s, MS, and peripheral nerve injuries.', color: 'from-amber-400 to-amber-600', specialty: 'Neurology' },
-        { icon: 'users', title: 'Paediatric Care', desc: 'Gentle, child-friendly therapy for developmental delays and physical conditions.', color: 'from-secondary-400 to-secondary-600', specialty: 'Pediatrics' },
-        { icon: 'shield-check', title: 'Orthopaedic Recovery', desc: 'Structured rehabilitation plans following orthopaedic or spinal surgeries.', color: 'from-accent-400 to-accent-600', specialty: 'Orthopedics' },
-        { icon: 'stethoscope', title: 'General Consult', desc: 'Comprehensive health check-ups and treatments for all ages.', color: 'from-violet-400 to-violet-600', specialty: 'General Physician' },
+        { icon: 'heart-pulse', title: 'Cardiology', desc: 'Expert diagnosis and treatment for heart disease, hypertension, arrhythmias and cardiac conditions.', color: 'from-rose-400 to-rose-600', specialty: 'Cardiology' },
+        { icon: 'brain', title: 'Neurology', desc: 'Specialised care for stroke, migraines, epilepsy, Parkinson\'s and nervous system disorders.', color: 'from-violet-400 to-violet-600', specialty: 'Neurology' },
+        { icon: 'bone', title: 'Orthopaedics', desc: 'Bone, joint and muscle care — fractures, arthritis, joint replacements and sports injuries.', color: 'from-amber-400 to-amber-600', specialty: 'Orthopedics' },
+        { icon: 'users', title: 'Paediatrics', desc: 'Compassionate, child-friendly medical care from newborns to adolescents.', color: 'from-secondary-400 to-secondary-600', specialty: 'Pediatrics' },
+        { icon: 'eye', title: 'Ophthalmology', desc: 'Complete eye care — vision tests, cataract surgery, glaucoma and retinal treatments.', color: 'from-sky-400 to-sky-600', specialty: 'Ophthalmology' },
+        { icon: 'stethoscope', title: 'General Medicine', desc: 'Comprehensive health check-ups, preventive care and treatment for common illnesses.', color: 'from-primary-400 to-primary-600', specialty: 'General Physician' },
     ];
 
     testimonials = [
-        { name: 'Priya Sharma', role: 'Marathon Runner', rating: 5, text: 'After my ACL tear I thought I\'d never run again. Six weeks of targeted physio at HealthHub and I was back on track. Truly world-class care.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop' },
-        { name: 'Ramesh Gupta', role: 'IT Professional', rating: 5, text: 'Booking took 2 minutes, the therapist was on time and my chronic back pain improved after three sessions. Highly recommend.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop' },
-        { name: 'Neha Verma', role: 'School Teacher', rating: 5, text: 'Five years of debilitating back pain — gone in 8 weeks. The personalised exercise plan changed my life. I wish I had come sooner!', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop' },
-        { name: 'Arjun Mehta', role: 'Cricket Player', rating: 5, text: 'Shoulder surgery rehab was seamless. The team monitored progress weekly and adjusted the plan. I\'m now bowling at full pace again.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop' },
-        { name: 'Sunita Rao', role: 'Retired Educator', rating: 5, text: 'The geriatric programme gave me my independence back. Safe exercises, caring staff and brilliant follow-up. 10/10.', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop' },
+        { name: 'Priya Sharma', role: 'Working Professional', rating: 5, text: 'I consulted a cardiologist on HealthHub and was diagnosed early. The doctor was thorough, explained everything clearly and my health has improved dramatically.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop' },
+        { name: 'Ramesh Gupta', role: 'Business Owner', rating: 5, text: 'Booking an appointment took 2 minutes. The doctor was on time, the consultation was excellent and my diabetes is now well under control. Highly recommend!', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop' },
+        { name: 'Neha Verma', role: 'School Teacher', rating: 5, text: 'Found a top dermatologist in my city through HealthHub. The skin condition I\'d struggled with for years was resolved in just 4 weeks. Truly life-changing!', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop' },
+        { name: 'Arjun Mehta', role: 'Software Engineer', rating: 5, text: 'My mother needed a neurologist urgently. HealthHub connected us with a specialist same day. The care and follow-up were outstanding. Couldn\'t be more grateful.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop' },
+        { name: 'Sunita Rao', role: 'Retired Civil Servant', rating: 5, text: 'The senior citizen health programme connected me with a caring geriatrician. Regular check-ups, medication reminders and follow-ups — all managed seamlessly. 10/10.', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop' },
     ];
 
     whyChoose = [
-        { icon: 'calendar-check', title: 'Instant Online Booking', desc: 'Book, reschedule or cancel in minutes — any device, 24 × 7.' },
-        { icon: 'user-check', title: 'Verified & Certified', desc: 'Every therapist holds valid certifications with verified clinical records.' },
-        { icon: 'clipboard-list', title: 'Evidence-Based Plans', desc: 'Treatment protocols backed by clinical research, tailored to each patient.' },
-        { icon: 'shield-check', title: 'Safe Clinical Standards', desc: 'ISO-compliant hygiene, sterilised equipment & structured safety protocols.' },
+        { icon: 'calendar-check', title: 'Instant Online Booking', desc: 'Book, reschedule or cancel in minutes — any device, any time, 24 × 7.' },
+        { icon: 'user-check', title: 'Verified & Certified Doctors', desc: 'Every doctor is board-certified, background-verified and holds valid medical registration.' },
+        { icon: 'clipboard-list', title: 'Personalised Treatment Plans', desc: 'Evidence-based treatment protocols tailored specifically to each patient\'s condition.' },
+        { icon: 'shield-check', title: 'Safe & Secure Platform', desc: 'Your health data is encrypted, private and protected under ISO & HIPAA-compliant standards.' },
     ];
 
     faqs = [
-        { q: 'Do I need a doctor\'s referral to book?', a: 'No referral is needed. You can book directly with any of our certified physiotherapists at any time.' },
-        { q: 'How long is a typical session?', a: 'Initial assessment sessions are 45–60 minutes. Follow-up treatment sessions typically last 30–45 minutes depending on your plan.' },
-        { q: 'Is physiotherapy covered by insurance?', a: 'Most major health insurance plans cover physiotherapy. We recommend checking with your insurer before your first visit. We provide invoices for reimbursement.' },
-        { q: 'Do you offer home visits?', a: 'Yes. We offer home-visit physiotherapy in select areas. You can filter therapists by "Home Visit Available" when booking.' },
-        { q: 'How many sessions will I need?', a: 'This depends on your condition. Many acute conditions improve in 4–8 sessions; chronic conditions may require a longer programme. Your therapist will set clear milestones.' },
-        { q: 'Can I switch my therapist if needed?', a: 'Absolutely. Patient satisfaction is our priority. You can request a different therapist anytime through your patient portal without any extra fee.' },
+        { q: 'Do I need a referral to book a specialist?', a: 'No referral is needed. You can directly search and book any specialist — cardiologist, dermatologist, neurologist and more — right from our platform.' },
+        { q: 'How long is a typical consultation?', a: 'Initial consultations are typically 20–40 minutes. Follow-up visits are usually 15–20 minutes. The duration may vary based on the doctor and your condition.' },
+        { q: 'Is the consultation covered by health insurance?', a: 'Many major health insurance plans cover doctor consultations. We recommend checking with your insurer. We provide detailed invoices for reimbursement claims.' },
+        { q: 'Do you offer online video consultations?', a: 'Yes. Most of our doctors offer online video consultations. You can filter by "Online Available" when searching for a doctor to find those offering telemedicine.' },
+        { q: 'How do I access my prescriptions and reports?', a: 'All prescriptions, lab reports and medical records are stored securely in your Patient Portal. You can download or share them with any doctor anytime.' },
+        { q: 'Can I switch my doctor if needed?', a: 'Absolutely. Patient satisfaction is our priority. You can book with a different doctor anytime through your patient portal without any cancellation fee.' },
     ];
 
     trustBadges = [
         { icon: 'award', label: 'ISO 9001 Certified' },
         { icon: 'shield-check', label: 'NABH Accredited' },
-        { icon: 'users', label: '500+ Trained Specialists' },
+        { icon: 'users', label: '500+ Verified Doctors' },
         { icon: 'heart-pulse', label: 'Evidence-Based Care' },
     ];
 

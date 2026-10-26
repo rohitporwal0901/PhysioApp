@@ -225,11 +225,11 @@
             <div
               class="absolute inset-[-6px] bg-gradient-to-br from-primary-300/30 to-secondary-400/20 rounded-3xl blur-sm">
             </div>
-            <div *ngIf="heroVideoSettings?.isActive"
+              <div *ngIf="heroVideoSettings?.isActive"
               class="relative w-full h-56 sm:h-72 rounded-3xl overflow-hidden shadow-xl bg-slate-900">
               <iframe class="absolute inset-0 w-full h-full"
                 [src]="'https://www.youtube.com/embed/' + heroVideoSettings?.videoId + '?autoplay=1&mute=1&loop=1&playlist=' + heroVideoSettings?.videoId + '&controls=0&showinfo=0&rel=0' | safe:'resourceUrl'"
-                title="Physiotherapy Mobile Dummy Video" frameborder="0"
+                title="Healthcare Mobile Video" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowfullscreen>
               </iframe>
@@ -244,8 +244,8 @@
                     <i-lucide name="play-circle" class="w-3.5 h-3.5 text-white"></i-lucide>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="text-white font-bold text-xs">Guided Physiotherapy</p>
-                    <p class="text-white/60 text-[10px] truncate">Watch professional recovery techniques</p>
+                    <p class="text-white font-bold text-xs">Expert Medical Care</p>
+                    <p class="text-white/60 text-[10px] truncate">Trusted doctors across all specialties</p>
                   </div>
                 </div>
               </div>
@@ -254,8 +254,8 @@
             <!-- Fallback Image if Video is disabled -->
             <div *ngIf="!heroVideoSettings?.isActive"
               class="relative w-full h-56 sm:h-72 rounded-3xl overflow-hidden shadow-xl">
-              <img src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=800&auto=format&fit=crop"
-                class="w-full h-full object-cover" alt="Physiotherapy">
+              <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=800&auto=format&fit=crop"
+                class="w-full h-full object-cover" alt="Doctor consultation">
             </div>
           </div>
         </div>
@@ -283,7 +283,7 @@
                 <iframe class="absolute inset-0 w-full h-full scale-[1.35] lg:scale-[1.2] pointer-events-none" [src]="'https://www.youtube.com/embed/' + heroVideoSettings?.videoId + 
   '?autoplay=1&mute=1&loop=1&playlist=' + heroVideoSettings?.videoId + 
   '&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1' 
-  | safe:'resourceUrl'" title="Physiotherapy Dummy Video" frameborder="0" allow="autoplay; encrypted-media"
+  | safe:'resourceUrl'" title="Healthcare Video" frameborder="0" allow="autoplay; encrypted-media"
                   allowfullscreen>
                 </iframe>
                 <div
@@ -298,8 +298,8 @@
                       <i-lucide name="play-circle" class="w-4 h-4 text-white"></i-lucide>
                     </div>
                     <div class="flex-1 min-w-0">
-                      <p class="text-white font-bold text-sm">Guided Physiotherapy</p>
-                      <p class="text-white/65 text-[11px] truncate">Watch professional recovery techniques</p>
+                      <p class="text-white font-bold text-sm">Expert Medical Care</p>
+                      <p class="text-white/65 text-[11px] truncate">Trusted doctors across all specialties</p>
                     </div>
                   </div>
                 </div>
@@ -308,12 +308,12 @@
               <!-- Fallback Slideshow/Image if Video is disabled -->
               <div *ngIf="!heroVideoSettings?.isActive"
                 class="hero-slideshow relative w-full h-[400px] xl:h-[460px] rounded-[2.8rem] overflow-hidden shadow-2xl z-10">
-                <img src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=1200&auto=format&fit=crop"
-                  class="w-full h-full object-cover" alt="Physiotherapy">
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1200&auto=format&fit=crop"
+                  class="w-full h-full object-cover" alt="Doctor consultation">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
                 <div class="absolute bottom-8 left-8 right-8 text-white">
                   <p class="text-2xl font-black mb-2">Expert Care</p>
-                  <p class="text-sm opacity-80">Leading physiotherapy services at your doorstep.</p>
+                  <p class="text-sm opacity-80">Trusted doctors across all specialties, at your service.</p>
                 </div>
               </div>
             </div>
@@ -459,7 +459,7 @@
           How <span class="text-gradient">HealthHub</span> Works
         </h2>
         <p class="text-slate-600 max-w-xl mx-auto text-base sm:text-lg">
-          From first click to full recovery — we make every step simple and transparent.
+          From finding the right doctor to getting your reports — we make every step simple and transparent.
         </p>
       </div>
 
@@ -511,7 +511,7 @@
           Comprehensive <span class="text-gradient">Care Services</span>
         </h2>
         <p class="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base lg:text-lg">
-          From acute injuries to chronic conditions, our clinical team delivers targeted, evidence-based treatment.
+          From cardiology to dermatology, our verified doctors deliver expert, evidence-based care for every condition.
         </p>
       </div>
 
@@ -674,8 +674,8 @@
             Our Partner <span class="text-gradient">Diagnostic Labs</span>
           </h2>
           <p class="text-slate-600 text-sm sm:text-base mb-4">
-            Quick diagnostics are key to effective recovery. Access world-class laboratory services through our verified
-            partners.
+            Accurate diagnostics are the foundation of great healthcare. Access world-class laboratory services through
+            our verified partners — fast, reliable and at your convenience.
           </p>
           <button (click)="goToLabRegister()"
             class="inline-flex items-center gap-2 text-primary-600 font-bold text-sm hover:text-primary-700 transition-colors group">
@@ -810,8 +810,9 @@
       </ng-template>
     </div>
   </section>
-  <!-- ══════════════════ AI POWERED RECOVERY (SLIM REDESIGN) ══════════════════ -->
-  <section class="py-10 sm:py-16 lg:py-20 bg-slate-950 relative overflow-hidden">
+  <!-- ══════════════════ AI POWERED RECOVERY — REMOVED ══════════════════ -->
+
+  <!-- ══════════════════ WHY CHOOSE US ══════════════════ -->
     <div class="absolute inset-0 opacity-30 pointer-events-none">
       <div class="absolute top-0 left-1/4 w-96 h-96 bg-emerald-600/10 rounded-full blur-[100px]"></div>
       <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-600/10 rounded-full blur-[100px]"></div>
@@ -892,8 +893,8 @@
               </h2>
 
               <p class="text-slate-400 text-base sm:text-lg leading-relaxed mb-10 max-w-lg">
-                Our clinical AI instantly analyzes your assessment data to generate professional therapeutic roadmaps
-                and progress reports.
+                Our clinical AI instantly analyses your health data to generate personalised insights,
+                prescription summaries and actionable health reports.
               </p>
 
               <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10">
@@ -911,7 +912,7 @@
                     </div>
                     }
                   </div>
-                  <p class="text-slate-500 text-xs font-semibold">Joined by 10k+ <br> Recovering Patients</p>
+                  <p class="text-slate-500 text-xs font-semibold">Joined by 10k+ <br> Patients & Counting</p>
                 </div>
               </div>
             </div>
@@ -942,19 +943,16 @@
               <div class="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center backdrop-blur-sm">
                 <i-lucide name="heart-pulse" class="w-7 h-7"></i-lucide>
               </div>
-              <div>
-                <p class="font-bold text-white text-lg font-heading">Start Recovery Today</p>
-                <p class="text-primary-200 text-xs">No waiting lists. No referrals needed.</p>
-              </div>
+            <p class="font-bold text-white text-lg font-heading">Start Your Health Journey</p>
+                <p class="text-primary-200 text-xs">No waiting lists. Book verified doctors instantly.</p>
             </div>
 
-            <!-- Mini checklist -->
             <ul class="space-y-3 mb-8">
               @for (p of [
-              'Certified & background-checked therapists',
+              'Board-certified & background-verified doctors',
               'Personalised evidence-based treatment plans',
               'Transparent pricing, no hidden charges',
-              'Digital progress tracking & reports'
+              'Digital health records & prescription tracking'
               ]; track p) {
               <li class="flex items-start gap-2.5 text-sm text-primary-100">
                 <i-lucide name="check-circle-2" class="w-4 h-4 text-white flex-shrink-0 mt-0.5"></i-lucide>
@@ -965,7 +963,7 @@
 
             <button (click)="goToRegister()"
               class="bg-white text-primary-600 font-bold py-3.5 px-8 rounded-xl hover:bg-primary-50 active:scale-95 transition-all shadow-md text-sm">
-              Book a Free Consultation →
+              Book a Free Doctor Consultation →
             </button>
           </div>
         </div>
@@ -976,8 +974,8 @@
           <p class="text-xs text-slate-500 font-medium">Patient satisfaction</p>
         </div>
         <div class="absolute -top-5 -right-5 bg-white rounded-2xl shadow-card border border-slate-100 px-5 py-4">
-          <p class="text-2xl font-black text-secondary-500 font-heading">10K+</p>
-          <p class="text-xs text-slate-500 font-medium">Sessions completed</p>
+          <p class="text-2xl font-black text-secondary-500 font-heading">50K+</p>
+          <p class="text-xs text-slate-500 font-medium">Patients served</p>
         </div>
       </div>
 
@@ -985,7 +983,7 @@
       <div class="reveal order-1 lg:order-2">
         <span class="section-chip">Why HealthHub?</span>
         <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-8">
-          A Platform Built for <span class="text-gradient">Patient Outcomes</span>
+          A Platform Built for <span class="text-gradient">Better Health Outcomes</span>
         </h2>
         <div class="space-y-5">
           @for (item of whyChoose; track item.title; let i = $index) {
@@ -1021,7 +1019,7 @@
           Real Patients. <span class="text-gradient">Real Outcomes.</span>
         </h2>
         <p class="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">
-          Genuine feedback from patients who completed treatment through HealthHub.
+          Genuine feedback from patients who consulted doctors through HealthHub.
         </p>
       </div>
 
@@ -1150,7 +1148,7 @@
         <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-3">
           Frequently <span class="text-gradient">Asked Questions</span>
         </h2>
-        <p class="text-slate-600 text-base">Everything you need to know before starting your treatment.</p>
+        <p class="text-slate-600 text-base">Everything you need to know before booking your first appointment.</p>
       </div>
 
       <div class="space-y-3 reveal">
@@ -1215,8 +1213,8 @@
                 class="text-primary-400">Hub</span></span>
           </div>
           <p class="hidden sm:block text-sm leading-relaxed max-w-xs">
-            India's trusted physiotherapy platform — connecting patients with certified specialists for in-clinic,
-            online and home-visit care.
+            India's trusted multi-specialty healthcare platform — connecting patients with verified doctors for in-clinic,
+            online video and home-visit consultations.
           </p>
           <!-- Accreditation icons -->
           <div class="hidden sm:flex flex-wrap gap-3 pt-2">
@@ -1313,7 +1311,7 @@
       <button (click)="goToRegister()"
         class="btn-primary w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-bold text-sm shadow-lg shadow-primary-500/30">
         <i-lucide name="calendar-check" class="w-4 h-4"></i-lucide>
-        Book Free Appointment
+        Book Free Consultation
       </button>
     </div>
   </div>

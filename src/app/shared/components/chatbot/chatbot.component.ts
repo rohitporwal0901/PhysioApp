@@ -28,7 +28,7 @@ export class ChatbotComponent implements AfterViewChecked {
 
   isOpen = false;
   messages: ChatMessage[] = [
-    { text: "Hi! I'm your AI health assistant. I can help answer questions about Health Hub services and basic healthcare. How can I help you?", isUser: false, time: new Date() }
+    { text: "Hi! I'm your AI health assistant. I can help you find the right doctor, understand symptoms, and answer questions about HealthHub's services. How can I help you today?", isUser: false, time: new Date() }
   ];
   userInput = '';
   isTyping = false;

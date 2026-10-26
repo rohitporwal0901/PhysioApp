@@ -174,7 +174,7 @@ export class BookAppointmentComponent implements OnInit {
     const result = await this.bookingService.bookAppointment({
       doctorId: this.selectedDoctor.id,
       doctorName: this.selectedDoctor.fullName || this.selectedDoctor.name,
-      doctorSpecialty: this.selectedDoctor.specialization || 'Physiotherapist',
+      doctorSpecialty: this.selectedDoctor.specialization || 'General Physician',
       doctorImage: this.selectedDoctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(this.selectedDoctor.fullName || 'Doctor')}&background=0D8ABC&color=fff`,
       date: this.selectedDate,
       time: this.selectedTimeSlot!,
