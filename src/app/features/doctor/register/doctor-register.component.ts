@@ -107,7 +107,7 @@ export class DoctorRegisterComponent implements OnInit {
         {
             type: 'halfYearly',
             name: 'Half-Yearly Plan',
-            price: 2499,
+            price: 10499,
             durationMonths: 6,
             features: [
                 'All Monthly Features',
@@ -121,7 +121,7 @@ export class DoctorRegisterComponent implements OnInit {
         {
             type: 'yearly',
             name: 'Yearly Plan',
-            price: 4499,
+            price: 21999,
             durationMonths: 12,
             features: [
                 'All Half-Yearly Features',
@@ -355,7 +355,7 @@ export class DoctorRegisterComponent implements OnInit {
                     // --- SHOW SUCCESS ANIMATION ---
                     this.isPaymentProcessing = false;
                     this.isPaymentSuccess = true;
-                    
+
                     // Wait for 2.5 seconds to show the animation, then navigate
                     setTimeout(() => {
                         this.router.navigate(['/doctor/dashboard']);
