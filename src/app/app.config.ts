@@ -19,7 +19,7 @@ import {
   CalendarX, UserSearch,
   CreditCard, UploadCloud, FlaskConical, FileWarning, FileBox, Timer,
   Baby, Dna, Thermometer, Pill, Syringe, TestTube2, ShieldPlus, Database, BrainCircuit, Smile,
-  Ambulance, Hospital, Bandage, BriefcaseMedical, CalendarRange, Receipt, BadgeCheck
+  Ambulance, Hospital, Bandage, BriefcaseMedical, CalendarRange, Receipt, BadgeCheck, FilePlus, Image
 } from 'lucide-angular';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -64,7 +64,7 @@ export const appConfig: ApplicationConfig = {
       CalendarX, UserSearch,
       CreditCard, UploadCloud, FlaskConical, FileWarning, FileBox, Timer,
       Baby, Dna, Thermometer, Pill, Syringe, TestTube2, ShieldPlus, Database, BrainCircuit, Smile,
-      Ambulance, Hospital, Bandage, BriefcaseMedical, CalendarRange, Receipt, BadgeCheck
+      Ambulance, Hospital, Bandage, BriefcaseMedical, CalendarRange, Receipt, BadgeCheck, FilePlus, Image
     }))
   ]
 };

@@ -44,6 +44,11 @@ export class MySessionsComponent implements OnInit {
   // AI Generation State
   generatingReportId: string | null = null;
 
+  // Prescription Modal State
+  selectedPrescriptionSession: BookedAppointment | null = null;
+  activePreviewFile: { name: string; url: string; type: string } | null = null;
+  isPrescriptionModalOpen = false;
+
   private doctorImages = [
     'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=400&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=400&auto=format&fit=crop',
@@ -477,6 +482,49 @@ export class MySessionsComponent implements OnInit {
       this.toast.error('Failed to submit feedback. Please try again.', 'Error');
     } finally {
       this.isSubmittingFeedback = false;
+    }
+  }
+
+  // ═══════════════════════════════════════
+  //  PRESCRIPTION VIEW & DOWNLOAD
+  // ═══════════════════════════════════════
+
+  openPrescriptionModal(session: BookedAppointment, fileToPreview?: { name: string; url: string; type: string }) {
+    if (session.prescription?.files && session.prescription.files.length > 0) {
+      this.selectedPrescriptionSession = session;
+      this.activePreviewFile = fileToPreview || session.prescription.files[0];
+      this.isPrescriptionModalOpen = true;
+    }
+  }
+
+  closePrescriptionModal() {
+    this.isPrescriptionModalOpen = false;
+    this.selectedPrescriptionSession = null;
+    this.activePreviewFile = null;
+  }
+
+  selectPreviewFile(file: { name: string; url: string; type: string }) {
+    this.activePreviewFile = file;
+  }
+
+  async downloadPrescriptionFile(file: { name: string; url: string; type: string }, event?: Event) {
+    if (event) event.stopPropagation();
+    try {
+      this.toast.info('Downloading file...', 'Prescription');
+      const response = await fetch(file.url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = file.name || 'Prescription';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      this.toast.success('Download completed.', 'Success');
+    } catch (e) {
+      console.warn('Direct fetch download failed, fallback to direct open:', e);
+      window.open(file.url, '_blank');
     }
   }
 }

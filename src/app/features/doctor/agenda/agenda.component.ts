@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BookingService, BookedAppointment } from '../../../core/services/booking.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ImageUploadService } from '../../../core/services/image-upload.service';
 import { Observable, of } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
 
@@ -18,6 +19,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 export class AgendaComponent implements OnInit {
   private bookingService = inject(BookingService);
   private authService = inject(AuthService);
+  private imageUploadService = inject(ImageUploadService);
 
   allAppointments: BookedAppointment[] = [];
   filteredAgenda: BookedAppointment[] = [];
@@ -38,6 +40,13 @@ export class AgendaComponent implements OnInit {
     icon: '',
     action: () => { }
   };
+
+  // Complete Session Modal with Prescription Upload
+  isCompleteModalOpen = false;
+  completeModalAppointment: BookedAppointment | null = null;
+  prescriptionFiles: { file: File; preview: string; name: string; type: string }[] = [];
+  isUploadingPrescription = false;
+  prescriptionUploadError = '';
 
   // Unsplash profile image collections for patients
   private patientImages = [
@@ -150,34 +159,109 @@ export class AgendaComponent implements OnInit {
 
   async completeAppointment(apt: BookedAppointment) {
     if (!apt.id || this.actionLoading) return;
+    this.completeModalAppointment = apt;
+    this.isCompleteModalOpen = true;
+    this.prescriptionFiles = [];
+    this.prescriptionUploadError = '';
+  }
 
-    this.confirmConfig = {
-      isOpen: true,
-      title: 'Complete Session',
-      message: `Mark this session with ${apt.patientName} as completed?`,
-      confirmText: 'Completed',
-      confirmBtnClass: 'bg-gradient-to-r from-blue-500 to-blue-600 shadow-blue-500/25',
-      icon: 'award',
-      action: async () => {
-        this.actionLoading = true;
-        try {
-          if (apt.id) {
-            if (this.clinicalNotes) {
-              await this.bookingService.updateTreatmentNotes(apt.id, this.clinicalNotes);
-            }
-            await this.bookingService.updateAppointmentStatus(apt.id, 'completed');
-            if (this.selectedAppointment?.id === apt.id) {
-              this.selectedAppointment.status = 'completed';
-              this.selectedAppointment.treatmentNotes = this.clinicalNotes;
-            }
-          }
-        } catch (error) {
-          console.error('Error completing appointment', error);
-        } finally {
-          this.actionLoading = false;
+  closeCompleteModal() {
+    this.isCompleteModalOpen = false;
+    this.completeModalAppointment = null;
+    this.prescriptionFiles = [];
+    this.prescriptionUploadError = '';
+  }
+
+  onPrescriptionFileSelected(event: any) {
+    const files: FileList = event.target.files;
+    if (!files || files.length === 0) return;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const validation = this.imageUploadService.validatePrescriptionFile(file);
+      if (!validation.valid) {
+        this.prescriptionUploadError = validation.error || 'Invalid file';
+        continue;
+      }
+
+      // Max 5 files
+      if (this.prescriptionFiles.length >= 5) {
+        this.prescriptionUploadError = 'Maximum 5 files allowed.';
+        break;
+      }
+
+      const preview = file.type.startsWith('image/') ? URL.createObjectURL(file) : '';
+      this.prescriptionFiles.push({
+        file,
+        preview,
+        name: file.name,
+        type: file.type
+      });
+      this.prescriptionUploadError = '';
+    }
+
+    // Reset file input
+    event.target.value = '';
+  }
+
+  removePrescriptionFile(index: number) {
+    const removed = this.prescriptionFiles.splice(index, 1);
+    if (removed[0]?.preview) {
+      URL.revokeObjectURL(removed[0].preview);
+    }
+  }
+
+  async confirmComplete() {
+    const apt = this.completeModalAppointment;
+    if (!apt?.id || this.actionLoading) return;
+
+    this.actionLoading = true;
+    this.isUploadingPrescription = true;
+
+    try {
+      // Save treatment notes
+      if (this.clinicalNotes) {
+        await this.bookingService.updateTreatmentNotes(apt.id, this.clinicalNotes);
+      }
+
+      // Upload prescription files if any
+      if (this.prescriptionFiles.length > 0) {
+        const uploadedFiles: { name: string; url: string; type: string }[] = [];
+
+        for (const pf of this.prescriptionFiles) {
+          const path = `prescriptions/${apt.id}/${Date.now()}_${pf.name}`;
+          const url = await this.imageUploadService.uploadFile(pf.file, path);
+          uploadedFiles.push({
+            name: pf.name,
+            url,
+            type: pf.type
+          });
+        }
+
+        await this.bookingService.updatePrescription(apt.id, uploadedFiles);
+        if (this.selectedAppointment?.id === apt.id) {
+          this.selectedAppointment.prescription = {
+            files: uploadedFiles,
+            uploadedAt: new Date()
+          };
         }
       }
-    };
+
+      // Mark as completed
+      await this.bookingService.updateAppointmentStatus(apt.id, 'completed');
+      if (this.selectedAppointment?.id === apt.id) {
+        this.selectedAppointment.status = 'completed';
+        this.selectedAppointment.treatmentNotes = this.clinicalNotes;
+      }
+
+      this.closeCompleteModal();
+    } catch (error) {
+      console.error('Error completing appointment', error);
+      this.prescriptionUploadError = 'Failed to complete. Please try again.';
+    } finally {
+      this.actionLoading = false;
+      this.isUploadingPrescription = false;
+    }
   }
 
   getStatusClass(status: string): string {

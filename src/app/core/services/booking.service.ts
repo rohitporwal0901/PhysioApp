@@ -37,6 +37,10 @@ export interface BookedAppointment {
   type: string;
   notes: string;          // Patient's complaint/reason for visit
   treatmentNotes?: string; // Doctor's notes after/during session
+  prescription?: {
+    files: { name: string; url: string; type: string }[];
+    uploadedAt: any;
+  };
   feedback?: {
     rating: number;
     comment: string;
@@ -187,6 +191,16 @@ export class BookingService {
   async updateTreatmentNotes(appointmentId: string, treatmentNotes: string): Promise<void> {
     const docRef = doc(this.firestore, 'appointments', appointmentId);
     await updateDoc(docRef, { treatmentNotes });
+  }
+
+  async updatePrescription(appointmentId: string, files: { name: string; url: string; type: string }[]): Promise<void> {
+    const docRef = doc(this.firestore, 'appointments', appointmentId);
+    await updateDoc(docRef, {
+      prescription: {
+        files,
+        uploadedAt: Timestamp.now()
+      }
+    });
   }
 
   async updateFeedback(appointmentId: string, feedback: { rating: number; comment: string }): Promise<void> {

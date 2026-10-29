@@ -55,11 +55,7 @@ export class PatientRegisterComponent implements OnInit {
 
   // Options
   genders = ['Male', 'Female', 'Other'];
-  conditions = [
-    'Back Pain', 'Neck Pain', 'Shoulder Injury', 
-    'Knee Pain', 'Sports Injury', 'Post-Surgery Recovery',
-    'Arthritis', 'Neurological Condition', 'General Wellness'
-  ];
+
 
   ngOnInit() {
     // Check for doctor context

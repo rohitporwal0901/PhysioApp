@@ -203,17 +203,7 @@
                 </div>
 
                 <div class="fields-grid">
-                    <!-- Condition -->
-                    <div class="field-group full-width">
-                        <label class="field-label">
-                            <i-lucide name="stethoscope" class="icon-xs text-slate-400"></i-lucide>
-                            Primary Condition <span class="optional">(optional)</span>
-                        </label>
-                        <select [(ngModel)]="condition" class="field-input field-select">
-                            <option value="">Select your condition</option>
-                            <option *ngFor="let c of conditions" [value]="c">{{ c }}</option>
-                        </select>
-                    </div>
+
 
                     <!-- Emergency Contact -->
                     <div class="field-group full-width">
