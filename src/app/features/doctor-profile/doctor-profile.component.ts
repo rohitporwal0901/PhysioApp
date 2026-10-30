@@ -9,6 +9,7 @@ import { Observable, of } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 
 import { ToastService } from '../../core/services/toast.service';
+import { PaymentService } from '../../core/services/payment.service';
 
 @Component({
     selector: 'app-doctor-profile',
@@ -24,6 +25,7 @@ export class DoctorProfileComponent implements OnInit {
     private bookingService = inject(BookingService);
     private authService = inject(AuthService);
     private toast = inject(ToastService);
+    private paymentService = inject(PaymentService);
 
     doctor: any = null;
     activeTab: 'profile' | 'book' = 'profile';
@@ -164,45 +166,99 @@ export class DoctorProfileComponent implements OnInit {
         }
     }
 
+    get appointmentFee(): number {
+        if (!this.doctor) return 0;
+        const fee = parseFloat(this.doctor.consultationFee ?? '0');
+        return isNaN(fee) ? 0 : fee;
+    }
+
     async confirmBooking() {
-        if (this.selectedDate && this.selectedSlot && this.doctor) {
-            if (!this.selectedConsultationType) {
-                this.bookingError = 'Please select a consultation type.';
+        if (!this.selectedDate || !this.selectedSlot || !this.doctor) return;
+
+        if (!this.isPatientRegistered) {
+            this.bookingError = 'Please log in as a registered patient to book an appointment.';
+            this.toast.error(this.bookingError, 'Login Required');
+            return;
+        }
+
+        if (!this.selectedConsultationType) {
+            this.bookingError = 'Please select a consultation type.';
+            return;
+        }
+
+        const notes = this.patientNotes?.trim() || 'General Consultation';
+
+        this.isProcessing = true;
+        this.bookingError = '';
+
+        // Step 1: Open Razorpay Payment (skip for free consultations)
+        let paymentResponse: any = null;
+        if (this.appointmentFee > 0) {
+            try {
+                const currentUser = this.authService.currentUser;
+                paymentResponse = await this.paymentService.openRazorpay({
+                    amount: this.appointmentFee,
+                    name: 'HealthHub',
+                    description: `Appointment with ${this.doctor.fullName || this.doctor.name}`,
+                    prefill: {
+                        name: currentUser?.fullName ?? '',
+                        email: currentUser?.email ?? '',
+                        contact: currentUser?.phone ?? ''
+                    }
+                });
+            } catch (payErr: any) {
+                this.bookingError = payErr.message ?? 'Payment was cancelled. Please try again.';
+                this.toast.error(this.bookingError, 'Payment Failed');
+                this.isProcessing = false;
                 return;
-            }
-
-            if (!this.patientNotes || this.patientNotes.trim().length < 10) {
-                this.bookingError = 'Please describe your condition/complaint (min 10 characters).';
-                return;
-            }
-            
-            this.isProcessing = true;
-            this.bookingError = '';
-
-            const result = await this.bookingService.bookAppointment({
-                doctorId: this.doctor.id,
-                doctorName: this.doctor.fullName || this.doctor.name || 'Doctor',
-                doctorSpecialty: this.doctor.specialization || this.doctor.specialty || 'General Physician',
-                doctorImage: this.doctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(this.doctor.fullName || 'Doctor')}&background=0D8ABC&color=fff`,
-                date: this.selectedDate,
-                time: this.selectedSlot,
-                type: this.selectedConsultationType || 'Consultation',
-                notes: this.patientNotes
-            });
-
-            this.isProcessing = false;
-
-            if (result.success) {
-                this.toast.success('Your appointment has been requested!', 'Success');
-                this.bookingConfirmed = true;
-                this.bookingError = '';
-                // Refresh booked slots
-                this.bookedSlots = await this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
-            } else {
-                this.bookingError = result.error || 'This slot is already booked or you are not registered.';
-                this.toast.error(this.bookingError, 'Booking Failed');
             }
         }
+
+        // Step 2: Book the appointment
+        const result = await this.bookingService.bookAppointment({
+            doctorId: this.doctor.id,
+            doctorName: this.doctor.fullName || this.doctor.name || 'Doctor',
+            doctorSpecialty: this.doctor.specialization || this.doctor.specialty || 'General Physician',
+            doctorImage: this.doctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(this.doctor.fullName || 'Doctor')}&background=0D8ABC&color=fff`,
+            date: this.selectedDate,
+            time: this.selectedSlot,
+            type: this.selectedConsultationType || 'Consultation',
+            notes: notes
+        });
+
+        if (result.success) {
+            // Step 3: Save transaction to Firestore
+            try {
+                const currentUser = this.authService.currentUser;
+                if (currentUser && paymentResponse) {
+                    await this.paymentService.saveAppointmentTransaction({
+                        patientId: currentUser.uid,
+                        patientName: currentUser.fullName,
+                        doctorId: this.doctor.id,
+                        doctorName: this.doctor.fullName || this.doctor.name,
+                        appointmentId: `appt_${Date.now()}`,
+                        appointmentDate: this.selectedDate,
+                        appointmentTime: this.selectedSlot,
+                        consultationType: this.selectedConsultationType,
+                        amount: this.appointmentFee,
+                        paymentResponse: paymentResponse
+                    });
+                }
+            } catch (txnErr) {
+                console.error('Transaction save error:', txnErr);
+            }
+
+            this.toast.success('Your appointment has been booked & payment confirmed!', 'Success');
+            this.bookingConfirmed = true;
+            this.bookingError = '';
+            // Refresh booked slots
+            this.bookedSlots = await this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
+        } else {
+            this.bookingError = result.error || 'This slot is already booked or you are not registered.';
+            this.toast.error(this.bookingError, 'Booking Failed');
+        }
+
+        this.isProcessing = false;
     }
 
     bookAnotherSlot() {
