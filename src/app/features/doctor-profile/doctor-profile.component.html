@@ -330,7 +330,7 @@
                             <div class="date-section">
                                 <label>Select Date</label>
                                 <input type="date" [(ngModel)]="selectedDate" [min]="minDate" class="date-input"
-                                    (ngModelChange)="onDateChange()">
+                                    (ngModelChange)="onDateChange()" (click)="$any($event.target).showPicker?.()">
                             </div>
 
                             <!-- Time slots -->

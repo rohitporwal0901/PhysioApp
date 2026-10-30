@@ -140,6 +140,7 @@
                             Date of Birth <span class="required">*</span>
                         </label>
                         <input type="date" [(ngModel)]="dob"
+                            (click)="$any($event.target).showPicker?.()"
                             class="field-input" [class.input-error]="submitAttempted && !dob" />
                         <p *ngIf="submitAttempted && !dob" class="error-msg mt-1">
                             <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Date of birth is required

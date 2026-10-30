@@ -148,14 +148,19 @@
     /* Hide native clear button */
     &::-webkit-clear-button { display: none; -webkit-appearance: none; }
     &::-webkit-inner-spin-button { display: none; }
-    /* Hide native calendar picker indicator (the square on the right) */
+    /* Show native calendar picker indicator (choose icon on the right) */
     &::-webkit-calendar-picker-indicator {
-        opacity: 0;
-        position: absolute;
-        right: 0;
-        width: 2.5rem;
-        height: 100%;
+        opacity: 0.75;
         cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: opacity 0.2s, transform 0.15s;
+        filter: invert(0.3);
+
+        &:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
     }
 
     :host-context(.dark) & {
@@ -163,6 +168,16 @@
         border-color: #334155;
         color: #cbd5e1;
         color-scheme: dark;
+
+        &::-webkit-calendar-picker-indicator {
+            filter: invert(0.9) brightness(1.2);
+            opacity: 0.9;
+
+            &:hover {
+                opacity: 1;
+                filter: invert(1) brightness(1.4);
+            }
+        }
     }
 
     @media (max-width: 480px) {

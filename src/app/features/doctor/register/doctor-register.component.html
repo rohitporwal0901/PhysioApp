@@ -153,6 +153,7 @@
                         <div class="field">
                             <label class="label">Date of Birth <span class="req">*</span></label>
                             <input type="date" [(ngModel)]="dob" class="input"
+                                (click)="$any($event.target).showPicker?.()"
                                 [class.border-red-500]="submitAttempted && !dob" />
                             <p *ngIf="submitAttempted && !dob" class="text-xs text-red-500 mt-1">Date of Birth is
                                 required.</p>

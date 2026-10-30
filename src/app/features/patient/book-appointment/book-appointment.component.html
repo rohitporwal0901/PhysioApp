@@ -216,7 +216,7 @@
 
                     <label class="date-label">Preferred Date</label>
                     <input type="date" [(ngModel)]="selectedDate" [min]="minDate" class="date-input"
-                        (ngModelChange)="onDateChange()">
+                        (ngModelChange)="onDateChange()" (click)="$any($event.target).showPicker?.()">
 
                     <label class="slots-label">Available Time Slots</label>
                     <div class="slots-grid">

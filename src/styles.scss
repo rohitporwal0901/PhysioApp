@@ -80,12 +80,46 @@
     }
 }
 
-.date-input-styled {
+/* Global Date Input Styling - Ensure calendar choose icon is visible everywhere */
+input[type="date"] {
+    cursor: pointer;
+    color-scheme: light;
+
     &::-webkit-clear-button {
         display: none;
         -webkit-appearance: none;
     }
     &::-webkit-inner-spin-button {
         display: none;
+    }
+    &::-webkit-calendar-picker-indicator {
+        display: inline-block;
+        cursor: pointer;
+        opacity: 0.75;
+        padding: 4px;
+        border-radius: 6px;
+        transition: opacity 0.2s ease, transform 0.15s ease;
+        filter: invert(0.3);
+
+        &:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+    }
+}
+
+.dark input[type="date"],
+html.dark input[type="date"],
+:host-context(.dark) input[type="date"] {
+    color-scheme: dark;
+
+    &::-webkit-calendar-picker-indicator {
+        filter: invert(0.9) brightness(1.2);
+        opacity: 0.9;
+
+        &:hover {
+            opacity: 1;
+            filter: invert(1) brightness(1.4);
+        }
     }
 }

@@ -81,7 +81,7 @@
                         <div class="date-input-wrap-dash">
                             <i-lucide name="calendar" class="date-icon-dash"></i-lucide>
                             <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" 
-                                class="date-input-dash">
+                                (click)="$any($event.target).showPicker?.()" class="date-input-dash">
                         </div>
                         <a routerLink="/doctor/agenda" class="text-[10px] sm:text-xs font-bold text-primary-500 hover:text-primary-600 uppercase tracking-widest whitespace-nowrap">Full Agenda &rarr;</a>
                     </div>

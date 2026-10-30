@@ -413,10 +413,26 @@
         box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
     }
 
-    /* For date type: hide native clear button */
+    /* For date type */
     &[type="date"]::-webkit-clear-button { display: none; -webkit-appearance: none; }
     &[type="date"]::-webkit-inner-spin-button { display: none; }
-    &[type="date"] { cursor: pointer; }
+    &[type="date"] {
+        cursor: pointer;
+        
+        &::-webkit-calendar-picker-indicator {
+            opacity: 0.75;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: opacity 0.2s, transform 0.15s;
+            filter: invert(0.3);
+
+            &:hover {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+    }
 }
 
 .field-select {

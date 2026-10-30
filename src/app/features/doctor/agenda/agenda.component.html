@@ -9,7 +9,7 @@
             <div class="flex items-center justify-between">
                 <div class="date-input-wrap">
                     <i-lucide name="calendar" class="date-input-icon"></i-lucide>
-                    <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" class="date-input-premium">
+                    <input type="date" [(ngModel)]="selectedDate" (ngModelChange)="onDateChange()" (click)="$any($event.target).showPicker?.()" class="date-input-premium">
                 </div>
             </div>
         </div>
