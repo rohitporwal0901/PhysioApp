@@ -170,12 +170,13 @@
         color-scheme: dark;
 
         &::-webkit-calendar-picker-indicator {
-            filter: invert(0.9) brightness(1.2);
-            opacity: 0.9;
+            filter: none;
+            opacity: 0.85;
+            cursor: pointer;
 
             &:hover {
                 opacity: 1;
-                filter: invert(1) brightness(1.4);
+                transform: scale(1.08);
             }
         }
     }
