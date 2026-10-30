@@ -1,5 +1,6 @@
 {
     "hosting": {
+        "site": "health-hub",
         "public": "dist/physio-app/browser",
         "ignore": [
             "firebase.json",

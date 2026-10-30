@@ -1,5 +1,5 @@
 /* ============================================================
-   PhysioPro — Healthcare Platform Landing Styles
+   HealthHub — Healthcare Platform Landing Styles
    ============================================================ */
 
 /* ── Smooth scroll ── */
@@ -116,6 +116,8 @@ html {
 /* ── Navbar ── */
 nav {
   background: transparent;
+  padding-top: env(safe-area-inset-top, 0px);
+  min-height: 80px; /* Ensures height is maintained even with safe area */
 
   &.nav-scrolled {
     background: rgba(255, 255, 255, 0.95);
@@ -123,6 +125,13 @@ nav {
     -webkit-backdrop-filter: blur(20px);
     box-shadow: 0 1px 20px rgba(0, 0, 0, 0.06);
     border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  }
+
+  &.mobile-menu-active {
+    background: white !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 1px 20px rgba(0, 0, 0, 0.06);
   }
 }
 
@@ -210,6 +219,30 @@ nav {
   background-image:
     radial-gradient(circle at 80% 20%, rgba(15, 155, 142, 0.12) 0%, transparent 45%),
     radial-gradient(circle at 10% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+}
+
+// Specialty Cards
+.specialty-card {
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+// Quick Cards
+.quick-card {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #0F9B8E 0%, #10B981 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* Animated orbs */
@@ -470,7 +503,27 @@ nav {
 }
 
 /* ── How It Works — step icon colours ── */
+.how-step {
+  .step-bg {
+    transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(1.08);
+  }
+
+  &:hover {
+    .step-bg {
+      opacity: 0.25 !important;
+      transform: scale(1);
+    }
+    
+    .step-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+  }
+}
+
 .step-icon {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  
   &--teal {
     background: linear-gradient(135deg, #3cc0b0, #0F9B8E);
     color: #fff;
@@ -542,6 +595,21 @@ nav {
   transition: opacity 0.55s ease,
   transform 0.55s ease,
   box-shadow 0.45s ease !important;
+}
+
+/* ── Lab cards ── */
+.lab-card {
+  transition: all 0.4s ease;
+
+  &--unavailable {
+    opacity: 0.7;
+    filter: grayscale(0.3);
+
+    &:hover {
+      opacity: 0.8;
+      filter: grayscale(0.15);
+    }
+  }
 }
 
 /* ── Skeleton shimmer ── */
@@ -744,17 +812,21 @@ nav {
   animation: scaleFade 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
 }
 
+/* ── Safe area for bottom CTA ── */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 /* ── Mobile responsiveness ── */
 @media (max-width: 640px) {
   .hero-section {
     min-height: 100dvh;
-    padding-bottom: 5.5rem;
-    /* space for sticky CTA */
+    padding-bottom: 4.5rem;
   }
 
   .hero-content h1 {
-    font-size: 2.4rem;
-    line-height: 1.15;
+    font-size: 2.2rem;
+    line-height: 1.12;
   }
 
   .search-widget {
@@ -765,21 +837,29 @@ nav {
     display: none !important;
   }
 
-  /* Better section spacing on mobile */
-  section {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-  }
-
   /* Better section headings on mobile */
   .section-chip {
     font-size: 0.65rem;
+    padding: 4px 10px;
+  }
+
+  /* Compact stat cards on smaller screens */
+  .stat-card {
+    .text-3xl {
+      font-size: 1.6rem;
+    }
   }
 }
 
 @media (max-width: 380px) {
   .hero-content h1 {
-    font-size: 2rem;
+    font-size: 1.9rem;
+  }
+
+  .stat-card {
+    .text-3xl {
+      font-size: 1.4rem;
+    }
   }
 }
 
@@ -796,14 +876,108 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ── Scroll to top button ── */
-.scroll-to-top {
-  animation: popIn 0.3s ease both;
+/* ── Floating Booking Card (HealthHub Theme) ── */
+.reveal-side {
+  animation: revealSide 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-@media (max-width: 640px) {
-  .scroll-to-top {
-    bottom: 5.5rem !important;
-    right: 1rem !important;
+@keyframes revealSide {
+  from {
+    opacity: 0;
+    transform: translateX(120px) scale(0.9);
   }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 3s infinite ease-in-out;
+}
+
+/* Card Shine Effect */
+.card-shine {
+  position: relative;
+  overflow: hidden;
+  mask-image: -webkit-radial-gradient(white, black); // Fixes overflow:hidden on some browsers with border-radius
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      115deg, 
+      transparent 0%, 
+      transparent 40%, 
+      rgba(255, 255, 255, 0.15) 50%, 
+      transparent 60%, 
+      transparent 100%
+    );
+    transition: left 0.75s ease;
+    pointer-events: none;
+    z-index: 20;
+  }
+  &:hover::before {
+    left: 150%;
+  }
+}
+
+@media (max-width: 768px) {
+  .fixed.bottom-6.right-6 {
+    bottom: 5.5rem !important; /* Move above the mobile bottom CTA */
+    right: 1.2rem !important;
+  }
+
+  /* Different entry for mobile arrow */
+  .reveal-side {
+    animation: revealUpMobile 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+}
+
+@keyframes revealUpMobile {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Custom Utilities for Slider ── */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}
+
+/* ── Animation for AI loading bars ── */
+@keyframes loadingBar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-loading-bar {
+  animation: loadingBar 2s ease-out forwards;
+}
+
+@keyframes pulseSlow {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 4s ease-in-out infinite;
 }

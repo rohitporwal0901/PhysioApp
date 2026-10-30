@@ -3,21 +3,41 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
+import { AuthService } from '../../../core/services/auth.service';
+import { ImageUploadService } from '../../../core/services/image-upload.service';
+import { PaymentService } from '../../../core/services/payment.service';
+import { SpecializationService } from '../../../core/services/specialization.service';
+import { OnInit } from '@angular/core';
+import { LegalModalComponent } from '../../../shared/components/legal-modal/legal-modal.component';
 
 @Component({
     selector: 'app-doctor-register',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule],
+    imports: [CommonModule, FormsModule, RouterModule, LucideAngularModule, LegalModalComponent],
     templateUrl: './doctor-register.component.html',
     styleUrl: './doctor-register.component.scss'
 })
-export class DoctorRegisterComponent {
+export class DoctorRegisterComponent implements OnInit {
     private router = inject(Router);
+    private authService = inject(AuthService);
+    private imageUpload = inject(ImageUploadService);
+    private paymentService = inject(PaymentService);
+    private specializationService = inject(SpecializationService);
+
+    ngOnInit() {
+        this.specializationService.getSpecialties().subscribe(data => {
+            this.dynamicSpecialties = data;
+        });
+    }
 
     isLoading = false;
+    isPaymentProcessing = false;
+    isPaymentSuccess = false;
     showPassword = false;
     currentStep = 1;
     totalSteps = 6;
+    errorMessage = '';
+    submitAttempted = false;
 
     // Step 1 — Basic Info
     fullName = '';
@@ -41,29 +61,78 @@ export class DoctorRegisterComponent {
     registrationNumber = '';
     council = '';
 
-    // Step 4 — Areas of Interest
-    selectedAreas: string[] = [];
-    areasOfInterest = [
-        'Sports Rehabilitation', 'Orthopaedic Physiotherapy', 'Neurological Rehab',
-        'Cardiopulmonary Therapy', 'Paediatric Physiotherapy', 'Geriatric Care',
-        'Manual Therapy', 'Post-Surgical Recovery', 'Women\'s Health',
-        'Pain Management', 'Exercise Therapy', 'Electrotherapy'
-    ];
-
-    // Step 5 — Fees & Availability
+    // Step 4 — Fees & Availability
     consultationFee = '';
     followUpFee = '';
     consultationType = 'in-person';
     availableDays: string[] = [];
     days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-    // Step 6 — Documents & Account
+    // Step 5 — Documents & Account
     password = '';
     confirmPassword = '';
     agreeTerms = false;
     profilePhotoName = '';
+    profilePhotoUrl = '';
+    isUploadingPhoto = false;
     certificateName = '';
     idProofName = '';
+
+    // Legal Modal
+    isLegalModalOpen = false;
+    legalModalTab: 'terms' | 'privacy' = 'terms';
+
+    openLegalModal(tab: 'terms' | 'privacy') {
+        this.legalModalTab = tab;
+        this.isLegalModalOpen = true;
+    }
+
+    // Step 6 - Subscription
+    selectedPlan: any = null;
+    plans = [
+        //   {
+        //     type: 'monthly',
+        //     name: 'Monthly Plan',
+        //     price: 499,
+        //     durationMonths: 1,
+        //     features: [
+        //       'Digital Patient Records',
+        //       'Appointment Scheduling',
+        //       'Revenue Tracking',
+        //       'Email/SMS Notifications',
+        //       'Standard Support'
+        //     ],
+        //     recommended: false
+        //   },
+        {
+            type: 'halfYearly',
+            name: 'Half-Yearly Plan',
+            price: 10499,
+            durationMonths: 6,
+            features: [
+                'All Monthly Features',
+                'Priority Support',
+                'Detailed Analytics',
+                'Customized Clinic Reports',
+                '15% Discount on Yearly'
+            ],
+            recommended: true
+        },
+        {
+            type: 'yearly',
+            name: 'Yearly Plan',
+            price: 21999,
+            durationMonths: 12,
+            features: [
+                'All Half-Yearly Features',
+                'Dedicated Account Manager',
+                'Advanced Marketing Tools',
+                'Custom Branding',
+                '2 Months FREE'
+            ],
+            recommended: false
+        }
+    ];
 
     genders = ['Male', 'Female', 'Other'];
     states = [
@@ -72,48 +141,50 @@ export class DoctorRegisterComponent {
         'Tamil Nadu', 'Telangana', 'Uttar Pradesh', 'West Bengal'
     ];
     qualifications = [
-        'BPT (Bachelor of Physiotherapy)',
-        'MPT (Master of Physiotherapy)',
-        'DPT (Doctor of Physiotherapy)',
-        'PhD in Physiotherapy',
-        'Diploma in Physiotherapy'
+        'MBBS', 'MD', 'MS', 'BDS', 'MDS', 'BAMS', 'BHMS', 'BPT', 'MPT', 'DNB', 'DM', 'MCh', 'PhD', 'DCH', 'DGO'
     ];
+
+    dynamicSpecialties: any[] = [];
 
     sidebarSteps = [
         { num: 1, label: 'Basic Information', icon: 'user' },
         { num: 2, label: 'Contact Details', icon: 'phone' },
         { num: 3, label: 'Qualifications', icon: 'graduation-cap' },
-        { num: 4, label: 'Areas of Interest', icon: 'heart-pulse' },
-        { num: 5, label: 'Fees & Availability', icon: 'calendar' },
-        { num: 6, label: 'Account & Documents', icon: 'shield-check' },
+        { num: 4, label: 'Fees & Availability', icon: 'calendar' },
+        { num: 5, label: 'Account & Documents', icon: 'shield-check' },
+        { num: 6, label: 'Subscription Plan', icon: 'credit-card' },
     ];
 
     get passwordsMatch(): boolean {
         return this.password === this.confirmPassword;
     }
 
+    get isEmailValid(): boolean {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(this.email);
+    }
+    get isPhoneValid(): boolean {
+        const phoneRegex = /^\+?[0-9]{10,14}$/;
+        return phoneRegex.test(this.phone.replace(/\s/g, ''));
+    }
+
     get step1Valid(): boolean {
         return !!(this.fullName && this.gender && this.dob);
     }
-
     get step2Valid(): boolean {
-        return !!(this.email && this.phone);
+        return !!(this.email && this.isEmailValid && this.phone && this.isPhoneValid);
     }
-
     get step3Valid(): boolean {
         return !!(this.qualification && this.specialization && this.experience);
     }
-
     get step4Valid(): boolean {
-        return this.selectedAreas.length > 0;
-    }
-
-    get step5Valid(): boolean {
         return !!(this.consultationFee);
     }
-
+    get step5Valid(): boolean {
+        return !!(this.password && this.password.length >= 6 && this.passwordsMatch && this.agreeTerms);
+    }
     get step6Valid(): boolean {
-        return !!(this.password && this.passwordsMatch && this.agreeTerms);
+        return !!this.selectedPlan;
     }
 
     get currentStepValid(): boolean {
@@ -128,22 +199,10 @@ export class DoctorRegisterComponent {
         }
     }
 
-    toggleArea(area: string) {
-        const idx = this.selectedAreas.indexOf(area);
-        if (idx > -1) {
-            this.selectedAreas.splice(idx, 1);
-        } else {
-            this.selectedAreas.push(area);
-        }
-    }
-
     toggleDay(day: string) {
         const idx = this.availableDays.indexOf(day);
-        if (idx > -1) {
-            this.availableDays.splice(idx, 1);
-        } else {
-            this.availableDays.push(day);
-        }
+        if (idx > -1) this.availableDays.splice(idx, 1);
+        else this.availableDays.push(day);
     }
 
     togglePassword() {
@@ -151,15 +210,20 @@ export class DoctorRegisterComponent {
     }
 
     goToStep(step: number) {
-        if (step <= this.currentStep) {
+        if (step < this.currentStep) {
             this.currentStep = step;
+            this.errorMessage = '';
+            this.submitAttempted = false;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
 
     nextStep() {
+        this.submitAttempted = true;
         if (this.currentStep < this.totalSteps && this.currentStepValid) {
             this.currentStep++;
+            this.submitAttempted = false;
+            this.errorMessage = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
@@ -167,26 +231,147 @@ export class DoctorRegisterComponent {
     prevStep() {
         if (this.currentStep > 1) {
             this.currentStep--;
+            this.submitAttempted = false;
+            this.errorMessage = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
 
-    // Simulated file pick
     onFileSelect(type: 'photo' | 'certificate' | 'id', event: any) {
         const file = event?.target?.files?.[0];
         if (file) {
-            if (type === 'photo') this.profilePhotoName = file.name;
             if (type === 'certificate') this.certificateName = file.name;
             if (type === 'id') this.idProofName = file.name;
         }
     }
 
-    register() {
-        if (!this.step6Valid) return;
+    async onPhotoSelected(event: any) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const validation = this.imageUpload.validateFile(file);
+        if (!validation.valid) {
+            alert(validation.error);
+            return;
+        }
+
+        this.isUploadingPhoto = true;
+        try {
+            const path = `profiles/doctors/temp_${Date.now()}`;
+            this.profilePhotoUrl = await this.imageUpload.uploadImage(file, path);
+            this.profilePhotoName = file.name;
+        } catch (err: any) {
+            alert('Photo upload failed: ' + err.message);
+        } finally {
+            this.isUploadingPhoto = false;
+        }
+    }
+
+    selectPlan(plan: any) {
+        this.selectedPlan = plan;
+    }
+
+    async register() {
+        this.submitAttempted = true;
+        if (!this.step6Valid || !this.step5Valid) return;
         this.isLoading = true;
-        setTimeout(() => {
+        this.errorMessage = '';
+
+        try {
+            // 1. Open Razorpay checkout popup
+            let paymentResponse: any;
+            try {
+                paymentResponse = await this.paymentService.openRazorpay({
+                    amount: this.selectedPlan.price,
+                    name: 'HealthHub',
+                    description: `${this.selectedPlan.name} — Doctor Subscription`,
+                    prefill: {
+                        name: this.fullName,
+                        email: this.email,
+                        contact: this.phone
+                    }
+                });
+            } catch (payErr: any) {
+                // User cancelled or payment failed — stop here
+                this.errorMessage = payErr.message ?? 'Payment was cancelled. Please try again.';
+                this.isLoading = false;
+                return;
+            }
+
+            // --- PAYMENT SUCCESSFUL, SHOW PROCESSING OVERLAY ---
             this.isLoading = false;
-            this.router.navigate(['/doctor/dashboard']);
-        }, 1500);
+            this.isPaymentProcessing = true;
+
+            // 2. Register Doctor only after payment success
+            const result = await this.authService.registerDoctor({
+                email: this.email,
+                password: this.password,
+                fullName: this.fullName,
+                gender: this.gender,
+                dob: this.dob,
+                phone: this.phone,
+                address: this.address,
+                city: this.city,
+                state: this.state,
+                qualification: this.qualification,
+                specialization: this.specialization,
+                experience: this.experience,
+                registrationNumber: this.registrationNumber,
+                council: this.council,
+                consultationFee: this.consultationFee,
+                followUpFee: this.followUpFee,
+                consultationType: this.consultationType,
+                availableDays: this.availableDays,
+                image: this.profilePhotoUrl
+            });
+
+            if (result.success) {
+                // 3. Save Transaction & Update Subscription in profile
+                const currentUser = this.authService.currentUser;
+                if (currentUser) {
+                    const expiryDate = this.paymentService.calculateExpiryDate(this.selectedPlan.type);
+
+                    // Save to transactions collection with real Razorpay IDs
+                    await this.paymentService.saveSubscriptionTransaction({
+                        userId: currentUser.uid,
+                        userType: 'doctor',
+                        userName: this.fullName,
+                        planType: this.selectedPlan.type,
+                        amount: this.selectedPlan.price,
+                        paymentResponse: paymentResponse,
+                        expiryDate: expiryDate
+                    });
+
+                    // Update User Profile with subscription info
+                    await this.authService.updateProfile(currentUser.uid, {
+                        subscription: {
+                            plan: this.selectedPlan.type,
+                            startDate: new Date(),
+                            expiryDate: expiryDate,
+                            status: 'active'
+                        }
+                    });
+
+                    // --- SHOW SUCCESS ANIMATION ---
+                    this.isPaymentProcessing = false;
+                    this.isPaymentSuccess = true;
+
+                    // Wait for 2.5 seconds to show the animation, then navigate
+                    setTimeout(() => {
+                        this.router.navigate(['/doctor/dashboard']);
+                    }, 2500);
+                }
+            } else {
+                this.isPaymentProcessing = false;
+                this.errorMessage = result.error ?? 'Registration failed. Please try again.';
+            }
+        } catch (err: any) {
+            this.isPaymentProcessing = false;
+            this.errorMessage = 'An unexpected error occurred: ' + err.message;
+        } finally {
+            if (this.isLoading) {
+                this.isLoading = false;
+            }
+        }
     }
 }

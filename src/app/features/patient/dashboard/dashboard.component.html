@@ -1,40 +1,42 @@
-<div class="h-full flex flex-col md:flex-row gap-8">
+<div class="h-full flex flex-col lg:flex-row gap-5 sm:gap-6 lg:gap-8 pt-4 sm:pt-6 lg:pt-0">
 
     <!-- Left Column: Upcoming Sessions & Progress -->
-    <div class="w-full lg:w-2/3 flex flex-col gap-8">
+    <div class="w-full lg:w-2/3 flex flex-col gap-5 sm:gap-6 lg:gap-8">
 
         <!-- Hero Welcome -->
         <div
-            class="bg-gradient-to-r from-primary-600 to-secondary-600 dark:from-primary-800 dark:to-secondary-800 rounded-3xl p-8 text-white relative overflow-hidden shadow-lg shadow-primary-500/20 dark:shadow-primary-900/40">
+            class="bg-gradient-to-r from-primary-600 to-secondary-600 dark:from-primary-800 dark:to-secondary-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-white relative overflow-hidden shadow-lg shadow-primary-500/20 dark:shadow-primary-900/40">
             <div
-                class="absolute right-0 top-0 w-64 h-64 bg-white/10 dark:bg-black/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3">
+                class="absolute right-0 top-0 w-40 sm:w-64 h-40 sm:h-64 bg-white/10 dark:bg-black/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3">
             </div>
             <div class="relative z-10">
-                <h2 class="text-3xl font-bold mb-2">Welcome back, {{ patientName }} 👋</h2>
-                <p class="text-primary-100 dark:text-primary-200 mb-6 max-w-md">You've completed 4 sessions this month.
-                    You're making great progress on your rehabilitation!</p>
+                <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2">Welcome back, {{ patientName }} 👋</h2>
+                <p class="text-primary-100 dark:text-primary-200 mb-4 sm:mb-6 max-w-md text-sm sm:text-base">Manage your health and book new appointments with our verified doctors and specialists.</p>
                 <button [routerLink]="['/patient/book-appointment']"
-                    class="bg-white dark:bg-slate-800 text-primary-600 dark:text-primary-400 font-bold py-2.5 px-6 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-white/50 dark:focus:ring-primary-500/50">
-                    Book New Session
+                    class="bg-white dark:bg-slate-800 text-primary-600 dark:text-primary-400 font-bold py-2 sm:py-2.5 px-4 sm:px-6 rounded-xl text-sm sm:text-base hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-white/50 dark:focus:ring-primary-500/50">
+                    Book Appointment
                 </button>
             </div>
         </div>
 
         <!-- Upcoming Appointments -->
         <div>
-            <div class="flex items-center justify-between mb-4 px-1">
-                <h3 class="text-xl font-bold text-slate-800 dark:text-white tracking-tight">Your Next Sessions</h3>
-                <a href="#"
-                    class="text-sm font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">View
-                    History</a>
+            <div class="flex items-center justify-between mb-3 sm:mb-4 px-1">
+                <h3 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white tracking-tight">Your Next Sessions</h3>
+            </div>
+
+            <!-- Loading indicator -->
+            <div *ngIf="isLoading" class="flex flex-col items-center py-8 sm:py-10 text-slate-400 bg-surface dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-glass">
+                <i-lucide name="loader" class="w-7 h-7 sm:w-8 sm:h-8 animate-spin mb-2"></i-lucide>
+                <p class="text-xs">Finding your confirmed sessions...</p>
             </div>
 
             <!-- Empty state when no appointments -->
-            <div *ngIf="upcomingAppointments.length === 0"
-                class="bg-surface dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-8 rounded-2xl text-center shadow-glass">
-                <i-lucide name="calendar" class="w-12 h-12 mx-auto text-slate-300 dark:text-slate-600 mb-3"></i-lucide>
-                <h4 class="text-lg font-bold text-slate-800 dark:text-white mb-1">No Upcoming Sessions</h4>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">You don't have any appointments booked yet.
+            <div *ngIf="!isLoading && upcomingAppointments.length === 0"
+                class="bg-surface dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-6 sm:p-8 rounded-2xl text-center shadow-glass">
+                <i-lucide name="calendar" class="w-10 h-10 sm:w-12 sm:h-12 mx-auto text-slate-300 dark:text-slate-600 mb-3"></i-lucide>
+                <h4 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white mb-1">No Upcoming Sessions</h4>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-4">You don't have any appointments booked yet.
                 </p>
                 <button [routerLink]="['/patient/book-appointment']"
                     class="px-4 py-2 bg-primary-50 text-primary-600 font-bold rounded-lg text-sm hover:bg-primary-100 transition-colors">
@@ -42,46 +44,42 @@
                 </button>
             </div>
 
-            <div class="space-y-4" *ngIf="upcomingAppointments.length > 0">
-                <div class="bg-surface dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between shadow-glass group hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
-                    *ngFor="let apt of upcomingAppointments; let first = first">
+            <div class="space-y-3 sm:space-y-4" *ngIf="!isLoading && upcomingAppointments.length > 0">
+                <div class="bg-surface dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between shadow-glass group hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
+                    *ngFor="let apt of upcomingAppointments">
 
-                    <!-- Dynamic tag for newly booked -->
-                    <div *ngIf="apt.isDynamic"
-                        class="absolute top-0 right-0 bg-primary-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-bl-lg rounded-tr-xl">
-                        NEWLY BOOKED
-                    </div>
-
-                    <div class="flex items-start sm:items-center mb-4 sm:mb-0">
-                        <!-- Cal Date Badge -->
-                        <div class="flex-shrink-0 w-14 h-14 rounded-xl flex flex-col items-center justify-center mr-4 shadow-sm border border-slate-100 dark:border-slate-700"
-                            [ngClass]="first ? 'bg-primary-500 dark:bg-primary-600 text-white' : 'bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200'">
-                            <span class="text-xs font-semibold uppercase tracking-wider mb-0.5"
-                                [ngClass]="first ? 'text-primary-100 dark:text-primary-200' : 'text-slate-500 dark:text-slate-400'">{{
-                                apt.date.split(' ')[0] }}</span>
-                            <span class="text-xl font-bold leading-none">{{ apt.date.split(' ')[1]?.replace(',', '') ||
-                                apt.date.split(' ')[0] }}</span>
+                    <div class="flex items-start sm:items-center mb-3 sm:mb-0">
+                        <!-- Date Badge -->
+                        <div class="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex flex-col items-center justify-center mr-3 sm:mr-4 shadow-sm border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-200">
+                            <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5 text-slate-400">
+                                {{ apt.date | date:'MMM' }}
+                            </span>
+                            <span class="text-lg sm:text-xl font-black leading-none">
+                                {{ apt.date | date:'d' }}
+                            </span>
                         </div>
 
                         <div>
                             <h4
-                                class="text-lg font-bold text-slate-800 dark:text-white tracking-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                                {{ apt.doctor }}</h4>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 flex items-center font-medium mt-1">
-                                <i-lucide name="clock" class="w-4 h-4 mr-1.5"></i-lucide> {{ apt.time }} &bull; {{
-                                apt.specialty }}
+                                class="text-base sm:text-lg font-bold text-slate-800 dark:text-white tracking-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                                {{ apt.doctorName }}</h4>
+                            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 flex items-center font-medium mt-0.5 sm:mt-1">
+                                <i-lucide name="clock" class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-1.5"></i-lucide> {{ apt.time }} &bull; {{ apt.doctorSpecialty }}
+                            </p>
+                            <p *ngIf="apt.status === 'confirmed'" class="text-[9px] sm:text-[10px] text-green-600 dark:text-green-400 font-bold mt-1 sm:mt-1.5 flex items-center bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded-full w-max">
+                                <i-lucide name="check-circle" class="w-3 h-3 mr-1"></i-lucide> Doctor Confirmed
                             </p>
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between sm:justify-end space-x-4 w-full sm:w-auto">
-                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full"
-                            [ngClass]="apt.status === 'Confirmed' ? 'bg-status-success/10 text-status-success dark:bg-status-success/20 dark:text-status-success' : 'bg-status-warning/10 text-status-warning dark:bg-status-warning/20 dark:text-amber-400'">
+                    <div class="flex items-center justify-end space-x-2 sm:space-x-3 w-full sm:w-auto mt-2 sm:mt-0">
+                        <span class="px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-bold rounded-xl capitalize"
+                            [ngClass]="getStatusClass(apt.status)">
                             {{ apt.status }}
                         </span>
-                        <button
-                            class="text-slate-400 dark:text-slate-500 hover:text-primary-600 dark:hover:text-primary-400 p-2 bg-slate-50 dark:bg-slate-700 hover:bg-primary-50 dark:hover:bg-slate-600 rounded-lg transition-colors">
-                            <i-lucide name="chevron-right" class="w-5 h-5"></i-lucide>
+                        <button [routerLink]="['/patient/sessions']"
+                            class="text-slate-400 dark:text-slate-500 hover:text-primary-600 dark:hover:text-primary-400 p-1.5 sm:p-2 bg-slate-50 dark:bg-slate-700 hover:bg-primary-50 dark:hover:bg-slate-600 rounded-lg transition-colors">
+                            <i-lucide name="chevron-right" class="w-4 h-4 sm:w-5 sm:h-5"></i-lucide>
                         </button>
                     </div>
                 </div>
@@ -89,102 +87,118 @@
             </div>
         </div>
 
-        <!-- Therapy Progress -->
-        <div
-            class="bg-surface dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-glass p-6">
-            <h3 class="text-lg font-bold text-slate-800 dark:text-white tracking-tight mb-6">Current Treatment Plan</h3>
-
-            <div
-                class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 dark:before:via-slate-700 before:to-transparent">
-
-                <!-- Phase 1 -->
-                <div
-                    class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                    <div
-                        class="flex items-center justify-center w-10 h-10 rounded-full border border-white dark:border-slate-800 bg-slate-100 dark:bg-slate-700 group-[.is-active]:bg-status-success text-slate-500 dark:text-slate-400 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-colors">
-                        <i-lucide name="check-circle-2" class="w-5 h-5"></i-lucide>
-                    </div>
-                    <div
-                        class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-slate-50 dark:bg-slate-700/50 p-4 rounded-xl border border-slate-100 dark:border-slate-600 shadow-sm">
-                        <div class="flex items-center justify-between mb-1">
-                            <h4 class="font-bold text-slate-800 dark:text-slate-200 text-sm">Phase 1: Pain Assessment
-                            </h4>
-                            <time class="text-xs font-medium text-slate-500 dark:text-slate-400">Oct 15</time>
-                        </div>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">Completed initial screening and diagnosed
-                            minor meniscus
-                            strain.</p>
-                    </div>
-                </div>
-
-                <!-- Phase 2 -->
-                <div
-                    class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                    <div
-                        class="flex items-center justify-center w-10 h-10 rounded-full border border-white dark:border-slate-800 bg-slate-100 dark:bg-slate-700 group-[.is-active]:bg-primary-500 text-slate-500 dark:text-slate-400 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-colors">
-                        <i-lucide name="activity" class="w-5 h-5"></i-lucide>
-                    </div>
-                    <div
-                        class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white dark:bg-slate-800 p-4 rounded-xl border-2 border-primary-500 dark:border-primary-600 shadow-md shadow-primary-500/10 dark:shadow-primary-900/20">
-                        <div class="flex items-center justify-between mb-1">
-                            <h4 class="font-bold text-primary-900 dark:text-primary-100 text-sm">Phase 2: Mobility
-                                Therapy</h4>
-                            <time class="text-xs font-semibold text-primary-500 dark:text-primary-400">Current</time>
-                        </div>
-                        <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-1.5 mt-3 mb-2">
-                            <div class="bg-primary-500 dark:bg-primary-400 h-1.5 rounded-full" style="width: 45%"></div>
-                        </div>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">45% complete to next
-                            milestone</p>
-                    </div>
-                </div>
-
-                <!-- Phase 3 -->
-                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                    <div
-                        class="flex items-center justify-center w-10 h-10 rounded-full border border-white dark:border-slate-800 bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 shadow shadow-slate-200 dark:shadow-slate-900 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                        <span class="text-sm font-bold">3</span>
-                    </div>
-                    <div
-                        class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-slate-50/50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm opacity-60 grayscale dark:grayscale-0 dark:opacity-40">
-                        <div class="flex items-center justify-between mb-1">
-                            <h4 class="font-bold text-slate-800 dark:text-slate-300 text-sm">Phase 3: Strengthening</h4>
-                        </div>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">Awaiting clearance from Phase 2.</p>
-                    </div>
-                </div>
-
+        <!-- Therapy Progress (Dynamic from AI Report) -->
+        <div class="bg-surface dark:bg-slate-800 rounded-2xl sm:rounded-3xl border border-slate-100 dark:border-slate-700 shadow-glass p-4 sm:p-6">
+            <div class="flex items-center justify-between mb-4 sm:mb-6 px-1">
+                <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white tracking-tight">Current Treatment Plan</h3>
+                <span *ngIf="currentTreatmentPlan" class="px-2 sm:px-3 py-0.5 sm:py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-[9px] sm:text-[10px] font-black uppercase tracking-widest rounded-full">
+                    {{ currentTreatmentPlan.score }}% Recovery Score
+                </span>
             </div>
+
+            <!-- Dynamic Timeline -->
+            <div *ngIf="currentTreatmentPlan; else noPlan" class="space-y-3 sm:space-y-4 relative before:absolute before:inset-0 before:ml-4 sm:before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 dark:before:via-slate-700 before:to-transparent">
+                
+                <div *ngFor="let phase of currentTreatmentPlan.roadmap; let i = index; let last = last" 
+                     class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group"
+                     [class.is-active]="i === 1">
+                    
+                    <!-- Smaller Icon Bubble -->
+                    <div class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white dark:border-slate-800 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 transition-all duration-500"
+                         [ngClass]="i === 1 ? 'bg-primary-500 text-white scale-110 ring-2 ring-primary-500/20' : (i < 1 ? 'bg-status-success text-white' : 'bg-slate-200 dark:bg-slate-700')">
+                        <i-lucide [name]="i === 1 ? 'activity' : (i < 1 ? 'check' : 'circle')" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i-lucide>
+                    </div>
+
+                    <!-- Compact Content Card -->
+                    <div class="w-[calc(100%-3rem)] sm:w-[calc(100%-3.5rem)] md:w-[calc(50%-2rem)] p-3 sm:p-4 rounded-xl border transition-all duration-300 shadow-sm"
+                         [ngClass]="i === 1 ? 'bg-white dark:bg-slate-800 border-primary-500/50 dark:border-primary-600/50 shadow-lg shadow-primary-500/5' : 'bg-slate-50/50 dark:bg-slate-700/20 border-slate-100 dark:border-slate-700'">
+                        <div class="flex items-center justify-between mb-1 sm:mb-1.5">
+                            <h4 class="font-bold text-[11px] sm:text-xs tracking-tight truncate" 
+                                [ngClass]="i === 1 ? 'text-primary-600 dark:text-primary-400' : 'text-slate-700 dark:text-slate-300'">
+                                {{ phase.phase }}: {{ phase.goal }}
+                            </h4>
+                            <span *ngIf="i === 1" class="px-1.5 py-0.5 bg-primary-500 text-[7px] sm:text-[8px] font-black text-white rounded-md uppercase tracking-widest animate-pulse">Active</span>
+                        </div>
+                        <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 leading-snug font-medium line-clamp-2 overflow-hidden" [title]="phase.focus">
+                            {{ phase.focus }}
+                        </p>
+                        
+                        <!-- Mini Progress bar for active phase -->
+                        <div *ngIf="i === 1" class="mt-2 sm:mt-3">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Progress</span>
+                                <span class="text-[8px] sm:text-[9px] font-black text-primary-500 tracking-widest">60%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-1 overflow-hidden">
+                                <div class="bg-primary-500 h-full" style="width: 60%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Compact Link -->
+                        <a *ngIf="phase.videoUrl" [href]="phase.videoUrl" target="_blank" 
+                           class="mt-2 sm:mt-2.5 inline-flex items-center text-[8px] sm:text-[9px] font-black text-primary-500 hover:text-primary-600 uppercase tracking-widest transition-colors group/link">
+                            <i-lucide name="play-circle" class="w-3 h-3 mr-1 group-hover/link:scale-110 transition-transform"></i-lucide> Watch Guide
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <ng-template #noPlan>
+                <div class="py-8 sm:py-12 flex flex-col items-center text-center px-4 sm:px-6">
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-slate-50 dark:bg-slate-700 rounded-full flex items-center justify-center mb-3 sm:mb-4 transition-transform hover:rotate-12">
+                        <i-lucide name="sparkles" class="w-7 h-7 sm:w-8 sm:h-8 text-primary-300 dark:text-primary-600"></i-lucide>
+                    </div>
+                    <h4 class="text-slate-800 dark:text-white font-bold mb-1 sm:mb-2 text-sm sm:text-base">No active plan yet</h4>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-[200px]">Complete your first session and generate an AI Report to see your personalized recovery roadmap here.</p>
+                </div>
+            </ng-template>
         </div>
 
     </div> <!-- End Left Column -->
 
-    <!-- Right Column: Quick book / Saved Docs -->
-    <div class="w-full lg:w-1/3 flex flex-col gap-6">
+    <!-- Right Column -->
+    <div class="w-full lg:w-1/3 flex flex-col gap-5 sm:gap-6">
 
         <div
-            class="bg-surface dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-glass p-6">
-            <h3 class="text-lg font-bold text-slate-800 dark:text-white tracking-tight mb-4">Your Care Team</h3>
+            class="bg-surface dark:bg-slate-800 rounded-2xl sm:rounded-3xl border border-slate-100 dark:border-slate-700 shadow-glass p-4 sm:p-6">
+            <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-white tracking-tight mb-3 sm:mb-4">Available Doctors</h3>
 
             <ng-container *ngIf="doctors$ | async as doctors; else loadingDocs">
-                <ul class="space-y-4">
-                    <li *ngFor="let doc of doctors | slice:0:2"
-                        class="flex items-start p-3 bg-slate-50 dark:bg-slate-700 rounded-2xl hover:bg-white dark:hover:bg-slate-600 hover:shadow-md border border-transparent hover:border-slate-100 dark:hover:border-slate-500 transition-all cursor-pointer group">
-                        <img [src]="doc.image"
-                            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Dr&background=random'"
-                            alt=""
-                            class="h-12 w-12 rounded-xl object-cover ring-2 ring-white dark:ring-slate-800 shadow-sm mt-0.5">
-                        <div class="ml-3 flex-1">
+                <ul class="space-y-3 sm:space-y-4">
+                    <li *ngFor="let doc of doctors | slice:0:3; let i = index"
+                        class="flex items-start p-2.5 sm:p-3 bg-slate-50 dark:bg-slate-700 rounded-xl sm:rounded-2xl hover:bg-white dark:hover:bg-slate-600 hover:shadow-md border border-transparent hover:border-slate-100 dark:hover:border-slate-500 transition-all cursor-pointer group"
+                        [routerLink]="['/doctor-profile', doc.id]">
+                        <div class="relative h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 rounded-xl ring-2 ring-white dark:ring-slate-800 shadow-sm mt-0.5">
+                            <img [src]="getDoctorImage(doc, i)" 
+                                 class="w-full h-full object-cover rounded-xl" alt="">
+                            <!-- Status Indicator -->
+                            <span
+                                class="absolute -bottom-1 -right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 border-white dark:border-slate-800"
+                                [ngClass]="doc.available ? 'bg-status-success' : 'bg-slate-400'">
+                            </span>
+                        </div>
+                        <div class="ml-2.5 sm:ml-3 flex-1 min-w-0">
                             <p
-                                class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                                {{ doc.name }}</p>
-                            <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">{{ doc.specialty
-                                }}</p>
-                            <div class="flex items-center mt-2.5 space-x-2">
-                                <button
-                                    class="flex-1 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Message</button>
+                                class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors truncate">
+                                {{ doc.fullName }}</p>
+                            <p class="text-[11px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5 truncate">{{ doc.specialization }}</p>
+                            <div class="flex flex-col gap-2 mt-2 sm:mt-2.5">
+                                <!-- Contact Buttons -->
+                                <div class="flex items-center space-x-2">
+                                    <a [href]="'tel:' + doc.phone" (click)="$event.stopPropagation()"
+                                       class="flex-1 flex items-center justify-center text-[9px] font-bold text-primary-500 hover:text-primary-600 transition-colors bg-primary-50 dark:bg-primary-900/20 px-2 py-1 rounded shadow-sm border border-primary-100 dark:border-primary-800/30">
+                                        <i-lucide name="phone" class="w-2.5 h-2.5 mr-1"></i-lucide>
+                                        Call
+                                    </a>
+                                    <a [href]="'https://wa.me/' + doc.phone" target="_blank" (click)="$event.stopPropagation()"
+                                       class="flex-1 flex items-center justify-center text-[9px] font-bold text-green-500 hover:text-green-600 transition-colors bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded shadow-sm border border-green-100 dark:border-green-800/30">
+                                        <i-lucide name="message-circle" class="w-2.5 h-2.5 mr-1"></i-lucide>
+                                        WhatsApp
+                                    </a>
+                                </div>
                                 <button [routerLink]="['/patient/book-appointment']"
-                                    class="flex-1 py-1.5 bg-primary-50 dark:bg-primary-900/30 rounded-lg text-xs font-bold text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-900/50 border border-primary-100 dark:border-primary-800 transition-colors">Book</button>
+                                    class="w-full py-1.5 sm:py-2 bg-primary-600 dark:bg-primary-700/80 rounded-xl text-[10px] sm:text-xs font-bold text-white hover:bg-primary-500 shadow-sm transition-all text-center">Book Session</button>
                             </div>
                         </div>
                     </li>
@@ -192,9 +206,9 @@
             </ng-container>
 
             <ng-template #loadingDocs>
-                <div class="animate-pulse space-y-4">
-                    <div class="flex space-x-4 items-center" *ngFor="let i of [1,2]">
-                        <div class="rounded-xl bg-slate-200 dark:bg-slate-700 h-12 w-12"></div>
+                <div class="animate-pulse space-y-3 sm:space-y-4">
+                    <div class="flex space-x-3 sm:space-x-4 items-center" *ngFor="let i of [1,2,3]">
+                        <div class="rounded-xl bg-slate-200 dark:bg-slate-700 h-10 w-10 sm:h-12 sm:w-12"></div>
                         <div class="flex-1 space-y-2 py-1">
                             <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
                             <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
@@ -203,20 +217,6 @@
                 </div>
             </ng-template>
 
-        </div>
-
-        <!-- Small info card -->
-        <div
-            class="bg-slate-800 dark:bg-slate-900 rounded-3xl shadow-lg border border-slate-700 dark:border-slate-800 p-6 text-white relative overflow-hidden">
-            <!-- Dark mode accent test inside a card -->
-            <div class="absolute -top-10 -right-10 w-24 h-24 bg-primary-500/30 rounded-full blur-xl"></div>
-
-            <i-lucide name="calendar" class="w-8 h-8 text-primary-400 mb-4"></i-lucide>
-            <h4 class="text-lg font-bold mb-2 text-white">Need to reschedule?</h4>
-            <p class="text-sm text-slate-400 mb-6 font-medium leading-relaxed">Cancel or reschedule any appointment up
-                to 24 hours in advance without any fees.</p>
-            <a href="#" class="text-sm font-semibold text-primary-400 hover:text-primary-300">View Clinic Policy
-                &rarr;</a>
         </div>
 
     </div> <!-- End Right Column -->

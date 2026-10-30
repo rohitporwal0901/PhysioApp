@@ -1,20 +1,31 @@
 <!-- =====================================
-   PhysioPro — Healthcare Platform Landing
+   HealthHub — Healthcare Platform Landing
    ===================================== -->
 <div class="landing-page font-sans">
 
   <!-- ══════════════════ NAVBAR ══════════════════ -->
-  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-400" [class.nav-scrolled]="navScrolled">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-400" [class.nav-scrolled]="navScrolled"
+    [class.mobile-menu-active]="mobileMenuOpen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
 
       <!-- Logo -->
-      <a href="#" class="flex items-center gap-2.5 group" aria-label="PhysioPro Home">
-        <div
-          class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-md shadow-primary-500/30 group-hover:scale-105 transition-transform">
-          <i-lucide name="activity" class="w-5 h-5 text-white"></i-lucide>
-        </div>
+      <a href="#" class="flex items-center gap-2.5 group" aria-label="HealthHub Home">
+        <svg class="w-10 h-10 drop-shadow-lg group-hover:scale-110 transition-all duration-300 animate-heartbeat"
+          viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGradLanding" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#0F9B8E" />
+              <stop offset="100%" stop-color="#10B981" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+            fill="url(#logoGradLanding)" />
+          <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
         <span class="text-xl font-bold text-slate-800 font-heading tracking-tight">
-          Physio<span class="text-primary-500">Pro</span>
+          Health<span class="text-primary-500">Hub</span>
         </span>
       </a>
 
@@ -28,20 +39,35 @@
         <button (click)="goToDoctorRegister()"
           class="nav-link text-sm font-semibold text-secondary-600 hover:text-secondary-700 transition-colors flex items-center gap-1">
           <i-lucide name="stethoscope" class="w-3.5 h-3.5"></i-lucide>
-          For Physiotherapists
+          For Doctors
+        </button>
+        <button (click)="goToLabRegister()"
+          class="nav-link text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors flex items-center gap-1">
+          <i-lucide name="microscope" class="w-3.5 h-3.5"></i-lucide>
+          For Labs
         </button>
       </div>
 
       <!-- Desktop CTA -->
       <div class="hidden md:flex items-center gap-3">
-        <button (click)="goToLogin()"
-          class="text-sm font-semibold text-primary-600 hover:text-primary-700 px-3 py-1.5 transition-colors">
-          Patient Login
-        </button>
-        <button (click)="goToRegister()"
-          class="btn-primary px-5 py-2.5 rounded-xl text-white text-sm font-bold shadow-md shadow-primary-500/30">
-          Book Appointment
-        </button>
+        <ng-container *ngIf="isAuthChecking; else authContent">
+          <!-- Loading state with animation -->
+          <div
+            class="flex items-center gap-3 px-4 py-2 bg-slate-100/50 backdrop-blur-sm rounded-xl border border-slate-200/50 animate-pulse">
+            <div class="w-4 h-4 rounded-full border-2 border-primary-500 border-t-transparent animate-spin"></div>
+            <span class="text-xs font-bold text-slate-500 tracking-tight">Checking...</span>
+          </div>
+        </ng-container>
+        <ng-template #authContent>
+          <button *ngIf="!isLoggedIn" (click)="goToLogin()"
+            class="text-sm font-bold text-slate-700 hover:text-primary-600 px-4 py-2 transition-colors">
+            Login
+          </button>
+          <button (click)="isLoggedIn ? goToDashboard() : goToRegister()"
+            class="btn-primary px-5 py-2.5 rounded-xl text-white text-sm font-bold shadow-md shadow-primary-500/30">
+            {{ isLoggedIn ? 'Go to Dashboard' : 'Book Appointment' }}
+          </button>
+        </ng-template>
       </div>
 
       <!-- Mobile hamburger -->
@@ -53,7 +79,7 @@
 
     <!-- Mobile menu -->
     <div class="mobile-menu md:hidden" [class.mobile-menu--open]="mobileMenuOpen">
-      <div class="px-4 pb-5 pt-2 bg-white/96 backdrop-blur-xl border-t border-slate-100 space-y-1">
+      <div class="px-4 pb-5 bg-white/96 backdrop-blur-xl space-y-1">
         <a href="#services" (click)="closeMobileMenu()" class="mobile-nav-item">
           <i-lucide name="activity" class="w-4 h-4 text-primary-400"></i-lucide> Services
         </a>
@@ -67,20 +93,34 @@
           <i-lucide name="help-circle" class="w-4 h-4 text-primary-400"></i-lucide> FAQ
         </a>
         <button (click)="goToDoctorRegister(); closeMobileMenu()" class="mobile-nav-item">
-          <i-lucide name="stethoscope" class="w-4 h-4 text-secondary-400"></i-lucide> For Physiotherapists
+          <i-lucide name="stethoscope" class="w-4 h-4 text-secondary-400"></i-lucide> For Doctors
         </button>
-        <div class="flex gap-3 pt-3 border-t border-slate-100 mt-2">
-          <button (click)="goToLogin(); closeMobileMenu()"
-            class="flex-1 py-3 rounded-xl border border-primary-200 text-primary-600 font-semibold text-sm hover:bg-primary-50 transition-all">Login</button>
-          <button (click)="goToRegister(); closeMobileMenu()"
-            class="flex-1 py-3 rounded-xl btn-primary text-white font-bold text-sm">Book Now</button>
+        <button (click)="goToLabRegister(); closeMobileMenu()" class="mobile-nav-item">
+          <i-lucide name="microscope" class="w-4 h-4 text-primary-400"></i-lucide> For Labs
+        </button>
+        <div class="flex flex-col gap-2 pt-3 border-t border-slate-100 mt-2">
+          <ng-container *ngIf="isAuthChecking; else mobileAuthContent">
+            <div
+              class="w-full py-3 px-4 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center gap-3">
+              <div class="w-4 h-4 rounded-full border-2 border-primary-500 border-t-transparent animate-spin"></div>
+              <span class="text-xs font-bold text-slate-500">Checking auth...</span>
+            </div>
+          </ng-container>
+          <ng-template #mobileAuthContent>
+            <button *ngIf="!isLoggedIn" (click)="goToLogin(); closeMobileMenu()"
+              class="w-full py-3 rounded-xl border border-slate-200 text-slate-700 font-bold text-sm">Login</button>
+            <button (click)="isLoggedIn ? goToDashboard() : goToRegister(); closeMobileMenu()"
+              class="w-full py-3 rounded-xl btn-primary text-white font-bold text-sm">
+              {{ isLoggedIn ? 'Go to Dashboard' : 'Book Appointment' }}
+            </button>
+          </ng-template>
         </div>
       </div>
     </div>
   </nav>
 
   <!-- ══════════════════ HERO ══════════════════ -->
-  <section class="hero-section relative pt-16 overflow-hidden">
+  <section class="hero-section relative pt-0 overflow-hidden">
 
     <!-- Rich layered background -->
     <div class="hero-bg-gradient absolute inset-0"></div>
@@ -89,37 +129,29 @@
     <div class="orb orb-2 absolute w-[500px] h-[500px] -bottom-40 -left-40 pointer-events-none"></div>
     <div class="orb orb-3 absolute w-72 h-72 top-1/2 left-1/3 pointer-events-none"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 lg:py-16 relative z-10">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 items-center min-h-[calc(100svh-4rem)]">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-8 sm:py-16 lg:py-16 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-20 items-center min-h-[calc(100svh-4rem)]">
 
         <!-- ── LEFT CONTENT ── -->
-        <div class="hero-content flex flex-col justify-center">
+        <div style="margin-top: 70px;" class="hero-content flex flex-col justify-center">
 
-          <!-- Platform trust badge -->
-          <div
-            class="hero-badge inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-primary-200 text-primary-700 text-xs font-bold px-4 py-2.5 rounded-xl mb-6 shadow-sm w-fit">
-            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            India's #1 Physiotherapy Platform
-            <span
-              class="ml-1 bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full text-[10px] font-bold">VERIFIED</span>
-          </div>
 
           <!-- Headline -->
           <h1
             class="text-[2.6rem] sm:text-5xl lg:text-[3.2rem] xl:text-[3.8rem] font-black font-heading text-slate-900 leading-[1.08] mb-5">
             Your Path to
-            <span class="hero-highlight block">Pain-Free Living</span>
+            <span class="hero-highlight block text-gradient">Better Health</span>
             <span class="text-slate-600 text-3xl sm:text-4xl lg:text-[2.4rem] font-bold">starts here.</span>
           </h1>
 
-          <p class="text-base sm:text-[1.05rem] text-slate-600 mb-8 leading-relaxed max-w-md">
+          <!-- <p class="text-base sm:text-[1.05rem] text-slate-600 mb-8 leading-relaxed max-w-md">
             Book certified physiotherapists for <strong class="text-slate-800 font-semibold">in-clinic, online or home
               visits</strong>.
             Personalised treatment. Expert care. Real results.
-          </p>
+          </p> -->
 
           <!-- Search Widget -->
-          <div
+          <!-- <div
             class="search-widget bg-white rounded-2xl shadow-xl shadow-primary-100/60 border border-slate-200/80 mb-6 overflow-hidden">
             <div class="flex flex-col sm:flex-row">
               <div class="flex items-center gap-3 flex-1 px-4 py-3.5">
@@ -139,10 +171,10 @@
                 Find a Physio
               </button>
             </div>
-          </div>
+          </div> -->
 
           <!-- Popular conditions chips -->
-          <div class="flex flex-wrap gap-2 mb-8">
+          <!-- <div class="flex flex-wrap gap-2 mb-8">
             <span class="text-xs text-slate-500 font-semibold self-center">Trending: </span>
             @for (c of conditions.slice(0, 5); track c.label) {
             <button (click)="bookCondition(c.label)"
@@ -151,10 +183,10 @@
               {{ c.label }}
             </button>
             }
-          </div>
+          </div> -->
 
           <!-- Social proof row -->
-          <div class="flex flex-wrap items-center gap-6 pt-5 border-t border-slate-200/60">
+          <div class="flex flex-wrap items-center gap-4 sm:gap-6 pt-4 sm:pt-5 border-t border-slate-200/60">
             <!-- Avatar stack -->
             <div class="flex items-center gap-2">
               <div class="flex -space-x-2">
@@ -188,18 +220,23 @@
         </div>
 
         <!-- ── MOBILE Hero Image (visible only on small screens) ── -->
-        <div class="hero-mobile-image block lg:hidden mt-8 mb-4 reveal">
+        <div class="hero-mobile-image block lg:hidden mt-6 mb-20 sm:mb-24 reveal">
           <div class="relative mx-auto max-w-sm">
             <div
               class="absolute inset-[-6px] bg-gradient-to-br from-primary-300/30 to-secondary-400/20 rounded-3xl blur-sm">
             </div>
-            <div class="relative w-full h-56 sm:h-72 rounded-3xl overflow-hidden shadow-xl bg-slate-900">
-              <iframe class="absolute inset-0 w-full h-full"
-                src="https://www.youtube.com/embed/aO1boUJhjvk?autoplay=1&mute=1&loop=1&playlist=aO1boUJhjvk&controls=0&showinfo=0&rel=0"
-                title="Physiotherapy Mobile Dummy Video" frameborder="0"
+              <div *ngIf="heroVideoSettings?.isActive"
+              class="relative w-full h-56 sm:h-72 rounded-3xl overflow-hidden shadow-xl bg-slate-900">
+              <iframe class="absolute inset-0 w-full h-full scale-[1.5] pointer-events-none"
+                [src]="'https://www.youtube.com/embed/' + heroVideoSettings?.videoId + '?autoplay=1&mute=1&loop=1&playlist=' + heroVideoSettings?.videoId + '&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3' | safe:'resourceUrl'"
+                title="Healthcare Mobile Video" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowfullscreen>
               </iframe>
+              <!-- Top gradient overlay to hide YouTube branding -->
+              <div
+                class="absolute top-0 left-0 right-0 h-14 bg-gradient-to-b from-slate-900/70 to-transparent pointer-events-none z-20">
+              </div>
               <div
                 class="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent pointer-events-none">
               </div>
@@ -211,11 +248,18 @@
                     <i-lucide name="play-circle" class="w-3.5 h-3.5 text-white"></i-lucide>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="text-white font-bold text-xs">Guided Physiotherapy</p>
-                    <p class="text-white/60 text-[10px] truncate">Watch professional recovery techniques</p>
+                    <p class="text-white font-bold text-xs">Expert Medical Care</p>
+                    <p class="text-white/60 text-[10px] truncate">Trusted doctors across all specialties</p>
                   </div>
                 </div>
               </div>
+            </div>
+
+            <!-- Fallback Image if Video is disabled -->
+            <div *ngIf="!heroVideoSettings?.isActive"
+              class="relative w-full h-56 sm:h-72 rounded-3xl overflow-hidden shadow-xl">
+              <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=800&auto=format&fit=crop"
+                class="w-full h-full object-cover" alt="Doctor consultation">
             </div>
           </div>
         </div>
@@ -238,36 +282,52 @@
               </div>
 
               <!-- Slideshow container / Now Youtube Video -->
-              <div
+              <div *ngIf="heroVideoSettings?.isActive"
                 class="hero-slideshow relative w-full h-[400px] xl:h-[460px] rounded-[2.8rem] overflow-hidden shadow-2xl z-10 bg-slate-900">
-                <iframe class="absolute inset-0 w-full h-full scale-[1.35] lg:scale-[1.2]"
-                  src="https://www.youtube.com/embed/aO1boUJhjvk?autoplay=1&mute=1&loop=1&playlist=aO1boUJhjvk&controls=0&showinfo=0&rel=0"
-                  title="Physiotherapy Dummy Video" frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                <iframe class="absolute inset-0 w-full h-full scale-[1.5] pointer-events-none" [src]="'https://www.youtube.com/embed/' + heroVideoSettings?.videoId + 
+  '?autoplay=1&mute=1&loop=1&playlist=' + heroVideoSettings?.videoId + 
+  '&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1' 
+  | safe:'resourceUrl'" title="Healthcare Video" frameborder="0" allow="autoplay; encrypted-media"
                   allowfullscreen>
                 </iframe>
+                <!-- Top gradient overlay to hide any YouTube branding -->
                 <div
-                  class="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent pointer-events-none">
+                  class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-slate-900/70 to-transparent pointer-events-none z-20">
+                </div>
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent pointer-events-none">
                 </div>
 
                 <!-- Caption at bottom -->
-                <div class="absolute bottom-0 left-0 right-0 z-30 p-4 pointer-events-none">
+                <div class="absolute bottom-0 left-0 right-0 z-30 p-5 pointer-events-none">
                   <div
                     class="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-2xl px-4 py-3 border border-white/15">
                     <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
                       <i-lucide name="play-circle" class="w-4 h-4 text-white"></i-lucide>
                     </div>
                     <div class="flex-1 min-w-0">
-                      <p class="text-white font-bold text-sm">Guided Physiotherapy</p>
-                      <p class="text-white/65 text-[11px] truncate">Watch professional recovery techniques</p>
+                      <p class="text-white font-bold text-sm">Expert Medical Care</p>
+                      <p class="text-white/65 text-[11px] truncate">Trusted doctors across all specialties</p>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <!-- Fallback Slideshow/Image if Video is disabled -->
+              <div *ngIf="!heroVideoSettings?.isActive"
+                class="hero-slideshow relative w-full h-[400px] xl:h-[460px] rounded-[2.8rem] overflow-hidden shadow-2xl z-10">
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1200&auto=format&fit=crop"
+                  class="w-full h-full object-cover" alt="Doctor consultation">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+                <div class="absolute bottom-8 left-8 right-8 text-white">
+                  <p class="text-2xl font-black mb-2">Expert Care</p>
+                  <p class="text-sm opacity-80">Trusted doctors across all specialties, at your service.</p>
                 </div>
               </div>
             </div>
 
             <!-- ── Floating card 1: Doctor available (top-left, outside image) ── -->
-            <div
+            <!-- <div
               class="floating-card absolute -left-16 top-6 bg-white rounded-2xl shadow-xl border border-slate-100 p-3.5 z-40 w-52 animate-float">
               <div class="flex items-center gap-2.5 mb-2">
                 <div class="relative">
@@ -285,10 +345,10 @@
                 <span class="text-slate-500">Sports Physio · 8 yrs</span>
                 <span class="bg-primary-50 text-primary-700 font-bold px-2 py-0.5 rounded-full text-[10px]">Book</span>
               </div>
-            </div>
+            </div> -->
 
             <!-- ── Floating card 2: Rating (bottom-left, outside image) ── -->
-            <div
+            <!-- <div
               class="floating-card absolute -left-12 bottom-20 bg-white rounded-2xl shadow-xl border border-slate-100 px-3.5 py-3 z-40 animate-float animation-delay-1000">
               <div class="flex items-center gap-0.5 mb-0.5">
                 @for (s of [1,2,3,4,5]; track s) {
@@ -297,11 +357,10 @@
               </div>
               <p class="text-sm font-black text-slate-800">4.9 <span class="text-xs font-normal text-slate-400">/
                   5.0</span></p>
-              <p class="text-[10px] text-slate-500">500+ verified reviews</p>
-            </div>
+            </div> -->
 
             <!-- ── Floating card 3: Sessions stat (bottom-right) ── -->
-            <div
+            <!-- <div
               class="floating-card absolute -right-8 bottom-24 bg-gradient-to-br from-primary-500 to-primary-700 text-white rounded-2xl shadow-glow p-3.5 z-40 animate-float animation-delay-2000">
               <div class="flex items-center gap-1.5 mb-1">
                 <i-lucide name="activity" class="w-4 h-4 opacity-90"></i-lucide>
@@ -309,7 +368,7 @@
               </div>
               <p class="text-xl font-black">680</p>
               <p class="text-[10px] opacity-70">Sessions completed</p>
-            </div>
+            </div> -->
 
           </div>
         </div>
@@ -326,13 +385,64 @@
     </div>
   </section>
 
+  <!-- ══════════════════ QUICK NAV CARDS ══════════════════ -->
+  <section style="background: white !important;"
+    class="relative -mt-10 sm:-mt-12 z-30 pb-8 sm:pb-12 px-4 transition-colors duration-300">
+    <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+      <!-- Doctor Card -->
+      <button (click)="goToSpecialties()"
+        class="quick-mini-card group flex items-center gap-4 bg-gradient-to-br from-[#064e40] to-[#0d8679] p-4 rounded-[1.5rem] border border-white/10 hover:scale-[1.02] transition-all duration-300 text-left shadow-xl shadow-emerald-950/20 card-shine relative overflow-hidden">
+        <div
+          class="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform backdrop-blur-md border border-white/5">
+          <i-lucide name="stethoscope" class="w-8 h-8 text-emerald-400"></i-lucide>
+        </div>
+        <div class="flex-1 relative z-10">
+          <p class="text-white font-black text-sm uppercase tracking-tight leading-tight">Doctor Appointment</p>
+          <p class="text-emerald-300/80 text-[10px] font-bold mt-0.5 tracking-wider">BOOK NOW</p>
+        </div>
+        <i-lucide name="chevron-right"
+          class="w-4 h-4 text-white/40 group-hover:translate-x-1 group-hover:text-white transition-all"></i-lucide>
+      </button>
+
+      <!-- Lab Card -->
+      <button (click)="scrollToSection('labs')"
+        class="quick-mini-card group flex items-center gap-4 bg-gradient-to-br from-[#1e293b] to-[#2d3748] p-4 rounded-[1.5rem] border border-white/10 hover:scale-[1.02] transition-all duration-300 text-left shadow-xl shadow-slate-950/20 card-shine relative overflow-hidden">
+        <div
+          class="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform backdrop-blur-md border border-white/5">
+          <i-lucide name="microscope" class="w-8 h-8 text-indigo-300"></i-lucide>
+        </div>
+        <div class="flex-1 relative z-10">
+          <p class="text-white font-black text-sm uppercase tracking-tight leading-tight">Lab Tests</p>
+          <p class="text-indigo-300/80 text-[10px] font-bold mt-0.5 tracking-wider">AT HOME</p>
+        </div>
+        <i-lucide name="chevron-right"
+          class="w-4 h-4 text-white/40 group-hover:translate-x-1 group-hover:text-white transition-all"></i-lucide>
+      </button>
+
+      <!-- Medicines Card (Optional but added for layout fullness like reference) -->
+      <!-- <button (click)="scrollToSection('services')" 
+        class="quick-mini-card group flex items-center gap-4 bg-[#E6F9F3] p-4 rounded-2xl border border-emerald-100/50 hover:bg-[#D4F5EC] transition-all duration-300 text-left shadow-sm hover:shadow-md hidden lg:flex">
+        <div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+          <i-lucide name="pill" class="w-8 h-8 text-[#059669]"></i-lucide>
+        </div>
+        <div class="flex-1">
+          <p class="text-slate-900 font-black text-sm uppercase tracking-tight leading-tight">Medicines</p>
+          <p class="text-[#059669] text-[10px] font-bold mt-0.5">2HR DELIVERY</p>
+        </div>
+        <i-lucide name="chevron-right" class="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform"></i-lucide>
+      </button> -->
+
+    </div>
+  </section>
+
   <!-- ══════════════════ STAT COUNTERS ══════════════════ -->
-  <section class="py-10 sm:py-14 bg-white relative">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="stats-trigger grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+  <section class="py-8 sm:py-12 bg-white relative">
+    <div class="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="stats-trigger grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5">
         @for (stat of statCounters; track stat.label; let i = $index) {
         <div
-          class="stat-card relative text-center bg-gradient-to-br from-white to-primary-50/40 border border-primary-100/50 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300"
+          class="stat-card relative text-center bg-gradient-to-br from-white to-primary-50/40 border border-primary-100/50 rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300"
           [style.transition-delay]="(i * 120) + 'ms'">
           <!-- Decorative bg icon -->
           <div class="absolute top-2 right-2 opacity-[0.07] pointer-events-none">
@@ -349,19 +459,19 @@
   </section>
 
   <!-- ══════════════════ HOW IT WORKS ══════════════════ -->
-  <section id="how-it-works" class="py-20 sm:py-28 bg-slate-50 border-t border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-14 reveal">
+  <section id="how-it-works" class="py-12 sm:py-20 lg:py-24 bg-slate-50 border-t border-slate-100">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="text-center mb-10 sm:mb-14 reveal">
         <span class="section-chip">Simple Process</span>
         <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-4">
-          How <span class="text-gradient">PhysioPro</span> Works
+          How <span class="text-gradient">HealthHub</span> Works
         </h2>
         <p class="text-slate-600 max-w-xl mx-auto text-base sm:text-lg">
-          From first click to full recovery — we make every step simple and transparent.
+          From finding the right doctor to getting your reports — we make every step simple and transparent.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 relative">
         <!-- Connector line (desktop) -->
         <div
           class="hidden lg:block absolute top-10 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-primary-200 via-primary-300 to-primary-200 z-0">
@@ -369,67 +479,54 @@
 
         @for (step of howItWorks; track step.title; let i = $index) {
         <div
-          class="how-step reveal relative z-10 bg-white rounded-2xl p-6 sm:p-7 border border-slate-100 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300"
+          class="how-step reveal relative z-10 bg-white rounded-2xl p-5 sm:p-7 border border-slate-100 shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300 overflow-hidden"
           [style.transition-delay]="(i * 100) + 'ms'">
-          <!-- Step number -->
-          <div class="flex items-center justify-between mb-5">
-            <div
-              class="step-icon step-icon--{{ step.color }} w-12 h-12 rounded-xl flex items-center justify-center shadow-sm">
-              <i-lucide [name]="step.icon" class="w-5 h-5"></i-lucide>
-            </div>
-            <span class="text-4xl font-black text-slate-100 font-heading select-none">{{ step.step }}</span>
+
+          <!-- Background Image -->
+          <div
+            class="step-bg absolute inset-0 z-0 opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity duration-500">
+            <img [src]="step.bgImage" class="w-full h-full object-cover" alt="">
+            <div class="absolute inset-0 bg-white/20"></div>
           </div>
-          <h3 class="text-base font-bold text-slate-800 mb-2 font-heading">{{ step.title }}</h3>
-          <p class="text-slate-500 text-sm leading-relaxed">{{ step.desc }}</p>
+
+          <div class="relative z-10">
+            <!-- Step number -->
+            <div class="flex items-center justify-between mb-5">
+              <div
+                class="step-icon step-icon--{{ step.color }} w-12 h-12 rounded-xl flex items-center justify-center shadow-sm">
+                <i-lucide [name]="step.icon" class="w-5 h-5"></i-lucide>
+              </div>
+              <span class="text-4xl font-black text-slate-100 font-heading select-none">{{ step.step }}</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-800 mb-2 font-heading">{{ step.title }}</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">{{ step.desc }}</p>
+          </div>
         </div>
         }
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════ CONDITIONS / TREATMENTS ══════════════════ -->
-  <section class="py-20 sm:py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12 reveal">
-        <span class="section-chip">Conditions We Treat</span>
-        <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-3">
-          Find Care For <span class="text-gradient">Your Condition</span>
-        </h2>
-        <p class="text-slate-600 max-w-xl mx-auto text-base">
-          Click any condition to find specialist physios and book instantly.
-        </p>
-      </div>
-      <div class="reveal flex flex-wrap justify-center gap-3">
-        @for (c of conditions; track c.label; let i = $index) {
-        <button (click)="bookCondition(c.label)"
-          class="condition-tag flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-medium text-sm hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 hover:shadow-sm transition-all duration-250 group"
-          [style.animation-delay]="(i * 60) + 'ms'">
-          <i-lucide [name]="c.icon"
-            class="w-4 h-4 text-slate-400 group-hover:text-primary-500 transition-colors"></i-lucide>
-          {{ c.label }}
-        </button>
-        }
-      </div>
-    </div>
-  </section>
+  <!-- ══════════════════ DOCTOR SPECIALTIES ══════════════════ -->
+
 
   <!-- ══════════════════ SERVICES ══════════════════ -->
-  <section id="services" class="py-20 sm:py-28 bg-slate-50 border-t border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-14 reveal">
+  <section id="services" class="py-12 sm:py-20 lg:py-24 bg-slate-50 border-t border-slate-100">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="text-center mb-10 sm:mb-14 reveal">
         <span class="section-chip">Specialisations</span>
         <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-4">
           Comprehensive <span class="text-gradient">Care Services</span>
         </h2>
-        <p class="text-slate-600 max-w-2xl mx-auto text-base sm:text-lg">
-          From acute injuries to chronic conditions, our clinical team delivers targeted, evidence-based treatment.
+        <p class="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base lg:text-lg">
+          From cardiology to dermatology, our verified doctors deliver expert, evidence-based care for every condition.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
         @for (service of services; track service.title; let i = $index) {
-        <div
-          class="service-card reveal group relative bg-white border border-slate-100 hover:border-primary-100 rounded-2xl p-6 sm:p-7 shadow-sm hover:shadow-card transition-all duration-350 hover:-translate-y-1.5 cursor-default overflow-hidden"
+        <div (click)="filterDoctorsBySpecialty(service.specialty)"
+          class="service-card reveal group relative bg-white border border-slate-100 hover:border-primary-100 rounded-2xl p-5 sm:p-6 lg:p-7 shadow-sm hover:shadow-card transition-all duration-350 hover:-translate-y-1.5 cursor-pointer overflow-hidden"
           [style.transition-delay]="(i * 80) + 'ms'">
           <div
             class="absolute -top-8 -right-8 w-24 h-24 bg-primary-50/50 rounded-full group-hover:scale-[2.5] transition-transform duration-500 z-0 pointer-events-none">
@@ -444,8 +541,8 @@
               {{ service.title }}</h3>
             <p class="text-slate-500 text-sm leading-relaxed">{{ service.desc }}</p>
             <div
-              class="flex items-center gap-1 mt-4 text-primary-500 text-sm font-semibold opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-              View specialists <i-lucide name="arrow-right" class="w-3.5 h-3.5"></i-lucide>
+              class="flex items-center gap-1 mt-4 text-primary-500 text-sm font-bold opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+              View specialists <i-lucide name="arrow-right" class="w-4 h-4"></i-lucide>
             </div>
           </div>
         </div>
@@ -455,30 +552,45 @@
   </section>
 
   <!-- ══════════════════ DOCTORS ══════════════════ -->
-  <section id="doctors" class="py-20 sm:py-28 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-14 reveal">
-        <span class="section-chip">Verified Specialists</span>
-        <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-4">
-          Meet Our <span class="text-gradient">Clinical Team</span>
-        </h2>
-        <p class="text-slate-600 max-w-2xl mx-auto text-base sm:text-lg">
-          All physiotherapists are background-verified, certified and reviewed by real patients.
-        </p>
+  <section id="doctors" class="py-12 sm:py-20 lg:py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 reveal">
+        <div class="max-w-xl">
+          <span class="section-chip">Verified Specialists</span>
+          <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-4">
+            Meet Our <span class="text-gradient">Clinical Team</span>
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base">
+            All doctors are background-verified, certified and trusted by real patients.
+          </p>
+        </div>
+        <div class="hidden sm:flex gap-2 mt-6 md:mt-0">
+          <button (click)="scrollDoctors('prev')"
+            class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white"
+            aria-label="Previous">
+            <i-lucide name="chevron-left" class="w-5 h-5"></i-lucide>
+          </button>
+          <button (click)="scrollDoctors('next')"
+            class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white"
+            aria-label="Next">
+            <i-lucide name="chevron-right" class="w-5 h-5"></i-lucide>
+          </button>
+        </div>
       </div>
 
       <ng-container *ngIf="doctors$ | async as doctors; else loadingDoctors">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Doctors Slider Container -->
+        <div #doctorsSlider class="flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scroll-smooth no-scrollbar">
           @for (doc of doctors; track doc.id; let i = $index) {
           <div (click)="openDoctorProfile(doc)"
-            class="doctor-card reveal group bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-400 overflow-hidden cursor-pointer hover:-translate-y-2"
-            [style.transition-delay]="(i * 80) + 'ms'">
+            class="doctor-card reveal flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[350px] snap-start group bg-white rounded-2xl border border-slate-100 shadow-sm transition-all duration-400 overflow-hidden"
+            [class.cursor-pointer]="doc.available" [class.cursor-not-allowed]="!doc.available"
+            [class.hover:shadow-xl]="doc.available" [class.hover:-translate-y-2]="doc.available"
+            [class.opacity-80]="!doc.available" [style.transition-delay]="(i * 80) + 'ms'">
 
             <!-- Doctor image -->
             <div class="relative h-52 bg-gradient-to-br from-primary-400 to-primary-700 overflow-hidden">
-              <img [src]="doc.image"
-                onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=Doctor&background=0F9B8E&color=fff&size=200'"
-                alt="{{ doc.name }}"
+              <img [src]="getDoctorImage(doc, i)" alt="{{ doc.fullName }}"
                 class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-600 ease-out">
               <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
 
@@ -498,8 +610,8 @@
 
               <!-- Name overlay -->
               <div class="absolute bottom-3 left-4">
-                <h3 class="text-base font-bold text-white font-heading leading-tight">{{ doc.name }}</h3>
-                <p class="text-primary-200 text-xs">{{ doc.specialty }}</p>
+                <h3 class="text-base font-bold text-white font-heading leading-tight">{{ doc.fullName }}</h3>
+                <p class="text-primary-200 text-xs">{{ doc.specialization || doc.specialty }}</p>
               </div>
             </div>
 
@@ -512,10 +624,10 @@
                   <i-lucide name="star" class="w-3.5 h-3.5" [class.text-amber-400]="s <= doc.rating"
                     [class.text-slate-200]="s > doc.rating" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
                   }
-                  <span class="text-sm font-bold text-slate-700 ml-1">{{ doc.rating }}</span>
-                  <span class="text-xs text-slate-400">({{ (doc.rating * 20 | number:'1.0-0') }})</span>
+                  <span class="text-xs text-slate-400">Trusted Specialist</span>
                 </div>
-                <span class="text-xs font-medium text-slate-500 bg-slate-50 px-2 py-1 rounded-lg">8+ yrs exp.</span>
+                <span class="text-xs font-medium text-slate-500 bg-slate-50 px-2 py-1 rounded-lg">{{ doc.experience ??
+                  '5+' }} Yrs Exp.</span>
               </div>
 
               <!-- CTA -->
@@ -533,19 +645,20 @@
         </div>
 
         <!-- See all CTA -->
-        <div class="text-center mt-10 reveal">
-          <button (click)="goToLogin()"
+        <!-- <div class="text-center mt-10 reveal">
+          <button (click)="isLoggedIn ? goToDashboard() : goToLogin()"
             class="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl border-2 border-primary-200 text-primary-600 font-bold text-sm hover:bg-primary-50 transition-all duration-200">
-            View All Specialists
+            {{ isLoggedIn ? 'View My Specialists' : 'View All Specialists' }}
             <i-lucide name="arrow-right" class="w-4 h-4"></i-lucide>
           </button>
-        </div>
+        </div> -->
       </ng-container>
 
       <ng-template #loadingDoctors>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          @for (i of [1,2,3,4,5,6]; track i) {
-          <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+        <div class="flex gap-6 overflow-hidden pb-8">
+          @for (i of [1,2,3,4]; track i) {
+          <div
+            class="flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[350px] bg-white rounded-2xl border border-slate-100 overflow-hidden">
             <div class="h-52 skeleton-shimmer"></div>
             <div class="p-5 space-y-3">
               <div class="h-4 skeleton-shimmer rounded-lg w-3/4"></div>
@@ -559,9 +672,156 @@
     </div>
   </section>
 
+  <!-- ══════════════════ DIAGNOSTIC LABS (SLIDER) ══════════════════ -->
+  <section id="labs" class="py-12 sm:py-20 lg:py-12 bg-slate-50 border-t border-slate-100 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 reveal">
+        <div class="max-w-xl">
+          <span class="section-chip">Trusted Network</span>
+          <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-3 sm:mb-4">
+            Our Partner <span class="text-gradient">Diagnostic Labs</span>
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base mb-4">
+            Accurate diagnostics are the foundation of great healthcare. Access world-class laboratory services through
+            our verified partners — fast, reliable and at your convenience.
+          </p>
+          <button (click)="goToLabRegister()"
+            class="inline-flex items-center gap-2 text-primary-600 font-bold text-sm hover:text-primary-700 transition-colors group">
+            Own a Lab? Register as a Partner
+            <i-lucide name="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i-lucide>
+          </button>
+        </div>
+        <div class="hidden sm:flex gap-2 mt-6 md:mt-0">
+          <button (click)="scrollLabs('prev')"
+            class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white"
+            aria-label="Previous">
+            <i-lucide name="chevron-left" class="w-5 h-5"></i-lucide>
+          </button>
+          <button (click)="scrollLabs('next')"
+            class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-primary-500 hover:text-primary-500 transition-all shadow-sm bg-white"
+            aria-label="Next">
+            <i-lucide name="chevron-right" class="w-5 h-5"></i-lucide>
+          </button>
+        </div>
+      </div>
+
+      <ng-container *ngIf="labs$ | async as labs; else loadingLabs">
+        <!-- Horizontal Slider Container -->
+        <div #labsSlider
+          class="flex gap-4 sm:gap-5 overflow-x-auto pb-6 sm:pb-8 snap-x snap-mandatory scroll-smooth no-scrollbar"
+          style="scrollbar-width: none; -ms-overflow-style: none;">
+          @for (lab of labs; track lab.id; let i = $index) {
+          <div class="flex-shrink-0 w-[270px] sm:w-[310px] lg:w-[340px] snap-start reveal"
+            [style.transition-delay]="(i * 100) + 'ms'">
+            <div
+              class="lab-card bg-white rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm overflow-hidden group hover:shadow-xl transition-all duration-500 h-full"
+              [class.lab-card--unavailable]="!(lab.available)">
+              <!-- Lab Image -->
+              <div class="relative h-40 sm:h-44 overflow-hidden">
+                <img [src]="getLabImage(lab, i)" alt="{{ lab.fullName || lab.name }}"
+                  (error)="onTestImgError($event, lab.fullName || lab.name)"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent"></div>
+
+                <!-- Top badges row -->
+                <div class="absolute top-3 left-3 right-3 flex items-center justify-between">
+                  <span
+                    class="bg-white/90 backdrop-blur-sm text-[9px] sm:text-[10px] font-black tracking-widest uppercase px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-primary-700 shadow-sm">
+                    PARTNER LAB
+                  </span>
+                  <span class="px-2 py-1 rounded-lg text-[9px] sm:text-[10px] font-bold shadow-sm backdrop-blur-sm"
+                    [ngClass]="(lab.available) ? 'bg-emerald-500/90 text-white' : 'bg-slate-200/90 text-slate-600'">
+                    {{ (lab.available) ? '● Open' : '○ Closed' }}
+                  </span>
+                </div>
+
+                <!-- Name overlay at bottom of image -->
+                <div class="absolute bottom-3 left-3 right-3">
+                  <h3 class="text-base sm:text-lg font-black text-white font-heading truncate drop-shadow-lg">{{
+                    lab.fullName || lab.name }}</h3>
+                </div>
+              </div>
+
+              <!-- Lab Details -->
+              <div class="p-4 sm:p-5">
+                <!-- Rating & availability row -->
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-1.5">
+                    <div class="flex items-center gap-0.5 text-amber-400">
+                      <i-lucide name="star" class="w-3.5 h-3.5 fill-current"></i-lucide>
+                    </div>
+                    <span class="text-slate-400 text-xs">· Partner</span>
+                  </div>
+                  <span class="text-[10px] font-medium px-2 py-0.5 rounded-full"
+                    [ngClass]="(lab.available) ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-500'">
+                    {{ (lab.available) ? 'Reports in 24h' : 'Unavailable' }}
+                  </span>
+                </div>
+
+                <!-- Info rows -->
+                <div class="space-y-2 mb-4">
+                  <div class="flex items-center gap-2 text-slate-500 text-xs">
+                    <i-lucide name="map-pin" class="w-3.5 h-3.5 text-primary-500 flex-shrink-0"></i-lucide>
+                    <span class="truncate">{{ lab.address || 'Diagnostic Services Available' }}</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-slate-500 text-xs">
+                    <i-lucide name="clock" class="w-3.5 h-3.5 text-primary-500 flex-shrink-0"></i-lucide>
+                    <span>{{ (lab.available) ? 'Mon–Sat: 8 AM – 8 PM' : 'Next Opening: Tomorrow'
+                      }}</span>
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-5 gap-2.5">
+                  <button (click)="callLab(lab.phone); $event.stopPropagation()"
+                    class="col-span-2 py-2.5 sm:py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5"
+                    [ngClass]="(lab.available)
+                      ? 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300'
+                      : 'bg-slate-100 border border-slate-100 text-slate-300 cursor-not-allowed'"
+                    [disabled]="!(lab.available)">
+                    <i-lucide name="phone" class="w-3.5 h-3.5"></i-lucide>
+                    Call
+                  </button>
+                  <a [href]="getWhatsAppUrl(lab)" [attr.target]="(lab.available) ? '_blank' : null"
+                    class="col-span-3 py-2.5 sm:py-3 rounded-xl font-bold text-xs transition-all duration-300 flex items-center justify-center gap-1.5"
+                    [ngClass]="(lab.available)
+                      ? 'bg-green-500 text-white hover:bg-green-600 shadow-sm hover:shadow-green-500/30 cursor-pointer'
+                      : 'bg-slate-100 text-slate-300 cursor-not-allowed pointer-events-none'">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </ng-container>
+
+      <ng-template #loadingLabs>
+        <div class="flex gap-4 sm:gap-5 overflow-hidden">
+          @for (i of [1,2,3,4]; track i) {
+          <div
+            class="flex-shrink-0 w-[270px] sm:w-[310px] lg:w-[340px] bg-white rounded-2xl sm:rounded-3xl border border-slate-100 overflow-hidden">
+            <div class="h-40 sm:h-44 skeleton-shimmer"></div>
+            <div class="p-4 sm:p-5 space-y-3">
+              <div class="h-4 skeleton-shimmer rounded-lg w-3/4"></div>
+              <div class="h-3 skeleton-shimmer rounded-lg w-1/2"></div>
+              <div class="h-10 skeleton-shimmer rounded-xl mt-3"></div>
+            </div>
+          </div>
+          }
+        </div>
+      </ng-template>
+    </div>
+  </section>
+
   <!-- ══════════════════ WHY CHOOSE US ══════════════════ -->
-  <section class="py-20 sm:py-28 bg-slate-50 border-t border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-14 xl:gap-20 items-center">
+  <section class="py-12 sm:py-20 lg:py-24 bg-slate-50 border-t border-slate-100">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-20 items-center">
 
       <!-- Left: Platform USP card -->
       <div class="relative reveal order-2 lg:order-1">
@@ -575,19 +835,16 @@
               <div class="w-12 h-12 bg-white/15 rounded-xl flex items-center justify-center backdrop-blur-sm">
                 <i-lucide name="heart-pulse" class="w-7 h-7"></i-lucide>
               </div>
-              <div>
-                <p class="font-bold text-white text-lg font-heading">Start Recovery Today</p>
-                <p class="text-primary-200 text-xs">No waiting lists. No referrals needed.</p>
-              </div>
+            <p class="font-bold text-white text-lg font-heading">Start Your Health Journey</p>
+                <p class="text-primary-200 text-xs">No waiting lists. Book verified doctors instantly.</p>
             </div>
 
-            <!-- Mini checklist -->
             <ul class="space-y-3 mb-8">
               @for (p of [
-              'Certified & background-checked therapists',
+              'Board-certified & background-verified doctors',
               'Personalised evidence-based treatment plans',
               'Transparent pricing, no hidden charges',
-              'Digital progress tracking & reports'
+              'Digital health records & prescription tracking'
               ]; track p) {
               <li class="flex items-start gap-2.5 text-sm text-primary-100">
                 <i-lucide name="check-circle-2" class="w-4 h-4 text-white flex-shrink-0 mt-0.5"></i-lucide>
@@ -598,7 +855,7 @@
 
             <button (click)="goToRegister()"
               class="bg-white text-primary-600 font-bold py-3.5 px-8 rounded-xl hover:bg-primary-50 active:scale-95 transition-all shadow-md text-sm">
-              Book a Free Consultation →
+              Book a Free Doctor Consultation →
             </button>
           </div>
         </div>
@@ -609,16 +866,16 @@
           <p class="text-xs text-slate-500 font-medium">Patient satisfaction</p>
         </div>
         <div class="absolute -top-5 -right-5 bg-white rounded-2xl shadow-card border border-slate-100 px-5 py-4">
-          <p class="text-2xl font-black text-secondary-500 font-heading">10K+</p>
-          <p class="text-xs text-slate-500 font-medium">Sessions completed</p>
+          <p class="text-2xl font-black text-secondary-500 font-heading">50K+</p>
+          <p class="text-xs text-slate-500 font-medium">Patients served</p>
         </div>
       </div>
 
       <!-- Right: Feature bullets -->
       <div class="reveal order-1 lg:order-2">
-        <span class="section-chip">Why PhysioPro?</span>
+        <span class="section-chip">Why HealthHub?</span>
         <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-8">
-          A Platform Built for <span class="text-gradient">Patient Outcomes</span>
+          A Platform Built for <span class="text-gradient">Better Health Outcomes</span>
         </h2>
         <div class="space-y-5">
           @for (item of whyChoose; track item.title; let i = $index) {
@@ -640,95 +897,150 @@
   </section>
 
   <!-- ══════════════════ TESTIMONIALS ══════════════════ -->
-  <section id="testimonials" class="py-20 sm:py-28 relative overflow-hidden">
+  <section id="testimonials" class="py-12 sm:py-20 lg:py-24 relative overflow-hidden">
     <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-primary-950 to-slate-900"></div>
     <div class="absolute top-0 right-0 w-96 h-96 bg-primary-500/8 rounded-full blur-[100px] pointer-events-none"></div>
     <div class="absolute bottom-0 left-0 w-80 h-80 bg-secondary-500/8 rounded-full blur-[80px] pointer-events-none">
     </div>
     <div class="dark-grid absolute inset-0 opacity-15 pointer-events-none"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="text-center mb-14 reveal">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center mb-10 sm:mb-14 reveal">
         <span class="section-chip-dark">Patient Stories</span>
         <h2 class="text-3xl sm:text-4xl font-black font-heading text-white mt-3 mb-3">
           Real Patients. <span class="text-gradient">Real Outcomes.</span>
         </h2>
         <p class="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">
-          Verified reviews from patients who completed treatment through PhysioPro.
+          Genuine feedback from patients who consulted doctors through HealthHub.
         </p>
       </div>
 
-      <!-- Featured testimonial -->
-      <div class="max-w-2xl mx-auto mb-10">
+      <!-- Featured testimonial (Real Feedback from Patients) -->
+      <ng-container *ngIf="feedbacks$ | async as realFeedbacks; else staticTestimonials">
+        <div class="max-w-2xl mx-auto mb-10" *ngIf="realFeedbacks.length > 0">
+          <div
+            class="testimonial-featured-card bg-white/7 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-7 sm:p-10">
+            <div class="flex gap-1 mb-4">
+              <i-lucide name="star" *ngFor="let s of [1,2,3,4,5]"
+                [class.text-amber-400]="s <= realFeedbacks[activeTestimonial % realFeedbacks.length].feedback!.rating"
+                [class.text-slate-200]="s > realFeedbacks[activeTestimonial % realFeedbacks.length].feedback!.rating"
+                class="w-4 h-4"
+                [ngStyle]="{'fill': (s <= realFeedbacks[activeTestimonial % realFeedbacks.length].feedback!.rating ? 'currentColor' : 'none')}"></i-lucide>
+              <span class="ml-2 text-xs font-medium text-slate-400 self-center">Verified Patient Feedback</span>
+            </div>
+            <p class="text-white/90 text-sm sm:text-base leading-relaxed mb-6 italic min-h-[4.5rem]">
+              "{{ realFeedbacks[activeTestimonial % realFeedbacks.length].feedback?.comment || 'Exceptional service and
+              care.' }}"
+            </p>
+            <div class="flex items-center gap-3">
+              <img [src]="realFeedbacks[activeTestimonial % realFeedbacks.length].patientImage"
+                alt="{{ realFeedbacks[activeTestimonial % realFeedbacks.length].patientName }}"
+                class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-400/40">
+              <div>
+                <p class="font-bold text-white text-sm">{{ realFeedbacks[activeTestimonial %
+                  realFeedbacks.length].patientName }}</p>
+                <p class="text-primary-300 text-xs">Patient of Dr. {{ realFeedbacks[activeTestimonial %
+                  realFeedbacks.length].doctorName }}</p>
+              </div>
+              <div class="ml-auto text-right">
+                <p class="text-xs text-slate-500">{{ realFeedbacks[activeTestimonial %
+                  realFeedbacks.length].feedback?.createdAt.toDate() | date:'shortDate' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mini cards slider on mobile, grid on desktop -->
         <div
-          class="testimonial-featured-card bg-white/7 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-7 sm:p-10">
-          <div class="flex gap-1 mb-4">
-            @for (s of [1,2,3,4,5]; track s) {
-            <i-lucide name="star" class="w-4 h-4 text-amber-400" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
-            }
-            <span class="ml-2 text-xs font-medium text-slate-400 self-center">Verified Patient</span>
-          </div>
-          <p class="text-white/90 text-sm sm:text-base leading-relaxed mb-6 italic min-h-[4.5rem]">
-            "{{ testimonials[activeTestimonial].text }}"
-          </p>
-          <div class="flex items-center gap-3">
-            <img [src]="testimonials[activeTestimonial].avatar" alt="{{ testimonials[activeTestimonial].name }}"
-              class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-400/40">
-            <div>
-              <p class="font-bold text-white text-sm">{{ testimonials[activeTestimonial].name }}</p>
-              <p class="text-primary-300 text-xs">{{ testimonials[activeTestimonial].role }}</p>
+          class="flex sm:grid sm:grid-cols-3 gap-4 overflow-x-auto sm:overflow-x-visible pb-6 sm:pb-0 snap-x snap-mandatory no-scrollbar"
+          *ngIf="realFeedbacks.length > 0">
+          @for (fb of realFeedbacks.slice(0, 6); track fb.id; let i = $index) {
+          <div (click)="setTestimonial(i)"
+            class="mini-testimonial-card flex-shrink-0 w-[260px] sm:w-auto snap-start reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
+            [class.active-card]="i === (activeTestimonial % realFeedbacks.length)">
+            <div class="flex gap-0.5 mb-3">
+              <i-lucide name="star" *ngFor="let s of [1,2,3,4,5]" [class.text-amber-400]="s <= fb.feedback!.rating"
+                [class.text-slate-600]="s > fb.feedback!.rating" class="w-3 h-3"
+                [ngStyle]="{'fill': (s <= fb.feedback!.rating ? 'currentColor' : 'none')}"></i-lucide>
             </div>
-            <div class="ml-auto text-right">
-              <p class="text-xs text-slate-500">Treated by PhysioPro</p>
+            <p class="text-white/70 text-xs italic mb-4 line-clamp-3 leading-relaxed">"{{ fb.feedback?.comment }}"</p>
+            <div class="flex items-center gap-2">
+              <img [src]="fb.patientImage" alt="" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-500/30">
+              <div>
+                <p class="font-bold text-white text-xs">{{ fb.patientName }}</p>
+                <p class="text-primary-400 text-[10px]">Treated for {{ fb.type }}</p>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </ng-container>
+
+      <!-- Fallback to Static Testimonials if no real feedbacks exist -->
+      <ng-template #staticTestimonials>
+        <div class="max-w-2xl mx-auto mb-10">
+          <div
+            class="testimonial-featured-card bg-white/7 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-7 sm:p-10">
+            <div class="flex gap-1 mb-4">
+              @for (s of [1,2,3,4,5]; track s) {
+              <i-lucide name="star" class="w-4 h-4 text-amber-400" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
+              }
+              <span class="ml-2 text-xs font-medium text-slate-400 self-center">Verified Patient</span>
+            </div>
+            <p class="text-white/90 text-sm sm:text-base leading-relaxed mb-6 italic min-h-[4.5rem]">
+              "{{ testimonials[activeTestimonial % testimonials.length].text }}"
+            </p>
+            <div class="flex items-center gap-3">
+              <img [src]="testimonials[activeTestimonial % testimonials.length].avatar"
+                alt="{{ testimonials[activeTestimonial % testimonials.length].name }}"
+                class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-400/40">
+              <div>
+                <p class="font-bold text-white text-sm">{{ testimonials[activeTestimonial % testimonials.length].name }}
+                </p>
+                <p class="text-primary-300 text-xs">{{ testimonials[activeTestimonial % testimonials.length].role }}</p>
+              </div>
+              <div class="ml-auto text-right">
+                <p class="text-xs text-slate-500">Treated by HealthHub</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Dots -->
-      <div class="flex justify-center gap-2 mb-12">
-        @for (t of testimonials; track t.name; let i = $index) {
-        <button (click)="setTestimonial(i)" class="testimonial-dot" [class.active]="i === activeTestimonial"
-          [attr.aria-label]="t.name">
-          <img [src]="t.avatar" alt="{{ t.name }}" class="w-full h-full object-cover rounded-full">
-        </button>
-        }
-      </div>
-
-      <!-- Mini cards grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        @for (t of testimonials.slice(0, 3); track t.name; let i = $index) {
-        <div (click)="setTestimonial(i)"
-          class="mini-testimonial-card reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
-          [class.active-card]="i === activeTestimonial">
-          <div class="flex gap-0.5 mb-3">
-            @for (s of [1,2,3,4,5]; track s) {
-            <i-lucide name="star" class="w-3 h-3 text-amber-400" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
-            }
-          </div>
-          <p class="text-white/70 text-xs italic mb-4 line-clamp-3 leading-relaxed">"{{ t.text }}"</p>
-          <div class="flex items-center gap-2">
-            <img [src]="t.avatar" alt="" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-500/30">
-            <div>
-              <p class="font-bold text-white text-xs">{{ t.name }}</p>
-              <p class="text-primary-400 text-[10px]">{{ t.role }}</p>
+        <div
+          class="flex sm:grid sm:grid-cols-3 gap-4 overflow-x-auto sm:overflow-x-visible pb-6 sm:pb-0 snap-x snap-mandatory no-scrollbar">
+          @for (t of testimonials.slice(0, 5); track t.name; let i = $index) {
+          <div (click)="setTestimonial(i)"
+            class="mini-testimonial-card flex-shrink-0 w-[260px] sm:w-auto snap-start reveal bg-white/5 border border-white/8 rounded-2xl p-5 cursor-pointer"
+            [class.active-card]="i === (activeTestimonial % testimonials.length)">
+            <div class="flex gap-0.5 mb-3">
+              @for (s of [1,2,3,4,5]; track s) {
+              <i-lucide name="star" class="w-3 h-3 text-amber-400" [ngStyle]="{'fill':'currentColor'}"></i-lucide>
+              }
+            </div>
+            <p class="text-white/70 text-xs italic mb-4 line-clamp-3 leading-relaxed">"{{ t.text }}"</p>
+            <div class="flex items-center gap-2">
+              <img [src]="t.avatar" alt="" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-500/30">
+              <div>
+                <p class="font-bold text-white text-xs">{{ t.name }}</p>
+                <p class="text-primary-400 text-[10px]">{{ t.role }}</p>
+              </div>
             </div>
           </div>
+          }
         </div>
-        }
-      </div>
+      </ng-template>
     </div>
   </section>
 
   <!-- ══════════════════ FAQ ══════════════════ -->
-  <section id="faq" class="py-20 sm:py-28 bg-white">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12 reveal">
+  <section id="faq" class="py-12 sm:py-20 lg:py-24 bg-white">
+    <div class="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="text-center mb-8 sm:mb-12 reveal">
         <span class="section-chip">Patient Questions</span>
         <h2 class="text-3xl sm:text-4xl font-black font-heading text-slate-900 mt-3 mb-3">
           Frequently <span class="text-gradient">Asked Questions</span>
         </h2>
-        <p class="text-slate-600 text-base">Everything you need to know before starting your treatment.</p>
+        <p class="text-slate-600 text-base">Everything you need to know before booking your first appointment.</p>
       </div>
 
       <div class="space-y-3 reveal">
@@ -756,66 +1068,48 @@
 
       <div class="text-center mt-10 reveal">
         <p class="text-slate-500 text-sm mb-3">Still have questions?</p>
-        <button (click)="goToLogin()"
+        <button (click)="isLoggedIn ? goToDashboard() : goToLogin()"
           class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary-50 text-primary-700 font-semibold text-sm hover:bg-primary-100 transition-all">
           <i-lucide name="message-circle" class="w-4 h-4"></i-lucide>
-          Chat with us
+          {{ isLoggedIn ? 'Contact Support' : 'Chat with us' }}
         </button>
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════ CTA BANNER ══════════════════ -->
-  <section
-    class="py-16 sm:py-20 bg-gradient-to-r from-primary-500 via-primary-600 to-secondary-500 relative overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none">
-      <div class="absolute -top-20 -right-20 w-72 h-72 bg-white/8 rounded-full"></div>
-      <div class="absolute -bottom-20 -left-20 w-72 h-72 bg-white/8 rounded-full"></div>
-    </div>
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 reveal">
-      <p class="text-primary-100 text-sm font-semibold uppercase tracking-widest mb-3">Start Today — It's Free</p>
-      <h2 class="text-3xl sm:text-4xl font-black font-heading text-white mb-4">
-        Ready to Begin Your <br class="hidden sm:block">Recovery Journey?
-      </h2>
-      <p class="text-primary-100 text-base sm:text-lg mb-8 max-w-xl mx-auto">
-        Book your first assessment at no cost. No referral, no waiting list — just expert care.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <button (click)="goToRegister()"
-          class="bg-white text-primary-600 font-bold text-sm sm:text-base py-4 px-8 rounded-xl shadow-xl hover:bg-primary-50 active:scale-95 transition-all duration-300 flex items-center gap-2 justify-center">
-          <i-lucide name="calendar-check" class="w-5 h-5"></i-lucide>
-          Book Free Appointment
-        </button>
-        <a href="tel:+919876543210"
-          class="bg-white/15 backdrop-blur-sm text-white font-bold text-sm py-4 px-8 rounded-xl border border-white/30 hover:bg-white/25 active:scale-95 transition-all flex items-center gap-2 justify-center">
-          <i-lucide name="phone" class="w-5 h-5"></i-lucide>
-          +91 98765 43210
-        </a>
-      </div>
-    </div>
-  </section>
 
   <!-- ══════════════════ FOOTER ══════════════════ -->
-  <footer id="contact" class="bg-slate-950 text-slate-400 pt-14 sm:pt-18 pb-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
+  <footer id="contact" class="bg-slate-950 text-slate-400 pt-10 sm:pt-14 pb-6 sm:pb-8">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 pb-10 sm:pb-12 border-b border-slate-800">
 
         <!-- Brand -->
         <div class="sm:col-span-2 lg:col-span-2 space-y-4">
-          <div class="flex items-center gap-2.5">
-            <div
-              class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
-              <i-lucide name="activity" class="w-5 h-5 text-white"></i-lucide>
-            </div>
-            <span class="text-xl font-bold text-white font-heading">Physio<span
-                class="text-primary-400">Pro</span></span>
+          <div class="flex items-center gap-2.5 group">
+            <svg class="w-9 h-9 drop-shadow-md group-hover:scale-110 transition-all duration-300 animate-heartbeat"
+              viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="logoGradFooter" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#0F9B8E" />
+                  <stop offset="100%" stop-color="#10B981" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                fill="url(#logoGradFooter)" />
+              <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="text-xl font-bold text-white font-heading">Health<span
+                class="text-primary-400">Hub</span></span>
           </div>
-          <p class="text-sm leading-relaxed max-w-xs">
-            India's trusted physiotherapy platform — connecting patients with certified specialists for in-clinic,
-            online and home-visit care.
+          <p class="hidden sm:block text-sm leading-relaxed max-w-xs">
+            India's trusted multi-specialty healthcare platform — connecting patients with verified doctors for in-clinic,
+            online video and home-visit consultations.
           </p>
           <!-- Accreditation icons -->
-          <div class="flex flex-wrap gap-3 pt-2">
+          <div class="hidden sm:flex flex-wrap gap-3 pt-2">
             @for (badge of trustBadges; track badge.label) {
             <div
               class="flex items-center gap-1.5 bg-slate-800 px-3 py-1.5 rounded-lg text-xs text-slate-400 font-medium">
@@ -836,8 +1130,7 @@
           </div>
         </div>
 
-        <!-- Quick Links -->
-        <div>
+        <div class="hidden sm:block">
           <h4 class="text-white font-semibold mb-5 text-sm uppercase tracking-wider">Platform</h4>
           <ul class="space-y-3 text-sm">
             <li><a href="#how-it-works" class="hover:text-primary-400 transition-colors">How It Works</a></li>
@@ -845,6 +1138,10 @@
             <li><a href="#doctors" class="hover:text-primary-400 transition-colors">Find a Specialist</a></li>
             <li><a href="#faq" class="hover:text-primary-400 transition-colors">FAQ</a></li>
             <li><button (click)="goToLogin()" class="hover:text-primary-400 transition-colors">Patient Portal</button>
+            </li>
+            <li><button (click)="goToDoctorRegister()" class="hover:text-primary-400 transition-colors">For
+                Doctors</button></li>
+            <li><button (click)="goToLabRegister()" class="hover:text-primary-400 transition-colors">For Labs</button>
             </li>
           </ul>
         </div>
@@ -863,8 +1160,8 @@
             </li>
             <li class="flex items-center gap-2.5">
               <i-lucide name="mail" class="w-4 h-4 text-primary-400 flex-shrink-0"></i-lucide>
-              <a href="mailto:hello@physiopro.in"
-                class="hover:text-primary-400 transition-colors">hello&#64;physiopro.in</a>
+              <a href="mailto:hello@healthhub.in"
+                class="hover:text-primary-400 transition-colors">hello&#64;healthhub.in</a>
             </li>
             <li class="flex items-center gap-2.5">
               <i-lucide name="clock" class="w-4 h-4 text-primary-400 flex-shrink-0"></i-lucide>
@@ -872,8 +1169,7 @@
             </li>
           </ul>
 
-          <!-- Newsletter mini form -->
-          <div class="mt-6">
+          <div class="hidden sm:block mt-6">
             <p class="text-xs text-slate-500 mb-2 font-medium">Get health tips in your inbox</p>
             <div class="flex rounded-xl overflow-hidden border border-slate-700">
               <input type="email" placeholder="Your email"
@@ -887,12 +1183,14 @@
         </div>
       </div>
 
-      <!-- Bottom row -->
-      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-        <p>© 2025 PhysioPro · All rights reserved. Built with care for better health.</p>
-        <div class="flex gap-5">
-          <a href="#" class="hover:text-primary-400 transition-colors">Privacy Policy</a>
-          <a href="#" class="hover:text-primary-400 transition-colors">Terms of Service</a>
+      <div
+        class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 text-center sm:text-left">
+        <p>© 2025 HealthHub · All rights reserved.</p>
+        <div class="hidden sm:flex gap-5">
+          <a (click)="openLegalModal('privacy')" class="hover:text-primary-400 transition-colors cursor-pointer">Privacy
+            Policy</a>
+          <a (click)="openLegalModal('terms')" class="hover:text-primary-400 transition-colors cursor-pointer">Terms of
+            Service</a>
           <a href="#" class="hover:text-primary-400 transition-colors">Impressum</a>
         </div>
       </div>
@@ -900,19 +1198,127 @@
   </footer>
 
   <!-- Mobile sticky CTA -->
-  <div class="fixed bottom-4 left-4 right-4 z-50 sm:hidden">
-    <button (click)="goToRegister()"
-      class="btn-primary w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-white font-bold text-sm shadow-2xl shadow-primary-500/50">
-      <i-lucide name="calendar-check" class="w-4 h-4"></i-lucide>
-      Book Free Appointment
-    </button>
+  <div class="fixed bottom-0 left-0 right-0 z-50 sm:hidden safe-area-bottom">
+    <div class="px-4 pb-3 pt-2 bg-white/95 backdrop-blur-md border-t border-slate-200/60">
+      <button (click)="goToRegister()"
+        class="btn-primary w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-bold text-sm shadow-lg shadow-primary-500/30">
+        <i-lucide name="calendar-check" class="w-4 h-4"></i-lucide>
+        Book Free Consultation
+      </button>
+    </div>
   </div>
 
-  <!-- Scroll to Top Button -->
-  <button (click)="scrollToTop()" *ngIf="navScrolled"
-    class="scroll-to-top fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 w-11 h-11 rounded-xl bg-primary-500 hover:bg-primary-600 text-white shadow-lg shadow-primary-500/30 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
-    [class.hidden]="!navScrolled" aria-label="Scroll to top">
-    <i-lucide name="arrow-up" class="w-5 h-5"></i-lucide>
-  </button>
+  <!-- Floating Specialty Card / Scroll to Top -->
+  <div *ngIf="navScrolled"
+    class="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50 flex flex-col items-end gap-3 reveal-side">
+
+    <!-- The Card (Desktop/Tablet: Goes to Doctors) -->
+    <!-- We wrap it in a card-container that maintains the hit-area to prevent jitter during scaling -->
+    <div (click)="scrollToDoctorSection()"
+      class="hidden sm:flex items-center cursor-pointer group active:scale-95 transition-transform duration-200">
+
+      <div
+        class="flex items-center justify-between bg-gradient-to-r from-[#064e40] to-[#0d8679] rounded-2xl shadow-2xl shadow-emerald-900/40 overflow-hidden hover:scale-[1.03] transition-transform duration-300 border border-white/10 w-[340px] h-[140px] card-shine relative will-change-transform">
+
+        <!-- Content Area (Left) -->
+        <div class="flex-1 flex flex-col gap-2 p-5 pr-2 relative z-10">
+          <!-- Branding -->
+          <div class="flex items-center gap-1.5 mb-1">
+            <div class="w-3 h-3 rounded-full bg-emerald-400/20 flex items-center justify-center">
+              <i-lucide name="sparkles" class="w-2 h-2 text-emerald-300"></i-lucide>
+            </div>
+            <span class="text-[9px] font-black text-emerald-400/80 tracking-[0.2em] uppercase">Specialist Care</span>
+          </div>
+
+          <!-- Heading -->
+          <h3 class="text-white font-bold text-[14px] leading-tight max-w-[160px]">
+            Book appointment with an expert Specialty
+          </h3>
+
+          <!-- Meta text -->
+          <p class="text-emerald-100/40 text-[10px] font-medium -mt-1">
+            Certified specialists available now
+          </p>
+
+          <!-- Button -->
+          <div class="mt-2.5 grid grid-cols-2 gap-2 pointer-events-auto">
+            <button (click)="scrollToDoctorSection(); $event.stopPropagation()"
+              class="w-full bg-emerald-500 hover:bg-emerald-400 text-white text-[9px] font-black py-2 rounded-lg uppercase tracking-wider transition-all duration-300 shadow-sm flex items-center justify-center gap-1 group/btn">
+              Details
+              <i-lucide name="arrow-right"
+                class="w-3 h-3 group-hover/btn:translate-x-0.5 transition-transform duration-300"></i-lucide>
+            </button>
+            <button (click)="bot.toggleChat(); $event.stopPropagation()"
+              class="w-full bg-white/10 hover:bg-white/20 border border-emerald-400/30 text-emerald-300 py-2 rounded-lg text-[9px] uppercase font-black tracking-wider transition-all duration-300 flex items-center justify-center gap-1 backdrop-blur-sm cursor-pointer shadow-sm hover:shadow-emerald-500/20 active:scale-95 group/chat">
+              <i-lucide name="message-circle"
+                class="w-3 h-3 group-hover/chat:scale-110 transition-transform"></i-lucide> AI Support
+            </button>
+          </div>
+        </div>
+
+        <!-- Doctor Image Area (Right) -->
+        <div class="relative w-[120px] h-full overflow-hidden bg-emerald-900/20 flex-shrink-0 text-right">
+          <img src="assets/doctor/doctor-card.png"
+            class="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700"
+            alt="Specialist">
+
+          <!-- Edge Glow -->
+          <div class="absolute inset-y-0 left-0 w-[40px] bg-gradient-to-r from-[#0d8679] to-transparent z-10"></div>
+
+          <!-- Status Badge -->
+          <div
+            class="absolute bottom-3 right-3 bg-white/10 backdrop-blur-md rounded-lg px-2 py-1 border border-white/20 z-20">
+            <div class="flex items-center gap-1">
+              <span
+                class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+              <span class="text-[8px] text-white font-bold uppercase tracking-tighter">Live</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Corner Abstract Detail -->
+        <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none">
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Speed Dial FAB (Combines Chat & Top) -->
+    <div class="sm:hidden flex flex-col items-end gap-3 pointer-events-auto">
+
+      <!-- Expanded Options -->
+      <div *ngIf="isFabMenuOpen" class="flex flex-col items-end gap-3 mb-2 animate-fade-in-up">
+        <div class="flex items-center gap-3">
+          <span class="bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">AI Support</span>
+          <button (click)="bot.toggleChat(); isFabMenuOpen = false"
+            class="w-10 h-10 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg flex items-center justify-center transition-all bg-gradient-to-tr from-emerald-600 to-teal-500">
+            <i-lucide name="message-circle" class="w-4 h-4"></i-lucide>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span class="bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">Top</span>
+          <button (click)="scrollToTop(); isFabMenuOpen = false"
+            class="w-10 h-10 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white shadow-lg flex items-center justify-center transition-all bg-gradient-to-tr from-emerald-600 to-teal-500">
+            <i-lucide name="arrow-up" class="w-4 h-4"></i-lucide>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Toggle -->
+      <button (click)="toggleFabMenu()"
+        class="w-12 h-12 rounded-full bg-gradient-to-tr from-primary-600 to-emerald-500 text-white shadow-lg shadow-emerald-500/30 flex items-center justify-center transition-all duration-300 active:scale-95 z-50">
+        <i-lucide *ngIf="!isFabMenuOpen" name="layout-grid"
+          class="w-5 h-5 transition-transform duration-300"></i-lucide>
+        <i-lucide *ngIf="isFabMenuOpen" name="x" class="w-5 h-5 transition-transform duration-300 rotate-90"></i-lucide>
+      </button>
+
+    </div>
+  </div>
+
+  <app-chatbot #bot></app-chatbot>
 
 </div>
+
+<app-legal-modal [isOpen]="isLegalModalOpen" [initialTab]="legalModalTab" [userType]="'patient'"
+  (close)="isLegalModalOpen = false">
+</app-legal-modal>

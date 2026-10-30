@@ -65,4 +65,62 @@
     ::selection {
         @apply bg-primary-400/30 text-primary-900;
     }
+
+    /* Premium Heartbeat Animation for Logo */
+    .animate-heartbeat {
+        animation: heartbeat 2s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+        0% { transform: scale(1); }
+        14% { transform: scale(1.15); }
+        28% { transform: scale(1); }
+        42% { transform: scale(1.15); }
+        70% { transform: scale(1); }
+    }
+}
+
+/* Global Date Input Styling - Ensure calendar choose icon is visible everywhere */
+input[type="date"] {
+    cursor: pointer;
+    color-scheme: light;
+
+    &::-webkit-clear-button {
+        display: none;
+        -webkit-appearance: none;
+    }
+    &::-webkit-inner-spin-button {
+        display: none;
+    }
+    &::-webkit-calendar-picker-indicator {
+        display: inline-block;
+        cursor: pointer;
+        opacity: 0.75;
+        padding: 4px;
+        border-radius: 6px;
+        transition: opacity 0.2s ease, transform 0.15s ease;
+        filter: invert(0.3);
+
+        &:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+    }
+}
+
+.dark input[type="date"],
+html.dark input[type="date"],
+:host-context(.dark) input[type="date"] {
+    color-scheme: dark;
+
+    &::-webkit-calendar-picker-indicator {
+        filter: none;
+        opacity: 0.85;
+        cursor: pointer;
+
+        &:hover {
+            opacity: 1;
+            transform: scale(1.08);
+        }
+    }
 }

@@ -1,52 +1,202 @@
-import { Injectable, signal } from '@angular/core';
-import { of, Observable, BehaviorSubject } from 'rxjs';
-import { delay } from 'rxjs/operators';
-import { DUMMY_DOCTORS, DUMMY_APPOINTMENTS, DUMMY_PATIENTS } from '../data/dummy-data';
+import { Injectable, inject } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  query,
+  where,
+  onSnapshot,
+  doc,
+  deleteDoc,
+  updateDoc,
+  addDoc,
+  Timestamp,
+  getDoc
+} from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class MockApiService {
+  private firestore = inject(Firestore);
 
-    // Simulating network delay for realistic SaaS feel
-    private readonly DEFAULT_DELAY = 600;
+  /** Get all registered doctors from 'users' collection */
+  getDoctors(): Observable<any[]> {
+    const q = query(
+      collection(this.firestore, 'users'),
+      where('role', '==', 'doctor')
+    );
+    return this.collectionToObservable(q);
+  }
 
-    // Reactive doctor store — allows Add Doctor to reflect on landing page
-    private doctorsSubject = new BehaviorSubject<any[]>([...DUMMY_DOCTORS]);
+  /** Get all registered patients from 'users' collection */
+  getPatients(): Observable<any[]> {
+    const q = query(
+      collection(this.firestore, 'users'),
+      where('role', '==', 'patient')
+    );
+    return this.collectionToObservable(q);
+  }
 
-    getDoctors(): Observable<any[]> {
-        return this.doctorsSubject.asObservable();
+  /** Add a new patient */
+  addPatient(patient: any): Promise<any> {
+    return addDoc(collection(this.firestore, 'users'), {
+      ...patient,
+      role: 'patient',
+      createdAt: Timestamp.now(),
+      status: 'active'
+    });
+  }
+
+  /** Get patients specifically assigned to a doctor (through their bookings) */
+  getPatientsByDoctor(doctorId: string): Observable<any[]> {
+    const q = query(
+      collection(this.firestore, 'users'),
+      where('role', '==', 'patient'),
+      where('assignedDoctors', 'array-contains', doctorId)
+    );
+    return this.collectionToObservable(q);
+  }
+
+  /** Get all appointments */
+  getAppointments(): Observable<any[]> {
+    return this.collectionToObservable(collection(this.firestore, 'appointments'));
+  }
+
+  /** Add a new doctor */
+  addDoctor(doctor: any): Promise<any> {
+    return addDoc(collection(this.firestore, 'users'), {
+      ...doctor,
+      role: 'doctor',
+      createdAt: Timestamp.now(),
+      isAvailable: true,
+      isActive: true
+    });
+  }
+
+  removeUser(uid: string): Promise<void> {
+    const docRef = doc(this.firestore, 'users', uid);
+    return deleteDoc(docRef);
+  }
+
+  /** Alias for removeUser to match component usage */
+  removeDoctor(uid: string): Promise<void> {
+    return this.removeUser(uid);
+  }
+
+  /** Toggle doctor active status */
+  async toggleDoctorActive(uid: string): Promise<void> {
+    console.log('Toggling Active for Doctor:', uid);
+    const docRef = doc(this.firestore, 'users', uid);
+    try {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const currentActive = data['active'] ?? false;
+        await updateDoc(docRef, {
+          isActive: !currentActive,
+          active: !currentActive // Map to both for compatibility
+        });
+        console.log('Update successful: isActive ->', !currentActive);
+      } else {
+        console.warn('Doctor document not found:', uid);
+      }
+    } catch (error) {
+      console.error('Error in toggleDoctorActive:', error);
+      throw error;
     }
+  }
 
-    addDoctor(doctor: any): void {
-        const current = this.doctorsSubject.getValue();
-        const newDoctor = {
-            ...doctor,
-            id: `D${current.length + 1}`,
-            rating: 4.5,
-            available: true,
-            image: doctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(doctor.name)}&background=0F9B8E&color=fff&size=200`
-        };
-        this.doctorsSubject.next([...current, newDoctor]);
+  /** Toggle doctor availability */
+  async toggleDoctorAvailability(uid: string): Promise<void> {
+    console.log('Toggling Availability for Doctor:', uid);
+    const docRef = doc(this.firestore, 'users', uid);
+    try {
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const currentAvailable = data['available'] ?? false;
+        await updateDoc(docRef, {
+          isAvailable: !currentAvailable,
+          available: !currentAvailable // Map both
+        });
+        console.log('Update successful: isAvailable ->', !currentAvailable);
+      }
+    } catch (error) {
+      console.error('Error in toggleDoctorAvailability:', error);
+      throw error;
     }
+  }
 
-    removeDoctor(id: string): void {
-        const current = this.doctorsSubject.getValue();
-        this.doctorsSubject.next(current.filter(d => d.id !== id));
-    }
+  /** Get all registered lab technicians from 'users' collection */
+  getLabTechnicians(): Observable<any[]> {
+    const q = query(
+      collection(this.firestore, 'users'),
+      where('role', '==', 'lab')
+    );
+    return this.collectionToObservable(q);
+  }
 
-    toggleDoctorAvailability(id: string): void {
-        const current = this.doctorsSubject.getValue();
-        this.doctorsSubject.next(current.map(d =>
-            d.id === id ? { ...d, available: !d.available } : d
-        ));
-    }
+  /** Add a new lab technician */
+  addLabTechnician(tech: any): Promise<any> {
+    return addDoc(collection(this.firestore, 'users'), {
+      ...tech,
+      role: 'lab',
+      createdAt: Timestamp.now(),
+      isAvailable: true,
+      isActive: true
+    });
+  }
 
-    getAppointments(): Observable<any[]> {
-        return of(DUMMY_APPOINTMENTS).pipe(delay(this.DEFAULT_DELAY));
+  /** Toggle lab technician availability */
+  async toggleLabTechnicianAvailability(uid: string): Promise<void> {
+    const docRef = doc(this.firestore, 'users', uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      await updateDoc(docRef, {
+        available: !data['available']
+      });
     }
+  }
 
-    getPatients(): Observable<any[]> {
-        return of(DUMMY_PATIENTS).pipe(delay(this.DEFAULT_DELAY));
+  /** Toggle lab technician active status */
+  async toggleLabTechnicianActive(uid: string): Promise<void> {
+    const docRef = doc(this.firestore, 'users', uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      await updateDoc(docRef, {
+        active: data['active'] === undefined ? false : !data['active']
+      });
     }
+  }
+
+  // Generic helper for real-time collection updates
+  private collectionToObservable(q: any): Observable<any[]> {
+    return new Observable<any[]>(subscriber => {
+      console.log('Starting Firestore snapshot for query...', q);
+      return onSnapshot(q, (snapshot: any) => {
+        const data = snapshot.docs.map((d: any) => {
+          const docData = d.data();
+          return {
+            id: d.id,
+            ...docData,
+            // Fallback for availability field naming inconsistency
+            available: docData.available ?? docData.isAvailable ?? false,
+            // Fallback for active field
+            active: docData.active ?? docData.isActive ?? false,
+            // Calculate stars (1-5) based on ratingScore: score / 20 gives stars. e.g. 100 = 5 stars, 5 = 1 star.
+            ratingScore: docData.ratingScore ?? 0,
+            rating: docData.ratingScore ? Math.min(5, Math.ceil(docData.ratingScore / 20)) : (docData.rating ?? 4.5)
+          };
+        });
+        console.log(`Firestore snapshot received: ${data.length} items found.`, data);
+        subscriber.next(data);
+      }, (error: any) => {
+        console.error('Firestore snapshot error:', error);
+        subscriber.error(error);
+      });
+    });
+  }
 }

@@ -7,14 +7,21 @@
     <div class="register-container">
 
         <!-- ── LOGO BAR ── -->
-        <div class="logo-bar">
-            <div class="logo-icon">
-                <i-lucide name="activity" class="icon-sm text-white"></i-lucide>
-            </div>
-            <span class="logo-text">Physio<span class="logo-accent">Pro</span></span>
+        <div class="logo-bar group">
+            <svg class="w-10 h-10 mr-3 drop-shadow-md group-hover:scale-110 transition-all duration-300 animate-heartbeat" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="logoGradPatReg" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#0F9B8E" />
+                        <stop offset="100%" stop-color="#10B981" />
+                    </linearGradient>
+                </defs>
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="url(#logoGradPatReg)" />
+                <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="logo-text">Health<span class="logo-accent">Hub</span></span>
             <a routerLink="/" class="back-home">
                 <i-lucide name="arrow-left" class="icon-xs"></i-lucide>
-                Back to Home
+                <span>Home</span>
             </a>
         </div>
 
@@ -55,6 +62,29 @@
                     </div>
                 </div>
 
+                <!-- Profile Photo Upload -->
+                <div class="flex flex-col items-center mb-8">
+                  <div class="relative group cursor-pointer" (click)="photoInput.click()">
+                    <div class="w-24 h-24 rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800 border-4 border-white/50 dark:border-slate-700/50 shadow-xl relative ring-4 ring-primary-500/5">
+                      <img *ngIf="profilePhotoUrl" [src]="profilePhotoUrl" class="w-full h-full object-cover">
+                      <div *ngIf="!profilePhotoUrl" class="w-full h-full flex flex-col items-center justify-center text-slate-400">
+                        <i-lucide name="camera" class="w-8 h-8 mb-1"></i-lucide>
+                        <span class="text-[8px] font-black uppercase tracking-widest text-center px-2">Tap to upload</span>
+                      </div>
+                      
+                      <!-- Loading Overlay -->
+                      <div *ngIf="isUploadingPhoto" class="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+                        <div class="w-6 h-6 border-3 border-white/20 border-t-white rounded-full animate-spin"></div>
+                      </div>
+                    </div>
+                    <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-primary-500 rounded-xl flex items-center justify-center text-white border-4 border-white dark:border-slate-900 shadow-lg group-hover:scale-110 transition-transform">
+                      <i-lucide name="plus" class="w-4 h-4"></i-lucide>
+                    </div>
+                  </div>
+                  <input #photoInput type="file" (change)="onPhotoSelected($event)" accept="image/*" class="hidden">
+                  <p class="text-[10px] font-bold text-slate-400 mt-4 uppercase tracking-[0.2em]">Profile Photo</p>
+                </div>
+
                 <div class="fields-grid">
                     <!-- Full Name -->
                     <div class="field-group full-width">
@@ -63,7 +93,10 @@
                             Full Name <span class="required">*</span>
                         </label>
                         <input type="text" [(ngModel)]="fullName" placeholder="e.g. Rohit Porwal"
-                            class="field-input" />
+                            class="field-input" [class.input-error]="submitAttempted && !fullName" />
+                        <p *ngIf="submitAttempted && !fullName" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Full name is required
+                        </p>
                     </div>
 
                     <!-- Email -->
@@ -73,7 +106,14 @@
                             Email Address <span class="required">*</span>
                         </label>
                         <input type="email" [(ngModel)]="email" placeholder="you@example.com"
-                            class="field-input" />
+                            class="field-input" [class.input-error]="(email && !isEmailValid) || (submitAttempted && !email)" />
+                        <p *ngIf="submitAttempted && !email" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Email is required
+                        </p>
+                        <p *ngIf="email && !isEmailValid" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide>
+                            Invalid email address
+                        </p>
                     </div>
 
                     <!-- Phone -->
@@ -83,7 +123,14 @@
                             Phone Number <span class="required">*</span>
                         </label>
                         <input type="tel" [(ngModel)]="phone" placeholder="+91 98765 43210"
-                            class="field-input" />
+                            class="field-input" [class.input-error]="(phone && !isPhoneValid) || (submitAttempted && !phone)" />
+                        <p *ngIf="submitAttempted && !phone" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Phone number is required
+                        </p>
+                        <p *ngIf="phone && !isPhoneValid" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide>
+                            Invalid phone number
+                        </p>
                     </div>
 
                     <!-- Date of Birth -->
@@ -93,7 +140,11 @@
                             Date of Birth <span class="required">*</span>
                         </label>
                         <input type="date" [(ngModel)]="dob"
-                            class="field-input" />
+                            (click)="$any($event.target).showPicker?.()"
+                            class="field-input" [class.input-error]="submitAttempted && !dob" />
+                        <p *ngIf="submitAttempted && !dob" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Date of birth is required
+                        </p>
                     </div>
 
                     <!-- Gender -->
@@ -102,10 +153,13 @@
                             <i-lucide name="users" class="icon-xs text-slate-400"></i-lucide>
                             Gender <span class="required">*</span>
                         </label>
-                        <select [(ngModel)]="gender" class="field-input field-select">
+                        <select [(ngModel)]="gender" class="field-input field-select" [class.input-error]="submitAttempted && !gender">
                             <option value="" disabled>Select gender</option>
                             <option *ngFor="let g of genders" [value]="g">{{ g }}</option>
                         </select>
+                        <p *ngIf="submitAttempted && !gender" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Gender is required
+                        </p>
                     </div>
 
                     <!-- Address -->
@@ -119,8 +173,7 @@
                     </div>
                 </div>
 
-                <button (click)="nextStep()" [disabled]="!step1Valid"
-                    class="btn-primary-full" [class.disabled]="!step1Valid">
+                <button (click)="nextStep()" class="btn-primary-full">
                     <span>Continue</span>
                     <i-lucide name="arrow-right" class="icon-xs"></i-lucide>
                 </button>
@@ -143,18 +196,15 @@
                     </div>
                 </div>
 
+                <!-- Error Alert -->
+                <div *ngIf="errorMessage"
+                    class="flex items-start gap-3 p-4 mb-4 rounded-2xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/40">
+                    <i-lucide name="alert-circle" class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"></i-lucide>
+                    <p class="text-sm text-red-600 dark:text-red-400 font-medium">{{ errorMessage }}</p>
+                </div>
+
                 <div class="fields-grid">
-                    <!-- Condition -->
-                    <div class="field-group full-width">
-                        <label class="field-label">
-                            <i-lucide name="stethoscope" class="icon-xs text-slate-400"></i-lucide>
-                            Primary Condition <span class="optional">(optional)</span>
-                        </label>
-                        <select [(ngModel)]="condition" class="field-input field-select">
-                            <option value="">Select your condition</option>
-                            <option *ngFor="let c of conditions" [value]="c">{{ c }}</option>
-                        </select>
-                    </div>
+
 
                     <!-- Emergency Contact -->
                     <div class="field-group full-width">
@@ -163,7 +213,12 @@
                             Emergency Contact <span class="optional">(optional)</span>
                         </label>
                         <input type="tel" [(ngModel)]="emergencyContact"
-                            placeholder="Emergency contact number" class="field-input" />
+                            placeholder="Emergency contact number" 
+                            class="field-input" [class.input-error]="emergencyContact && !isEmergencyPhoneValid" />
+                        <p *ngIf="emergencyContact && !isEmergencyPhoneValid" class="error-msg">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide>
+                            Invalid emergency contact number
+                        </p>
                     </div>
 
                     <!-- Password -->
@@ -174,11 +229,14 @@
                         </label>
                         <div class="password-wrapper">
                             <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password"
-                                placeholder="Min. 8 characters" class="field-input" />
+                                placeholder="Min. 8 characters" class="field-input" [class.input-error]="submitAttempted && !password" />
                             <button type="button" (click)="togglePassword()" class="password-toggle">
                                 <i-lucide [name]="showPassword ? 'eye-off' : 'eye'" class="icon-xs"></i-lucide>
                             </button>
                         </div>
+                        <p *ngIf="submitAttempted && !password" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Password is required
+                        </p>
                     </div>
 
                     <!-- Confirm Password -->
@@ -190,10 +248,13 @@
                         <div class="password-wrapper">
                             <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword"
                                 placeholder="Re-enter password" class="field-input"
-                                [class.input-error]="confirmPassword && !passwordsMatch" />
+                                [class.input-error]="(confirmPassword && !passwordsMatch) || (submitAttempted && !confirmPassword)" />
                         </div>
-                        <p *ngIf="confirmPassword && !passwordsMatch" class="error-msg">
+                        <p *ngIf="confirmPassword && !passwordsMatch" class="error-msg mt-1">
                             <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Passwords do not match
+                        </p>
+                        <p *ngIf="submitAttempted && !confirmPassword" class="error-msg mt-1">
+                            <i-lucide name="alert-circle" class="icon-xs"></i-lucide> Confirm Password is required
                         </p>
                     </div>
                 </div>
@@ -201,20 +262,23 @@
                 <!-- Terms -->
                 <label class="terms-row">
                     <input type="checkbox" [(ngModel)]="agreeTerms" class="terms-checkbox" />
-                    <span class="terms-text">
+                    <span class="terms-text" [class.text-red-500]="submitAttempted && !agreeTerms">
                         I agree to the
-                        <a href="#" class="link">Terms of Service</a> and
-                        <a href="#" class="link">Privacy Policy</a>
+                        <a (click)="openLegalModal('terms')" class="link cursor-pointer">Terms of Service</a> and
+                        <a (click)="openLegalModal('privacy')" class="link cursor-pointer">Privacy Policy</a>
                     </span>
                 </label>
+                <p *ngIf="submitAttempted && !agreeTerms" class="error-msg mt-1 text-center">
+                    <i-lucide name="alert-circle" class="icon-xs"></i-lucide> You must agree to the terms
+                </p>
 
                 <div class="btn-row">
                     <button (click)="prevStep()" class="btn-outline">
                         <i-lucide name="arrow-left" class="icon-xs"></i-lucide>
                         Back
                     </button>
-                    <button (click)="register()" [disabled]="!step2Valid || isLoading"
-                        class="btn-primary" [class.disabled]="!step2Valid || isLoading">
+                    <button (click)="register()" [disabled]="isLoading"
+                        class="btn-primary" [class.disabled]="isLoading">
                         <svg *ngIf="isLoading" class="spin-icon" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor"
@@ -222,7 +286,7 @@
                             </path>
                         </svg>
                         <i-lucide *ngIf="!isLoading" name="check-circle" class="icon-xs"></i-lucide>
-                        {{ isLoading ? 'Creating Account...' : 'Register & Book Appointment' }}
+                        {{ isLoading ? 'Creating Account...' : 'Register' }}
                     </button>
                 </div>
             </div>
@@ -247,3 +311,10 @@
 
     </div>
 </div>
+
+<app-legal-modal 
+    [isOpen]="isLegalModalOpen" 
+    [initialTab]="legalModalTab" 
+    [userType]="'patient'"
+    (close)="isLegalModalOpen = false">
+</app-legal-modal>

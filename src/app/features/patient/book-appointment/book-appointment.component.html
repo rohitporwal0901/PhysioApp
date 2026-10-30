@@ -1,4 +1,4 @@
-<div class="booking-page">
+<div style="padding: 0px;" class="booking-page">
     <div class="booking-inner fade-in-up">
 
         <!-- ── STEPPER ── -->
@@ -40,35 +40,58 @@
         <ng-container *ngIf="currentStep === 1">
             <div class="section-title-row">
                 <h2 class="section-title">Available Specialists</h2>
-                <select class="filter-select">
-                    <option>All Specialties</option>
-                    <option>Sports Injury</option>
-                    <option>Neurological Rehab</option>
-                    <option>Orthopaedic</option>
-                </select>
             </div>
 
             <!-- Doctor Cards -->
             <ng-container *ngIf="doctors$ | async as doctors; else loadingDocs">
                 <div class="doctor-list fade-in-up">
-                    <div *ngFor="let doc of doctors" class="doctor-card" [class.unavailable]="!doc.available"
-                        (click)="selectDoctor(doc)">
-
+                    <div *ngFor="let doc of doctors" class="doctor-card group" [class.unavailable]="doc.available === false" (click)="doc.available !== false && selectDoctor(doc)">
                         <div class="doctor-card-left">
-                            <img [src]="doc.image"
-                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Dr&background=0ea5e9&color=fff&size=200'"
-                                [alt]="doc.name" class="doctor-avatar">
+                            <div class="relative w-12 h-12 sm:w-14 sm:h-14 mr-3 sm:mr-4 flex-shrink-0">
+                                <img [src]="'https://ui-avatars.com/api/?name=' + encodeURIComponent(doc.fullName) + '&background=0D8ABC&color=fff&size=128'"
+                                    class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl object-cover shadow-md transition-transform duration-300 group-hover:scale-110"
+                                    alt="">
+                                <div
+                                    class="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-sm">
+                                    <div
+                                        class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-800">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="doctor-info">
-                                <h3>{{ doc.name }}</h3>
-                                <p>{{ doc.specialty }}</p>
-                                <div class="doctor-badge-row">
-                                    <span class="badge-exp">8+ yrs exp</span>
+                                <div class="flex items-center gap-1 sm:gap-1.5 mb-0.5 sm:mb-1">
+                                    <h3
+                                        class="text-slate-900 dark:text-white font-black tracking-tight leading-none group-hover:text-primary-600 transition-colors">
+                                        {{ doc.fullName }}</h3>
+                                    <i-lucide name="check-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-500"></i-lucide>
+                                </div>
+                                <p class="text-slate-500 dark:text-slate-400 font-semibold text-xs mb-2">{{
+                                    doc.specialization || doc.specialty }}</p>
+                                <div class="doctor-status-row">
+                                    <div class="stat-pill">
+                                        <i-lucide name="star" class="w-3 h-3 text-amber-500 fill-amber-500"></i-lucide>
+                                        <span>4.9</span>
+                                    </div>
+                                    <div class="stat-pill-primary">
+                                        <i-lucide name="award" class="w-3 h-3"></i-lucide>
+                                        <span>{{ doc.experience ?? '8+' }} Yrs Exp</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <button *ngIf="doc.available" class="view-btn">Book</button>
-                        <span *ngIf="!doc.available" class="booked-label">Booked</span>
+                        <div class="doctor-card-right">
+                            <button class="view-btn" [disabled]="doc.available === false">
+                                <span>{{ doc.available !== false ? 'Book Now' : 'Not Available' }}</span>
+                                <i-lucide [name]="doc.available !== false ? 'arrow-right' : 'slash'" 
+                                    class="w-3.5 h-3.5 ml-1.5"></i-lucide>
+                            </button>
+                        </div>
+                    </div>
+                    <div *ngIf="doctors.length === 0" class="col-span-full py-20 text-center">
+                        <i-lucide name="users"
+                            class="w-16 h-16 text-slate-200 dark:text-slate-800 mx-auto mb-4"></i-lucide>
+                        <p class="text-slate-500 dark:text-slate-400">No doctors are currently available for booking.
+                        </p>
                     </div>
                 </div>
             </ng-container>
@@ -102,23 +125,49 @@
                 <!-- Doctor Summary -->
                 <div class="doc-summary-card">
                     <div class="doc-summary-bg"></div>
-                    <img [src]="selectedDoctor.image"
-                        onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Dr&background=0ea5e9&color=fff&size=200'"
-                        alt="Doctor" class="doc-summary-img">
-                    <p class="doc-summary-name">{{ selectedDoctor.name }}</p>
-                    <p class="doc-summary-spec">{{ selectedDoctor.specialty }}</p>
-                    <div class="doc-details-box">
-                        <div class="doc-detail-row">
-                            <i-lucide name="clock" class="w-3.5 h-3.5 text-primary-400"></i-lucide>
-                            45 Min Consultation
+                    <!-- Mobile: Horizontal compact layout -->
+                    <div class="flex sm:hidden items-center gap-3 relative z-10">
+                        <div class="relative flex-shrink-0">
+                            <img [src]="'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedDoctor.fullName) + '&background=0D8ABC&color=fff&size=128'"
+                                class="w-14 h-14 rounded-xl object-cover ring-2 ring-white dark:ring-slate-700 shadow-lg" alt="">
+                            <div class="absolute -bottom-1 -right-1 bg-emerald-500 text-white p-0.5 rounded-md border-2 border-white dark:border-slate-800">
+                                <i-lucide name="check" class="w-2.5 h-2.5"></i-lucide>
+                            </div>
                         </div>
-                        <div class="doc-detail-row">
-                            <i-lucide name="map-pin" class="w-3.5 h-3.5 text-primary-400"></i-lucide>
-                            In-person Visit
+                        <div class="flex-1 min-w-0">
+                            <p class="font-black text-sm text-slate-900 dark:text-white tracking-tight truncate">{{ selectedDoctor.fullName }}</p>
+                            <p class="text-[10px] font-bold text-primary-500 uppercase tracking-wider mt-0.5">{{ selectedDoctor.specialization || selectedDoctor.specialty }}</p>
+                            <div class="flex items-center gap-3 mt-1.5 text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                                <span class="flex items-center gap-1"><i-lucide name="clock" class="w-3 h-3 text-primary-400"></i-lucide>45 Min</span>
+                                <span class="flex items-center gap-1">
+                                    <i-lucide [name]="selectedConsultationType === 'Online' ? 'video' : 'map-pin'" class="w-3 h-3 text-primary-400"></i-lucide>
+                                    {{ selectedConsultationType === 'Online' ? 'Online' : 'Clinic' }}
+                                </span>
+                            </div>
                         </div>
-                        <div class="doc-detail-row">
-                            <i-lucide name="users" class="w-3.5 h-3.5 text-primary-400"></i-lucide>
-                            New Patient Intake
+                    </div>
+                    <!-- Desktop: Vertical centered layout -->
+                    <div class="hidden sm:block">
+                        <div class="relative mx-auto w-24 h-24 mb-4 z-10 group">
+                            <img [src]="'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedDoctor.fullName) + '&background=0D8ABC&color=fff&size=128'"
+                                class="w-24 h-24 rounded-[2rem] object-cover ring-4 ring-white dark:ring-slate-800 shadow-2xl transition-all duration-500 group-hover:rotate-6"
+                                alt="">
+                            <div class="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-1.5 rounded-xl border-4 border-white dark:border-slate-800 shadow-lg">
+                                <i-lucide name="check" class="w-4 h-4"></i-lucide>
+                            </div>
+                        </div>
+                        <p class="doc-summary-name relative z-10 font-black tracking-tight">{{ selectedDoctor.fullName }}</p>
+                        <p class="doc-summary-spec relative z-10 font-bold uppercase tracking-widest text-[10px] opacity-70">
+                            {{ selectedDoctor.specialization || selectedDoctor.specialty }}</p>
+                        <div class="doc-details-box relative z-10">
+                            <div class="doc-detail-row">
+                                <i-lucide name="clock" class="w-3.5 h-3.5 text-primary-400"></i-lucide>
+                                Consultation (45 Min)
+                            </div>
+                            <div class="doc-detail-row" *ngIf="selectedConsultationType">
+                                <i-lucide [name]="selectedConsultationType === 'Online' ? 'video' : 'map-pin'" class="w-3.5 h-3.5 text-primary-400"></i-lucide>
+                                {{ selectedConsultationType === 'Online' ? 'Online Session' : 'Clinic Visit' }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -127,20 +176,47 @@
                 <div class="slot-card">
                     <h3 class="slot-card-title">Select <span>Date & Time</span></h3>
 
-                    <p class="booking-as-info" *ngIf="isPatientRegistered">
-                        <i-lucide name="user-check" class="w-4 h-4"></i-lucide>
-                        Booking as <strong>{{ patientName }}</strong>
+                    <p class="booking-as-info">
+                        <i-lucide name="user-check" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i-lucide>
+                        Patient: <strong>{{ patientName }}</strong>
                     </p>
 
                     <!-- Error -->
                     <div *ngIf="bookingError" class="booking-error-inline">
-                        <i-lucide name="alert-circle" class="w-4 h-4"></i-lucide>
+                        <i-lucide name="alert-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0"></i-lucide>
                         {{ bookingError }}
+                    </div>
+
+                    <!-- Consultation Type Selection -->
+                    <div class="type-section" *ngIf="selectedDoctor">
+                        <label>Choose Consultation Type</label>
+                        <div class="type-grid">
+                            <ng-container *ngIf="(selectedDoctor.consultationType || '').toLowerCase() === 'both'; else singleType">
+                                <button (click)="selectedConsultationType = 'In Person'" 
+                                    class="type-btn" [class.selected]="selectedConsultationType === 'In Person'">
+                                    <i-lucide name="user" class="w-5 h-5"></i-lucide>
+                                    In Person
+                                </button>
+                                <button (click)="selectedConsultationType = 'Online'" 
+                                    class="type-btn" [class.selected]="selectedConsultationType === 'Online'">
+                                    <i-lucide name="video" class="w-5 h-5"></i-lucide>
+                                    Online
+                                </button>
+                            </ng-container>
+                            <ng-template #singleType>
+                                <div class="type-btn single-option">
+                                    <span class="flex items-center gap-2">
+                                        <i-lucide [name]="(selectedDoctor.consultationType || '').toLowerCase().includes('online') ? 'video' : 'user'" class="w-5 h-5"></i-lucide>
+                                        {{ selectedDoctor.consultationType || 'In Person' }} Consultation (Recommended)
+                                    </span>
+                                </div>
+                            </ng-template>
+                        </div>
                     </div>
 
                     <label class="date-label">Preferred Date</label>
                     <input type="date" [(ngModel)]="selectedDate" [min]="minDate" class="date-input"
-                        (ngModelChange)="onDateChange()">
+                        (ngModelChange)="onDateChange()" (click)="$any($event.target).showPicker?.()">
 
                     <label class="slots-label">Available Time Slots</label>
                     <div class="slots-grid">
@@ -148,14 +224,48 @@
                             [class.selected]="selectedTimeSlot === slot" [class.booked]="isSlotBooked(slot)"
                             [disabled]="isSlotBooked(slot)">
                             {{ slot }}
-                            <span *ngIf="isSlotBooked(slot)" class="slot-booked-label">Booked</span>
+                            <span *ngIf="isSlotBooked(slot)" class="slot-booked-label">Unavailable</span>
                         </button>
                     </div>
 
-                    <button [disabled]="!selectedTimeSlot" (click)="confirmBooking()" class="confirm-btn"
-                        [class.active]="selectedTimeSlot" [class.inactive]="!selectedTimeSlot">
-                        <i-lucide name="calendar-check" class="w-5 h-5" *ngIf="selectedTimeSlot"></i-lucide>
-                        {{ selectedTimeSlot ? 'Confirm Booking' : 'Select a Time to Continue' }}
+                    <div class="mt-3 sm:mt-5">
+                        <label class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5 sm:mb-2 block">Personal Note /
+                            Complaint (Optional)</label>
+                        <textarea [(ngModel)]="patientNotes" placeholder="Describe your symptoms or condition..."
+                            class="w-full h-20 sm:h-24 p-2.5 sm:p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-primary-500/50 outline-none resize-none transition-all"></textarea>
+                    </div>
+
+                    <!-- ── Payment Fee Info ── -->
+                    <div *ngIf="selectedDoctor && appointmentFee > 0"
+                        class="mt-3 sm:mt-4 flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-primary-200 dark:border-primary-800/40 bg-primary-50 dark:bg-primary-900/20">
+                        <div class="flex items-center gap-2">
+                            <i-lucide name="credit-card" class="w-4 h-4 text-primary-500"></i-lucide>
+                            <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300">Consultation Fee</span>
+                        </div>
+                        <span class="text-sm sm:text-base font-black text-primary-600 dark:text-primary-400">₹{{ appointmentFee }}</span>
+                    </div>
+                    <div *ngIf="selectedDoctor && appointmentFee === 0"
+                        class="mt-3 sm:mt-4 flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-emerald-200 dark:border-emerald-800/40 bg-emerald-50 dark:bg-emerald-900/20">
+                        <i-lucide name="badge-check" class="w-4 h-4 text-emerald-500"></i-lucide>
+                        <span class="text-xs sm:text-sm font-semibold text-emerald-700 dark:text-emerald-400">Free Consultation</span>
+                    </div>
+
+                    <button [disabled]="!selectedTimeSlot || !selectedConsultationType || isProcessing" (click)="confirmBooking()"
+                        class="confirm-btn mt-3 sm:mt-4" [class.active]="selectedTimeSlot && selectedConsultationType" [class.inactive]="!selectedTimeSlot || !selectedConsultationType">
+                        <i-lucide name="loader" class="w-4 h-4 sm:w-5 sm:h-5 animate-spin" *ngIf="isProcessing"></i-lucide>
+                        <i-lucide name="credit-card" class="w-4 h-4 sm:w-5 sm:h-5"
+                            *ngIf="selectedTimeSlot && selectedConsultationType && !isProcessing && appointmentFee > 0"></i-lucide>
+                        <i-lucide name="calendar-check" class="w-4 h-4 sm:w-5 sm:h-5"
+                            *ngIf="selectedTimeSlot && selectedConsultationType && !isProcessing && appointmentFee === 0"></i-lucide>
+                        <ng-container *ngIf="!isProcessing">
+                            <ng-container *ngIf="selectedTimeSlot && selectedConsultationType">
+                                {{ appointmentFee > 0 ? 'Confirm & Pay ₹' + appointmentFee : 'Confirm Appointment (Free)' }}
+                            </ng-container>
+                            <ng-container *ngIf="!selectedTimeSlot || !selectedConsultationType">
+                                Complete Details to Continue
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="isProcessing">Processing Payment...</ng-container>
                     </button>
                 </div>
 
@@ -166,60 +276,79 @@
         <ng-container *ngIf="currentStep === 3">
             <div class="success-wrap fade-in-up">
                 <div class="success-card">
-                    <!-- BG Effects -->
                     <div class="success-bg-blob blob-top"></div>
                     <div class="success-bg-blob blob-bottom"></div>
 
-                    <!-- Icon -->
                     <div class="success-icon-wrap">
                         <div class="success-icon-glow"></div>
                         <div class="success-icon-circle">
-                            <i-lucide name="calendar-check" class="w-12 h-12 text-white"></i-lucide>
+                            <i-lucide name="check" class="w-10 h-10 sm:w-12 sm:h-12 text-white"></i-lucide>
                         </div>
-                        <span class="xp-badge">+50 XP</span>
                     </div>
 
-                    <h2 class="success-title">You're all set! 🥳</h2>
+                    <h2 class="success-title">Booking Requested! 🥳</h2>
                     <p class="success-desc">
-                        Your appointment with <strong style="color:#0f172a">{{ selectedDoctor?.name }}</strong>
-                        is confirmed. You just earned 50 recovery points!
+                        Your request for <strong class="text-slate-900 dark:text-white">{{ selectedDoctor?.fullName }}</strong>
+                        has been sent. You'll be notified once the doctor confirms your slot.
                     </p>
 
                     <!-- Booking Summary -->
-                    <div class="booking-summary">
-                        <div class="booking-summary-top">
-                            <img [src]="selectedDoctor?.image"
-                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Dr&background=0ea5e9&color=fff'"
-                                alt="" class="summary-doc-img">
-                            <div>
-                                <p class="summary-doc-name">{{ selectedDoctor?.name }}</p>
-                                <p class="summary-doc-spec">{{ selectedDoctor?.specialty }}</p>
+                    <div class="booking-summary mt-4 sm:mt-6">
+                        <div
+                            class="flex items-center justify-between p-3 sm:p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-700">
+                            <div class="flex items-center">
+                                <i-lucide name="calendar" class="w-4 h-4 sm:w-5 sm:h-5 text-primary-500 mr-1.5 sm:mr-2"></i-lucide>
+                                <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">{{ formattedDate }}</span>
                             </div>
-                        </div>
-                        <div class="booking-meta-row">
-                            <div class="booking-meta-item">
-                                <p class="meta-label">
-                                    <i-lucide name="calendar" class="w-3.5 h-3.5"></i-lucide> Date
-                                </p>
-                                <p class="meta-value">{{ formattedDate }}</p>
+                            <div class="flex items-center">
+                                <i-lucide name="clock" class="w-4 h-4 sm:w-5 sm:h-5 text-secondary-500 mr-1.5 sm:mr-2"></i-lucide>
+                                <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-white">{{ selectedTimeSlot }} • {{ selectedConsultationType }}</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Actions -->
-                    <div class="success-actions">
-                        <button (click)="goToPatientDashboard()" class="action-btn-primary">
-                            <i-lucide name="layout-dashboard" class="w-4 h-4"></i-lucide>
-                            Patient Dashboard
-                        </button>
-                        <button (click)="goToDoctorDashboard()" class="action-btn-outline">
-                            <i-lucide name="activity" class="w-4 h-4"></i-lucide>
-                            Doctor Dashboard
+                    <div class="success-actions mt-6 sm:mt-8">
+                        <button (click)="goToPatientDashboard()"
+                            class="action-btn-primary w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-white shadow-xl shadow-primary-500/20 hover:scale-[1.02] transition-all">
+                            Go to My Appointments
                         </button>
                     </div>
                 </div>
             </div>
         </ng-container>
 
+    </div>
+
+    <!-- Fullscreen Loading & Success Overlay -->
+    <div *ngIf="isPaymentProcessing || isPaymentSuccess" class="payment-overlay">
+        <div class="payment-modal">
+            
+            <!-- Loading State -->
+            <div *ngIf="!isPaymentSuccess" class="loader-container">
+                <svg class="spinner-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <div class="loader-icon">
+                    <i-lucide name="shield-check" class="w-8 h-8"></i-lucide>
+                </div>
+            </div>
+
+            <!-- Success State -->
+            <div *ngIf="isPaymentSuccess" class="success-container">
+                <div class="success-ring"></div>
+                <div class="success-circle">
+                    <i-lucide name="check" class="success-icon"></i-lucide>
+                </div>
+            </div>
+
+            <h3 class="status-title">
+                {{ isPaymentSuccess ? 'Payment Successful!' : 'Processing Payment' }}
+            </h3>
+            <p class="status-desc">
+                {{ isPaymentSuccess ? 'Confirming your appointment...' : 'Please do not close this window or press back.' }}
+            </p>
+        </div>
     </div>
 </div>

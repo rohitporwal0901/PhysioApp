@@ -1,0 +1,36 @@
+.mobile-sidebar {
+  @media (max-width: 1023px) {
+    border-radius: 0 2rem 2rem 0;
+    height: 100%;
+    
+    .logo-container {
+      height: calc(4rem + env(safe-area-inset-top, 0px));
+      padding-top: env(safe-area-inset-top, 0px);
+      align-items: center;
+      display: flex;
+    }
+  }
+}
+
+/* Ensure backdrop is below sidebar but above header */
+.fixed.inset-0.bg-slate-900\/70 {
+  z-index: 55;
+}
+
+/* Nav Item Premium Touch */
+nav a {
+  &.active-link {
+    background: linear-gradient(to right, rgba(15, 155, 142, 0.08), transparent);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 20%;
+      bottom: 20%;
+      width: 4px;
+      background: #0F9B8E;
+      border-radius: 0 4px 4px 0;
+    }
+  }
+}

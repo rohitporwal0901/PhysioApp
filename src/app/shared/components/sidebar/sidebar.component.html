@@ -5,16 +5,22 @@
 
 <!-- Sidebar -->
 <aside [class.translate-x-0]="isMobileMenuOpen" [class.-translate-x-full]="!isMobileMenuOpen"
-    class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:block shadow-xl lg:shadow-none flex flex-col">
+    class="fixed inset-y-0 left-0 z-[60] w-64 h-full lg:h-screen bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 transition-all duration-300 ease-in-out lg:translate-x-0 lg:sticky lg:top-0 lg:block shadow-2xl lg:shadow-none flex flex-col mobile-sidebar overflow-hidden">
 
     <!-- Logo + Close -->
-    <div class="flex items-center px-5 h-16 border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
-        <div
-            class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center mr-3 shadow-md shadow-primary-500/20 flex-shrink-0">
-            <i-lucide name="activity" class="text-white w-5 h-5"></i-lucide>
-        </div>
+    <div class="flex items-center px-5 h-16 border-b border-slate-100 dark:border-slate-800 flex-shrink-0 logo-container group">
+        <svg class="w-9 h-9 mr-3 drop-shadow-md group-hover:scale-110 transition-all duration-300 animate-heartbeat" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="logoGradSidebar" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#0F9B8E" />
+                    <stop offset="100%" stop-color="#10B981" />
+                </linearGradient>
+            </defs>
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="url(#logoGradSidebar)" />
+            <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
         <span class="text-lg font-black text-slate-800 dark:text-white tracking-tight font-heading">
-            Physio<span class="text-primary-500">Pro</span>
+            Health<span class="text-primary-500">Hub</span>
         </span>
         <button (click)="closeMenu.emit()"
             class="ml-auto lg:hidden text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
@@ -25,13 +31,14 @@
     <!-- Role indicator pill -->
     <div class="px-4 pt-5 pb-3">
         <div class="flex items-center gap-2.5 px-3 py-2.5 rounded-2xl bg-gradient-to-r"
-            [ngClass]="roleColor + ' bg-opacity-10'">
-            <div class="w-8 h-8 rounded-xl bg-white/30 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
-                <i-lucide [name]="roleIcon" class="w-4 h-4 text-white"></i-lucide>
+            [ngClass]="roleColorClasses + ' bg-opacity-10'">
+            <div class="w-8 h-8 rounded-xl bg-white/30 backdrop-blur-sm flex items-center justify-center flex-shrink-0 overflow-hidden shadow-inner">
+                <img *ngIf="currentUser?.image" [src]="currentUser?.image" class="w-full h-full object-cover">
+                <i-lucide *ngIf="!currentUser?.image" [name]="roleIcon" class="w-4 h-4 text-white"></i-lucide>
             </div>
             <div>
                 <p class="text-xs font-bold text-white/70 uppercase tracking-wider">Logged in as</p>
-                <p class="text-sm font-black text-white leading-tight">{{ role }}</p>
+                <p class="text-sm font-black text-white leading-tight">{{ roleLabel }}</p>
             </div>
         </div>
     </div>
@@ -44,16 +51,12 @@
 
         @for (item of menuItems; track item.path) {
         <a [routerLink]="item.path"
-            routerLinkActive="!text-primary-600 dark:!text-primary-400 !bg-primary-50/80 dark:!bg-primary-500/10 !border-primary-100 dark:!border-primary-500/20 font-bold"
+            routerLinkActive="active-link"
             [routerLinkActiveOptions]="{exact: false}"
-            class="relative group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-2xl text-slate-500 dark:text-slate-400 border border-transparent hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all mb-1.5"
+            class="relative group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all mb-1"
             (click)="closeMenu.emit()">
 
             <div class="flex items-center gap-3">
-                <!-- Active indicator bar -->
-                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-primary-500 rounded-r-full transition-all duration-300"
-                    routerLinkActive="!h-8"></div>
-
                 <i-lucide [name]="item.icon" class="flex-shrink-0 w-5 h-5 transition-colors duration-200"></i-lucide>
                 <span>{{ item.label }}</span>
             </div>
@@ -66,27 +69,75 @@
         }
     </nav>
 
+    <!-- Subscription Widget (Only for Doctor/Lab) -->
+    <div *ngIf="planName" class="px-4 pb-4 mt-2">
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/50">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Subscription</span>
+                <span *ngIf="isExpiredState" class="px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-[9px] font-bold text-red-600 dark:text-red-400 uppercase">Expired</span>
+                <span *ngIf="!isExpiredState && daysRemaining <= 5" class="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-[9px] font-bold text-amber-600 dark:text-amber-400 uppercase">Expiring</span>
+            </div>
+            
+            <h4 class="text-xs font-black text-slate-700 dark:text-slate-200 mb-1">{{ planName }}</h4>
+            <div class="flex items-center gap-2 mb-3">
+                <i-lucide name="calendar" class="w-3 h-3 text-slate-400"></i-lucide>
+                <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400">Expires: {{ expiryDateDisplay || 'N/A' }}</span>
+            </div>
+
+            <div class="space-y-1.5">
+                <div class="flex items-center justify-between text-[10px] font-bold">
+                    <span class="text-slate-500">{{ isExpiredState ? 'Renew account' : daysRemaining + ' days left' }}</span>
+                    <span class="text-primary-500">{{ isExpiredState ? '0%' : (daysRemaining > 30 ? '100%' : ( (daysRemaining / 30 * 100) | number:'1.0-0') + '%') }}</span>
+                </div>
+                <div class="h-1.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full transition-all duration-1000"
+                        [style.width.%]="isExpiredState ? 0 : (daysRemaining > 30 ? 100 : (daysRemaining / 30 * 100))">
+                    </div>
+                </div>
+            </div>
+
+            <!-- <button *ngIf="isExpiredState || daysRemaining <= 5" 
+                class="mt-4 w-full py-2 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-[11px] font-black uppercase tracking-widest shadow-lg shadow-primary-500/20 transition-all active:scale-[0.98]">
+                Renew Now
+            </button> -->
+        </div>
+    </div>
+
     <!-- Bottom: User card -->
     <div class="border-t border-slate-100 dark:border-slate-800 p-4 flex-shrink-0">
         <div
             class="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer group">
             <div class="relative flex-shrink-0">
-                <img class="h-9 w-9 rounded-xl object-cover ring-2 ring-transparent group-hover:ring-primary-100 dark:group-hover:ring-slate-700 transition-all"
-                    src="https://ui-avatars.com/api/?name={{ userName }}&background=0F9B8E&color=fff&size=36"
-                    onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff'"
+                <img class="h-9 w-9 rounded-xl object-cover ring-2 ring-transparent group-hover:ring-primary-100 dark:group-hover:ring-slate-700 transition-all shadow-sm"
+                    [src]="currentUser?.image || 'https://ui-avatars.com/api/?name=' + userName + '&background=0F9B8E&color=fff&size=36'"
                     alt="Avatar">
                 <span
                     class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-status-success border-2 border-white dark:border-slate-900 rounded-full"></span>
             </div>
             <div class="flex-1 overflow-hidden">
                 <p class="text-sm font-bold text-slate-700 dark:text-slate-200 truncate">{{ userName }}</p>
-                <p class="text-xs text-slate-400 dark:text-slate-500">{{ role }} Account</p>
+                <p class="text-xs text-slate-400 dark:text-slate-500">{{ roleLabel }} Account</p>
             </div>
-            <a routerLink="/login"
+            <button (click)="onLogout()"
                 class="text-slate-300 dark:text-slate-600 hover:text-red-400 dark:hover:text-red-400 transition-colors p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
                 title="Logout">
-                <i-lucide name="arrow-right" class="w-4 h-4 rotate-180"></i-lucide>
-            </a>
+                <i-lucide name="log-out" class="w-4 h-4"></i-lucide>
+            </button>
         </div>
     </div>
 </aside>
+
+<!-- Logout Confirmation -->
+<app-confirm-dialog 
+    [isOpen]="showLogoutConfirm"
+    title="Come back soon!"
+    message="Are you sure you want to log out of your HealthHub account?"
+    icon="log-out"
+    confirmText="Yes, Logout"
+    cancelText="Stay logged in"
+    iconBgClass="bg-red-50 dark:bg-red-900/20"
+    iconColorClass="text-red-500"
+    confirmBtnClass="bg-gradient-to-r from-red-500 to-red-600 shadow-red-500/25"
+    (confirmed)="confirmLogout()"
+    (cancelled)="showLogoutConfirm = false">
+</app-confirm-dialog>

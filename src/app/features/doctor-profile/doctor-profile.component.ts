@@ -5,7 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { MockApiService } from '../../core/services/mock-api.service';
 import { BookingService } from '../../core/services/booking.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
+
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
     selector: 'app-doctor-profile',
@@ -19,21 +22,37 @@ export class DoctorProfileComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private api = inject(MockApiService);
     private bookingService = inject(BookingService);
+    private authService = inject(AuthService);
+    private toast = inject(ToastService);
 
     doctor: any = null;
     activeTab: 'profile' | 'book' = 'profile';
+    isProcessing = false;
 
     // Booking form
     selectedDate = new Date().toISOString().split('T')[0];
+    private prevDate: string = this.selectedDate;
     selectedSlot = '';
     bookingConfirmed = false;
     bookedSlots: string[] = [];
     bookingError = '';
+    patientNotes = '';
 
     availableSlots = [
-        '09:00 AM', '09:45 AM', '10:30 AM', '11:15 AM',
-        '12:00 PM', '02:00 PM', '02:45 PM', '03:30 PM',
-        '04:15 PM', '05:00 PM'
+       '09:00 AM', '09:45 AM', '10:30 AM', '11:15 AM',
+    '12:00 PM', '02:00 PM', '02:45 PM', '03:30 PM',
+    '04:15 PM', '05:00 PM'
+    ];
+
+    selectedConsultationType = '';
+
+    // Unsplash doctor profile image collection
+    private doctorImages = [
+      'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1559839734-2b71f1536783?q=80&w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=600&auto=format&fit=crop'
     ];
 
     ngOnInit() {
@@ -42,18 +61,29 @@ export class DoctorProfileComponent implements OnInit {
         const state = nav?.extras?.state as { doctor: any };
         if (state?.doctor) {
             this.doctor = state.doctor;
+            this.setDefaultConsultationType();
         } else {
             // Fallback: load from service using route param
             const docId = this.route.snapshot.paramMap.get('id');
             this.api.getDoctors().subscribe(docs => {
                 this.doctor = docs.find(d => d.id === docId) || docs[0];
+                this.setDefaultConsultationType();
             });
         }
+        
+        this.route.queryParams.subscribe(params => {
+            if (params['tab'] === 'book') {
+                if (this.isPatientRegistered) {
+                    this.activeTab = 'book';
+                    this.onDateChange();
+                }
+            }
+        });
     }
 
     /** Check if the patient is registered */
     get isPatientRegistered(): boolean {
-        return this.bookingService.isPatientRegistered;
+        return this.authService.isLoggedIn && this.authService.userRole === 'patient';
     }
 
     /** Get registered patient name */
@@ -69,20 +99,36 @@ export class DoctorProfileComponent implements OnInit {
     }
 
     startBooking() {
-        // Check if patient is registered
-        if (!this.isPatientRegistered) {
-            this.bookingError = 'Please register first before booking an appointment.';
-            return;
+        if (this.isPatientRegistered) {
+            this.activeTab = 'book';
+            this.bookingError = '';
+            this.onDateChange();
+        } else {
+            // Not registered as a patient in current session
+            if (this.authService.isLoggedIn) {
+                // Logged in but not as a patient (Doctor or Admin)
+                this.bookingError = `You are currently logged in as an ${this.authService.userRole}. Only patients can book appointments.`;
+            } else {
+                // Not logged in at all - "Already Registered? Book Slot" flow
+                // Take them to login and then come back
+                const currentUrl = this.router.url.split('?')[0]; // strip existing query params if any
+                this.router.navigate(['/login'], { 
+                    queryParams: { returnUrl: `${currentUrl}?tab=book` } 
+                });
+            }
         }
-        this.bookingError = '';
-        this.activeTab = 'book';
-        this.onDateChange(); // Ensure slots are refreshed for the default date when tab opens
     }
 
     /** When date changes, reload booked slots for that date */
-    onDateChange() {
+    async onDateChange() {
+        // Prevent clearing: if value is emptied (Clear button clicked), restore on next tick
+        if (!this.selectedDate) {
+            setTimeout(() => { this.selectedDate = this.prevDate; }, 10);
+            return;
+        }
+        this.prevDate = this.selectedDate;
         if (this.doctor && this.selectedDate) {
-            this.bookedSlots = this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
+            this.bookedSlots = await this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
             // If the selected slot is now booked, deselect it
             if (this.bookedSlots.includes(this.selectedSlot)) {
                 this.selectedSlot = '';
@@ -90,9 +136,26 @@ export class DoctorProfileComponent implements OnInit {
         }
     }
 
-    /** Check if a slot is already booked */
+    /** Check if a slot is already booked or in the past */
     isSlotBooked(slot: string): boolean {
-        return this.bookedSlots.includes(slot);
+        return this.bookedSlots.includes(slot) || this.isSlotInPast(slot);
+    }
+
+    isSlotInPast(slot: string): boolean {
+        // Only disable past slots if the selected date is today
+        if (this.selectedDate !== this.minDate) return false;
+
+        const now = new Date();
+        const [time, period] = slot.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+
+        if (period === 'PM' && hours < 12) hours += 12;
+        if (period === 'AM' && hours === 12) hours = 0;
+
+        const slotTime = new Date();
+        slotTime.setHours(hours, minutes, 0, 0);
+
+        return slotTime < now;
     }
 
     selectSlot(slot: string) {
@@ -101,27 +164,53 @@ export class DoctorProfileComponent implements OnInit {
         }
     }
 
-    confirmBooking() {
+    async confirmBooking() {
         if (this.selectedDate && this.selectedSlot && this.doctor) {
-            const appointment = this.bookingService.bookAppointment({
+            if (!this.selectedConsultationType) {
+                this.bookingError = 'Please select a consultation type.';
+                return;
+            }
+
+            if (!this.patientNotes || this.patientNotes.trim().length < 10) {
+                this.bookingError = 'Please describe your condition/complaint (min 10 characters).';
+                return;
+            }
+            
+            this.isProcessing = true;
+            this.bookingError = '';
+
+            const result = await this.bookingService.bookAppointment({
                 doctorId: this.doctor.id,
-                doctorName: this.doctor.name,
-                doctorSpecialty: this.doctor.specialty,
-                doctorImage: this.doctor.image,
+                doctorName: this.doctor.fullName || this.doctor.name || 'Doctor',
+                doctorSpecialty: this.doctor.specialization || this.doctor.specialty || 'General Physician',
+                doctorImage: this.doctor.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(this.doctor.fullName || 'Doctor')}&background=0D8ABC&color=fff`,
                 date: this.selectedDate,
                 time: this.selectedSlot,
-                type: 'Consultation'
+                type: this.selectedConsultationType || 'Consultation',
+                notes: this.patientNotes
             });
 
-            if (appointment) {
+            this.isProcessing = false;
+
+            if (result.success) {
+                this.toast.success('Your appointment has been requested!', 'Success');
                 this.bookingConfirmed = true;
                 this.bookingError = '';
                 // Refresh booked slots
-                this.bookedSlots = this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
+                this.bookedSlots = await this.bookingService.getBookedSlotsForDoctor(this.doctor.id, this.selectedDate);
             } else {
-                this.bookingError = 'This slot is already booked or you are not registered. Please try another slot.';
+                this.bookingError = result.error || 'This slot is already booked or you are not registered.';
+                this.toast.error(this.bookingError, 'Booking Failed');
             }
         }
+    }
+
+    bookAnotherSlot() {
+        this.bookingConfirmed = false;
+        this.selectedSlot = '';
+        this.bookingError = '';
+        this.setDefaultConsultationType();
+        this.onDateChange();
     }
 
     goToDashboard() {
@@ -138,5 +227,35 @@ export class DoctorProfileComponent implements OnInit {
 
     get minDate(): string {
         return new Date().toISOString().split('T')[0];
+    }
+
+    getDoctorImage(): string {
+        if (!this.doctor) return '';
+        if (this.doctor.image && !this.doctor.image.includes('ui-avatars.com')) {
+            return this.doctor.image;
+        }
+        // Use a stable image based on the doctor's name length for consistency on this page
+        const index = (this.doctor.fullName || this.doctor.name || '').length;
+        return this.doctorImages[index % this.doctorImages.length];
+    }
+
+    encodeURIComponent(str: string): string {
+        return encodeURIComponent(str);
+    }
+
+    private setDefaultConsultationType() {
+        if (!this.doctor) return;
+        
+        const type = (this.doctor.consultationType || '').toLowerCase();
+        if (type === 'online') {
+            this.selectedConsultationType = 'Online';
+        } else if (type === 'in person' || type === 'in-person') {
+            this.selectedConsultationType = 'In Person';
+        } else if (type === 'both') {
+            this.selectedConsultationType = 'In Person';
+        } else {
+            // Fallback for missing or other types
+            this.selectedConsultationType = 'In Person';
+        }
     }
 }

@@ -1,45 +1,70 @@
 import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
   LucideAngularModule,
-  Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
-  ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
+  Activity, Mail, Lock, LayoutDashboard, LayoutGrid, Users, UserPlus, Calendar,
+  ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, ChevronUp, Menu, X, Filter, Search, Plus, Moon, Sun,
   PlaySquare, PlayCircle, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
   FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2,
   Heart, Zap, Shield, MapPin, Phone, PhoneCall, GraduationCap, Award,
   ClipboardList, HeartPulse, CalendarCheck, CalendarPlus,
   ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff,
   ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
-  TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone,
-  LockKeyhole, AlertCircle, Check, Linkedin, Send
+  TrendingUp, HelpCircle, ListOrdered, List, Stethoscope, Bone, Circle,
+  LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut, Sparkles, MessageSquare, Loader,
+  Accessibility, Footprints, Brain, Cpu, Map, Microscope, Info, AlertTriangle,
+  SearchX, Briefcase, ExternalLink, IndianRupee, Share, Share2, Download, FileDown, IdCard,
+  CalendarOff, Home, Building, Landmark, Save, TestTube, Slash, Bell, XCircle, Video, Loader2,
+  CalendarX, UserSearch,
+  CreditCard, UploadCloud, FlaskConical, FileWarning, FileBox, Timer,
+  Baby, Dna, Thermometer, Pill, Syringe, TestTube2, ShieldPlus, Database, BrainCircuit, Smile,
+  Ambulance, Hospital, Bandage, BriefcaseMedical, CalendarRange, Receipt, BadgeCheck, FilePlus, Image
 } from 'lucide-angular';
 
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { getStorage, provideStorage } from '@angular/fire/storage';
 import { getAnalytics, provideAnalytics, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
+import { getFunctions, provideFunctions } from '@angular/fire/functions';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    provideRouter(routes, withInMemoryScrolling({
+      scrollPositionRestoration: 'top',
+      anchorScrolling: 'enabled',
+    })),
     provideAnimationsAsync(),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
+    provideStorage(() => getStorage()),
     provideAnalytics(() => getAnalytics()),
+    provideFunctions(() => getFunctions()),
     ScreenTrackingService,
     UserTrackingService,
     importProvidersFrom(LucideAngularModule.pick({
-      Activity, Mail, Lock, LayoutDashboard, Users, UserPlus, Calendar,
-      ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, Menu, X, Filter, Search, Plus, Moon, Sun,
+      Activity, Mail, Lock, LayoutDashboard, LayoutGrid, Users, UserPlus, Calendar,
+      ArrowRight, ArrowLeft, ArrowUp, Clock, ChevronRight, ChevronDown, ChevronUp, Menu, X, Filter, Search, Plus, Moon, Sun,
       PlaySquare, PlayCircle, CheckCircle2, ActivitySquare, MoreHorizontal, Star, User,
       FileText, Settings, Camera, RefreshCw, Fingerprint, Trash2, Edit2,
       Heart, Zap, Shield, MapPin, Phone, PhoneCall, GraduationCap, Award,
       ClipboardList, HeartPulse, CalendarCheck, CalendarPlus,
       ChevronLeft, UserCheck, CheckCircle, ClipboardCheck, Eye, EyeOff,
       ShieldCheck, MessageCircle, Facebook, Twitter, Instagram, Youtube,
-      TrendingUp, HelpCircle, ListOrdered, Stethoscope, Bone,
-      LockKeyhole, AlertCircle, Check, Linkedin, Send
+      TrendingUp, HelpCircle, ListOrdered, List, Stethoscope, Bone, Circle,
+      LockKeyhole, AlertCircle, Check, Linkedin, Send, LogOut, Sparkles, MessageSquare, Loader,
+      Accessibility, Footprints, Brain, Cpu, Map, Microscope, Info, AlertTriangle,
+      SearchX, Briefcase, ExternalLink, IndianRupee, Share, Share2, Download, FileDown, IdCard,
+      CalendarOff, Home, Building, Landmark, Save, TestTube, Slash, Bell, XCircle, Video, Loader2,
+      CalendarX, UserSearch,
+      CreditCard, UploadCloud, FlaskConical, FileWarning, FileBox, Timer,
+      Baby, Dna, Thermometer, Pill, Syringe, TestTube2, ShieldPlus, Database, BrainCircuit, Smile,
+      Ambulance, Hospital, Bandage, BriefcaseMedical, CalendarRange, Receipt, BadgeCheck, FilePlus, Image
     }))
   ]
 };

@@ -1,0 +1,82 @@
+<!-- Chat Window -->
+<div *ngIf="isOpen" 
+     class="fixed bottom-[140px] right-6 sm:bottom-[200px] sm:right-8 z-[10000] pointer-events-auto bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden w-[350px] sm:w-[400px] h-[500px] flex flex-col transition-all duration-300 origin-bottom-right">
+  
+  <!-- Header -->
+  <div class="bg-gradient-to-r from-emerald-600 to-teal-500 p-4 flex justify-between items-center text-white">
+    <div class="flex items-center gap-3">
+      <div class="bg-white/20 p-2 rounded-full backdrop-blur-sm">
+        <lucide-icon [img]="Bot" class="w-6 h-6"></lucide-icon>
+      </div>
+      <div>
+        <h3 class="font-bold text-lg leading-tight">HealthHub Bot</h3>
+        <p class="text-xs text-white/80">AI Support Assistant</p>
+      </div>
+    </div>
+    <button (click)="toggleChat()" class="hover:bg-white/20 p-2 rounded-full transition-colors">
+      <lucide-icon [img]="X" class="w-5 h-5"></lucide-icon>
+    </button>
+  </div>
+
+  <!-- Messages Area -->
+  <div class="flex-1 bg-slate-900 p-4 overflow-y-auto space-y-4" #chatScroll>
+    <div *ngFor="let msg of messages" class="flex w-full" [ngClass]="msg.isUser ? 'justify-end' : 'justify-start'">
+      
+      <div class="flex gap-2 max-w-[85%]" [ngClass]="msg.isUser ? 'flex-row-reverse' : 'flex-row'">
+        <!-- Avatar -->
+        <div class="shrink-0 mt-1">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-sm"
+               [ngClass]="msg.isUser ? 'bg-emerald-500 text-white' : 'bg-slate-800 text-teal-400 border border-slate-700'">
+            <lucide-icon [img]="msg.isUser ? User : Bot" class="w-4 h-4"></lucide-icon>
+          </div>
+        </div>
+        
+        <!-- Bubble -->
+        <div class="p-3 rounded-2xl text-sm leading-relaxed shadow-sm flex flex-col gap-1"
+             [ngClass]="msg.isUser ? 'bg-emerald-600 text-white rounded-tr-none' : 'bg-slate-800 border border-slate-700 text-slate-200 rounded-tl-none'">
+          <p style="white-space: pre-wrap;">{{ msg.text }}</p>
+          <span class="text-[10px] self-end opacity-70">{{ msg.time | date:'shortTime' }}</span>
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- Typing Indicator -->
+    <div *ngIf="isTyping" class="flex justify-start w-full">
+      <div class="flex gap-2 max-w-[85%] flex-row">
+        <div class="shrink-0 mt-1">
+           <div class="w-8 h-8 rounded-full bg-slate-800 text-teal-400 border border-slate-700 flex items-center justify-center shadow-sm">
+              <lucide-icon [img]="Bot" class="w-4 h-4"></lucide-icon>
+           </div>
+        </div>
+        <div class="p-4 rounded-2xl rounded-tl-none bg-slate-800 border border-slate-700 shadow-sm flex items-center gap-1">
+          <div class="w-1.5 h-1.5 bg-teal-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+          <div class="w-1.5 h-1.5 bg-teal-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+          <div class="w-1.5 h-1.5 bg-teal-500 rounded-full animate-bounce"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input Area -->
+  <div class="p-3 bg-slate-900 border-t border-slate-800">
+    <div class="flex relative items-end bg-slate-800 rounded-xl border border-slate-700 focus-within:border-emerald-500 transition-colors">
+      <textarea 
+        [(ngModel)]="userInput"
+        (keydown)="handleKeyDown($event)"
+        placeholder="Type your message..."
+        class="w-full max-h-32 min-h-[44px] bg-transparent text-slate-200 text-sm p-3 pr-12 focus:outline-none resize-none overflow-y-auto"
+        rows="1"
+      ></textarea>
+      <button 
+        (click)="sendMessage()"
+        [disabled]="!userInput.trim() || isTyping"
+        class="absolute right-2 bottom-2 p-1.5 rounded-lg text-emerald-500 hover:bg-slate-700 disabled:opacity-50 disabled:hover:bg-transparent transition-all">
+        <lucide-icon [img]="Send" class="w-5 h-5"></lucide-icon>
+      </button>
+    </div>
+    <div class="mt-2 text-center">
+      <p class="text-[10px] text-slate-500">AI-generated responses may be inaccurate.</p>
+    </div>
+  </div>
+</div>

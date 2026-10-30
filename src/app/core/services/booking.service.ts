@@ -1,207 +1,264 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
-
-export interface RegisteredPatient {
-    id: string;
-    fullName: string;
-    email: string;
-    phone: string;
-    dob: string;
-    gender: string;
-    address?: string;
-    condition?: string;
-    emergencyContact?: string;
-    image: string;
-    registeredAt: Date;
-}
+import { Injectable, inject } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  onSnapshot,
+  doc,
+  updateDoc,
+  Timestamp,
+  orderBy,
+  arrayUnion,
+  limit,
+  increment
+} from '@angular/fire/firestore';
+import { Observable, BehaviorSubject, map } from 'rxjs';
+import { AuthService, AppUser } from './auth.service';
 
 export interface BookedAppointment {
-    id: string;
-    patientId: string;
-    patientName: string;
-    patientImage: string;
-    patientEmail: string;
-    doctorId: string;
-    doctorName: string;
-    doctorSpecialty: string;
-    doctorImage: string;
-    date: string;          // YYYY-MM-DD
-    time: string;          // e.g. '09:00 AM'
-    duration: string;
-    status: 'scheduled' | 'confirmed' | 'completed' | 'cancelled';
-    type: string;
-    notes: string;
-    bookedAt: Date;
+  id?: string;
+  patientId: string;
+  patientName: string;
+  patientEmail: string;
+  patientPhone?: string;
+  patientGender?: string;
+  patientCondition?: string;
+  patientImage?: string;
+  doctorId: string;
+  doctorName: string;
+  doctorSpecialty: string;
+  date: string;          // YYYY-MM-DD
+  time: string;          // e.g. '09:00 AM'
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
+  type: string;
+  notes: string;          // Patient's complaint/reason for visit
+  treatmentNotes?: string; // Doctor's notes after/during session
+  prescription?: {
+    files: { name: string; url: string; type: string }[];
+    uploadedAt: any;
+  };
+  feedback?: {
+    rating: number;
+    comment: string;
+    createdAt: any;
+  };
+  createdAt: any;
+  aiReport?: {
+    summary: string;
+    score: number;
+    roadmap: any[]; // Changed from string[][] to any[] of objects
+    recommendation: string;
+    generatedAt: any;
+  };
 }
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class BookingService {
+  private firestore = inject(Firestore);
+  private auth = inject(AuthService);
 
-    // ── Registered Patient (current session) ──
-    private currentPatientSubject = new BehaviorSubject<RegisteredPatient | null>(null);
-    currentPatient$ = this.currentPatientSubject.asObservable();
+  private appointmentsCollection = collection(this.firestore, 'appointments');
 
-    // ── All Booked Appointments ──
-    private appointmentsSubject = new BehaviorSubject<BookedAppointment[]>([]);
-    appointments$ = this.appointmentsSubject.asObservable();
+  get isPatientRegistered(): boolean {
+    const user = this.auth.currentUser;
+    return !!user && user.role === 'patient';
+  }
 
-    constructor() {
-        // Pre-fill with dummy appointments to make demo realistic
-        const DUMMY_APPOINTMENTS: BookedAppointment[] = [
-            { id: 'A1', patientName: 'John Doe', patientImage: 'https://randomuser.me/api/portraits/men/11.jpg', patientId: 'P1', patientEmail: 'john@example.com', doctorId: 'D1', doctorName: 'Dr. Sarah Jenkins', doctorSpecialty: 'Sports Injury', doctorImage: 'https://randomuser.me/api/portraits/women/44.jpg', time: '09:00 AM', duration: '45m', status: 'completed', type: 'Initial Assessment', date: new Date().toISOString().split('T')[0], notes: 'Patient reports mild lower back pain.', bookedAt: new Date() },
-            { id: 'A2', patientName: 'Alice Smith', patientImage: 'https://randomuser.me/api/portraits/women/11.jpg', patientId: 'P2', patientEmail: 'alice@example.com', doctorId: 'D1', doctorName: 'Dr. Sarah Jenkins', doctorSpecialty: 'Sports Injury', doctorImage: 'https://randomuser.me/api/portraits/women/44.jpg', time: '10:00 AM', duration: '30m', status: 'completed', type: 'Follow-up Therapy', date: new Date().toISOString().split('T')[0], notes: 'Progressing well with stretches.', bookedAt: new Date() },
-            { id: 'A3', patientName: 'Bob Brown', patientImage: 'https://randomuser.me/api/portraits/men/22.jpg', patientId: 'P3', patientEmail: 'bob@example.com', doctorId: 'D2', doctorName: 'Dr. Mark Lee', doctorSpecialty: 'Neurological Rehab', doctorImage: 'https://randomuser.me/api/portraits/men/46.jpg', time: '01:00 PM', duration: '30m', status: 'scheduled', type: 'Routine Checkup', date: new Date().toISOString().split('T')[0], notes: '', bookedAt: new Date() }
-        ];
-        this.appointmentsSubject.next(DUMMY_APPOINTMENTS);
+  get currentPatient(): AppUser | null {
+    const user = this.auth.currentUser;
+    return user && user.role === 'patient' ? user : null;
+  }
+
+  // ═══════════════════════════════════════
+  //  BOOKING LOGIC
+  // ═══════════════════════════════════════
+
+  async bookAppointment(data: {
+    doctorId: string;
+    doctorName: string;
+    doctorSpecialty: string;
+    doctorImage?: string;
+    date: string;
+    time: string;
+    type?: string;
+    notes?: string;
+  }): Promise<{ success: boolean; error?: string }> {
+    const user = this.auth.currentUser;
+    if (!user || user.role !== 'patient') {
+      return { success: false, error: 'Only registered patients can book appointments.' };
     }
 
-    // ── Logged-in user info (for doctor/patient dashboard context) ──
-    private loggedInUserSubject = new BehaviorSubject<{ role: string; id: string; name: string } | null>(null);
-    loggedInUser$ = this.loggedInUserSubject.asObservable();
-
-    // ═══════════════════════════════════════
-    //  PATIENT REGISTRATION
-    // ═══════════════════════════════════════
-
-    get isPatientRegistered(): boolean {
-        return this.currentPatientSubject.getValue() !== null;
+    const isBooked = await this.isSlotTaken(data.doctorId, data.date, data.time);
+    if (isBooked) {
+      return { success: false, error: 'This time slot is already taken. Please choose another.' };
     }
 
-    get currentPatient(): RegisteredPatient | null {
-        return this.currentPatientSubject.getValue();
+    try {
+      const patientRef = doc(this.firestore, 'users', user.uid);
+      const patientSnap = await getDoc(patientRef);
+      const patientData = patientSnap.data() as any;
+
+      const appointment: BookedAppointment = {
+        patientId: user.uid,
+        patientName: user.fullName,
+        patientEmail: user.email,
+        patientPhone: patientData?.phone || '',
+        patientGender: patientData?.gender || '',
+        patientCondition: patientData?.condition || data.type || 'General Consultation',
+        patientImage: patientData?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=random`,
+        doctorId: data.doctorId,
+        doctorName: data.doctorName,
+        doctorSpecialty: data.doctorSpecialty,
+        date: data.date,
+        time: data.time,
+        status: 'pending',
+        type: data.type || 'Consultation',
+        notes: data.notes || '',
+        createdAt: Timestamp.now()
+      };
+
+      await addDoc(this.appointmentsCollection, appointment);
+
+      const userRef = doc(this.firestore, 'users', user.uid);
+      await updateDoc(userRef, {
+        assignedDoctors: arrayUnion(data.doctorId)
+      });
+
+      return { success: true };
+    } catch (err) {
+      console.error('Booking error:', err);
+      return { success: false, error: 'Failed to book appointment. Please try again.' };
     }
+  }
 
-    registerPatient(data: {
-        fullName: string;
-        email: string;
-        phone: string;
-        dob: string;
-        gender: string;
-        address?: string;
-        condition?: string;
-        emergencyContact?: string;
-    }): RegisteredPatient {
-        const patient: RegisteredPatient = {
-            id: 'P' + Date.now(),
-            fullName: data.fullName,
-            email: data.email,
-            phone: data.phone,
-            dob: data.dob,
-            gender: data.gender,
-            address: data.address,
-            condition: data.condition,
-            emergencyContact: data.emergencyContact,
-            image: `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName)}&background=0F9B8E&color=fff&size=200`,
-            registeredAt: new Date()
-        };
-        this.currentPatientSubject.next(patient);
-        return patient;
-    }
+  private async isSlotTaken(doctorId: string, date: string, time: string): Promise<boolean> {
+    const q = query(
+      this.appointmentsCollection,
+      where('doctorId', '==', doctorId),
+      where('date', '==', date),
+      where('time', '==', time),
+      where('status', 'in', ['pending', 'confirmed'])
+    );
+    const snap = await getDocs(q);
+    return !snap.empty;
+  }
 
-    // ═══════════════════════════════════════
-    //  LOGIN / SESSION MANAGEMENT
-    // ═══════════════════════════════════════
+  getPatientAppointments(patientId: string): Observable<BookedAppointment[]> {
+    const q = query(
+      this.appointmentsCollection,
+      where('patientId', '==', patientId),
+      orderBy('createdAt', 'desc')
+    );
+    return this.collectionToObservable(q);
+  }
 
-    setLoggedInUser(role: string, id: string, name: string) {
-        this.loggedInUserSubject.next({ role, id, name });
-    }
+  getDoctorAppointments(doctorId: string): Observable<BookedAppointment[]> {
+    const q = query(
+      this.appointmentsCollection,
+      where('doctorId', '==', doctorId),
+      orderBy('createdAt', 'desc')
+    );
+    return this.collectionToObservable(q);
+  }
 
-    get loggedInUser() {
-        return this.loggedInUserSubject.getValue();
-    }
+  async getBookedSlots(doctorId: string, date: string): Promise<string[]> {
+    const q = query(
+      this.appointmentsCollection,
+      where('doctorId', '==', doctorId),
+      where('date', '==', date),
+      where('status', 'in', ['pending', 'confirmed'])
+    );
+    const snap = await getDocs(q);
+    return snap.docs.map(doc => doc.data()['time']);
+  }
 
-    // ═══════════════════════════════════════
-    //  BOOKING APPOINTMENTS
-    // ═══════════════════════════════════════
+  /** Alias for existing component usage */
+  async getBookedSlotsForDoctor(doctorId: string, date: string): Promise<string[]> {
+    return this.getBookedSlots(doctorId, date);
+  }
 
-    bookAppointment(data: {
-        doctorId: string;
-        doctorName: string;
-        doctorSpecialty: string;
-        doctorImage: string;
-        date: string;
-        time: string;
-        type?: string;
-    }): BookedAppointment | null {
-        const patient = this.currentPatientSubject.getValue();
-        if (!patient) return null; // Must be registered
+  async updateAppointmentStatus(appointmentId: string, status: 'confirmed' | 'cancelled' | 'completed'): Promise<void> {
+    const docRef = doc(this.firestore, 'appointments', appointmentId);
+    await updateDoc(docRef, { status });
+  }
 
-        // Check if slot already booked
-        if (this.isSlotBooked(data.doctorId, data.date, data.time)) {
-            return null;
+  async updateTreatmentNotes(appointmentId: string, treatmentNotes: string): Promise<void> {
+    const docRef = doc(this.firestore, 'appointments', appointmentId);
+    await updateDoc(docRef, { treatmentNotes });
+  }
+
+  async updatePrescription(appointmentId: string, files: { name: string; url: string; type: string }[]): Promise<void> {
+    const docRef = doc(this.firestore, 'appointments', appointmentId);
+    await updateDoc(docRef, {
+      prescription: {
+        files,
+        uploadedAt: Timestamp.now()
+      }
+    });
+  }
+
+  async updateFeedback(appointmentId: string, feedback: { rating: number; comment: string }): Promise<void> {
+    const docRef = doc(this.firestore, 'appointments', appointmentId);
+
+    // Get the appointment to find the doctorId
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+      const aptData = snap.data() as BookedAppointment;
+      const doctorId = aptData.doctorId;
+
+      // 1. Update appointment feedback
+      await updateDoc(docRef, {
+        feedback: {
+          ...feedback,
+          createdAt: Timestamp.now()
         }
+      });
 
-        const appointment: BookedAppointment = {
-            id: 'A' + Date.now(),
-            patientId: patient.id,
-            patientName: patient.fullName,
-            patientImage: patient.image,
-            patientEmail: patient.email,
-            doctorId: data.doctorId,
-            doctorName: data.doctorName,
-            doctorSpecialty: data.doctorSpecialty,
-            doctorImage: data.doctorImage,
-            date: data.date,
-            time: data.time,
-            duration: '45m',
-            status: 'confirmed',
-            type: data.type || 'Consultation',
-            notes: '',
-            bookedAt: new Date()
-        };
-
-        const current = this.appointmentsSubject.getValue();
-        this.appointmentsSubject.next([...current, appointment]);
-        return appointment;
+      // 2. Increment doctor's rating score by 5 points
+      if (doctorId) {
+        const doctorRef = doc(this.firestore, 'users', doctorId);
+        await updateDoc(doctorRef, {
+          ratingScore: increment(5)
+        });
+      }
     }
+  }
 
-    // ═══════════════════════════════════════
-    //  SLOT AVAILABILITY
-    // ═══════════════════════════════════════
+  async updateAiReport(appointmentId: string, aiReport: any): Promise<void> {
+    const docRef = doc(this.firestore, 'appointments', appointmentId);
+    await updateDoc(docRef, {
+      aiReport: {
+        ...aiReport,
+        generatedAt: Timestamp.now()
+      }
+    });
+  }
 
-    isSlotBooked(doctorId: string, date: string, time: string): boolean {
-        const appointments = this.appointmentsSubject.getValue();
-        return appointments.some(
-            a => a.doctorId === doctorId && a.date === date && a.time === time && a.status !== 'cancelled'
-        );
-    }
+  getLatestFeedbacks(limitCount: number = 6): Observable<BookedAppointment[]> {
+    const q = query(
+      this.appointmentsCollection,
+      where('feedback', '!=', null),
+      orderBy('feedback.createdAt', 'desc'),
+      limit(limitCount)
+    );
+    return this.collectionToObservable(q);
+  }
 
-    getBookedSlotsForDoctor(doctorId: string, date: string): string[] {
-        const appointments = this.appointmentsSubject.getValue();
-        return appointments
-            .filter(a => a.doctorId === doctorId && a.date === date && a.status !== 'cancelled')
-            .map(a => a.time);
-    }
-
-    // ═══════════════════════════════════════
-    //  DASHBOARD QUERIES
-    // ═══════════════════════════════════════
-
-    /** Get appointments for a specific doctor */
-    getAppointmentsForDoctor(doctorId: string): Observable<BookedAppointment[]> {
-        return this.appointments$.pipe(
-            map(apts => apts.filter(a => a.doctorId === doctorId))
-        );
-    }
-
-    /** Get appointments for a specific patient */
-    getAppointmentsForPatient(patientId: string): Observable<BookedAppointment[]> {
-        return this.appointments$.pipe(
-            map(apts => apts.filter(a => a.patientId === patientId))
-        );
-    }
-
-    /** Get appointments for the currently logged-in patient */
-    getMyAppointments(): Observable<BookedAppointment[]> {
-        const patient = this.currentPatientSubject.getValue();
-        if (!patient) return new BehaviorSubject<BookedAppointment[]>([]).asObservable();
-        return this.getAppointmentsForPatient(patient.id);
-    }
-
-    /** Get all booked appointments (for admin or general view) */
-    getAllAppointments(): Observable<BookedAppointment[]> {
-        return this.appointments$;
-    }
+  private collectionToObservable(q: any): Observable<BookedAppointment[]> {
+    return new Observable<BookedAppointment[]>(subscriber => {
+      return onSnapshot(q, (snapshot: any) => {
+        const data = snapshot.docs.map((d: any) => ({
+          id: d.id,
+          ...d.data()
+        })) as BookedAppointment[];
+        subscriber.next(data);
+      }, (error: any) => subscriber.error(error));
+    });
+  }
 }

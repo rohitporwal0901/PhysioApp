@@ -1,0 +1,136 @@
+<div *ngIf="isOpen" class="fixed inset-0 z-[10000] flex items-center justify-center sm:p-4 overflow-hidden">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-slate-950/40 backdrop-blur-md animate-fade-in" (click)="onClose()"></div>
+
+    <!-- Modal Container -->
+    <div class="relative w-full h-[100dvh] sm:h-auto sm:max-w-3xl bg-white dark:bg-slate-900 
+                sm:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col animate-dialog-in
+                border-slate-200/50 dark:border-slate-800/50">
+        
+        <!-- Header -->
+        <div class="px-6 py-5 sm:px-8 sm:py-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl sticky top-0 z-10">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+                    <i-lucide [name]="activeTab === 'privacy' ? 'shield-check' : 'file-text'" 
+                              class="w-6 h-6 text-primary-500"></i-lucide>
+                    {{ activeTab === 'privacy' ? 'Privacy Policy' : 'Terms & Conditions' }}
+                </h2>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Last Updated: March 2024</p>
+            </div>
+            
+            <button (click)="onClose()" class="w-10 h-10 rounded-2xl bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all flex items-center justify-center hover:scale-110 active:scale-95">
+                <i-lucide name="x" class="w-5 h-5"></i-lucide>
+            </button>
+        </div>
+
+        <!-- Tab Switcher (Mobile style) -->
+        <div class="px-6 sm:px-8 py-3 bg-slate-50/50 dark:bg-slate-800/20 border-b border-slate-100 dark:border-slate-800 flex gap-2">
+            <button (click)="setTab('terms')" 
+                    [class]="activeTab === 'terms' ? 'active-tab' : 'inactive-tab'">
+                Terms of Service
+            </button>
+            <button (click)="setTab('privacy')" 
+                    [class]="activeTab === 'privacy' ? 'active-tab' : 'inactive-tab'">
+                Privacy Policy
+            </button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="flex-1 overflow-y-auto px-6 py-6 sm:px-8 sm:py-8 custom-scrollbar">
+            
+            <!-- Dynamic Content based on userType and activeTab -->
+            <div class="prose prose-slate dark:prose-invert max-w-none">
+                
+                <ng-container *ngIf="activeTab === 'terms'">
+                    <section class="mb-8">
+                        <h3 class="text-lg font-black text-slate-800 dark:text-slate-200 mb-4">1. Acceptance of Terms</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                            Welcome to HealthHub. By accessing or using our platform, you agree to be bound by these Terms and Conditions. Please read them carefully.
+                        </p>
+                    </section>
+
+                    <!-- Specific Section for Doctor -->
+                    <section *ngIf="userType === 'doctor'" class="mb-8 p-5 rounded-3xl bg-primary-50/50 dark:bg-primary-900/10 border border-primary-100/50 dark:border-primary-800/30">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i-lucide name="stethoscope" class="w-5 h-5 text-primary-600"></i-lucide>
+                            <h3 class="text-base font-bold text-primary-900 dark:text-primary-100">For Medical Professionals</h3>
+                        </div>
+                        <ul class="text-sm text-primary-800/70 dark:text-primary-200/70 space-y-2 list-disc pl-5">
+                            <li>You must maintain valid certification and registration with medical councils.</li>
+                            <li>You agree to provide accurate medical advice and follow ethical guidelines.</li>
+                            <li>Subscription fees are non-refundable once the service period has commenced.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Specific Section for Lab -->
+                    <section *ngIf="userType === 'lab'" class="mb-8 p-5 rounded-3xl bg-indigo-50/50 dark:bg-indigo-900/10 border border-indigo-100/50 dark:border-indigo-800/30">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i-lucide name="microscope" class="w-5 h-5 text-indigo-600"></i-lucide>
+                            <h3 class="text-base font-bold text-indigo-900 dark:text-indigo-100">For Diagnostic Labs</h3>
+                        </div>
+                        <ul class="text-sm text-indigo-800/70 dark:text-indigo-200/70 space-y-2 list-disc pl-5">
+                            <li>Labs must adhere to national quality control standards for diagnostic testing.</li>
+                            <li>Electronic report delivery must be secured with 256-bit encryption.</li>
+                            <li>Home collection services must be performed by trained technicians.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Specific Section for Patient -->
+                    <section *ngIf="userType === 'patient'" class="mb-8 p-5 rounded-3xl bg-emerald-50/50 dark:bg-emerald-900/10 border border-emerald-100/50 dark:border-emerald-800/30">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i-lucide name="users" class="w-5 h-5 text-emerald-600"></i-lucide>
+                            <h3 class="text-base font-bold text-emerald-900 dark:text-emerald-100">For Patients</h3>
+                        </div>
+                        <ul class="text-sm text-emerald-800/70 dark:text-emerald-200/70 space-y-2 list-disc pl-5">
+                            <li>Appointments must be cancelled at least 4 hours in advance.</li>
+                            <li>Medical history provided must be accurate for safe treatment.</li>
+                            <li>Payments for sessions must be completed prior to the consultation.</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-8">
+                        <h3 class="text-lg font-black text-slate-800 dark:text-slate-200 mb-4">2. Professional Services</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                            HealthHub acts as a facilitator connecting users with medical professionals. While we verify credentials, the professional responsibility lies with the practitioner.
+                        </p>
+                    </section>
+                </ng-container>
+
+                <ng-container *ngIf="activeTab === 'privacy'">
+                    <section class="mb-8">
+                        <h3 class="text-lg font-black text-slate-800 dark:text-slate-200 mb-4">1. Data Collection</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                            We collect personal information including but not limited to name, contact details, and medical history to provide personalized healthcare services.
+                        </p>
+                    </section>
+
+                    <section class="mb-8">
+                        <h3 class="text-lg font-black text-slate-800 dark:text-slate-200 mb-4">2. Medical Records (HIPAA Compliant)</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                            All patient health records are encrypted and stored in compliance with international healthcare data protection standards. Only authorized medical professionals have access to your data.
+                        </p>
+                    </section>
+
+                    <section class="mb-8">
+                        <h3 class="text-lg font-black text-slate-800 dark:text-slate-200 mb-4">3. Third Party Sharing</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                            We do not sell your personal data. We only share information with partners (like Labs) when explicitly requested by you for a service.
+                        </p>
+                    </section>
+                </ng-container>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 sm:px-8 sm:py-5 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2 text-slate-500 text-xs font-medium">
+                <i-lucide name="lock" class="w-3.5 h-3.5 text-emerald-500"></i-lucide>
+                Your data is secure with SSL encryption
+            </div>
+            <button (click)="onClose()" 
+                    class="w-full sm:w-auto px-8 py-3 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm hover:scale-[1.02] transition-all active:scale-95 shadow-lg shadow-slate-900/10 dark:shadow-white/10">
+                Got it
+            </button>
+        </div>
+    </div>
+</div>
